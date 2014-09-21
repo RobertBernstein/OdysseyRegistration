@@ -1,0 +1,168 @@
+@{
+    // Package:	Odyssey of the Mind Web Site
+    // Module:	Tournament Registration
+    // File:	Page07.cshtml
+    // Author:	Robert Bernstein
+    // Created:	before 08/04/2007: v1.0: Classic ASP
+    // Updated:	11/04/2007: v2.0: Overhauled tournament registration; Replaced database query code with MDB2
+    //			12/27/2009: v3.0: Rebuilt in ASP.NET 3.5
+    //			01/01/2010: v3.1: Rebuilt in ASP.NET MVC 1.0
+    //			11/19/2013: v4.0: Rebuilt in ASP.NET MVC 4
+}
+
+@model OdysseyMvc4.ViewData.TournamentRegistration.Page07ViewData
+
+@{
+    ViewBag.Title = Model.FriendlyRegistrationName + " Page 7 of 10";
+}
+
+<script type="text/javascript">
+    //		document.getElementById("primaryChoice").style.visibility = "hidden";
+
+    //		function ChangeVisibility(choiceClicked) {
+    //			if (choiceClicked == "primaryChoice") {
+    //				document.getElementById('primaryChoice').style.visibility = 'visible';
+    //				document.getElementById('division1Choice').style.visibility = 'collapsed';
+    //			}
+    //			else if (choiceClicked == "division1Choice") {
+    //				{
+    //					document.getElementById('primaryChoice').style.visibility = 'collapsed';
+    //					document.getElementById('division1Choice').style.visibility = 'visible';
+    //				}
+    //			}
+    //			else {
+    //				document.getElementById('primaryChoice').style.visibility = 'collapsed';
+    //				document.getElementById('division1Choice').style.visibility = 'collapsed';
+    //			}
+    //		}
+    
+    $(function () {
+        $("#IsDoingSpontaneous").change(function () {
+            $('#primary').prop('checked', true);
+
+        });
+        
+        $("#Division123ProblemChoice").change(function() {
+            $('#division1').prop('checked', true);
+        });
+    });
+    
+    function FormValidator() {
+        // Determine whether the team was eligible to compete in the Primary Division (== 0).
+        if ($("#DivisionOfTeam").val() == "0") {
+            // The team may compete as Primary.  Determine whether the user selected Primary division or Division 1.
+            if ($("#primary").attr("checked") != "undefined" && $("#primary").is(":checked")) {
+                // The user selected Primary, so check to make sure they chose whether to compete in Spontaneous
+                if ($("#IsDoingSpontaneous option:selected").text() == "Select One") {
+                    alert("You must select whether your team wishes to participate in the spontaneous competition or not.");
+                    $("#IsDoingSpontaneous").focus();
+                    return false;
+                }
+            }
+            // User selected a division, not primary.
+            else if ($("#division1").attr("checked") != "undefined" && $("#division1").is(":checked")) {
+                // The user chose Division 1, so determine which problem they will compete in.
+                if ($("#Division123ProblemChoice option:selected").text() == "Select a Problem") {
+                    alert("You must select a long-term problem in which your team will compete.");
+                    $("#Division123ProblemChoice").focus();
+                    return false;
+                }
+            } else {
+                // User did not click a radio button.
+                alert("You must choose whether your team will participate as Primary or Division 1.");
+                return false;
+            }
+        }
+        else {
+            // The team is not a Primary team, so determine which problem they will compete in
+            if ($("#SelectedProblem option:selected").text() == "Select a Problem") {
+                alert("You must select a long long-term problem in which your team will compete.");
+                $("#SelectedProblem").focus();
+                return false;
+            }
+        }
+
+        return true;
+    }
+</script>
+
+<h1>
+    @ViewBag.Title
+</h1>
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { onsubmit = "return FormValidator();" }))
+{
+    <p>
+        We have calculated the division which your team is eligible to compete in based
+        on the team members' grades entered on the previous page.
+    </p>
+
+    // DivisionOfTeam = 0 when the team is competing in the Primary Division.
+    if (Model.DivisionOfTeam == 0)
+    {
+        <p class="required">
+            Your team is a Primary division team. &nbsp;However, this year's rules allow a Primary team to &#8220;age
+            up&#8221; and compete as a Division 1 team. &nbsp;Please select from one of the following options:
+        </p>
+        <p>
+            @* value="0" means Division = Primary *@
+            @Html.RadioButtonFor(x => x.DivisionRadioGroup, "0", new { id = "primary"}) Primary Division
+            @*<input name="divisionRadioGroup" id="primary" type="radio" value="0" /> Primary Division*@
+        </p>
+        <div id="primaryChoice">
+            <blockquote>
+                Your problem is called &#8220;@Model.PrimaryProblemName&#8221;.
+
+                @if (Model.Config["PrimaryTeamsMayDoSpontaneous"] == "True")
+                {
+                    <p>
+                        As your team members are competing in the Primary division, please choose whether
+                        your team will participate in the Spontaneous competition:
+                    </p>
+                    <p style="text-align: center">
+                        @Html.DropDownListFor(x => x.IsDoingSpontaneous, Model.IsDoingSpontaneousDropDown, "Select One")
+                    </p>
+                }
+            </blockquote>
+        </div>
+        <hr style="width: 60%; text-align: center" />
+        @* value="1" means Division = 1 *@
+        <p>
+            @Html.RadioButtonFor(x => x.DivisionRadioGroup, "1", new { id = "division1" }) Division 1
+            @*<input name="divisionRadioGroup" id="division1" type="radio" value="1" /> Division 1*@
+        </p>
+        <div id="division1Choice">
+            <blockquote>
+                <p>
+                    Please choose the long-term problem in which your team will compete:
+                </p>
+                <p style="text-align: center">
+                    @Html.DropDownListFor(x => x.Division123ProblemChoice, Model.Division123ProblemDropDown, "Select a Problem")
+                </p>
+            </blockquote>
+        </div>
+    }
+    else
+    {
+        <p class="required">
+            Your team will compete in division @Model.DivisionOfTeam.
+        </p>
+        <p>
+            As your team members are competing in division @Model.DivisionOfTeam, please choose the long-term problem
+            in which your team will compete:
+        </p>
+        <p style="text-align: center">
+            @Html.DropDownListFor(x => x.SelectedProblem, Model.Division123ProblemDropDown, "Select a Problem")
+        </p>
+    }
+
+    // DivisionOfTeam == 0 when Primary, otherwise it will be 1, 2, or 3
+    @Html.Hidden("DivisionOfTeam", Model.DivisionOfTeam)
+    <hr />
+    <div style="text-align: right">
+        <input type="submit" value="Next Page >>" id="nextButton" name="nextButton" />
+    </div>
+    <div style="text-align: left">
+        <a href="@Model.Config["HomePage"]">Return to the Home Page</a>
+    </div>
+}
