@@ -145,6 +145,8 @@
     <Compile Include="Controllers\CoachesTrainingRegistrationController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\JudgesRegistrationController.cs" />
+    <Compile Include="Controllers\TournamentRegistrationController.cs" />
+    <Compile Include="Controllers\VolunteerRegistrationController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
