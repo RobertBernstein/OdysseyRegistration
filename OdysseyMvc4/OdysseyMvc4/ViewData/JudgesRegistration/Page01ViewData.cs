@@ -1,18 +1,22 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Page01ViewData.cs" company="Tardis Technologies">
-//   Copyright 2013 Tardis Technologies. All rights reserved.
+//   Copyright 2014 Tardis Technologies. All rights reserved.
 // </copyright>
 // <summary>
 //   Defines the Page01ViewData type.
 // </summary>
 // <created>
-//   October 27th, 2013
+//   Sunday, October 27th, 2013
 // </created>
+// <updated>
+//   Tuesday, September 30th, 2014
+// </updated>
 // --------------------------------------------------------------------------------------------------------------------
 
 namespace OdysseyMvc4.ViewData.JudgesRegistration
 {
     using OdysseyMvc4.Models;
+    using OdysseyMvc4.ViewData;
 
     /// <summary>
     /// The page 01 view data.
@@ -25,22 +29,20 @@ namespace OdysseyMvc4.ViewData.JudgesRegistration
         public Event JudgesInfo { get; set; }
 
         /// <summary>
-        /// Gets or sets the tournament info.
+        /// Gets the judges training date or "TBA" if it is not defined.
         /// </summary>
-        public Event TournamentInfo { get; set; }
+        public string JudgesTrainingDate
+        {
+            get
+            {
+                return this.JudgesInfo.StartDate.HasValue
+                    ? this.JudgesInfo.StartDate.Value.ToLongDateString()
+                    : "TBA";
+            }
+        }
 
         /// <summary>
-        /// Gets or sets the mail regional director hyper link.
-        /// </summary>
-        public string MailRegionalDirectorHyperLink { get; set; }
-
-        /// <summary>
-        /// Gets or sets the mail regional director hyper link text.
-        /// </summary>
-        public string MailRegionalDirectorHyperLinkText { get; set; }
-
-        /// <summary>
-        /// Gets the judges training location or "TBA" if it's not defined.
+        /// Gets the judges training location or "TBA" if it is not defined.
         /// </summary>
         public string JudgesTrainingLocation
         {
@@ -53,20 +55,7 @@ namespace OdysseyMvc4.ViewData.JudgesRegistration
         }
 
         /// <summary>
-        /// Gets the judges training date.
-        /// </summary>
-        public string JudgesTrainingDate
-        {
-            get
-            {
-                return this.JudgesInfo.StartDate != null
-                    ? this.JudgesInfo.StartDate.Value.ToLongDateString()
-                    : "TBA";
-            }
-        }
-
-        /// <summary>
-        /// Gets the judges training time.
+        /// Gets the judges training time or "TBA" if it is not defined.
         /// </summary>
         public string JudgesTrainingTime
         {
@@ -78,43 +67,8 @@ namespace OdysseyMvc4.ViewData.JudgesRegistration
             }
         }
 
-        /// <summary>
-        /// Gets the tournament location or "TBA" if it's not defined.
-        /// </summary>
-        public string TournamentLocation
-        {
-            get
-            {
-                return !string.IsNullOrWhiteSpace(this.TournamentInfo.Location)
-                    ? this.TournamentInfo.Location
-                    : "TBA";
-            }
-        }
+        public string MailRegionalDirectorHyperLink { get; set; }
 
-        /// <summary>
-        /// Gets the tournament date.
-        /// </summary>
-        public string TournamentDate
-        {
-            get
-            {
-                return this.TournamentInfo.StartDate != null
-                    ? this.TournamentInfo.StartDate.Value.ToLongDateString()
-                    : "TBA";
-            }
-        }
-
-        /// <summary>
-        /// Gets the tournament training time.
-        /// </summary>
-        public string TournamentTime
-        {
-            get
-            {
-                return !string.IsNullOrWhiteSpace(this.TournamentInfo.Time)
-                    ? this.TournamentInfo.Time
-                    : "TBA";
-            }
-        }
+        public string MailRegionalDirectorHyperLinkText { get; set; }
     }
 }
