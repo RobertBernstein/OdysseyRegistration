@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="BaseViewData.cs" company="Tardis Technologies">
-//   Copyright 2013 Tardis Technologies. All rights reserved.
+//   Copyright 2014 Tardis Technologies. All rights reserved.
 // </copyright>
 // <summary>
 //   The base ViewData class for all other ViewData classes.
@@ -10,6 +10,8 @@
 namespace OdysseyMvc4.ViewData
 {
     using System.Collections.Generic;
+
+    using OdysseyMvc4.Models;
 
     /// <summary>
     /// The base ViewData class for all other ViewData classes.
@@ -38,5 +40,33 @@ namespace OdysseyMvc4.ViewData
         /// North").
         /// </summary>
         public string RegionName { get; set; }
+
+        public string SiteName { get; set; }
+
+        public string TournamentDate
+        {
+            get
+            {
+                return this.TournamentInfo.StartDate.HasValue ? this.TournamentInfo.StartDate.Value.ToLongDateString() : "TBA";
+            }
+        }
+
+        public Event TournamentInfo { get; set; }
+
+        public string TournamentLocation
+        {
+            get
+            {
+                return !string.IsNullOrWhiteSpace(this.TournamentInfo.Location) ? this.TournamentInfo.Location : "TBA";
+            }
+        }
+
+        public string TournamentTime
+        {
+            get
+            {
+                return !string.IsNullOrWhiteSpace(this.TournamentInfo.Time) ? this.TournamentInfo.Time : "TBA";
+            }
+        }
     }
 }
