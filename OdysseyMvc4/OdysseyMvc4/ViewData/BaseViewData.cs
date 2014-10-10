@@ -30,16 +30,22 @@ namespace OdysseyMvc4.ViewData
         public string FriendlyRegistrationName { get; set; }
 
         /// <summary>
-        /// Gets or sets the Odyssey of the Mind region number within the state of
-        /// Virginia (e.g. 9).
+        /// Gets or sets the path to the web site's CSS file based on which server this is hosted on, NoVA North or
+        /// NoVA South.
         /// </summary>
-        public string RegionNumber { get; set; }
+        public string PathToSiteCssFile { get; set; }
 
         /// <summary>
         /// Gets or sets the Odyssey of the Mind region name within Virginia (e.g. "NoVA
         /// North").
         /// </summary>
         public string RegionName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the Odyssey of the Mind region number within the state of
+        /// Virginia (e.g. 9).
+        /// </summary>
+        public string RegionNumber { get; set; }
 
         public string SiteName { get; set; }
 
