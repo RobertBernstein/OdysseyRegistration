@@ -214,6 +214,20 @@
     <Compile Include="ViewData\JudgesRegistration\Page01ViewData.cs" />
     <Compile Include="ViewData\JudgesRegistration\Page02ViewData.cs" />
     <Compile Include="ViewData\JudgesRegistration\Page03ViewData.cs" />
+    <Compile Include="ViewData\TournamentRegistration\Page01ViewData.cs" />
+    <Compile Include="ViewData\TournamentRegistration\Page02ViewData.cs" />
+    <Compile Include="ViewData\TournamentRegistration\Page03ViewData.cs" />
+    <Compile Include="ViewData\TournamentRegistration\Page04ViewData.cs" />
+    <Compile Include="ViewData\TournamentRegistration\Page05ViewData.cs" />
+    <Compile Include="ViewData\TournamentRegistration\Page06ViewData.cs" />
+    <Compile Include="ViewData\TournamentRegistration\Page07ViewData.cs" />
+    <Compile Include="ViewData\TournamentRegistration\Page08ViewData.cs" />
+    <Compile Include="ViewData\TournamentRegistration\Page09ViewData.cs" />
+    <Compile Include="ViewData\TournamentRegistration\Page10ViewData.cs" />
+    <Compile Include="ViewData\TournamentRegistration\ResendEmailViewData.cs" />
+    <Compile Include="ViewData\VolunteerRegistration\Page01ViewData.cs" />
+    <Compile Include="ViewData\VolunteerRegistration\Page02ViewData.cs" />
+    <Compile Include="ViewData\VolunteerRegistration\Page03ViewData.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\images\acnvbul2.gif" />
