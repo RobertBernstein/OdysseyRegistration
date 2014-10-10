@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Page02ViewData.cs" company="Tardis Technologies">
-//   Copyright 2013 Tardis Technologies. All rights reserved.
+//   Copyright 2014 Tardis Technologies. All rights reserved.
 // </copyright>
 // <summary>
 //   Defines the Page02ViewData type.
@@ -17,7 +17,7 @@ namespace OdysseyMvc4.ViewData.JudgesRegistration
     using System.Diagnostics.CodeAnalysis;
     using System.Web.Mvc;
 
-    using OdysseyMvc4.Models;
+    using OdysseyMvc4.ViewData;
 
     /// <summary>
     /// The page 02 view data.
@@ -62,8 +62,8 @@ namespace OdysseyMvc4.ViewData.JudgesRegistration
         /// <summary>
         /// Gets or sets the state.
         /// </summary>
-        [Required]
         [Display(Name = "State")]
+        [Required]
         [StringLength(2, MinimumLength = 2, ErrorMessage = "The state must be exactly 2 characters.")]
         public string State { get; set; }
 
@@ -169,12 +169,20 @@ namespace OdysseyMvc4.ViewData.JudgesRegistration
         public string ProblemConflict3 { get; set; }
 
         /// <summary>
-        /// Gets or sets the number of years of experience this Odyssey judge has.
+        /// Gets or sets the number of years of long-term judging experience this Odyssey judge has.
         /// </summary>
         [Required]
-        [Display(Name = "Years of Experience")]
-        [Range(0, 100, ErrorMessage = "The Years of Experience field must only contain numeric digits and must be no more than 100 years.")]
-        public string YearsExperience { get; set; }
+        [Display(Name = "Years of Long-Term Judging Experience")]
+        [Range(0, 100, ErrorMessage = "The Years of Long-Term Judging Experience field must only contain numeric digits and must be no more than 100 years.")]
+        public string YearsOfLongTermJudgingExperience { get; set; }
+
+        /// <summary>
+        /// Gets or sets the number of years of spontaneous judging experience this Odyssey judge has.
+        /// </summary>
+        [Required]
+        [Display(Name = "Years of Spontaneous Judging Experience")]
+        [Range(0, 100, ErrorMessage = "The Years of Spontaneous Judging Experience field must only contain numeric digits and must be no more than 100 years.")]
+        public string YearsOfSpontaneousJudgingExperience { get; set; }
 
         /// <summary>
         /// Gets or sets the notes field's contents.
@@ -182,19 +190,37 @@ namespace OdysseyMvc4.ViewData.JudgesRegistration
         [StringLength(500, ErrorMessage = "The notes field cannot contain more than 500 characters.")]
         public string Notes { get; set; }
 
-        /// <summary>
-        /// Gets or sets the judge.
-        /// </summary>
-        public Judge Judge { get; set; }
+        [Required(ErrorMessage = "You must choose whether or not you have children competing in our Regional Tournament.")]
+        public string HasChildrenCompeting { get; set; }
 
-        /// <summary>
-        /// Gets or sets the judges info.
-        /// </summary>
-        public Event JudgesInfo { get; set; }
+        [Display(Name = "Head Judge")]
+        public bool PreviouslyHeadJudge { get; set; }
+
+        [Display(Name = "Problem Judge")]
+        public bool PreviouslyProblemJudge { get; set; }
+
+        [Display(Name = "Scorechecker")]
+        public bool PreviouslyScorechecker { get; set; }
+
+        [Display(Name = "Staging Judge")]
+        public bool PreviouslyStagingJudge { get; set; }
+
+        [Display(Name = "Style Judge")]
+        public bool PreviouslyStyleJudge { get; set; }
+
+        [Display(Name = "Timekeeper")]
+        public bool PreviouslyTimekeeper { get; set; }
+
+        [Display(Name = "Weigh-In Judge")]
+        public bool PreviouslyWeighInJudge { get; set; }
 
         /// <summary>
         /// Gets or sets the t-shirt sizes.
         /// </summary>
+        [Required]
+        [Display(Name = "T-Shirt Size")]
+        public string TshirtSize { get; set; }
+
         public IEnumerable<SelectListItem> TshirtSizes { get; set; }
 
         /// <summary>
@@ -206,15 +232,12 @@ namespace OdysseyMvc4.ViewData.JudgesRegistration
         /// Gets the problem conflict list for the first child.
         /// </summary>
         public IEnumerable<SelectListItem> ProblemConflictList1
+        {
+            get
             {
-                get
-                {
-                var problemConflicts = this.ProblemConflictListCommon;
-                var listItem = new SelectListItem { Value = "8", Text = "I Have No Child Competing" };
-                problemConflicts.Add(listItem);
-                return problemConflicts;
-                }
+                return this.ProblemConflictListCommon;
             }
+        }
 
         /// <summary>
         /// Gets the problem conflict list for the second child.
@@ -223,10 +246,7 @@ namespace OdysseyMvc4.ViewData.JudgesRegistration
         {
             get
             {
-                var problemConflicts = this.ProblemConflictListCommon;
-                var listItem = new SelectListItem { Value = "8", Text = "I Have No 2nd Child Competing" };
-                problemConflicts.Add(listItem);
-                return problemConflicts;
+                return this.ProblemConflictListCommon;
             }
         }
 
@@ -237,22 +257,19 @@ namespace OdysseyMvc4.ViewData.JudgesRegistration
         {
             get
             {
-                var problemConflicts = this.ProblemConflictListCommon;
-                var listItem = new SelectListItem { Value = "8", Text = "I Have No 3rd Child Competing" };
-                problemConflicts.Add(listItem);
-                return problemConflicts;
+                return this.ProblemConflictListCommon;
             }
         }
 
         /// <summary>
         /// Gets the problem conflicts.
         /// </summary>
-        private List<SelectListItem> ProblemConflictListCommon
+        private IEnumerable<SelectListItem> ProblemConflictListCommon
         {
             get
             {
-                var problemConflicts = new List<SelectListItem>(this.ProblemChoices);
-                var foundItem = problemConflicts.Find(sli => sli.Text == "No Preference");
+                List<SelectListItem> problemConflicts = new List<SelectListItem>(this.ProblemChoices);
+                SelectListItem foundItem = problemConflicts.Find(sli => sli.Text == "No Preference");
 
                 if (foundItem != null)
                 {
@@ -262,5 +279,11 @@ namespace OdysseyMvc4.ViewData.JudgesRegistration
                 return problemConflicts;
             }
         }
+
+        [Required(ErrorMessage = "You must choose whether or not you want CEU credit.")]
+        public string WantsCeuCredit { get; set; }
+
+        [Required(ErrorMessage = "You must choose whether or not you are willing to be a scorechecker.")]
+        public string WillingToBeScorechecker { get; set; }
     }
 }

@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Page03ViewData.cs" company="Tardis Technologies">
-//   Copyright 2013 Tardis Technologies. All rights reserved.
+//   Copyright 2014 Tardis Technologies. All rights reserved.
 // </copyright>
 // <summary>
 //   Defines the Page03ViewData type.
@@ -13,6 +13,7 @@
 namespace OdysseyMvc4.ViewData.JudgesRegistration
 {
     using OdysseyMvc4.Models;
+    using OdysseyMvc4.ViewData;
 
     /// <summary>
     /// The page 03 view data.
@@ -23,11 +24,6 @@ namespace OdysseyMvc4.ViewData.JudgesRegistration
         /// Gets or sets the judges info.
         /// </summary>
         public Event JudgesInfo { get; set; }
-
-        /// <summary>
-        /// Gets or sets the tournament info.
-        /// </summary>
-        public Event TournamentInfo { get; set; }
 
         /// <summary>
         /// Gets or sets the judge.
@@ -52,6 +48,6 @@ namespace OdysseyMvc4.ViewData.JudgesRegistration
         /// <summary>
         /// Gets or sets the error message.
         /// </summary>
-        public string ErrorMessge { get; set; }
+        public string ErrorMessage { get; set; }
     }
 }
