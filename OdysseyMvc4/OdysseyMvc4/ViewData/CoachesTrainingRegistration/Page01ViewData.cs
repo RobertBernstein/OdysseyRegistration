@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Page01ViewData.cs" company="Tardis Technologies">
-//   Copyright 2013 Tardis Technologies. All rights reserved.
+//   Copyright 2014 Tardis Technologies. All rights reserved.
 // </copyright>
 // <summary>
 //   The page 01 view data.
@@ -82,7 +82,6 @@ namespace OdysseyMvc4.ViewData.CoachesTrainingRegistration
         /// </summary>
         [Required]
         [Display(Name = "Problem")]
-
         public string SelectedProblem { get; set; }
 
         /// <summary>

@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Page02ViewData.cs" company="Tardis Technologies">
-//   Copyright 2013 Tardis Technologies. All rights reserved.
+//   Copyright 2014 Tardis Technologies. All rights reserved.
 // </copyright>
 // <summary>
 //   Defines the Page02ViewData type.
