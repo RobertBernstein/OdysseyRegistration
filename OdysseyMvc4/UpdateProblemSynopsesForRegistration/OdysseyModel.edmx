@@ -1,0 +1,124 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="DB_12824_registrationModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Problem">
+          <Key>
+            <PropertyRef Name="ProblemID" />
+          </Key>
+          <Property Name="ProblemID" Type="int" Nullable="false" />
+          <Property Name="ProblemCategory" Type="nvarchar" MaxLength="30" />
+          <Property Name="ProblemName" Type="nvarchar" MaxLength="50" />
+          <Property Name="ProblemDescription" Type="nvarchar(max)" />
+          <Property Name="Divisions" Type="nvarchar" MaxLength="50" />
+          <Property Name="CostLimit" Type="nvarchar" MaxLength="50" />
+          <Property Name="ProblemCaptainID" Type="nvarchar" MaxLength="50" />
+          <Property Name="PCFirstName" Type="nvarchar" MaxLength="50" />
+          <Property Name="PCLastName" Type="nvarchar" MaxLength="50" />
+          <Property Name="PCAddress" Type="nvarchar" MaxLength="255" />
+          <Property Name="PCCity" Type="nvarchar" MaxLength="50" />
+          <Property Name="PCStateOrProvince" Type="nvarchar" MaxLength="20" />
+          <Property Name="PCPostalCode" Type="nvarchar" MaxLength="20" />
+          <Property Name="PCWorkPhone" Type="nvarchar" MaxLength="30" />
+          <Property Name="PCHomePhone" Type="nvarchar" MaxLength="30" />
+          <Property Name="PCMobilePhone" Type="nvarchar" MaxLength="30" />
+          <Property Name="PCFaxNumber" Type="nvarchar" MaxLength="30" />
+          <Property Name="PCEmail1" Type="nvarchar" MaxLength="50" />
+          <Property Name="PCEmail2" Type="nvarchar" MaxLength="50" />
+          <Property Name="Notes" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityContainer Name="DB_12824_registrationModelStoreContainer">
+          <EntitySet Name="Problem" EntityType="Self.Problem" Schema="dbo" store:Type="Tables" />
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="DB_12824_registrationModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Problem">
+          <Key>
+            <PropertyRef Name="ProblemID" />
+          </Key>
+          <Property Name="ProblemID" Type="Int32" Nullable="false" />
+          <Property Name="ProblemCategory" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="ProblemName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ProblemDescription" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Divisions" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CostLimit" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ProblemCaptainID" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="PCFirstName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="PCLastName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="PCAddress" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="PCCity" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="PCStateOrProvince" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="PCPostalCode" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="PCWorkPhone" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="PCHomePhone" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="PCMobilePhone" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="PCFaxNumber" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="PCEmail1" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="PCEmail2" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Notes" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityContainer Name="DB_12824_registrationEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Problems" EntityType="Self.Problem" />
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="DB_12824_registrationModelStoreContainer" CdmEntityContainer="DB_12824_registrationEntities">
+          <EntitySetMapping Name="Problems">
+            <EntityTypeMapping TypeName="DB_12824_registrationModel.Problem">
+              <MappingFragment StoreEntitySet="Problem">
+                <ScalarProperty Name="ProblemID" ColumnName="ProblemID" />
+                <ScalarProperty Name="ProblemCategory" ColumnName="ProblemCategory" />
+                <ScalarProperty Name="ProblemName" ColumnName="ProblemName" />
+                <ScalarProperty Name="ProblemDescription" ColumnName="ProblemDescription" />
+                <ScalarProperty Name="Divisions" ColumnName="Divisions" />
+                <ScalarProperty Name="CostLimit" ColumnName="CostLimit" />
+                <ScalarProperty Name="ProblemCaptainID" ColumnName="ProblemCaptainID" />
+                <ScalarProperty Name="PCFirstName" ColumnName="PCFirstName" />
+                <ScalarProperty Name="PCLastName" ColumnName="PCLastName" />
+                <ScalarProperty Name="PCAddress" ColumnName="PCAddress" />
+                <ScalarProperty Name="PCCity" ColumnName="PCCity" />
+                <ScalarProperty Name="PCStateOrProvince" ColumnName="PCStateOrProvince" />
+                <ScalarProperty Name="PCPostalCode" ColumnName="PCPostalCode" />
+                <ScalarProperty Name="PCWorkPhone" ColumnName="PCWorkPhone" />
+                <ScalarProperty Name="PCHomePhone" ColumnName="PCHomePhone" />
+                <ScalarProperty Name="PCMobilePhone" ColumnName="PCMobilePhone" />
+                <ScalarProperty Name="PCFaxNumber" ColumnName="PCFaxNumber" />
+                <ScalarProperty Name="PCEmail1" ColumnName="PCEmail1" />
+                <ScalarProperty Name="PCEmail2" ColumnName="PCEmail2" />
+                <ScalarProperty Name="Notes" ColumnName="Notes" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
