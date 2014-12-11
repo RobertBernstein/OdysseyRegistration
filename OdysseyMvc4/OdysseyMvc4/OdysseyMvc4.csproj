@@ -386,6 +386,7 @@
     <Content Include="Views\VolunteerRegistration\Page01.cshtml" />
     <Content Include="Views\VolunteerRegistration\Page02.cshtml" />
     <Content Include="Views\VolunteerRegistration\Page03.cshtml" />
+    <Content Include="Views\Shared\TournamentRegistration\EmailPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

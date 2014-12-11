@@ -37,16 +37,37 @@ namespace OdysseyMvc4.Controllers
             this.FriendlyRegistrationName = this.GetFriendlyRegistrationName();
         }
 
+        /// <summary>
+        /// Handle HTTP GET requests for the BadAltCoachEmail page.
+        /// </summary>
+        /// <returns>
+        /// The <see cref="ActionResult"/>.
+        /// </returns>
         public ActionResult BadAltCoachEmail()
         {
             return this.View();
         }
 
+        /// <summary>
+        /// Handle HTTP GET requests for the BadCoachEmail page.
+        /// </summary>
+        /// <returns>
+        /// The <see cref="ActionResult"/>.
+        /// </returns>
         public ActionResult BadCoachEmail()
         {
             return this.View();
         }
 
+        /// <summary>
+        /// The determine division of team.
+        /// </summary>
+        /// <param name="gradesOfTeamMembers">
+        /// The grades of team members.
+        /// </param>
+        /// <returns>
+        /// The <see cref="int"/>.
+        /// </returns>
         public int DetermineDivisionOfTeam(List<string> gradesOfTeamMembers)
         {
             int divisionOfTeam = -1;
@@ -575,7 +596,7 @@ namespace OdysseyMvc4.Controllers
             Page06ViewData viewData = new Page06ViewData { GradeChoices = new SelectList(gradesList) };
 
             this.SetBaseViewData(viewData);
-            
+
             return this.View(viewData);
         }
 
@@ -1017,6 +1038,13 @@ namespace OdysseyMvc4.Controllers
             return this.View(viewData);
         }
 
+        /// <summary>
+        /// Handle HTTP GET requests for the ResendEmail page.
+        /// </summary>
+        /// <returns>
+        /// The <see cref="ActionResult"/>.
+        /// </returns>
+        [HttpGet]
         public ActionResult ResendEmail()
         {
             ResendEmailViewData viewData = new ResendEmailViewData();
@@ -1024,88 +1052,178 @@ namespace OdysseyMvc4.Controllers
             return this.View(viewData);
         }
 
+        /// <summary>
+        /// Handle HTTP POST requests for the ResendEmail page.
+        /// </summary>
+        /// <param name="collection">
+        /// The collection.
+        /// </param>
+        /// <returns>
+        /// The <see cref="ActionResult"/>.
+        /// </returns>
         [HttpPost]
         public ActionResult ResendEmail(FormCollection collection)
         {
-            string str2;
-            string str3;
             ResendEmailViewData model = new ResendEmailViewData();
-            this.UpdateModel<ResendEmailViewData>(model);
+            this.UpdateModel(model);
+
             Page10ViewData viewData = new Page10ViewData
             {
                 TournamentInfo = this.Repository.TournamentInfo,
                 TournamentRegistration = this.Repository.GetTournamentRegistrationById(model.TeamNumber)
             };
+
             this.SetBaseViewData(viewData);
+
+            // Make sure at least one of the two check boxes was checked.
             if ((model.CoachCheckbox == "false") && (model.AltCoachCheckbox == "false"))
             {
                 model.ErrorMessage = "No one was selected to resend the registration information to, so no e-mail was sent.";
                 model.Success = false;
                 return this.View(model);
             }
-            string str = string.Empty;
+
+            string recipientList = string.Empty;
             if (model.CoachCheckbox == "true")
             {
-                str = str + viewData.TournamentRegistration.CoachEmailAddress;
+                recipientList += viewData.TournamentRegistration.CoachEmailAddress;
             }
+
             if (model.AltCoachCheckbox == "true")
             {
-                if (!string.IsNullOrEmpty(str))
+                if (!string.IsNullOrEmpty(recipientList))
                 {
-                    str = str + ",";
+                    recipientList = recipientList + ",";
                 }
-                str = str + viewData.TournamentRegistration.AltCoachEmailAddress;
+
+                recipientList += viewData.TournamentRegistration.AltCoachEmailAddress;
             }
-            this.Repository.GetJudgeNameFromJudgeId(viewData.TournamentRegistration.JudgeID, out str2, out str3);
-            viewData.JudgeFirstName = str2;
-            viewData.JudgeLastName = str3;
+
+            string judgeFirstName;
+            string judgeLastName;
+            this.Repository.GetJudgeNameFromJudgeId(viewData.TournamentRegistration.JudgeID, out judgeFirstName, out judgeLastName);
+
+            viewData.JudgeFirstName = judgeFirstName;
+            viewData.JudgeLastName = judgeLastName;
+
             Volunteer volunteerById = this.Repository.GetVolunteerById(viewData.TournamentRegistration.VolunteerID);
             viewData.VolunteerFirstName = volunteerById.FirstName;
             viewData.VolunteerLastName = volunteerById.LastName;
+
             viewData.SchoolName = this.Repository.GetSchoolNameFromSchoolId(viewData.TournamentRegistration.SchoolID);
             viewData.ProblemName = this.Repository.GetProblemNameFromProblemId(viewData.TournamentRegistration.ProblemID);
             viewData.MailBody = this.GenerateEmailBody(viewData);
-            MailMessage mailMessage = this.BuildMessage(viewData.Config["WebmasterEmail"], viewData.RegionName + " Odyssey Region " + viewData.RegionNumber + " Tournament Registration", viewData.MailBody, str, "rob@tardistech.com", null);
+
+            // Instantiate a new instance of MailMessage.
+            MailMessage mailMessage = this.BuildMessage(
+                viewData.Config["WebmasterEmail"],
+                viewData.RegionName + " Odyssey Region " + viewData.RegionNumber + " Tournament Registration",
+                viewData.MailBody,
+                recipientList,
+                "rob@tardistech.com",
+                null);
+
+            // Instantiate a new instance of SmtpClient.
             model.ErrorMessage = this.SendMessage(model, mailMessage);
+
             model.Success = true;
+
             return this.View(model);
         }
 
+        #region Test Methods
+
+        /// <summary>
+        /// Clear the Team ID from Carolina's Judge Registration in order to test Tournament Registration.
+        /// </summary>
+        /// <remarks>
+        /// This function is intended for testing only.
+        /// </remarks>
+        /// <returns>
+        /// The <see cref="ActionResult"/>.
+        /// </returns>
         public ActionResult Carolina()
         {
             this.Repository.ClearTeamIdFromJudgeRecord(0x26, "Carolina", "Deschapelles");
             return this.RedirectToAction("Page01", "TournamentRegistration");
         }
 
+        /// <summary>
+        /// Clear the Team ID from Joyce Ghen's Judge Registration in order to test Tournament Registration.
+        /// </summary>
+        /// <remarks>
+        /// This function is intended for testing only.
+        /// </remarks>
+        /// <returns>
+        /// The <see cref="ActionResult"/>.
+        /// </returns>
         public ActionResult Joyce()
         {
             this.Repository.ClearTeamIdFromJudgeRecord(30, "Joyce", "Ghen");
             return this.RedirectToAction("Page01", "TournamentRegistration");
         }
 
+        /// <summary>
+        /// Clear the Team ID from Margaret Eccles' Judge Registration in order to test Tournament Registration.
+        /// </summary>
+        /// <remarks>
+        /// This function is intended for testing only.
+        /// </remarks>
+        /// <returns>
+        /// The <see cref="ActionResult"/>.
+        /// </returns>
         public ActionResult Margaret()
         {
             this.Repository.ClearTeamIdFromJudgeRecord(0x11, "Margaret", "Eccles");
             return this.RedirectToAction("Page01", "TournamentRegistration");
         }
 
+        /// <summary>
+        /// Clear the Team ID from Rob's Judge Registration in order to test Tournament Registration.
+        /// </summary>
+        /// <remarks>
+        /// This function is intended for testing only.
+        /// </remarks>
+        /// <returns>
+        /// The <see cref="ActionResult"/>.
+        /// </returns>
         public ActionResult Rob()
         {
             this.Repository.ClearTeamIdFromJudgeRecord(5, "Rob", "Bernstein");
             return this.RedirectToAction("Page01", "TournamentRegistration");
         }
 
+        /// <summary>
+        /// Clear the Team ID from Ron Ghen's Judge Registration in order to test Tournament Registration.
+        /// </summary>
+        /// <remarks>
+        /// This function is intended for testing only.
+        /// </remarks>
+        /// <returns>
+        /// The <see cref="ActionResult"/>.
+        /// </returns>
         public ActionResult Ron()
         {
             this.Repository.ClearTeamIdFromJudgeRecord(0x1f, "Ron", "Ghen");
             return this.RedirectToAction("Page01", "TournamentRegistration");
         }
 
+        /// <summary>
+        /// Clear the Team ID from Sarah Tate's Judge Registration in order to test Tournament Registration.
+        /// </summary>
+        /// <remarks>
+        /// This function is intended for testing only.
+        /// </remarks>
+        /// <returns>
+        /// The <see cref="ActionResult"/>.
+        /// </returns>
         public ActionResult Sarah()
         {
             this.Repository.ClearTeamIdFromJudgeRecord(0x10, "Sarah", "Tate");
             return this.RedirectToAction("Page01", "TournamentRegistration");
         }
+
+        #endregion
 
         /// <summary>
         /// The generate email body.
