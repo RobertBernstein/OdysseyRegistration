@@ -28,20 +28,23 @@ namespace OdysseyMvc4.Models
         public string MobilePhone { get; set; }
         public string EmailAddress { get; set; }
         public string Notes { get; set; }
+        public string ProblemChoice1 { get; set; }
+        public string ProblemChoice2 { get; set; }
+        public string ProblemChoice3 { get; set; }
+        public string HasChildrenCompeting { get; set; }
         public string COI { get; set; }
         public string ProblemCOI1 { get; set; }
         public string ProblemCOI2 { get; set; }
         public string ProblemCOI3 { get; set; }
-        public string ProblemChoice1 { get; set; }
-        public string ProblemChoice2 { get; set; }
-        public string ProblemChoice3 { get; set; }
         public string ProblemAssigned { get; set; }
         public Nullable<bool> InformationMailed_ { get; set; }
         public Nullable<bool> AttendedJT_ { get; set; }
         public Nullable<bool> Active { get; set; }
+        public string WillingToBeScorechecker { get; set; }
         public string TshirtSize { get; set; }
-        public string CEU { get; set; }
-        public string YearsExperience { get; set; }
+        public string WantsCEUCredit { get; set; }
+        public string YearsOfLongTermJudgingExperience { get; set; }
+        public string YearsOfSpontaneousJudgingExperience { get; set; }
         public string PreviousPositions { get; set; }
         public string ProblemID { get; set; }
         public Nullable<System.DateTime> TimeRegistered { get; set; }

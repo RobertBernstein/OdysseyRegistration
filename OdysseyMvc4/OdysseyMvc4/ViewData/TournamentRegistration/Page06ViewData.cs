@@ -1,19 +1,45 @@
-﻿namespace OdysseyMvc4.ViewData.TournamentRegistration
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="Page06ViewData.cs" company="Tardis Technologies">
+//   Copyright 2014 Tardis Technologies. All rights reserved.
+// </copyright>
+// <summary>
+//   Defines the Page06ViewData type.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
+
+namespace OdysseyMvc4.ViewData.TournamentRegistration
 {
-    using OdysseyMvc4.ViewData;
-    using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-    using System.Runtime.CompilerServices;
+    using System.Web.Mvc;
 
+    using OdysseyMvc4.ViewData;
+
+    /// <summary>
+    /// The page 06 view data.
+    /// </summary>
     public class Page06ViewData : BaseViewData
     {
+        /// <summary>
+        /// Gets or sets the grade choices.
+        /// </summary>
         public IEnumerable<SelectListItem> GradeChoices { get; set; }
 
-        [Display(Name="First Name"), StringLength(0x19, ErrorMessage="The team member's first name must not be more than 25 characters."), Required(ErrorMessage="You must include at least Team Member 1 to proceed.  Make sure the first name field is filled in.")]
+        /// <summary>
+        /// Gets or sets the member first name 1.
+        /// </summary>
+        [Display(Name = "First Name")]
+        [StringLength(0x19, ErrorMessage = "The team member's first name must not be more than 25 characters.")]
+        [Required(
+            ErrorMessage =
+                "You must include at least Team Member 1 to proceed.  Make sure the first name field is filled in.")]
         public string MemberFirstName1 { get; set; }
 
-        [StringLength(0x19, ErrorMessage="The team member's first name must not be more than 25 characters."), Display(Name="First Name")]
+        /// <summary>
+        /// Gets or sets the member first name 2.
+        /// </summary>
+        [StringLength(0x19, ErrorMessage = "The team member's first name must not be more than 25 characters.")]
+        [Display(Name = "First Name")]
         public string MemberFirstName2 { get; set; }
 
         [Display(Name="First Name"), StringLength(0x19, ErrorMessage="The team member's first name must not be more than 25 characters.")]

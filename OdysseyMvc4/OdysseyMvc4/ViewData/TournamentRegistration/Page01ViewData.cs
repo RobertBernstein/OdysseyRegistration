@@ -19,7 +19,7 @@
         {
             get
             {
-                return (!base.TournamentInfo.LateEventCostStartDate.HasValue ? "TBA" : base.TournamentInfo.LateEventCostStartDate.Value.AddDays(-1.0).ToLongDateString());
+                return !this.TournamentInfo.LateEventCostStartDate.HasValue ? "TBA" : base.TournamentInfo.LateEventCostStartDate.Value.AddDays(-1.0).ToLongDateString();
             }
         }
 
@@ -27,9 +27,9 @@
         {
             get
             {
-                if (!string.IsNullOrWhiteSpace(base.TournamentInfo.LateEventCost))
+                if (!string.IsNullOrWhiteSpace(this.TournamentInfo.LateEventCost))
                 {
-                    return ("$" + base.TournamentInfo.LateEventCost);
+                    return "$" + this.TournamentInfo.LateEventCost;
                 }
                 return string.Empty;
             }
@@ -39,7 +39,7 @@
         {
             get
             {
-                return (!base.TournamentInfo.PaymentDueDate.HasValue ? "TBA" : base.TournamentInfo.PaymentDueDate.Value.ToLongDateString());
+                return !this.TournamentInfo.PaymentDueDate.HasValue ? "TBA" : this.TournamentInfo.PaymentDueDate.Value.ToLongDateString();
             }
         }
 
@@ -60,11 +60,11 @@
             get
             {
                 DateTime time;
-                if (base.Config["TournamentRegistrationCloseDateTime"] == null)
+                if (this.Config["TournamentRegistrationCloseDateTime"] == null)
                 {
                     return "TBA";
                 }
-                DateTime.TryParse(base.Config["TournamentRegistrationCloseDateTime"], out time);
+                DateTime.TryParse(this.Config["TournamentRegistrationCloseDateTime"], out time);
                 return time.ToLongDateString();
             }
         }

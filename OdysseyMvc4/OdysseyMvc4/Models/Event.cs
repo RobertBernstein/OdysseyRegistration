@@ -40,6 +40,8 @@ namespace OdysseyMvc4.Models
         public string EventPayeePhone1 { get; set; }
         public string EventPayeeEmail1 { get; set; }
         public string EventCost { get; set; }
+        public string LateEventCost { get; set; }
+        public Nullable<System.DateTime> LateEventCostStartDate { get; set; }
         public Nullable<System.DateTime> PaymentDueDate { get; set; }
         public string EventMakeChecksOutTo { get; set; }
         public string EventVolunteerInformationMessage { get; set; }

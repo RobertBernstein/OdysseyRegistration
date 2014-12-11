@@ -1442,7 +1442,7 @@ namespace OdysseyMvc4.Models
                        ProblemChoice2 = j.ProblemChoice2,
                        ProblemChoice3 = j.ProblemChoice3,
                        TshirtSize = j.TshirtSize,
-                       ContinuingEducationUnits = j.CEU,
+                       ContinuingEducationUnits = j.WantsCEUCredit,
                        YearsExperience = j.YearsExperience,
                        TimeRegistered = j.TimeRegistered,
                        TimeAssignedToTeam = j.TimeAssignedToTeam,

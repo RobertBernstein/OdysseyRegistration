@@ -24,16 +24,18 @@ namespace OdysseyMvc4.Models
         public string CoachLastName { get; set; }
         public string CoachAddress { get; set; }
         public string CoachCity { get; set; }
-        public string CoachStateOrProvince { get; set; }
+        public string CoachState { get; set; }
         public string CoachZipCode { get; set; }
-        public string CoachDaytimePhone { get; set; }
         public string CoachEveningPhone { get; set; }
-        public string CoachEmail { get; set; }
+        public string CoachDaytimePhone { get; set; }
+        public string CoachMobilePhone { get; set; }
+        public string CoachEmailAddress { get; set; }
         public string AltCoachFirstName { get; set; }
         public string AltCoachLastName { get; set; }
-        public string AltCoachDaytimePhone { get; set; }
         public string AltCoachEveningPhone { get; set; }
-        public string AltCoachEmail { get; set; }
+        public string AltCoachDaytimePhone { get; set; }
+        public string AltCoachMobilePhone { get; set; }
+        public string AltCoachEmailAddress { get; set; }
         public string MemberFirstName1 { get; set; }
         public string MemberLastName1 { get; set; }
         public string MemberGrade1 { get; set; }
@@ -55,9 +57,6 @@ namespace OdysseyMvc4.Models
         public string MemberFirstName7 { get; set; }
         public string MemberLastName7 { get; set; }
         public string MemberGrade7 { get; set; }
-        public string MemberFirstName8 { get; set; }
-        public string MemberLastName8 { get; set; }
-        public string MemberGrade8 { get; set; }
         public Nullable<bool> Spontaneous { get; set; }
         public string Notes { get; set; }
         public string SpecialConsiderations { get; set; }

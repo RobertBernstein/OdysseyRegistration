@@ -4,41 +4,26 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="OdysseyModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
-        <EntityContainer Name="OdysseyModelStoreContainer">
-          <EntitySet Name="CoachesTrainingDivisions" EntityType="OdysseyModel.Store.CoachesTrainingDivisions" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="CoachesTrainingRegions" EntityType="OdysseyModel.Store.CoachesTrainingRegions" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="CoachesTrainingRegistrations" EntityType="OdysseyModel.Store.CoachesTrainingRegistrations" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="CoachesTrainingRoles" EntityType="OdysseyModel.Store.CoachesTrainingRoles" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="Config" EntityType="OdysseyModel.Store.Config" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="ContactUsRecipients" EntityType="OdysseyModel.Store.ContactUsRecipients" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="ContactUsSenderRoles" EntityType="OdysseyModel.Store.ContactUsSenderRoles" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="Events" EntityType="OdysseyModel.Store.Events" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="Judges" EntityType="OdysseyModel.Store.Judges" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="Problem" EntityType="OdysseyModel.Store.Problem" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="Schools" EntityType="OdysseyModel.Store.Schools" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="TournamentRegistration" EntityType="OdysseyModel.Store.TournamentRegistration" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="Volunteers" EntityType="OdysseyModel.Store.Volunteers" store:Type="Tables" Schema="dbo" />
-        </EntityContainer>
+    <Schema Namespace="OdysseyModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
         <EntityType Name="CoachesTrainingDivisions">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="tinyint" Nullable="false" />
-          <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="50" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <EntityType Name="CoachesTrainingRegions">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
-          <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="CoachesTrainingRegistrations">
           <Key>
             <PropertyRef Name="RegistrationID" />
           </Key>
-          <Property Name="RegistrationID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="RegistrationID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="FirstName" Type="nvarchar" MaxLength="50" />
           <Property Name="LastName" Type="nvarchar" MaxLength="100" />
           <Property Name="SchoolName" Type="nvarchar" MaxLength="100" />
@@ -56,13 +41,13 @@
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="tinyint" Nullable="false" />
-          <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="50" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <EntityType Name="Config">
           <Key>
             <PropertyRef Name="Name" />
           </Key>
-          <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="50" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Value" Type="nvarchar" MaxLength="800" />
         </EntityType>
         <EntityType Name="ContactUsRecipients">
@@ -70,8 +55,8 @@
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="tinyint" Nullable="false" />
-          <Property Name="contact_name" Type="nvarchar" Nullable="false" MaxLength="100" />
-          <Property Name="email_address" Type="nvarchar" Nullable="false" MaxLength="100" />
+          <Property Name="contact_name" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="email_address" Type="nvarchar" MaxLength="100" Nullable="false" />
         </EntityType>
         <EntityType Name="ContactUsSenderRoles">
           <Key>
@@ -110,6 +95,8 @@
           <Property Name="EventPayeePhone1" Type="nvarchar" MaxLength="20" />
           <Property Name="EventPayeeEmail1" Type="nvarchar" MaxLength="100" />
           <Property Name="EventCost" Type="nvarchar" MaxLength="20" />
+          <Property Name="LateEventCost" Type="nvarchar" MaxLength="20" />
+          <Property Name="LateEventCostStartDate" Type="date" />
           <Property Name="PaymentDueDate" Type="date" />
           <Property Name="EventMakeChecksOutTo" Type="nvarchar" MaxLength="150" />
           <Property Name="EventVolunteerInformationMessage" Type="nvarchar(max)" />
@@ -120,7 +107,7 @@
           <Key>
             <PropertyRef Name="JudgeID" />
           </Key>
-          <Property Name="JudgeID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="JudgeID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="TeamID" Type="nvarchar" MaxLength="50" />
           <Property Name="FirstName" Type="nvarchar" MaxLength="50" />
           <Property Name="LastName" Type="nvarchar" MaxLength="50" />
@@ -134,20 +121,23 @@
           <Property Name="MobilePhone" Type="nvarchar" MaxLength="30" />
           <Property Name="EmailAddress" Type="nvarchar" MaxLength="50" />
           <Property Name="Notes" Type="nvarchar(max)" />
+          <Property Name="ProblemChoice1" Type="nvarchar" MaxLength="60" />
+          <Property Name="ProblemChoice2" Type="nvarchar" MaxLength="60" />
+          <Property Name="ProblemChoice3" Type="nvarchar" MaxLength="60" />
+          <Property Name="HasChildrenCompeting" Type="nvarchar" MaxLength="3" />
           <Property Name="COI" Type="nvarchar" MaxLength="50" />
           <Property Name="ProblemCOI1" Type="nvarchar" MaxLength="60" />
           <Property Name="ProblemCOI2" Type="nvarchar" MaxLength="60" />
           <Property Name="ProblemCOI3" Type="nvarchar" MaxLength="60" />
-          <Property Name="ProblemChoice1" Type="nvarchar" MaxLength="60" />
-          <Property Name="ProblemChoice2" Type="nvarchar" MaxLength="60" />
-          <Property Name="ProblemChoice3" Type="nvarchar" MaxLength="60" />
           <Property Name="ProblemAssigned" Type="nvarchar" MaxLength="50" />
           <Property Name="InformationMailed?" Type="bit" />
           <Property Name="AttendedJT?" Type="bit" />
           <Property Name="Active" Type="bit" />
+          <Property Name="WillingToBeScorechecker" Type="nvarchar" MaxLength="3" />
           <Property Name="TshirtSize" Type="nvarchar" MaxLength="50" />
-          <Property Name="CEU" Type="nvarchar" MaxLength="50" />
-          <Property Name="YearsExperience" Type="nvarchar" MaxLength="50" />
+          <Property Name="WantsCEUCredit" Type="nvarchar" MaxLength="3" />
+          <Property Name="YearsOfLongTermJudgingExperience" Type="nvarchar" MaxLength="50" />
+          <Property Name="YearsOfSpontaneousJudgingExperience" Type="nvarchar" MaxLength="50" />
           <Property Name="PreviousPositions" Type="nvarchar" MaxLength="100" />
           <Property Name="ProblemID" Type="nvarchar" MaxLength="50" />
           <Property Name="TimeRegistered" Type="datetime" />
@@ -184,7 +174,7 @@
           <Key>
             <PropertyRef Name="ID" />
           </Key>
-          <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="50" />
           <Property Name="Address" Type="nvarchar" MaxLength="255" />
           <Property Name="City" Type="nvarchar" MaxLength="50" />
@@ -218,7 +208,7 @@
           <Key>
             <PropertyRef Name="TeamID" />
           </Key>
-          <Property Name="TeamID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="TeamID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="MembershipName" Type="nvarchar" MaxLength="50" />
           <Property Name="MembershipNumber" Type="nvarchar" MaxLength="50" />
           <Property Name="ProblemID" Type="int" />
@@ -228,16 +218,18 @@
           <Property Name="CoachLastName" Type="nvarchar" MaxLength="50" />
           <Property Name="CoachAddress" Type="nvarchar" MaxLength="255" />
           <Property Name="CoachCity" Type="nvarchar" MaxLength="50" />
-          <Property Name="CoachStateOrProvince" Type="nvarchar" MaxLength="20" />
+          <Property Name="CoachState" Type="nvarchar" MaxLength="20" />
           <Property Name="CoachZipCode" Type="nvarchar" MaxLength="20" />
-          <Property Name="CoachDaytimePhone" Type="nvarchar" MaxLength="30" />
           <Property Name="CoachEveningPhone" Type="nvarchar" MaxLength="30" />
-          <Property Name="CoachEmail" Type="nvarchar" MaxLength="50" />
+          <Property Name="CoachDaytimePhone" Type="nvarchar" MaxLength="30" />
+          <Property Name="CoachMobilePhone" Type="nvarchar" MaxLength="30" />
+          <Property Name="CoachEmailAddress" Type="nvarchar" MaxLength="50" />
           <Property Name="AltCoachFirstName" Type="nvarchar" MaxLength="50" />
           <Property Name="AltCoachLastName" Type="nvarchar" MaxLength="50" />
-          <Property Name="AltCoachDaytimePhone" Type="nvarchar" MaxLength="50" />
           <Property Name="AltCoachEveningPhone" Type="nvarchar" MaxLength="50" />
-          <Property Name="AltCoachEmail" Type="nvarchar" MaxLength="50" />
+          <Property Name="AltCoachDaytimePhone" Type="nvarchar" MaxLength="50" />
+          <Property Name="AltCoachMobilePhone" Type="nvarchar" MaxLength="30" />
+          <Property Name="AltCoachEmailAddress" Type="nvarchar" MaxLength="50" />
           <Property Name="MemberFirstName1" Type="nvarchar" MaxLength="50" />
           <Property Name="MemberLastName1" Type="nvarchar" MaxLength="50" />
           <Property Name="MemberGrade1" Type="nvarchar" MaxLength="50" />
@@ -259,9 +251,6 @@
           <Property Name="MemberFirstName7" Type="nvarchar" MaxLength="50" />
           <Property Name="MemberLastName7" Type="nvarchar" MaxLength="50" />
           <Property Name="MemberGrade7" Type="nvarchar" MaxLength="50" />
-          <Property Name="MemberFirstName8" Type="nvarchar" MaxLength="50" />
-          <Property Name="MemberLastName8" Type="nvarchar" MaxLength="50" />
-          <Property Name="MemberGrade8" Type="nvarchar" MaxLength="50" />
           <Property Name="Spontaneous" Type="bit" />
           <Property Name="Notes" Type="nvarchar(max)" />
           <Property Name="SpecialConsiderations" Type="nvarchar(max)" />
@@ -278,21 +267,36 @@
           <Key>
             <PropertyRef Name="VolunteerID" />
           </Key>
-          <Property Name="VolunteerID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="VolunteerID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="TeamID" Type="int" />
-          <Property Name="VolunteerFirstName" Type="nvarchar" MaxLength="50" />
-          <Property Name="VolunteerLastName" Type="nvarchar" MaxLength="50" />
-          <Property Name="VolunteerDaytimePhone" Type="nvarchar" MaxLength="30" />
-          <Property Name="VolunteerEveningPhone" Type="nvarchar" MaxLength="30" />
-          <Property Name="VolunteerMobilePhone" Type="nvarchar" MaxLength="30" />
-          <Property Name="VolunteerEmail" Type="nvarchar" MaxLength="50" />
-          <Property Name="VolunteerNotes" Type="nvarchar(max)" />
+          <Property Name="FirstName" Type="nvarchar" MaxLength="50" />
+          <Property Name="LastName" Type="nvarchar" MaxLength="50" />
+          <Property Name="DaytimePhone" Type="nvarchar" MaxLength="30" />
+          <Property Name="EveningPhone" Type="nvarchar" MaxLength="30" />
+          <Property Name="MobilePhone" Type="nvarchar" MaxLength="30" />
+          <Property Name="EmailAddress" Type="nvarchar" MaxLength="50" />
+          <Property Name="Notes" Type="nvarchar(max)" />
           <Property Name="VolunteerWantsToSee" Type="nvarchar(max)" />
           <Property Name="TimeRegistrationStarted" Type="datetime" />
           <Property Name="TimeRegistered" Type="datetime" />
           <Property Name="TimeAssignedToTeam" Type="datetime" />
           <Property Name="UserAgent" Type="nvarchar(max)" />
         </EntityType>
+        <EntityContainer Name="OdysseyModelStoreContainer">
+          <EntitySet Name="CoachesTrainingDivisions" EntityType="Self.CoachesTrainingDivisions" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CoachesTrainingRegions" EntityType="Self.CoachesTrainingRegions" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CoachesTrainingRegistrations" EntityType="Self.CoachesTrainingRegistrations" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CoachesTrainingRoles" EntityType="Self.CoachesTrainingRoles" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Config" EntityType="Self.Config" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ContactUsRecipients" EntityType="Self.ContactUsRecipients" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ContactUsSenderRoles" EntityType="Self.ContactUsSenderRoles" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Events" EntityType="Self.Events" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Judges" EntityType="Self.Judges" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Problem" EntityType="Self.Problem" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Schools" EntityType="Self.Schools" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TournamentRegistration" EntityType="Self.TournamentRegistration" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Volunteers" EntityType="Self.Volunteers" Schema="dbo" store:Type="Tables" />
+        </EntityContainer>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
@@ -302,6 +306,7 @@
           <EntitySet Name="CoachesTrainingRegions" EntityType="OdysseyModel.CoachesTrainingRegion" />
           <EntitySet Name="CoachesTrainingRegistrations" EntityType="OdysseyModel.CoachesTrainingRegistration" />
           <EntitySet Name="CoachesTrainingRoles" EntityType="OdysseyModel.CoachesTrainingRole" />
+          <EntitySet Name="Configs" EntityType="OdysseyModel.Config" />
           <EntitySet Name="ContactUsRecipients" EntityType="OdysseyModel.ContactUsRecipient" />
           <EntitySet Name="ContactUsSenderRoles" EntityType="OdysseyModel.ContactUsSenderRole" />
           <EntitySet Name="Events" EntityType="OdysseyModel.Event" />
@@ -310,254 +315,264 @@
           <EntitySet Name="Schools" EntityType="OdysseyModel.School" />
           <EntitySet Name="TournamentRegistrations" EntityType="OdysseyModel.TournamentRegistration" />
           <EntitySet Name="Volunteers" EntityType="OdysseyModel.Volunteer" />
-          <EntitySet Name="Configs" EntityType="OdysseyModel.Config" />
         </EntityContainer>
         <EntityType Name="CoachesTrainingDivision">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="Byte" Nullable="false" />
-          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="CoachesTrainingRegion">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="CoachesTrainingRegistration">
           <Key>
             <PropertyRef Name="RegistrationID" />
           </Key>
           <Property Name="RegistrationID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="FirstName" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
-          <Property Name="LastName" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
-          <Property Name="SchoolName" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
-          <Property Name="Role" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
-          <Property Name="Division" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
-          <Property Name="SelectedProblem" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
-          <Property Name="EmailAddress" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
-          <Property Name="YearsInvolved" Type="String" MaxLength="10" Unicode="true" FixedLength="false" />
-          <Property Name="RegionNumber" Type="String" MaxLength="20" Unicode="true" FixedLength="false" />
+          <Property Name="FirstName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="LastName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="SchoolName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Role" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Division" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="SelectedProblem" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="EmailAddress" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="YearsInvolved" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="RegionNumber" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
           <Property Name="TimeRegistered" Type="DateTime" Precision="3" />
-          <Property Name="UserAgent" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="UserAgent" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="CoachesTrainingRole">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="Byte" Nullable="false" />
-          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" Unicode="true" FixedLength="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="Config">
+          <Key>
+            <PropertyRef Name="Name" />
+          </Key>
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Value" Type="String" MaxLength="800" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="ContactUsRecipient">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="Byte" Nullable="false" />
-          <Property Name="contact_name" Type="String" Nullable="false" MaxLength="100" Unicode="true" FixedLength="false" />
-          <Property Name="email_address" Type="String" Nullable="false" MaxLength="100" Unicode="true" FixedLength="false" />
+          <Property Name="contact_name" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="email_address" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="ContactUsSenderRole">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="Byte" Nullable="false" />
-          <Property Name="role_name" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
+          <Property Name="role_name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="Event">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" />
-          <Property Name="EventName" Type="String" MaxLength="200" Unicode="true" FixedLength="false" />
-          <Property Name="LocationURL" Type="String" MaxLength="200" Unicode="true" FixedLength="false" />
-          <Property Name="LocationURLColor" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
-          <Property Name="LocationAddress" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
-          <Property Name="LocationCity" Type="String" MaxLength="30" Unicode="true" FixedLength="false" />
-          <Property Name="LocationState" Type="String" MaxLength="5" Unicode="true" FixedLength="false" />
-          <Property Name="LocationPhone" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+          <Property Name="EventName" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="LocationURL" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="LocationURLColor" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="LocationAddress" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="LocationCity" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="LocationState" Type="String" MaxLength="5" FixedLength="false" Unicode="true" />
+          <Property Name="LocationPhone" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="StartDate" Type="DateTime" Precision="3" />
           <Property Name="EndDate" Type="DateTime" Precision="3" />
-          <Property Name="Location" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
-          <Property Name="Time" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
-          <Property Name="EventCoordinatorName" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
-          <Property Name="EventCoordinatorEmail" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
-          <Property Name="EventCoordinatorPhone" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
-          <Property Name="InformationURL" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
-          <Property Name="LocationMapURL" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
-          <Property Name="EventPayeeName" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
-          <Property Name="EventPayeeAddress1" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
-          <Property Name="EventPayeeAddress2" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
-          <Property Name="EventPayeeCity" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
-          <Property Name="EventPayeeState" Type="String" MaxLength="30" Unicode="true" FixedLength="false" />
-          <Property Name="EventPayeeZipCode" Type="String" MaxLength="15" Unicode="true" FixedLength="false" />
-          <Property Name="EventPayeePhone1" Type="String" MaxLength="20" Unicode="true" FixedLength="false" />
-          <Property Name="EventPayeeEmail1" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
-          <Property Name="EventCost" Type="String" MaxLength="20" Unicode="true" FixedLength="false" />
+          <Property Name="Location" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Time" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="EventCoordinatorName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="EventCoordinatorEmail" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="EventCoordinatorPhone" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="InformationURL" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="LocationMapURL" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="EventPayeeName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="EventPayeeAddress1" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="EventPayeeAddress2" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="EventPayeeCity" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="EventPayeeState" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="EventPayeeZipCode" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="EventPayeePhone1" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="EventPayeeEmail1" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="EventCost" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="LateEventCost" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="LateEventCostStartDate" Type="DateTime" Precision="0" />
           <Property Name="PaymentDueDate" Type="DateTime" Precision="0" />
-          <Property Name="EventMakeChecksOutTo" Type="String" MaxLength="150" Unicode="true" FixedLength="false" />
-          <Property Type="String" Name="EventVolunteerInformationMessage" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="TeamsVolunteerWantsToSeeMessage" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="EventMailBody" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="EventMakeChecksOutTo" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="EventVolunteerInformationMessage" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="TeamsVolunteerWantsToSeeMessage" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="EventMailBody" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="Judge">
           <Key>
             <PropertyRef Name="JudgeID" />
           </Key>
           <Property Name="JudgeID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="TeamID" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
-          <Property Name="FirstName" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
-          <Property Name="LastName" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
-          <Property Name="Address" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
-          <Property Name="AddressLine2" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
-          <Property Name="City" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
-          <Property Name="State" Type="String" MaxLength="20" Unicode="true" FixedLength="false" />
-          <Property Name="ZipCode" Type="String" MaxLength="20" Unicode="true" FixedLength="false" />
-          <Property Name="DaytimePhone" Type="String" MaxLength="30" Unicode="true" FixedLength="false" />
-          <Property Name="EveningPhone" Type="String" MaxLength="30" Unicode="true" FixedLength="false" />
-          <Property Name="MobilePhone" Type="String" MaxLength="30" Unicode="true" FixedLength="false" />
-          <Property Name="EmailAddress" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
-          <Property Name="Notes" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
-          <Property Name="COI" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
-          <Property Name="ProblemCOI1" Type="String" MaxLength="60" Unicode="true" FixedLength="false" />
-          <Property Name="ProblemCOI2" Type="String" MaxLength="60" Unicode="true" FixedLength="false" />
-          <Property Name="ProblemCOI3" Type="String" MaxLength="60" Unicode="true" FixedLength="false" />
-          <Property Name="ProblemChoice1" Type="String" MaxLength="60" Unicode="true" FixedLength="false" />
-          <Property Name="ProblemChoice2" Type="String" MaxLength="60" Unicode="true" FixedLength="false" />
-          <Property Name="ProblemChoice3" Type="String" MaxLength="60" Unicode="true" FixedLength="false" />
-          <Property Name="ProblemAssigned" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+          <Property Name="TeamID" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="FirstName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="LastName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Address" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="AddressLine2" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="City" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="State" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="ZipCode" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="DaytimePhone" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="EveningPhone" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="MobilePhone" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="EmailAddress" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Notes" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ProblemChoice1" Type="String" MaxLength="60" FixedLength="false" Unicode="true" />
+          <Property Name="ProblemChoice2" Type="String" MaxLength="60" FixedLength="false" Unicode="true" />
+          <Property Name="ProblemChoice3" Type="String" MaxLength="60" FixedLength="false" Unicode="true" />
+          <Property Name="HasChildrenCompeting" Type="String" MaxLength="3" FixedLength="false" Unicode="true" />
+          <Property Name="COI" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ProblemCOI1" Type="String" MaxLength="60" FixedLength="false" Unicode="true" />
+          <Property Name="ProblemCOI2" Type="String" MaxLength="60" FixedLength="false" Unicode="true" />
+          <Property Name="ProblemCOI3" Type="String" MaxLength="60" FixedLength="false" Unicode="true" />
+          <Property Name="ProblemAssigned" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="InformationMailed_" Type="Boolean" />
           <Property Name="AttendedJT_" Type="Boolean" />
           <Property Name="Active" Type="Boolean" />
-          <Property Name="TshirtSize" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
-          <Property Name="CEU" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
-          <Property Name="YearsExperience" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
-          <Property Name="PreviousPositions" Type="String" MaxLength="100" Unicode="true" FixedLength="false" />
-          <Property Name="ProblemID" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+          <Property Name="WillingToBeScorechecker" Type="String" MaxLength="3" FixedLength="false" Unicode="true" />
+          <Property Name="TshirtSize" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="WantsCEUCredit" Type="String" MaxLength="3" FixedLength="false" Unicode="true" />
+          <Property Name="YearsOfLongTermJudgingExperience" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="YearsOfSpontaneousJudgingExperience" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="PreviousPositions" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="ProblemID" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="TimeRegistered" Type="DateTime" Precision="3" />
           <Property Name="TimeAssignedToTeam" Type="DateTime" Precision="3" />
           <Property Name="TimeRegistrationStarted" Type="DateTime" Precision="3" />
-          <Property Name="UserAgent" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="UserAgent" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="Problem">
           <Key>
             <PropertyRef Name="ProblemID" />
           </Key>
           <Property Name="ProblemID" Type="Int32" Nullable="false" />
-          <Property Name="ProblemCategory" Type="String" MaxLength="30" Unicode="true" FixedLength="false" />
-          <Property Name="ProblemName" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
-          <Property Name="ProblemDescription" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
-          <Property Name="Divisions" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
-          <Property Name="CostLimit" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
-          <Property Name="ProblemCaptainID" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
-          <Property Name="PCFirstName" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
-          <Property Name="PCLastName" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
-          <Property Name="PCAddress" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
-          <Property Name="PCCity" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
-          <Property Name="PCStateOrProvince" Type="String" MaxLength="20" Unicode="true" FixedLength="false" />
-          <Property Name="PCPostalCode" Type="String" MaxLength="20" Unicode="true" FixedLength="false" />
-          <Property Name="PCWorkPhone" Type="String" MaxLength="30" Unicode="true" FixedLength="false" />
-          <Property Name="PCHomePhone" Type="String" MaxLength="30" Unicode="true" FixedLength="false" />
-          <Property Name="PCMobilePhone" Type="String" MaxLength="30" Unicode="true" FixedLength="false" />
-          <Property Name="PCFaxNumber" Type="String" MaxLength="30" Unicode="true" FixedLength="false" />
-          <Property Name="PCEmail1" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
-          <Property Name="PCEmail2" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
-          <Property Name="Notes" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="ProblemCategory" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="ProblemName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ProblemDescription" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Divisions" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CostLimit" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ProblemCaptainID" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="PCFirstName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="PCLastName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="PCAddress" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="PCCity" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="PCStateOrProvince" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="PCPostalCode" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="PCWorkPhone" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="PCHomePhone" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="PCMobilePhone" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="PCFaxNumber" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="PCEmail1" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="PCEmail2" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Notes" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="School">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
-          <Property Name="Address" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
-          <Property Name="City" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
-          <Property Name="State" Type="String" MaxLength="20" Unicode="true" FixedLength="false" />
-          <Property Name="PostalCode" Type="String" MaxLength="20" Unicode="true" FixedLength="false" />
-          <Property Name="Phone" Type="String" MaxLength="30" Unicode="true" FixedLength="false" />
-          <Property Name="Membership_1" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
-          <Property Name="Membership_1seen" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
-          <Property Name="Membership_2" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
-          <Property Name="Membership_2seen" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
-          <Property Name="Membership_3" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
-          <Property Name="Membership_3seen" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
-          <Property Name="Membership_4" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
-          <Property Name="Membership_4seen" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
-          <Property Name="CoordNew_" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
-          <Property Name="CoordFirstName" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
-          <Property Name="CoordLastName" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
-          <Property Name="CoordAddress" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
-          <Property Name="CoordCity" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
-          <Property Name="CoordState" Type="String" MaxLength="20" Unicode="true" FixedLength="false" />
-          <Property Name="CoordPostalCode" Type="String" MaxLength="20" Unicode="true" FixedLength="false" />
-          <Property Name="CoordPhone" Type="String" MaxLength="30" Unicode="true" FixedLength="false" />
-          <Property Name="CoordAltPhone" Type="String" MaxLength="30" Unicode="true" FixedLength="false" />
-          <Property Name="CoordMobilePhone" Type="String" MaxLength="30" Unicode="true" FixedLength="false" />
-          <Property Name="CoordFaxNumber" Type="String" MaxLength="30" Unicode="true" FixedLength="false" />
-          <Property Name="CoordEmailName" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
-          <Property Name="Share_" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
-          <Property Name="Notes" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Address" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="City" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="State" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="PostalCode" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Phone" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="Membership_1" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Membership_1seen" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Membership_2" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Membership_2seen" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Membership_3" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Membership_3seen" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Membership_4" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Membership_4seen" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CoordNew_" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CoordFirstName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CoordLastName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CoordAddress" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="CoordCity" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CoordState" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="CoordPostalCode" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="CoordPhone" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="CoordAltPhone" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="CoordMobilePhone" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="CoordFaxNumber" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="CoordEmailName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Share_" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Notes" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="TournamentRegistration">
           <Key>
             <PropertyRef Name="TeamID" />
           </Key>
           <Property Name="TeamID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="MembershipName" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
-          <Property Name="MembershipNumber" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+          <Property Name="MembershipName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="MembershipNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="ProblemID" Type="Int32" />
-          <Property Name="Division" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+          <Property Name="Division" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="SchoolID" Type="Int32" />
-          <Property Name="CoachFirstName" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
-          <Property Name="CoachLastName" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
-          <Property Name="CoachAddress" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
-          <Property Name="CoachCity" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
-          <Property Name="CoachStateOrProvince" Type="String" MaxLength="20" Unicode="true" FixedLength="false" />
-          <Property Name="CoachZipCode" Type="String" MaxLength="20" Unicode="true" FixedLength="false" />
-          <Property Name="CoachDaytimePhone" Type="String" MaxLength="30" Unicode="true" FixedLength="false" />
-          <Property Name="CoachEveningPhone" Type="String" MaxLength="30" Unicode="true" FixedLength="false" />
-          <Property Name="CoachEmail" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
-          <Property Name="AltCoachFirstName" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
-          <Property Name="AltCoachLastName" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
-          <Property Name="AltCoachDaytimePhone" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
-          <Property Name="AltCoachEveningPhone" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
-          <Property Name="AltCoachEmail" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
-          <Property Name="MemberFirstName1" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
-          <Property Name="MemberLastName1" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
-          <Property Name="MemberGrade1" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
-          <Property Name="MemberFirstName2" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
-          <Property Name="MemberLastName2" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
-          <Property Name="MemberGrade2" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
-          <Property Name="MemberFirstName3" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
-          <Property Name="MemberLastName3" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
-          <Property Name="MemberGrade3" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
-          <Property Name="MemberFirstName4" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
-          <Property Name="MemberLastName4" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
-          <Property Name="MemberGrade4" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
-          <Property Name="MemberFirstName5" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
-          <Property Name="MemberLastName5" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
-          <Property Name="MemberGrade5" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
-          <Property Name="MemberFirstName6" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
-          <Property Name="MemberLastName6" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
-          <Property Name="MemberGrade6" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
-          <Property Name="MemberFirstName7" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
-          <Property Name="MemberLastName7" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
-          <Property Name="MemberGrade7" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
-          <Property Name="MemberFirstName8" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
-          <Property Name="MemberLastName8" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
-          <Property Name="MemberGrade8" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+          <Property Name="CoachFirstName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CoachLastName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CoachAddress" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="CoachCity" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CoachState" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="CoachZipCode" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="CoachEveningPhone" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="CoachDaytimePhone" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="CoachMobilePhone" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="CoachEmailAddress" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="AltCoachFirstName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="AltCoachLastName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="AltCoachEveningPhone" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="AltCoachDaytimePhone" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="AltCoachMobilePhone" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="AltCoachEmailAddress" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="MemberFirstName1" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="MemberLastName1" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="MemberGrade1" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="MemberFirstName2" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="MemberLastName2" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="MemberGrade2" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="MemberFirstName3" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="MemberLastName3" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="MemberGrade3" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="MemberFirstName4" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="MemberLastName4" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="MemberGrade4" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="MemberFirstName5" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="MemberLastName5" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="MemberGrade5" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="MemberFirstName6" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="MemberLastName6" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="MemberGrade6" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="MemberFirstName7" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="MemberLastName7" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="MemberGrade7" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Spontaneous" Type="Boolean" />
-          <Property Name="Notes" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
-          <Property Name="SpecialConsiderations" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
-          <Property Name="SchedulingIssues" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="Notes" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="SpecialConsiderations" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="SchedulingIssues" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Paid" Type="Int16" />
           <Property Name="JudgeID" Type="Int16" />
-          <Property Name="TeamRegistrationFee" Type="String" MaxLength="20" Unicode="true" FixedLength="false" />
+          <Property Name="TeamRegistrationFee" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
           <Property Name="VolunteerID" Type="Int32" />
           <Property Name="TimeRegistrationStarted" Type="DateTime" Precision="3" />
           <Property Name="TimeRegistered" Type="DateTime" Precision="3" />
-          <Property Name="UserAgent" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="UserAgent" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="Volunteer">
           <Key>
@@ -565,27 +580,20 @@
           </Key>
           <Property Name="VolunteerID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="TeamID" Type="Int32" />
-          <Property Name="VolunteerFirstName" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
-          <Property Name="VolunteerLastName" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
-          <Property Name="VolunteerDaytimePhone" Type="String" MaxLength="30" Unicode="true" FixedLength="false" />
-          <Property Name="VolunteerEveningPhone" Type="String" MaxLength="30" Unicode="true" FixedLength="false" />
-          <Property Name="VolunteerMobilePhone" Type="String" MaxLength="30" Unicode="true" FixedLength="false" />
-          <Property Name="VolunteerEmail" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
-          <Property Name="VolunteerNotes" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
-          <Property Name="VolunteerWantsToSee" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="FirstName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="LastName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="DaytimePhone" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="EveningPhone" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="MobilePhone" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="EmailAddress" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Notes" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="VolunteerWantsToSee" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="TimeRegistrationStarted" Type="DateTime" Precision="3" />
           <Property Name="TimeRegistered" Type="DateTime" Precision="3" />
           <Property Name="TimeAssignedToTeam" Type="DateTime" Precision="3" />
-          <Property Name="UserAgent" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <Property Name="UserAgent" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
-        <EntityType Name="Config">
-          <Key>
-            <PropertyRef Name="Name" />
-          </Key>
-          <Property Type="String" Name="Name" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="Value" MaxLength="800" FixedLength="false" Unicode="true" />
-        </EntityType>
-      </Schema>
+        </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
@@ -594,41 +602,49 @@
           <EntitySetMapping Name="CoachesTrainingDivisions">
             <EntityTypeMapping TypeName="OdysseyModel.CoachesTrainingDivision">
               <MappingFragment StoreEntitySet="CoachesTrainingDivisions">
-                <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="CoachesTrainingRegions">
             <EntityTypeMapping TypeName="OdysseyModel.CoachesTrainingRegion">
               <MappingFragment StoreEntitySet="CoachesTrainingRegions">
-                <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="CoachesTrainingRegistrations">
             <EntityTypeMapping TypeName="OdysseyModel.CoachesTrainingRegistration">
               <MappingFragment StoreEntitySet="CoachesTrainingRegistrations">
-                <ScalarProperty Name="RegistrationID" ColumnName="RegistrationID" />
-                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
-                <ScalarProperty Name="LastName" ColumnName="LastName" />
-                <ScalarProperty Name="SchoolName" ColumnName="SchoolName" />
-                <ScalarProperty Name="Role" ColumnName="Role" />
-                <ScalarProperty Name="Division" ColumnName="Division" />
-                <ScalarProperty Name="SelectedProblem" ColumnName="SelectedProblem" />
-                <ScalarProperty Name="EmailAddress" ColumnName="EmailAddress" />
-                <ScalarProperty Name="YearsInvolved" ColumnName="YearsInvolved" />
-                <ScalarProperty Name="RegionNumber" ColumnName="RegionNumber" />
-                <ScalarProperty Name="TimeRegistered" ColumnName="TimeRegistered" />
                 <ScalarProperty Name="UserAgent" ColumnName="UserAgent" />
+                <ScalarProperty Name="TimeRegistered" ColumnName="TimeRegistered" />
+                <ScalarProperty Name="RegionNumber" ColumnName="RegionNumber" />
+                <ScalarProperty Name="YearsInvolved" ColumnName="YearsInvolved" />
+                <ScalarProperty Name="EmailAddress" ColumnName="EmailAddress" />
+                <ScalarProperty Name="SelectedProblem" ColumnName="SelectedProblem" />
+                <ScalarProperty Name="Division" ColumnName="Division" />
+                <ScalarProperty Name="Role" ColumnName="Role" />
+                <ScalarProperty Name="SchoolName" ColumnName="SchoolName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="RegistrationID" ColumnName="RegistrationID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="CoachesTrainingRoles">
             <EntityTypeMapping TypeName="OdysseyModel.CoachesTrainingRole">
               <MappingFragment StoreEntitySet="CoachesTrainingRoles">
+                <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Configs">
+            <EntityTypeMapping TypeName="OdysseyModel.Config">
+              <MappingFragment StoreEntitySet="Config">
+                <ScalarProperty Name="Value" ColumnName="Value" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -636,17 +652,17 @@
           <EntitySetMapping Name="ContactUsRecipients">
             <EntityTypeMapping TypeName="OdysseyModel.ContactUsRecipient">
               <MappingFragment StoreEntitySet="ContactUsRecipients">
-                <ScalarProperty Name="ID" ColumnName="ID" />
-                <ScalarProperty Name="contact_name" ColumnName="contact_name" />
                 <ScalarProperty Name="email_address" ColumnName="email_address" />
+                <ScalarProperty Name="contact_name" ColumnName="contact_name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="ContactUsSenderRoles">
             <EntityTypeMapping TypeName="OdysseyModel.ContactUsSenderRole">
               <MappingFragment StoreEntitySet="ContactUsSenderRoles">
-                <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="role_name" ColumnName="role_name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -656,224 +672,220 @@
                 <ScalarProperty Name="EventMailBody" ColumnName="EventMailBody" />
                 <ScalarProperty Name="TeamsVolunteerWantsToSeeMessage" ColumnName="TeamsVolunteerWantsToSeeMessage" />
                 <ScalarProperty Name="EventVolunteerInformationMessage" ColumnName="EventVolunteerInformationMessage" />
-                <ScalarProperty Name="ID" ColumnName="ID" />
-                <ScalarProperty Name="EventName" ColumnName="EventName" />
-                <ScalarProperty Name="LocationURL" ColumnName="LocationURL" />
-                <ScalarProperty Name="LocationURLColor" ColumnName="LocationURLColor" />
-                <ScalarProperty Name="LocationAddress" ColumnName="LocationAddress" />
-                <ScalarProperty Name="LocationCity" ColumnName="LocationCity" />
-                <ScalarProperty Name="LocationState" ColumnName="LocationState" />
-                <ScalarProperty Name="LocationPhone" ColumnName="LocationPhone" />
-                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
-                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
-                <ScalarProperty Name="Location" ColumnName="Location" />
-                <ScalarProperty Name="Time" ColumnName="Time" />
-                <ScalarProperty Name="EventCoordinatorName" ColumnName="EventCoordinatorName" />
-                <ScalarProperty Name="EventCoordinatorEmail" ColumnName="EventCoordinatorEmail" />
-                <ScalarProperty Name="EventCoordinatorPhone" ColumnName="EventCoordinatorPhone" />
-                <ScalarProperty Name="InformationURL" ColumnName="InformationURL" />
-                <ScalarProperty Name="LocationMapURL" ColumnName="LocationMapURL" />
-                <ScalarProperty Name="EventPayeeName" ColumnName="EventPayeeName" />
-                <ScalarProperty Name="EventPayeeAddress1" ColumnName="EventPayeeAddress1" />
-                <ScalarProperty Name="EventPayeeAddress2" ColumnName="EventPayeeAddress2" />
-                <ScalarProperty Name="EventPayeeCity" ColumnName="EventPayeeCity" />
-                <ScalarProperty Name="EventPayeeState" ColumnName="EventPayeeState" />
-                <ScalarProperty Name="EventPayeeZipCode" ColumnName="EventPayeeZipCode" />
-                <ScalarProperty Name="EventPayeePhone1" ColumnName="EventPayeePhone1" />
-                <ScalarProperty Name="EventPayeeEmail1" ColumnName="EventPayeeEmail1" />
-                <ScalarProperty Name="EventCost" ColumnName="EventCost" />
-                <ScalarProperty Name="PaymentDueDate" ColumnName="PaymentDueDate" />
                 <ScalarProperty Name="EventMakeChecksOutTo" ColumnName="EventMakeChecksOutTo" />
+                <ScalarProperty Name="PaymentDueDate" ColumnName="PaymentDueDate" />
+                <ScalarProperty Name="LateEventCostStartDate" ColumnName="LateEventCostStartDate" />
+                <ScalarProperty Name="LateEventCost" ColumnName="LateEventCost" />
+                <ScalarProperty Name="EventCost" ColumnName="EventCost" />
+                <ScalarProperty Name="EventPayeeEmail1" ColumnName="EventPayeeEmail1" />
+                <ScalarProperty Name="EventPayeePhone1" ColumnName="EventPayeePhone1" />
+                <ScalarProperty Name="EventPayeeZipCode" ColumnName="EventPayeeZipCode" />
+                <ScalarProperty Name="EventPayeeState" ColumnName="EventPayeeState" />
+                <ScalarProperty Name="EventPayeeCity" ColumnName="EventPayeeCity" />
+                <ScalarProperty Name="EventPayeeAddress2" ColumnName="EventPayeeAddress2" />
+                <ScalarProperty Name="EventPayeeAddress1" ColumnName="EventPayeeAddress1" />
+                <ScalarProperty Name="EventPayeeName" ColumnName="EventPayeeName" />
+                <ScalarProperty Name="LocationMapURL" ColumnName="LocationMapURL" />
+                <ScalarProperty Name="InformationURL" ColumnName="InformationURL" />
+                <ScalarProperty Name="EventCoordinatorPhone" ColumnName="EventCoordinatorPhone" />
+                <ScalarProperty Name="EventCoordinatorEmail" ColumnName="EventCoordinatorEmail" />
+                <ScalarProperty Name="EventCoordinatorName" ColumnName="EventCoordinatorName" />
+                <ScalarProperty Name="Time" ColumnName="Time" />
+                <ScalarProperty Name="Location" ColumnName="Location" />
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+                <ScalarProperty Name="LocationPhone" ColumnName="LocationPhone" />
+                <ScalarProperty Name="LocationState" ColumnName="LocationState" />
+                <ScalarProperty Name="LocationCity" ColumnName="LocationCity" />
+                <ScalarProperty Name="LocationAddress" ColumnName="LocationAddress" />
+                <ScalarProperty Name="LocationURLColor" ColumnName="LocationURLColor" />
+                <ScalarProperty Name="LocationURL" ColumnName="LocationURL" />
+                <ScalarProperty Name="EventName" ColumnName="EventName" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Judges">
             <EntityTypeMapping TypeName="OdysseyModel.Judge">
               <MappingFragment StoreEntitySet="Judges">
-                <ScalarProperty Name="JudgeID" ColumnName="JudgeID" />
-                <ScalarProperty Name="TeamID" ColumnName="TeamID" />
-                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
-                <ScalarProperty Name="LastName" ColumnName="LastName" />
-                <ScalarProperty Name="Address" ColumnName="Address" />
-                <ScalarProperty Name="AddressLine2" ColumnName="AddressLine2" />
-                <ScalarProperty Name="City" ColumnName="City" />
-                <ScalarProperty Name="State" ColumnName="State" />
-                <ScalarProperty Name="ZipCode" ColumnName="ZipCode" />
-                <ScalarProperty Name="DaytimePhone" ColumnName="DaytimePhone" />
-                <ScalarProperty Name="EveningPhone" ColumnName="EveningPhone" />
-                <ScalarProperty Name="MobilePhone" ColumnName="MobilePhone" />
-                <ScalarProperty Name="EmailAddress" ColumnName="EmailAddress" />
-                <ScalarProperty Name="Notes" ColumnName="Notes" />
-                <ScalarProperty Name="COI" ColumnName="COI" />
-                <ScalarProperty Name="ProblemCOI1" ColumnName="ProblemCOI1" />
-                <ScalarProperty Name="ProblemCOI2" ColumnName="ProblemCOI2" />
-                <ScalarProperty Name="ProblemCOI3" ColumnName="ProblemCOI3" />
-                <ScalarProperty Name="ProblemChoice1" ColumnName="ProblemChoice1" />
-                <ScalarProperty Name="ProblemChoice2" ColumnName="ProblemChoice2" />
-                <ScalarProperty Name="ProblemChoice3" ColumnName="ProblemChoice3" />
-                <ScalarProperty Name="ProblemAssigned" ColumnName="ProblemAssigned" />
-                <ScalarProperty Name="InformationMailed_" ColumnName="InformationMailed?" />
-                <ScalarProperty Name="AttendedJT_" ColumnName="AttendedJT?" />
-                <ScalarProperty Name="Active" ColumnName="Active" />
-                <ScalarProperty Name="TshirtSize" ColumnName="TshirtSize" />
-                <ScalarProperty Name="CEU" ColumnName="CEU" />
-                <ScalarProperty Name="YearsExperience" ColumnName="YearsExperience" />
-                <ScalarProperty Name="PreviousPositions" ColumnName="PreviousPositions" />
-                <ScalarProperty Name="ProblemID" ColumnName="ProblemID" />
-                <ScalarProperty Name="TimeRegistered" ColumnName="TimeRegistered" />
-                <ScalarProperty Name="TimeAssignedToTeam" ColumnName="TimeAssignedToTeam" />
-                <ScalarProperty Name="TimeRegistrationStarted" ColumnName="TimeRegistrationStarted" />
                 <ScalarProperty Name="UserAgent" ColumnName="UserAgent" />
+                <ScalarProperty Name="TimeRegistrationStarted" ColumnName="TimeRegistrationStarted" />
+                <ScalarProperty Name="TimeAssignedToTeam" ColumnName="TimeAssignedToTeam" />
+                <ScalarProperty Name="TimeRegistered" ColumnName="TimeRegistered" />
+                <ScalarProperty Name="ProblemID" ColumnName="ProblemID" />
+                <ScalarProperty Name="PreviousPositions" ColumnName="PreviousPositions" />
+                <ScalarProperty Name="YearsOfSpontaneousJudgingExperience" ColumnName="YearsOfSpontaneousJudgingExperience" />
+                <ScalarProperty Name="YearsOfLongTermJudgingExperience" ColumnName="YearsOfLongTermJudgingExperience" />
+                <ScalarProperty Name="WantsCEUCredit" ColumnName="WantsCEUCredit" />
+                <ScalarProperty Name="TshirtSize" ColumnName="TshirtSize" />
+                <ScalarProperty Name="WillingToBeScorechecker" ColumnName="WillingToBeScorechecker" />
+                <ScalarProperty Name="Active" ColumnName="Active" />
+                <ScalarProperty Name="AttendedJT_" ColumnName="AttendedJT?" />
+                <ScalarProperty Name="InformationMailed_" ColumnName="InformationMailed?" />
+                <ScalarProperty Name="ProblemAssigned" ColumnName="ProblemAssigned" />
+                <ScalarProperty Name="ProblemCOI3" ColumnName="ProblemCOI3" />
+                <ScalarProperty Name="ProblemCOI2" ColumnName="ProblemCOI2" />
+                <ScalarProperty Name="ProblemCOI1" ColumnName="ProblemCOI1" />
+                <ScalarProperty Name="COI" ColumnName="COI" />
+                <ScalarProperty Name="HasChildrenCompeting" ColumnName="HasChildrenCompeting" />
+                <ScalarProperty Name="ProblemChoice3" ColumnName="ProblemChoice3" />
+                <ScalarProperty Name="ProblemChoice2" ColumnName="ProblemChoice2" />
+                <ScalarProperty Name="ProblemChoice1" ColumnName="ProblemChoice1" />
+                <ScalarProperty Name="Notes" ColumnName="Notes" />
+                <ScalarProperty Name="EmailAddress" ColumnName="EmailAddress" />
+                <ScalarProperty Name="MobilePhone" ColumnName="MobilePhone" />
+                <ScalarProperty Name="EveningPhone" ColumnName="EveningPhone" />
+                <ScalarProperty Name="DaytimePhone" ColumnName="DaytimePhone" />
+                <ScalarProperty Name="ZipCode" ColumnName="ZipCode" />
+                <ScalarProperty Name="State" ColumnName="State" />
+                <ScalarProperty Name="City" ColumnName="City" />
+                <ScalarProperty Name="AddressLine2" ColumnName="AddressLine2" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="TeamID" ColumnName="TeamID" />
+                <ScalarProperty Name="JudgeID" ColumnName="JudgeID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Problems">
             <EntityTypeMapping TypeName="OdysseyModel.Problem">
               <MappingFragment StoreEntitySet="Problem">
-                <ScalarProperty Name="ProblemID" ColumnName="ProblemID" />
-                <ScalarProperty Name="ProblemCategory" ColumnName="ProblemCategory" />
-                <ScalarProperty Name="ProblemName" ColumnName="ProblemName" />
-                <ScalarProperty Name="ProblemDescription" ColumnName="ProblemDescription" />
-                <ScalarProperty Name="Divisions" ColumnName="Divisions" />
-                <ScalarProperty Name="CostLimit" ColumnName="CostLimit" />
-                <ScalarProperty Name="ProblemCaptainID" ColumnName="ProblemCaptainID" />
-                <ScalarProperty Name="PCFirstName" ColumnName="PCFirstName" />
-                <ScalarProperty Name="PCLastName" ColumnName="PCLastName" />
-                <ScalarProperty Name="PCAddress" ColumnName="PCAddress" />
-                <ScalarProperty Name="PCCity" ColumnName="PCCity" />
-                <ScalarProperty Name="PCStateOrProvince" ColumnName="PCStateOrProvince" />
-                <ScalarProperty Name="PCPostalCode" ColumnName="PCPostalCode" />
-                <ScalarProperty Name="PCWorkPhone" ColumnName="PCWorkPhone" />
-                <ScalarProperty Name="PCHomePhone" ColumnName="PCHomePhone" />
-                <ScalarProperty Name="PCMobilePhone" ColumnName="PCMobilePhone" />
-                <ScalarProperty Name="PCFaxNumber" ColumnName="PCFaxNumber" />
-                <ScalarProperty Name="PCEmail1" ColumnName="PCEmail1" />
-                <ScalarProperty Name="PCEmail2" ColumnName="PCEmail2" />
                 <ScalarProperty Name="Notes" ColumnName="Notes" />
+                <ScalarProperty Name="PCEmail2" ColumnName="PCEmail2" />
+                <ScalarProperty Name="PCEmail1" ColumnName="PCEmail1" />
+                <ScalarProperty Name="PCFaxNumber" ColumnName="PCFaxNumber" />
+                <ScalarProperty Name="PCMobilePhone" ColumnName="PCMobilePhone" />
+                <ScalarProperty Name="PCHomePhone" ColumnName="PCHomePhone" />
+                <ScalarProperty Name="PCWorkPhone" ColumnName="PCWorkPhone" />
+                <ScalarProperty Name="PCPostalCode" ColumnName="PCPostalCode" />
+                <ScalarProperty Name="PCStateOrProvince" ColumnName="PCStateOrProvince" />
+                <ScalarProperty Name="PCCity" ColumnName="PCCity" />
+                <ScalarProperty Name="PCAddress" ColumnName="PCAddress" />
+                <ScalarProperty Name="PCLastName" ColumnName="PCLastName" />
+                <ScalarProperty Name="PCFirstName" ColumnName="PCFirstName" />
+                <ScalarProperty Name="ProblemCaptainID" ColumnName="ProblemCaptainID" />
+                <ScalarProperty Name="CostLimit" ColumnName="CostLimit" />
+                <ScalarProperty Name="Divisions" ColumnName="Divisions" />
+                <ScalarProperty Name="ProblemDescription" ColumnName="ProblemDescription" />
+                <ScalarProperty Name="ProblemName" ColumnName="ProblemName" />
+                <ScalarProperty Name="ProblemCategory" ColumnName="ProblemCategory" />
+                <ScalarProperty Name="ProblemID" ColumnName="ProblemID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Schools">
             <EntityTypeMapping TypeName="OdysseyModel.School">
               <MappingFragment StoreEntitySet="Schools">
-                <ScalarProperty Name="ID" ColumnName="ID" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="Address" ColumnName="Address" />
-                <ScalarProperty Name="City" ColumnName="City" />
-                <ScalarProperty Name="State" ColumnName="State" />
-                <ScalarProperty Name="PostalCode" ColumnName="PostalCode" />
-                <ScalarProperty Name="Phone" ColumnName="Phone" />
-                <ScalarProperty Name="Membership_1" ColumnName="Membership#1" />
-                <ScalarProperty Name="Membership_1seen" ColumnName="Membership#1seen" />
-                <ScalarProperty Name="Membership_2" ColumnName="Membership#2" />
-                <ScalarProperty Name="Membership_2seen" ColumnName="Membership#2seen" />
-                <ScalarProperty Name="Membership_3" ColumnName="Membership#3" />
-                <ScalarProperty Name="Membership_3seen" ColumnName="Membership#3seen" />
-                <ScalarProperty Name="Membership_4" ColumnName="Membership#4" />
-                <ScalarProperty Name="Membership_4seen" ColumnName="Membership#4seen" />
-                <ScalarProperty Name="CoordNew_" ColumnName="CoordNew?" />
-                <ScalarProperty Name="CoordFirstName" ColumnName="CoordFirstName" />
-                <ScalarProperty Name="CoordLastName" ColumnName="CoordLastName" />
-                <ScalarProperty Name="CoordAddress" ColumnName="CoordAddress" />
-                <ScalarProperty Name="CoordCity" ColumnName="CoordCity" />
-                <ScalarProperty Name="CoordState" ColumnName="CoordState" />
-                <ScalarProperty Name="CoordPostalCode" ColumnName="CoordPostalCode" />
-                <ScalarProperty Name="CoordPhone" ColumnName="CoordPhone" />
-                <ScalarProperty Name="CoordAltPhone" ColumnName="CoordAltPhone" />
-                <ScalarProperty Name="CoordMobilePhone" ColumnName="CoordMobilePhone" />
-                <ScalarProperty Name="CoordFaxNumber" ColumnName="CoordFaxNumber" />
-                <ScalarProperty Name="CoordEmailName" ColumnName="CoordEmailName" />
-                <ScalarProperty Name="Share_" ColumnName="Share?" />
                 <ScalarProperty Name="Notes" ColumnName="Notes" />
+                <ScalarProperty Name="Share_" ColumnName="Share?" />
+                <ScalarProperty Name="CoordEmailName" ColumnName="CoordEmailName" />
+                <ScalarProperty Name="CoordFaxNumber" ColumnName="CoordFaxNumber" />
+                <ScalarProperty Name="CoordMobilePhone" ColumnName="CoordMobilePhone" />
+                <ScalarProperty Name="CoordAltPhone" ColumnName="CoordAltPhone" />
+                <ScalarProperty Name="CoordPhone" ColumnName="CoordPhone" />
+                <ScalarProperty Name="CoordPostalCode" ColumnName="CoordPostalCode" />
+                <ScalarProperty Name="CoordState" ColumnName="CoordState" />
+                <ScalarProperty Name="CoordCity" ColumnName="CoordCity" />
+                <ScalarProperty Name="CoordAddress" ColumnName="CoordAddress" />
+                <ScalarProperty Name="CoordLastName" ColumnName="CoordLastName" />
+                <ScalarProperty Name="CoordFirstName" ColumnName="CoordFirstName" />
+                <ScalarProperty Name="CoordNew_" ColumnName="CoordNew?" />
+                <ScalarProperty Name="Membership_4seen" ColumnName="Membership#4seen" />
+                <ScalarProperty Name="Membership_4" ColumnName="Membership#4" />
+                <ScalarProperty Name="Membership_3seen" ColumnName="Membership#3seen" />
+                <ScalarProperty Name="Membership_3" ColumnName="Membership#3" />
+                <ScalarProperty Name="Membership_2seen" ColumnName="Membership#2seen" />
+                <ScalarProperty Name="Membership_2" ColumnName="Membership#2" />
+                <ScalarProperty Name="Membership_1seen" ColumnName="Membership#1seen" />
+                <ScalarProperty Name="Membership_1" ColumnName="Membership#1" />
+                <ScalarProperty Name="Phone" ColumnName="Phone" />
+                <ScalarProperty Name="PostalCode" ColumnName="PostalCode" />
+                <ScalarProperty Name="State" ColumnName="State" />
+                <ScalarProperty Name="City" ColumnName="City" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="TournamentRegistrations">
             <EntityTypeMapping TypeName="OdysseyModel.TournamentRegistration">
               <MappingFragment StoreEntitySet="TournamentRegistration">
-                <ScalarProperty Name="TeamID" ColumnName="TeamID" />
-                <ScalarProperty Name="MembershipName" ColumnName="MembershipName" />
-                <ScalarProperty Name="MembershipNumber" ColumnName="MembershipNumber" />
-                <ScalarProperty Name="ProblemID" ColumnName="ProblemID" />
-                <ScalarProperty Name="Division" ColumnName="Division" />
-                <ScalarProperty Name="SchoolID" ColumnName="SchoolID" />
-                <ScalarProperty Name="CoachFirstName" ColumnName="CoachFirstName" />
-                <ScalarProperty Name="CoachLastName" ColumnName="CoachLastName" />
-                <ScalarProperty Name="CoachAddress" ColumnName="CoachAddress" />
-                <ScalarProperty Name="CoachCity" ColumnName="CoachCity" />
-                <ScalarProperty Name="CoachStateOrProvince" ColumnName="CoachStateOrProvince" />
-                <ScalarProperty Name="CoachZipCode" ColumnName="CoachZipCode" />
-                <ScalarProperty Name="CoachDaytimePhone" ColumnName="CoachDaytimePhone" />
-                <ScalarProperty Name="CoachEveningPhone" ColumnName="CoachEveningPhone" />
-                <ScalarProperty Name="CoachEmail" ColumnName="CoachEmail" />
-                <ScalarProperty Name="AltCoachFirstName" ColumnName="AltCoachFirstName" />
-                <ScalarProperty Name="AltCoachLastName" ColumnName="AltCoachLastName" />
+                <ScalarProperty Name="UserAgent" ColumnName="UserAgent" />
+                <ScalarProperty Name="TimeRegistered" ColumnName="TimeRegistered" />
+                <ScalarProperty Name="TimeRegistrationStarted" ColumnName="TimeRegistrationStarted" />
+                <ScalarProperty Name="VolunteerID" ColumnName="VolunteerID" />
+                <ScalarProperty Name="TeamRegistrationFee" ColumnName="TeamRegistrationFee" />
+                <ScalarProperty Name="JudgeID" ColumnName="JudgeID" />
+                <ScalarProperty Name="Paid" ColumnName="Paid" />
+                <ScalarProperty Name="SchedulingIssues" ColumnName="SchedulingIssues" />
+                <ScalarProperty Name="SpecialConsiderations" ColumnName="SpecialConsiderations" />
+                <ScalarProperty Name="Notes" ColumnName="Notes" />
+                <ScalarProperty Name="Spontaneous" ColumnName="Spontaneous" />
+                <ScalarProperty Name="MemberGrade7" ColumnName="MemberGrade7" />
+                <ScalarProperty Name="MemberLastName7" ColumnName="MemberLastName7" />
+                <ScalarProperty Name="MemberFirstName7" ColumnName="MemberFirstName7" />
+                <ScalarProperty Name="MemberGrade6" ColumnName="MemberGrade6" />
+                <ScalarProperty Name="MemberLastName6" ColumnName="MemberLastName6" />
+                <ScalarProperty Name="MemberFirstName6" ColumnName="MemberFirstName6" />
+                <ScalarProperty Name="MemberGrade5" ColumnName="MemberGrade5" />
+                <ScalarProperty Name="MemberLastName5" ColumnName="MemberLastName5" />
+                <ScalarProperty Name="MemberFirstName5" ColumnName="MemberFirstName5" />
+                <ScalarProperty Name="MemberGrade4" ColumnName="MemberGrade4" />
+                <ScalarProperty Name="MemberLastName4" ColumnName="MemberLastName4" />
+                <ScalarProperty Name="MemberFirstName4" ColumnName="MemberFirstName4" />
+                <ScalarProperty Name="MemberGrade3" ColumnName="MemberGrade3" />
+                <ScalarProperty Name="MemberLastName3" ColumnName="MemberLastName3" />
+                <ScalarProperty Name="MemberFirstName3" ColumnName="MemberFirstName3" />
+                <ScalarProperty Name="MemberGrade2" ColumnName="MemberGrade2" />
+                <ScalarProperty Name="MemberLastName2" ColumnName="MemberLastName2" />
+                <ScalarProperty Name="MemberFirstName2" ColumnName="MemberFirstName2" />
+                <ScalarProperty Name="MemberGrade1" ColumnName="MemberGrade1" />
+                <ScalarProperty Name="MemberLastName1" ColumnName="MemberLastName1" />
+                <ScalarProperty Name="MemberFirstName1" ColumnName="MemberFirstName1" />
+                <ScalarProperty Name="AltCoachEmailAddress" ColumnName="AltCoachEmailAddress" />
+                <ScalarProperty Name="AltCoachMobilePhone" ColumnName="AltCoachMobilePhone" />
                 <ScalarProperty Name="AltCoachDaytimePhone" ColumnName="AltCoachDaytimePhone" />
                 <ScalarProperty Name="AltCoachEveningPhone" ColumnName="AltCoachEveningPhone" />
-                <ScalarProperty Name="AltCoachEmail" ColumnName="AltCoachEmail" />
-                <ScalarProperty Name="MemberFirstName1" ColumnName="MemberFirstName1" />
-                <ScalarProperty Name="MemberLastName1" ColumnName="MemberLastName1" />
-                <ScalarProperty Name="MemberGrade1" ColumnName="MemberGrade1" />
-                <ScalarProperty Name="MemberFirstName2" ColumnName="MemberFirstName2" />
-                <ScalarProperty Name="MemberLastName2" ColumnName="MemberLastName2" />
-                <ScalarProperty Name="MemberGrade2" ColumnName="MemberGrade2" />
-                <ScalarProperty Name="MemberFirstName3" ColumnName="MemberFirstName3" />
-                <ScalarProperty Name="MemberLastName3" ColumnName="MemberLastName3" />
-                <ScalarProperty Name="MemberGrade3" ColumnName="MemberGrade3" />
-                <ScalarProperty Name="MemberFirstName4" ColumnName="MemberFirstName4" />
-                <ScalarProperty Name="MemberLastName4" ColumnName="MemberLastName4" />
-                <ScalarProperty Name="MemberGrade4" ColumnName="MemberGrade4" />
-                <ScalarProperty Name="MemberFirstName5" ColumnName="MemberFirstName5" />
-                <ScalarProperty Name="MemberLastName5" ColumnName="MemberLastName5" />
-                <ScalarProperty Name="MemberGrade5" ColumnName="MemberGrade5" />
-                <ScalarProperty Name="MemberFirstName6" ColumnName="MemberFirstName6" />
-                <ScalarProperty Name="MemberLastName6" ColumnName="MemberLastName6" />
-                <ScalarProperty Name="MemberGrade6" ColumnName="MemberGrade6" />
-                <ScalarProperty Name="MemberFirstName7" ColumnName="MemberFirstName7" />
-                <ScalarProperty Name="MemberLastName7" ColumnName="MemberLastName7" />
-                <ScalarProperty Name="MemberGrade7" ColumnName="MemberGrade7" />
-                <ScalarProperty Name="MemberFirstName8" ColumnName="MemberFirstName8" />
-                <ScalarProperty Name="MemberLastName8" ColumnName="MemberLastName8" />
-                <ScalarProperty Name="MemberGrade8" ColumnName="MemberGrade8" />
-                <ScalarProperty Name="Spontaneous" ColumnName="Spontaneous" />
-                <ScalarProperty Name="Notes" ColumnName="Notes" />
-                <ScalarProperty Name="SpecialConsiderations" ColumnName="SpecialConsiderations" />
-                <ScalarProperty Name="SchedulingIssues" ColumnName="SchedulingIssues" />
-                <ScalarProperty Name="Paid" ColumnName="Paid" />
-                <ScalarProperty Name="JudgeID" ColumnName="JudgeID" />
-                <ScalarProperty Name="TeamRegistrationFee" ColumnName="TeamRegistrationFee" />
-                <ScalarProperty Name="VolunteerID" ColumnName="VolunteerID" />
-                <ScalarProperty Name="TimeRegistrationStarted" ColumnName="TimeRegistrationStarted" />
-                <ScalarProperty Name="TimeRegistered" ColumnName="TimeRegistered" />
-                <ScalarProperty Name="UserAgent" ColumnName="UserAgent" />
+                <ScalarProperty Name="AltCoachLastName" ColumnName="AltCoachLastName" />
+                <ScalarProperty Name="AltCoachFirstName" ColumnName="AltCoachFirstName" />
+                <ScalarProperty Name="CoachEmailAddress" ColumnName="CoachEmailAddress" />
+                <ScalarProperty Name="CoachMobilePhone" ColumnName="CoachMobilePhone" />
+                <ScalarProperty Name="CoachDaytimePhone" ColumnName="CoachDaytimePhone" />
+                <ScalarProperty Name="CoachEveningPhone" ColumnName="CoachEveningPhone" />
+                <ScalarProperty Name="CoachZipCode" ColumnName="CoachZipCode" />
+                <ScalarProperty Name="CoachState" ColumnName="CoachState" />
+                <ScalarProperty Name="CoachCity" ColumnName="CoachCity" />
+                <ScalarProperty Name="CoachAddress" ColumnName="CoachAddress" />
+                <ScalarProperty Name="CoachLastName" ColumnName="CoachLastName" />
+                <ScalarProperty Name="CoachFirstName" ColumnName="CoachFirstName" />
+                <ScalarProperty Name="SchoolID" ColumnName="SchoolID" />
+                <ScalarProperty Name="Division" ColumnName="Division" />
+                <ScalarProperty Name="ProblemID" ColumnName="ProblemID" />
+                <ScalarProperty Name="MembershipNumber" ColumnName="MembershipNumber" />
+                <ScalarProperty Name="MembershipName" ColumnName="MembershipName" />
+                <ScalarProperty Name="TeamID" ColumnName="TeamID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Volunteers">
             <EntityTypeMapping TypeName="OdysseyModel.Volunteer">
               <MappingFragment StoreEntitySet="Volunteers">
-                <ScalarProperty Name="VolunteerID" ColumnName="VolunteerID" />
-                <ScalarProperty Name="TeamID" ColumnName="TeamID" />
-                <ScalarProperty Name="VolunteerFirstName" ColumnName="VolunteerFirstName" />
-                <ScalarProperty Name="VolunteerLastName" ColumnName="VolunteerLastName" />
-                <ScalarProperty Name="VolunteerDaytimePhone" ColumnName="VolunteerDaytimePhone" />
-                <ScalarProperty Name="VolunteerEveningPhone" ColumnName="VolunteerEveningPhone" />
-                <ScalarProperty Name="VolunteerMobilePhone" ColumnName="VolunteerMobilePhone" />
-                <ScalarProperty Name="VolunteerEmail" ColumnName="VolunteerEmail" />
-                <ScalarProperty Name="VolunteerNotes" ColumnName="VolunteerNotes" />
-                <ScalarProperty Name="VolunteerWantsToSee" ColumnName="VolunteerWantsToSee" />
-                <ScalarProperty Name="TimeRegistrationStarted" ColumnName="TimeRegistrationStarted" />
-                <ScalarProperty Name="TimeRegistered" ColumnName="TimeRegistered" />
-                <ScalarProperty Name="TimeAssignedToTeam" ColumnName="TimeAssignedToTeam" />
                 <ScalarProperty Name="UserAgent" ColumnName="UserAgent" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Configs">
-            <EntityTypeMapping TypeName="OdysseyModel.Config">
-              <MappingFragment StoreEntitySet="Config">
-                <ScalarProperty Name="Value" ColumnName="Value" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="TimeAssignedToTeam" ColumnName="TimeAssignedToTeam" />
+                <ScalarProperty Name="TimeRegistered" ColumnName="TimeRegistered" />
+                <ScalarProperty Name="TimeRegistrationStarted" ColumnName="TimeRegistrationStarted" />
+                <ScalarProperty Name="VolunteerWantsToSee" ColumnName="VolunteerWantsToSee" />
+                <ScalarProperty Name="Notes" ColumnName="Notes" />
+                <ScalarProperty Name="EmailAddress" ColumnName="EmailAddress" />
+                <ScalarProperty Name="MobilePhone" ColumnName="MobilePhone" />
+                <ScalarProperty Name="EveningPhone" ColumnName="EveningPhone" />
+                <ScalarProperty Name="DaytimePhone" ColumnName="DaytimePhone" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="TeamID" ColumnName="TeamID" />
+                <ScalarProperty Name="VolunteerID" ColumnName="VolunteerID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -894,6 +906,7 @@
         <DesignerProperty Name="EnablePluralization" Value="True" />
         <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
         <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+        <DesignerProperty Name="UseLegacyProvider" Value="True" />
       </DesignerInfoPropertySet>
     </Options>
     <!-- Diagram content (shape and connector positions) -->

@@ -16,13 +16,13 @@ namespace OdysseyMvc4.Models
     {
         public int VolunteerID { get; set; }
         public Nullable<int> TeamID { get; set; }
-        public string VolunteerFirstName { get; set; }
-        public string VolunteerLastName { get; set; }
-        public string VolunteerDaytimePhone { get; set; }
-        public string VolunteerEveningPhone { get; set; }
-        public string VolunteerMobilePhone { get; set; }
-        public string VolunteerEmail { get; set; }
-        public string VolunteerNotes { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string DaytimePhone { get; set; }
+        public string EveningPhone { get; set; }
+        public string MobilePhone { get; set; }
+        public string EmailAddress { get; set; }
+        public string Notes { get; set; }
         public string VolunteerWantsToSee { get; set; }
         public Nullable<System.DateTime> TimeRegistrationStarted { get; set; }
         public Nullable<System.DateTime> TimeRegistered { get; set; }
