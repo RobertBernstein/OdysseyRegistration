@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="OdysseyRepository.cs" company="Tardis Technologies">
-//   Copyright 2013 Tardis Technologies. All rights reserved.
+//   Copyright 2014 Tardis Technologies. All rights reserved.
 // </copyright>
 // <summary>
 //   The Odyssey registration database repository.
@@ -421,12 +421,6 @@ namespace OdysseyMvc4.Models
 
                 return this.problemChoicesWithoutSpontaneous ?? (this.ProblemChoices = temp);
             }
-
-            //// TODO: does this need to be kept? (11/02/2013)
-            private set
-            {
-                this.problemChoicesWithoutSpontaneous = value;
-            }
         }
 
         /// <summary>
@@ -685,15 +679,16 @@ namespace OdysseyMvc4.Models
         /// <returns>
         /// The first matching volunteer from the database if found, null otherwise.
         /// </returns>
-        public Volunteer GetVolunteerByIdAndName(int volunteerId, string volunteerFirstName, string volunteerLastName)
-        {
-            return
-                this.context.Volunteers.FirstOrDefault(
-                    v =>
-                        v.VolunteerID == volunteerId &&
-                        v.VolunteerFirstName.ToLower() == volunteerFirstName.ToLower() &&
-                        v.VolunteerLastName.ToLower() == volunteerLastName.ToLower());
-        }
+        /// TODO: Uncomment this method, Rob - 12/10/2014
+        //public Volunteer GetVolunteerByIdAndName(int volunteerId, string volunteerFirstName, string volunteerLastName)
+        //{
+        //    return
+        //        this.context.Volunteers.FirstOrDefault(
+        //            v =>
+        //                v.VolunteerID == volunteerId &&
+        //                v.VolunteerFirstName.ToLower() == volunteerFirstName.ToLower() &&
+        //                v.VolunteerLastName.ToLower() == volunteerLastName.ToLower());
+        //}
 
         /// <summary>
         /// The get coaches training registration by id.
@@ -776,16 +771,16 @@ namespace OdysseyMvc4.Models
                     registration.First().CoachLastName = newRegistrationData.CoachLastName;
                     registration.First().CoachAddress = newRegistrationData.CoachAddress;
                     registration.First().CoachCity = newRegistrationData.CoachCity;
-                    registration.First().CoachStateOrProvince = newRegistrationData.CoachStateOrProvince;
+                    registration.First().CoachState = newRegistrationData.CoachState;
                     registration.First().CoachZipCode = newRegistrationData.CoachZipCode;
                     registration.First().CoachDaytimePhone = newRegistrationData.CoachDaytimePhone;
                     registration.First().CoachEveningPhone = newRegistrationData.CoachEveningPhone;
-                    registration.First().CoachEmail = newRegistrationData.CoachEmail;
+                    registration.First().CoachEmailAddress = newRegistrationData.CoachEmailAddress;
                     registration.First().AltCoachFirstName = newRegistrationData.AltCoachFirstName;
                     registration.First().AltCoachLastName = newRegistrationData.AltCoachLastName;
                     registration.First().AltCoachDaytimePhone = newRegistrationData.AltCoachDaytimePhone;
                     registration.First().AltCoachEveningPhone = newRegistrationData.AltCoachEveningPhone;
-                    registration.First().AltCoachEmail = newRegistrationData.AltCoachEmail;
+                    registration.First().AltCoachEmailAddress = newRegistrationData.AltCoachEmailAddress;
                     break;
 
                 case 6:
@@ -810,9 +805,6 @@ namespace OdysseyMvc4.Models
                     registration.First().MemberFirstName7 = newRegistrationData.MemberFirstName7;
                     registration.First().MemberLastName7 = newRegistrationData.MemberLastName7;
                     registration.First().MemberGrade7 = newRegistrationData.MemberGrade7;
-                    registration.First().MemberFirstName8 = newRegistrationData.MemberFirstName8;
-                    registration.First().MemberLastName8 = newRegistrationData.MemberLastName8;
-                    registration.First().MemberGrade8 = newRegistrationData.MemberGrade8;
                     break;
 
                 case 7:
@@ -866,8 +858,7 @@ namespace OdysseyMvc4.Models
                         registration.MemberGrade4,
                         registration.MemberGrade5,
                         registration.MemberGrade6,
-                        registration.MemberGrade7,
-                        registration.MemberGrade8
+                        registration.MemberGrade7
                     };
         }
 
@@ -1281,7 +1272,7 @@ namespace OdysseyMvc4.Models
                     judgesFound.First().ProblemCOI3 = newRegistrationData.ProblemCOI3;
                     judgesFound.First().YearsExperience = newRegistrationData.YearsExperience;
                     judgesFound.First().TshirtSize = newRegistrationData.TshirtSize;
-                    judgesFound.First().CEU = newRegistrationData.CEU;
+                    judgesFound.First().WantsCEUCredit = newRegistrationData.WantsCEUCredit;
                     judgesFound.First().Notes = newRegistrationData.Notes;
                     judgesFound.First().PreviousPositions = newRegistrationData.PreviousPositions;
 
@@ -1324,14 +1315,14 @@ namespace OdysseyMvc4.Models
             {
                 case 2:
                     // TODO: Can we just say volunteerFound = newRegistrationData?
-                    volunteerFound.VolunteerFirstName = newRegistrationData.VolunteerFirstName;
-                    volunteerFound.VolunteerLastName = newRegistrationData.VolunteerLastName;
-                    volunteerFound.VolunteerDaytimePhone = newRegistrationData.VolunteerDaytimePhone;
-                    volunteerFound.VolunteerEveningPhone = newRegistrationData.VolunteerEveningPhone;
-                    volunteerFound.VolunteerMobilePhone = newRegistrationData.VolunteerMobilePhone;
-                    volunteerFound.VolunteerEmail = newRegistrationData.VolunteerEmail;
+                    volunteerFound.FirstName = newRegistrationData.FirstName;
+                    volunteerFound.LastName = newRegistrationData.LastName;
+                    volunteerFound.DaytimePhone = newRegistrationData.DaytimePhone;
+                    volunteerFound.EveningPhone = newRegistrationData.EveningPhone;
+                    volunteerFound.MobilePhone = newRegistrationData.MobilePhone;
+                    volunteerFound.EmailAddress = newRegistrationData.EmailAddress;
                     volunteerFound.VolunteerWantsToSee = newRegistrationData.VolunteerWantsToSee;
-                    volunteerFound.VolunteerNotes = newRegistrationData.VolunteerNotes;
+                    volunteerFound.Notes = newRegistrationData.Notes;
 
                     break;
 
@@ -1396,7 +1387,7 @@ namespace OdysseyMvc4.Models
             }
 
             // Update the volunteer's e-mail address.
-            volunteerFound.VolunteerEmail = email;
+            volunteerFound.EmailAddress = email;
 
             // SaveChanges returns the number of objects updated in the database.
             return this.context.SaveChanges();
