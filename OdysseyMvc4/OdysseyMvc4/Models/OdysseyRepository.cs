@@ -72,6 +72,11 @@ namespace OdysseyMvc4.Models
         private @Event tournamentInfo;
 
         /// <summary>
+        /// The volunteer info.
+        /// </summary>
+        private @Event volunteerInfo;
+
+        /// <summary>
         /// The schools.
         /// </summary>
         private IEnumerable schools;
@@ -310,6 +315,25 @@ namespace OdysseyMvc4.Models
             set
             {
                 this.tournamentInfo = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the volunteer info.
+        /// TODO: Test that this works. I copied it from TournamentInfo, Rob - 12/12/2014.
+        /// </summary>
+        public @Event VolunteerInfo
+        {
+            get
+            {
+                return this.volunteerInfo ?? (this.VolunteerInfo = (from o in this.context.Events
+                                                                    where o.EventName.StartsWith(this.RegionName) && o.EventName.Contains("Volunteer")
+                                                                    select o).First());
+            }
+
+            set
+            {
+                this.volunteerInfo = value;
             }
         }
 

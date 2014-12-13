@@ -1,10 +1,20 @@
-﻿namespace OdysseyMvc4.ViewData.VolunteerRegistration
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="Page03ViewData.cs" company="Tardis Technologies">
+//   Copyright 2014 Tardis Technologies. All rights reserved.
+// </copyright>
+// <summary>
+//   Defines the Page03ViewData type.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
+
+namespace OdysseyMvc4.ViewData.VolunteerRegistration
 {
     using OdysseyMvc4.Models;
     using OdysseyMvc4.ViewData;
-    using System;
-    using System.Runtime.CompilerServices;
 
+    /// <summary>
+    /// The page 03 view data.
+    /// </summary>
     public class Page03ViewData : BaseViewData
     {
         public bool EmailAddressWasSpecified { get; set; }
@@ -15,9 +25,8 @@
 
         public string MailErrorMessage { get; set; }
 
-        public OdysseyMvc4.Models.Volunteer Volunteer { get; set; }
+        public Volunteer Volunteer { get; set; }
 
         public Event VolunteerInfo { get; set; }
     }
 }
-
