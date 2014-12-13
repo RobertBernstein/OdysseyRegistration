@@ -127,9 +127,14 @@ namespace OdysseyMvc4.Models
         public string ContinuingEducationUnits { get; set; }
 
         /// <summary>
-        /// Gets or sets the years experience.
+        /// Gets or sets the years of long-term judging experience.
         /// </summary>
-        public string YearsExperience { get; set; }
+        public string YearsOfLongTermJudgingExperience { get; set; }
+
+        /// <summary>
+        /// Gets or sets the years of spontaneous judging experience.
+        /// </summary>
+        public string YearsOfSpontaneousJudgingExperience { get; set; }
 
         /// <summary>
         /// Gets or sets the time registered.

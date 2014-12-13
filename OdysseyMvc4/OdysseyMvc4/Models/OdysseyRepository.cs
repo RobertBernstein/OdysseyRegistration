@@ -320,7 +320,7 @@ namespace OdysseyMvc4.Models
 
         /// <summary>
         /// Gets or sets the volunteer info.
-        /// TODO: Test that this works. I copied it from TournamentInfo, Rob - 12/12/2014.
+        /// TODO: Test that this works. I copied it from TournamentInfo - Rob, 12/12/2014.
         /// </summary>
         public @Event VolunteerInfo
         {
@@ -443,6 +443,7 @@ namespace OdysseyMvc4.Models
                     thePrimaryProblem.ProblemName += " (The Primary Problem)";
                 }
 
+                // TODO: Look into what this does - Rob, 12/12/2014.
                 return this.problemChoicesWithoutSpontaneous ?? (this.ProblemChoices = temp);
             }
         }
@@ -703,7 +704,7 @@ namespace OdysseyMvc4.Models
         /// <returns>
         /// The first matching volunteer from the database if found, null otherwise.
         /// </returns>
-        /// TODO: Verify this still works, Rob - 12/12/2014.
+        /// TODO: Verify that this still works - Rob, 12/12/2014.
         public Volunteer GetVolunteerByIdAndName(int volunteerId, string volunteerFirstName, string volunteerLastName)
         {
             return
@@ -1294,7 +1295,8 @@ namespace OdysseyMvc4.Models
                     judgesFound.First().ProblemCOI1 = newRegistrationData.ProblemCOI1;
                     judgesFound.First().ProblemCOI2 = newRegistrationData.ProblemCOI2;
                     judgesFound.First().ProblemCOI3 = newRegistrationData.ProblemCOI3;
-                    judgesFound.First().YearsExperience = newRegistrationData.YearsExperience;
+                    judgesFound.First().YearsOfLongTermJudgingExperience = newRegistrationData.YearsOfLongTermJudgingExperience;
+                    judgesFound.First().YearsOfSpontaneousJudgingExperience = newRegistrationData.YearsOfSpontaneousJudgingExperience;
                     judgesFound.First().TshirtSize = newRegistrationData.TshirtSize;
                     judgesFound.First().WantsCEUCredit = newRegistrationData.WantsCEUCredit;
                     judgesFound.First().Notes = newRegistrationData.Notes;
@@ -1458,7 +1460,8 @@ namespace OdysseyMvc4.Models
                        ProblemChoice3 = j.ProblemChoice3,
                        TshirtSize = j.TshirtSize,
                        ContinuingEducationUnits = j.WantsCEUCredit,
-                       YearsExperience = j.YearsExperience,
+                       YearsOfLongTermJudgingExperience = j.YearsOfLongTermJudgingExperience,
+                       YearsOfSpontaneousJudgingExperience = j.YearsOfSpontaneousJudgingExperience,
                        TimeRegistered = j.TimeRegistered,
                        TimeAssignedToTeam = j.TimeAssignedToTeam,
                        TimeRegistrationStarted = j.TimeRegistrationStarted,
