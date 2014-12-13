@@ -703,16 +703,16 @@ namespace OdysseyMvc4.Models
         /// <returns>
         /// The first matching volunteer from the database if found, null otherwise.
         /// </returns>
-        /// TODO: Uncomment this method, Rob - 12/10/2014
-        //public Volunteer GetVolunteerByIdAndName(int volunteerId, string volunteerFirstName, string volunteerLastName)
-        //{
-        //    return
-        //        this.context.Volunteers.FirstOrDefault(
-        //            v =>
-        //                v.VolunteerID == volunteerId &&
-        //                v.VolunteerFirstName.ToLower() == volunteerFirstName.ToLower() &&
-        //                v.VolunteerLastName.ToLower() == volunteerLastName.ToLower());
-        //}
+        /// TODO: Verify this still works, Rob - 12/12/2014.
+        public Volunteer GetVolunteerByIdAndName(int volunteerId, string volunteerFirstName, string volunteerLastName)
+        {
+            return
+                this.context.Volunteers.FirstOrDefault(
+                    v =>
+                        v.VolunteerID == volunteerId &&
+                        string.Equals(v.FirstName, volunteerFirstName, StringComparison.CurrentCultureIgnoreCase) &&
+                        string.Equals(v.LastName, volunteerLastName, StringComparison.CurrentCultureIgnoreCase));
+        }
 
         /// <summary>
         /// The get coaches training registration by id.
