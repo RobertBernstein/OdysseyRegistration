@@ -13,7 +13,7 @@
 @model OdysseyMvc4.ViewData.TournamentRegistration.Page10ViewData
 
 @{
-    ViewBag.Title = Model.FriendlyRegistrationName + " Page 10 of 10";
+    ViewBag.Title = Model.FriendlyRegistrationName + " Page 9 of 9";
 }
 
 <script src="@Url.Content("~/Scripts/PrintThisPage.js")" type="text/javascript"></script>
@@ -116,18 +116,18 @@
                 <td>
                     <select name="os0">
                         @* Note: Only include one of the two lines, below. *@
-                        @* <option value="Early Registration Fee -">Early Registration Fee - $75.00 USD</option> *@
-                        <option value="Standard Registration Fee -">Standard Registration Fee - $85.00 USD</option>
-                    </select>
-                </td>
-            </tr>
-            <tr><td><input type="hidden" name="on1" value="Team's Tournament ID">Team's Tournament ID</td></tr>
-            <tr><td><input type="text" name="os1" maxlength="200" value="@Model.TournamentRegistration.TeamID"></td></tr>
-            <tr><td><input type="hidden" name="on2" value="Coach's Last Name">Coach's Last Name</td></tr>
-            <tr><td><input type="text" name="os2" maxlength="200" value="@Model.TournamentRegistration.CoachLastName"></td></tr>
-        </table>
-        <input type="hidden" name="currency_code" value="USD">
-        <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_paynowCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
-        <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
-    </form>
-}
+                        <option value="Early Registration Fee -">Early Registration Fee - $75.00 USD</option>
+                        @* <option value="Standard Registration Fee -">Standard Registration Fee - $85.00 USD</option> *@
+                        </select>
+                    </td>
+                </tr>
+                <tr><td><input type="hidden" name="on1" value="Team's Tournament ID">Team's Tournament ID</td></tr>
+                <tr><td><input type="text" name="os1" maxlength="200" value="@Model.TournamentRegistration.TeamID"></td></tr>
+                <tr><td><input type="hidden" name="on2" value="Coach's Last Name">Coach's Last Name</td></tr>
+                <tr><td><input type="text" name="os2" maxlength="200" value="@Model.TournamentRegistration.CoachLastName"></td></tr>
+            </table>
+            <input type="hidden" name="currency_code" value="USD">
+            <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_paynowCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+            <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
+        </form>
+    }

@@ -348,7 +348,7 @@ namespace OdysseyMvc4.Controllers
                 // TODO: Send an e-mail reporting database failure; could not find the record already added to the database
                 this.Repository.UpdateTournamentRegistration(id, 3, newRegistrationData);
 
-                return this.RedirectToAction("Page04", new { id });
+                return this.RedirectToAction("Page05", new { id });
             }
             catch (Exception exception)
             {
@@ -865,10 +865,10 @@ namespace OdysseyMvc4.Controllers
             viewData.JudgeFirstName = judgeFirstName;
             viewData.JudgeLastName = judgeLastName;
 
-            Volunteer volunteerById = this.Repository.GetVolunteerById(viewData.TournamentRegistration.VolunteerID);
+            ////Volunteer volunteerById = this.Repository.GetVolunteerById(viewData.TournamentRegistration.VolunteerID);
 
-            viewData.VolunteerFirstName = volunteerById.FirstName;
-            viewData.VolunteerLastName = volunteerById.LastName;
+            ////viewData.VolunteerFirstName = volunteerById.FirstName;
+            ////viewData.VolunteerLastName = volunteerById.LastName;
 
             viewData.Division = (viewData.TournamentRegistration.Division == "0") ? "Primary" : viewData.TournamentRegistration.Division;
             viewData.ProblemName = this.Repository.GetProblemNameFromProblemId(viewData.TournamentRegistration.ProblemID);
@@ -1015,9 +1015,9 @@ namespace OdysseyMvc4.Controllers
             viewData.JudgeFirstName = judgeFirstName;
             viewData.JudgeLastName = judgeLastName;
 
-            Volunteer volunteerById = this.Repository.GetVolunteerById(viewData.TournamentRegistration.VolunteerID);
-            viewData.VolunteerFirstName = volunteerById.FirstName;
-            viewData.VolunteerLastName = volunteerById.LastName;
+            ////Volunteer volunteerById = this.Repository.GetVolunteerById(viewData.TournamentRegistration.VolunteerID);
+            ////viewData.VolunteerFirstName = volunteerById.FirstName;
+            ////viewData.VolunteerLastName = volunteerById.LastName;
 
             viewData.SchoolName = this.Repository.GetSchoolNameFromSchoolId(viewData.TournamentRegistration.SchoolID);
             viewData.ProblemName = this.Repository.GetProblemNameFromProblemId(viewData.TournamentRegistration.ProblemID);
@@ -1106,9 +1106,9 @@ namespace OdysseyMvc4.Controllers
             viewData.JudgeFirstName = judgeFirstName;
             viewData.JudgeLastName = judgeLastName;
 
-            Volunteer volunteerById = this.Repository.GetVolunteerById(viewData.TournamentRegistration.VolunteerID);
-            viewData.VolunteerFirstName = volunteerById.FirstName;
-            viewData.VolunteerLastName = volunteerById.LastName;
+            ////Volunteer volunteerById = this.Repository.GetVolunteerById(viewData.TournamentRegistration.VolunteerID);
+            ////viewData.VolunteerFirstName = volunteerById.FirstName;
+            ////viewData.VolunteerLastName = volunteerById.LastName;
 
             viewData.SchoolName = this.Repository.GetSchoolNameFromSchoolId(viewData.TournamentRegistration.SchoolID);
             viewData.ProblemName = this.Repository.GetProblemNameFromProblemId(viewData.TournamentRegistration.ProblemID);
