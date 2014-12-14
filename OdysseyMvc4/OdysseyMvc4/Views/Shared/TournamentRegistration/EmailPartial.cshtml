@@ -3,10 +3,10 @@
     <p style="text-align: center"><b>You have been assigned Team ID @Model.TournamentRegistration.TeamID.</b></p>
     <p>Dear Coach @Model.TournamentRegistration.CoachLastName,</p>
     <p>
-        You have registered the team listed below.&nbsp; Your judge and volunteer are listed below,
+        You have registered the team listed below.&nbsp; Your judge @*and volunteer are *@is listed below,
         as well.&nbsp; Please remind your judge that the team is counting on him or her
-        to attend both Judges Training and the Regional Tournament, and remind your volunteer that he or she must spend
-        two hours volunteering at the Regional Tournament.<br />
+        to attend both Judges Training and the Regional Tournament@*, and remind your volunteer that he or she must spend
+            two hours volunteering at the Regional Tournament*@.<br />
 
     </p>
     <p>
@@ -33,7 +33,7 @@
 
     <p>
         Payments by check must be made out to &quot;@Model.TournamentInfo.EventMakeChecksOutTo&quot; and mailed to the address
-        below. &nbsp;Please put your team ID number (see top of this page) on the check. &nbsp;If your team’s
+        below. &nbsp;<b>Please put your team ID number (see top of this page), school name, and coach name on the check.</b> &nbsp;If your team’s
         @Model.FriendlyRegistrationName fee is being paid as one of a group of teams (for example, the school PTA is
         paying for all teams), be sure to advise your school coordinator of your team’s ID number so that all team ID numbers
         can be included on the group check.
@@ -62,7 +62,7 @@
             number (see top of this page) and the coach's last name.
         </p>
 
-        <p>To submit your payment online, click the &quot;Pay Now&quot; button at the bottom of the page.</p>
+        <p>To submit your payment online, click the &quot;Pay Now&quot; button <b>at the bottom of the page</b>.</p>
     }
 
     <p>
@@ -149,28 +149,29 @@
         <tr>
             <td colspan='2'><hr /></td>
         </tr>
-        <tr>
-            <td colspan='2'>
-                <p align='center'><b>Your Volunteer:</b>
-            </td>
-        </tr>
-        <tr>
-            <td width='305'>
-                <br /><b>ID Number:</b>
-            </td>
-            <td width='431'><br />@Model.TournamentRegistration.VolunteerID</td>
-        </tr>
-        <tr>
-            <td width='305'><b>First Name:</b></td>
-            <td width='431'>@Model.VolunteerFirstName</td>
-        </tr>
-        <tr>
-            <td width='305'><b>Last Name:</b></td>
-            <td width='431'>@Model.VolunteerLastName</td>
-        </tr>
-        <tr>
-            <td colspan='2'><hr /></td>
-        </tr>
+        @* TODO: Commented this out; check the database for disabled Volunteer Registration instead - Rob, 12/12/2014. *@
+        @*        <tr>
+                <td colspan='2'>
+                    <p align='center'><b>Your Volunteer:</b>
+                </td>
+            </tr>
+            <tr>
+                <td width='305'>
+                    <br /><b>ID Number:</b>
+                </td>
+                <td width='431'><br />@Model.TournamentRegistration.VolunteerID</td>
+            </tr>
+            <tr>
+                <td width='305'><b>First Name:</b></td>
+                <td width='431'>@Model.VolunteerFirstName</td>
+            </tr>
+            <tr>
+                <td width='305'><b>Last Name:</b></td>
+                <td width='431'>@Model.VolunteerLastName</td>
+            </tr>
+            <tr>
+                <td colspan='2'><hr /></td>
+            </tr>*@
         <tr>
             <td colspan='2'>
                 <p align='center'><b>Your Coach:</b>

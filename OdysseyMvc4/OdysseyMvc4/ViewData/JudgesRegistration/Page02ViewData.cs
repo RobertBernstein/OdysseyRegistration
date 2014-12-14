@@ -48,7 +48,6 @@ namespace OdysseyMvc4.ViewData.JudgesRegistration
         /// <summary>
         /// Gets or sets the address line 2.
         /// </summary>
-        [Required]
         [Display(Name = "Street Address Line 2")]
         public string AddressLine2 { get; set; }
 
