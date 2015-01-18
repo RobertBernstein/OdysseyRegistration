@@ -236,6 +236,8 @@
     <Content Include="Content\images\acnvbul2.gif" />
     <Content Include="Content\images\bullet.gif" />
     <Content Include="Content\images\down.gif" />
+    <Content Include="Content\NovaNorth.css" />
+    <Content Include="Content\NovaSouth.css" />
     <Content Include="Content\themes\base\images\animated-overlay.gif" />
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
@@ -396,6 +398,8 @@
     <Content Include="Views\VolunteerRegistration\Page02.cshtml" />
     <Content Include="Views\VolunteerRegistration\Page03.cshtml" />
     <Content Include="Views\Shared\TournamentRegistration\EmailPartial.cshtml" />
+    <Content Include="Views\Shared\BadEmail.cshtml" />
+    <Content Include="Views\Shared\EmailPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

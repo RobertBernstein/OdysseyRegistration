@@ -35,7 +35,9 @@ namespace OdysseyMvc4.Controllers
         {
             BaseViewData viewData = new BaseViewData();
             this.SetBaseViewData(viewData);
-            return this.View();
+
+            // TODO: Test that this is the correct path to the BadEmail page, Rob - 01/18/2015.
+            return this.View("~/Views/Shared/BadEmail.cshtml");
         }
 
         /// <summary>
