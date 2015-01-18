@@ -317,7 +317,11 @@
       <DependentUpon>OdysseyModel.edmx</DependentUpon>
       <LastGenOutput>OdysseyModel.cs</LastGenOutput>
     </Content>
-    <Content Include="Documentation\Website - Registration Configuration.docx" />
+    <Content Include="Documentation\Registration - Configuration %28In Progress%29.docx" />
+    <Content Include="Documentation\Registration - Configuring Open and Close Dates and Times.docx" />
+    <Content Include="Documentation\Registration - Connecting to the SQL Server Database.docx" />
+    <Content Include="Documentation\Website - Configuration Information.docx" />
+    <Content Include="Documentation\Website - Fixing WordPress Theme Problems.docx" />
     <None Include="Properties\PublishProfiles\novanorth.org - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\novanorth.org - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\novasouth.org - FTP.pubxml" />
