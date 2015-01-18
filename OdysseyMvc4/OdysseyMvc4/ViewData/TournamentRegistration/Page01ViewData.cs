@@ -1,7 +1,17 @@
-﻿namespace OdysseyMvc4.ViewData.TournamentRegistration
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="Page01ViewData.cs" company="Tardis Technologies">
+//   Copyright 2015 Tardis Technologies. All rights reserved.
+// </copyright>
+// <summary>
+//   Defines the Page01ViewData type.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
+
+namespace OdysseyMvc4.ViewData.TournamentRegistration
 {
-    using OdysseyMvc4.ViewData;
     using System;
+
+    using OdysseyMvc4.ViewData;
 
     public class Page01ViewData : BaseViewData
     {
@@ -10,7 +20,7 @@
             get
             {
                 bool flag;
-                bool.TryParse(base.Config["AcceptingPayPal"], out flag);
+                bool.TryParse(this.Config["AcceptingPayPal"], out flag);
                 return flag;
             }
         }
@@ -19,7 +29,9 @@
         {
             get
             {
-                return !this.TournamentInfo.LateEventCostStartDate.HasValue ? "TBA" : base.TournamentInfo.LateEventCostStartDate.Value.AddDays(-1.0).ToLongDateString();
+                return this.TournamentInfo.LateEventCostStartDate.HasValue
+                    ? this.TournamentInfo.LateEventCostStartDate.Value.AddDays(-1.0).ToLongDateString()
+                    : "TBA";
             }
         }
 
@@ -27,11 +39,9 @@
         {
             get
             {
-                if (!string.IsNullOrWhiteSpace(this.TournamentInfo.LateEventCost))
-                {
-                    return "$" + this.TournamentInfo.LateEventCost;
-                }
-                return string.Empty;
+                return !string.IsNullOrWhiteSpace(this.TournamentInfo.LateEventCost)
+                           ? "$" + this.TournamentInfo.LateEventCost
+                           : string.Empty;
             }
         }
 
@@ -39,19 +49,38 @@
         {
             get
             {
-                return !this.TournamentInfo.PaymentDueDate.HasValue ? "TBA" : this.TournamentInfo.PaymentDueDate.Value.ToLongDateString();
+                return this.TournamentInfo.PaymentDueDate.HasValue
+                    ? this.TournamentInfo.PaymentDueDate.Value.ToLongDateString()
+                    : "TBA";
             }
         }
 
+        /// <summary>
+        /// Gets the team registration fee.  If the late registration date has passed, returns the higher, late fee.
+        /// </summary>
         public string TeamRegistrationFee
         {
             get
             {
-                if (!string.IsNullOrWhiteSpace(base.TournamentInfo.EventCost))
+                var eventRegistrationFee = !string.IsNullOrWhiteSpace(this.TournamentInfo.EventCost)
+                    ? "$" + this.TournamentInfo.EventCost
+                    : "TBA";
+
+                var lateEventRegistrationFee = !string.IsNullOrWhiteSpace(this.TournamentInfo.LateEventCost)
+                    ? "$" + this.TournamentInfo.LateEventCost
+                    : "TBA";
+
+                // If we have not set a late event cost start date, then the standard registration fee is the only one
+                // for this year.
+                if (this.TournamentInfo.LateEventCostStartDate == null)
                 {
-                    return ("$" + base.TournamentInfo.EventCost);
+                    return eventRegistrationFee;
                 }
-                return "TBA";
+
+                bool registrationFeeIsLate =
+                    DateTime.Compare((DateTime)this.TournamentInfo.LateEventCostStartDate, DateTime.Now) < 0;
+
+                return !registrationFeeIsLate ? eventRegistrationFee : lateEventRegistrationFee;
             }
         }
 
@@ -64,10 +93,10 @@
                 {
                     return "TBA";
                 }
+
                 DateTime.TryParse(this.Config["TournamentRegistrationCloseDateTime"], out time);
                 return time.ToLongDateString();
             }
         }
     }
 }
-
