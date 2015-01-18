@@ -317,7 +317,7 @@
       <DependentUpon>OdysseyModel.edmx</DependentUpon>
       <LastGenOutput>OdysseyModel.cs</LastGenOutput>
     </Content>
-    <Content Include="Documentation\Odyssey Registration Configuration.docx" />
+    <Content Include="Documentation\Website - Registration Configuration.docx" />
     <None Include="Properties\PublishProfiles\novanorth.org - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\novanorth.org - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\novasouth.org - FTP.pubxml" />
