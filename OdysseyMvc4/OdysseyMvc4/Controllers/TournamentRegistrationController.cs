@@ -925,38 +925,36 @@ namespace OdysseyMvc4.Controllers
         [HttpGet]
         public ActionResult Page10(int id)
         {
-            Page10ViewData viewData;
-            string errorMessage;
-            MailMessage errorMailMessage;
             string judgeFirstName;
             string judgeLastName;
+
             if (this.CurrentRegistrationState != RegistrationState.Available)
             {
                 return this.RedirectToAction(this.CurrentRegistrationState.ToString());
             }
 
+            var viewData = new Page10ViewData();
+            this.SetBaseViewData(viewData);
+
+            // Build the e-mail subject in case an error occurs.
+            var emailSubject = string.Format("Error: {0} Odyssey Region {1} Tournament Registration", viewData.RegionName, viewData.RegionNumber);
+
             short? judgeId = this.Repository.GetJudgeIdFromTournamentRegistrationId(id);
-            short? nullable3 = judgeId;
-            int? nullable4 = nullable3.HasValue ? new int?(nullable3.GetValueOrDefault()) : null;
-            if (nullable4.HasValue)
+            if (judgeId.HasValue)
             {
                 // Attempt to write the Tournament Registration ID into the correct Judge record.
+                string errorMessage;
                 this.Repository.UpdateJudgeRecordWithTournamentRegistrationId(judgeId, id, out errorMessage);
 
-                if (!string.IsNullOrEmpty(errorMessage))
+                if (!string.IsNullOrWhiteSpace(errorMessage))
                 {
-                    viewData = new Page10ViewData
-                    {
-                        JudgeErrorMessage = errorMessage
-                    };
-
-                    this.SetBaseViewData(viewData);
+                    viewData.JudgeErrorMessage = errorMessage;
 
                     // Instantiate a new instance of MailMessage
-                    errorMailMessage = this.BuildMessage(
+                    var errorMailMessage = this.BuildMessage(
                         viewData.Config["WebmasterEmail"],
-                        "Error: " + viewData.RegionName + " Odyssey Region " + viewData.RegionNumber + " Tournament Registration",
-                        string.Concat(new object[] { "<p>Team with ID # ", id, " attempted to re-register after its judge was assigned to the team.</p><p>", errorMessage, "</p>" }),
+                        emailSubject,
+                        string.Format("<p>Team with ID # {0} attempted to re-register after its judge was assigned to the team.</p><p>{1}</p>", id, errorMessage),
                         viewData.Config["WebmasterEmail"],
                         null,
                         null);
@@ -967,37 +965,55 @@ namespace OdysseyMvc4.Controllers
                     return this.View(viewData);
                 }
             }
-
-            int? volunteerId = this.Repository.GetVolunteerIdFromTournamentRegistrationId(id);
-            if (volunteerId.HasValue)
+            else
             {
-                // Attempt to write the Tournament Registration ID into the correct Volunteer record.
-                this.Repository.UpdateVolunteerRecordWithTournamentRegistrationId(volunteerId.Value, id, out errorMessage);
+                // No Judge ID was found for this team, so send an error message e-mail.
+                var errorMailMessage = this.BuildMessage(
+                    viewData.Config["WebmasterEmail"],
+                    emailSubject,
+                    string.Format("<p>Team with ID # {0} attempted to register, but no Judge ID was found in the TournamentRegistration table for the team.</p>", id),
+                    viewData.Config["WebmasterEmail"],
+                    null,
+                    null);
 
-                if (!string.IsNullOrEmpty(errorMessage))
-                {
-                    viewData = new Page10ViewData
-                    {
-                        VolunteerErrorMessage = errorMessage
-                    };
+                // Instantiate a new instance of SmtpClient.
+                viewData.MailErrorMessage = this.SendMessage(viewData, errorMailMessage);
 
-                    this.SetBaseViewData(viewData);
-
-                    // Instantiate a new instance of MailMessage.
-                    errorMailMessage = this.BuildMessage(
-                        viewData.Config["WebmasterEmail"],
-                        "Error: " + viewData.RegionName + " Odyssey Region " + viewData.RegionNumber + " Tournament Registration",
-                        string.Concat(new object[] { "<p>Team with ID # ", id, " attempted to re-register after its volunteer was assigned to the team.</p><p>", errorMessage, "</p>" }),
-                        viewData.Config["WebmasterEmail"],
-                        null,
-                        null);
-
-                    // Instantiate a new instance of SmtpClient.
-                    viewData.MailErrorMessage = this.SendMessage(viewData, errorMailMessage);
-
-                    return this.View(viewData);
-                }
+                // TODO: Does this actually display the error to the user? - Rob, 01/18/2015.
+                viewData.JudgeErrorMessage = "No Judge ID could be found in the TournamentRegistration table for your team.  Please contact the Webmaster.";
+                return this.View(viewData);
             }
+
+            ////int? volunteerId = this.Repository.GetVolunteerIdFromTournamentRegistrationId(id);
+            ////if (volunteerId.HasValue)
+            ////{
+            ////    // Attempt to write the Tournament Registration ID into the correct Volunteer record.
+            ////    this.Repository.UpdateVolunteerRecordWithTournamentRegistrationId(volunteerId.Value, id, out errorMessage);
+
+            ////    if (!string.IsNullOrEmpty(errorMessage))
+            ////    {
+            ////        viewData = new Page10ViewData
+            ////        {
+            ////            VolunteerErrorMessage = errorMessage
+            ////        };
+
+            ////        this.SetBaseViewData(viewData);
+
+            ////        // Instantiate a new instance of MailMessage.
+            ////        errorMailMessage = this.BuildMessage(
+            ////            viewData.Config["WebmasterEmail"],
+            ////            "Error: " + viewData.RegionName + " Odyssey Region " + viewData.RegionNumber + " Tournament Registration",
+            ////            string.Concat("<p>Team with ID # ", id, " attempted to re-register after its volunteer was assigned to the team.</p><p>", errorMessage, "</p>"),
+            ////            viewData.Config["WebmasterEmail"],
+            ////            null,
+            ////            null);
+
+            ////        // Instantiate a new instance of SmtpClient.
+            ////        viewData.MailErrorMessage = this.SendMessage(viewData, errorMailMessage);
+
+            ////        return this.View(viewData);
+            ////    }
+            ////}
 
             // The Tournament Registration ID was successfully written into the correct Judge and Volunteer records.
             viewData = new Page10ViewData

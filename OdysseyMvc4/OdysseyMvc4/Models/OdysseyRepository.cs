@@ -64,7 +64,8 @@ namespace OdysseyMvc4.Models
         /// <summary>
         /// The problem choices without spontaneous.
         /// </summary>
-        private IEnumerable<Problem> problemChoicesWithoutSpontaneous;
+        /// TODO: Is this still needed?  Can it be removed?  Why is it never initialized? - Rob, 12/17/2018.
+        private readonly IEnumerable<Problem> problemChoicesWithoutSpontaneous;
 
         /// <summary>
         /// The problem conflicts.
@@ -894,23 +895,20 @@ namespace OdysseyMvc4.Models
         ////}
 
         /// <summary>
-        /// The get judge id from tournament registration id.
+        /// Get the judge record ID from the tournament registration ID.
         /// </summary>
         /// <param name="tournamentRegistrationId">
-        /// The tournament registration id.
+        /// The tournament registration ID used to look up the judge ID.
         /// </param>
         /// <returns>
-        /// The Judge ID as a <see>
-        ///     <cref>short?</cref>
-        /// </see>.
+        /// The judge ID as a <see><cref>short?</cref></see>.
         /// </returns>
         public short? GetJudgeIdFromTournamentRegistrationId(int tournamentRegistrationId)
         {
-            TournamentRegistration firstJudgeIdRecordOrDefault = (from t in this.context.TournamentRegistrations
-                                                                  where t.TeamID == tournamentRegistrationId
-                                                                  select t).FirstOrDefault();
+            var firstJudgeIdRecordOrDefault =
+                this.context.TournamentRegistrations.FirstOrDefault(t => t.TeamID == tournamentRegistrationId);
 
-            return firstJudgeIdRecordOrDefault != null ? firstJudgeIdRecordOrDefault.JudgeID : null;
+            return firstJudgeIdRecordOrDefault?.JudgeID;
         }
 
         /// <summary>
