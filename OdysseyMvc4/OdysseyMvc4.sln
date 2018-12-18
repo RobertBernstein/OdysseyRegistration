@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.136
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OdysseyMvc4", "OdysseyMvc4\OdysseyMvc4.csproj", "{BD2044B5-A24B-4992-960F-5AF07941AB2B}"
 EndProject
@@ -20,15 +20,16 @@ Global
 		{BD2044B5-A24B-4992-960F-5AF07941AB2B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BD2044B5-A24B-4992-960F-5AF07941AB2B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{89C73E79-FE54-46FB-912E-556D0B044291}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{89C73E79-FE54-46FB-912E-556D0B044291}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{89C73E79-FE54-46FB-912E-556D0B044291}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{89C73E79-FE54-46FB-912E-556D0B044291}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8C5AFCC9-71D8-4AA5-8FA0-AC2FC8B3C30C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8C5AFCC9-71D8-4AA5-8FA0-AC2FC8B3C30C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8C5AFCC9-71D8-4AA5-8FA0-AC2FC8B3C30C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8C5AFCC9-71D8-4AA5-8FA0-AC2FC8B3C30C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D78136E6-82B5-4140-9E59-FF4D199A542D}
 	EndGlobalSection
 EndGlobal
