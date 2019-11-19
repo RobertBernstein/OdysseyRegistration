@@ -120,6 +120,10 @@
     a tournament without people like you! &nbsp; Please provide us with the following
     information in order to complete your registration.
 </p>
+<p>
+    <b>Note</b>: We will use whatever first and last name you provide here to print the name tag that you will wear
+    on tournament day. &nbsp;Please make sure that it is the name by which you wish to be identified for the entire day.
+</p>
 <hr />
 @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "mainForm", onsubmit = "return FormValidator();" }))
 {
@@ -198,7 +202,8 @@
     <hr />
     <p>
         NOTE: We do not use your e-mail address for anything except keeping you informed
-        about the tournament. &nbsp;It will not be shared with anyone outside our region.
+        about the tournament. &nbsp;It will not be shared with anyone outside of Virginia
+        Odyssey of the Mind.
     </p>
     <p>
         <img src="@Url.Content("~/Content/Images/bullet.gif")" alt="Required" width="15" />
@@ -259,7 +264,34 @@
             @Html.LabelFor(x => x.ProblemConflict3)
             @Html.DropDownListFor(x => x.ProblemConflict3, Model.ProblemConflictList3)
         </p>
+        <p>
+            <b>Note:</b> Please do not select any of these problems to judge in the drop-down lists, below;
+            we cannot assign you to any of them since your child will be competing in those problems.
+        </p>
     </div>
+    <hr />
+    <p>
+        <b>
+            Please enter your First, Second, and Third choices for the problem you'd like to
+            judge.
+        </b>
+    </p>
+    <p>
+        @Html.LabelFor(x => x.ProblemChoice1)
+        @Html.DropDownListFor(x => x.ProblemChoice1, Model.ProblemChoices)
+        &nbsp; <a href="@Model.Config["LinkToSynopses"]" target="_blank">
+            Click here for
+            a description of the problems
+        </a>
+    </p>
+    <p>
+        @Html.LabelFor(x => x.ProblemChoice2)
+        @Html.DropDownListFor(x => x.ProblemChoice2, Model.ProblemChoices)
+    </p>
+    <p>
+        @Html.LabelFor(x => x.ProblemChoice3)
+        @Html.DropDownListFor(x => x.ProblemChoice3, Model.ProblemChoices)
+    </p>
     <hr />
     <p>
         <img alt="Required" src="@Url.Content("~/Content/Images/bullet.gif")" width="15" />&nbsp;
