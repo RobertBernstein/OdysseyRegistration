@@ -409,3 +409,7 @@ p.mail_us {
     position: relative;
     left: 20px;
 }
+
+.dropdown {
+    width: 30em;
+}

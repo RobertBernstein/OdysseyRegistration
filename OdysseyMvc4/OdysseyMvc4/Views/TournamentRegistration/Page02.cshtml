@@ -71,7 +71,7 @@
     @Html.ValidationSummary(true)
     <p style="text-align: center">
         @Html.LabelFor(x => x.SelectedSchool)
-        @Html.DropDownListFor(x => x.SelectedSchool, Model.SchoolList, "Select a School or Organization")
+        @Html.DropDownListFor(x => x.SelectedSchool, Model.SchoolList, "Select a School or Organization", new {@class="dropdown"})
         @Html.ValidationMessageFor(x => x.SelectedSchool)
     </p>
     <hr />
