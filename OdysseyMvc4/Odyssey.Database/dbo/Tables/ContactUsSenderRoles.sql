@@ -1,0 +1,8 @@
+﻿CREATE TABLE [dbo].[ContactUsSenderRoles](
+	[ID] [tinyint] NOT NULL,
+	[role_name] [nvarchar](100) NULL,
+ CONSTRAINT [PK_contact_us_sender_roles] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]

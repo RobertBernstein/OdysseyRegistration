@@ -1,0 +1,35 @@
+﻿CREATE TABLE [dbo].[Schools](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[Name] [nvarchar](50) NULL,
+	[Address] [nvarchar](255) NULL,
+	[City] [nvarchar](50) NULL,
+	[State] [nvarchar](20) NULL,
+	[PostalCode] [nvarchar](20) NULL,
+	[Phone] [nvarchar](30) NULL,
+	[Membership#1] [nvarchar](50) NULL,
+	[Membership#1seen] [nvarchar](50) NULL,
+	[Membership#2] [nvarchar](50) NULL,
+	[Membership#2seen] [nvarchar](50) NULL,
+	[Membership#3] [nvarchar](50) NULL,
+	[Membership#3seen] [nvarchar](50) NULL,
+	[Membership#4] [nvarchar](50) NULL,
+	[Membership#4seen] [nvarchar](50) NULL,
+	[CoordNew?] [nvarchar](50) NULL,
+	[CoordFirstName] [nvarchar](50) NULL,
+	[CoordLastName] [nvarchar](50) NULL,
+	[CoordAddress] [nvarchar](255) NULL,
+	[CoordCity] [nvarchar](50) NULL,
+	[CoordState] [nvarchar](20) NULL,
+	[CoordPostalCode] [nvarchar](20) NULL,
+	[CoordPhone] [nvarchar](30) NULL,
+	[CoordAltPhone] [nvarchar](30) NULL,
+	[CoordMobilePhone] [nvarchar](30) NULL,
+	[CoordFaxNumber] [nvarchar](30) NULL,
+	[CoordEmailName] [nvarchar](50) NULL,
+	[Share?] [nvarchar](50) NULL,
+	[Notes] [nvarchar](max) NULL,
+ CONSTRAINT [PK_Schools] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
