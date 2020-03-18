@@ -1,13 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.136
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29820.132
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OdysseyMvc4", "OdysseyMvc4\OdysseyMvc4.csproj", "{BD2044B5-A24B-4992-960F-5AF07941AB2B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OdysseyMvc4.Tests", "OdysseyMvc4.Tests\OdysseyMvc4.Tests.csproj", "{89C73E79-FE54-46FB-912E-556D0B044291}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UpdateProblemSynopsesForRegistration", "UpdateProblemSynopsesForRegistration\UpdateProblemSynopsesForRegistration.csproj", "{8C5AFCC9-71D8-4AA5-8FA0-AC2FC8B3C30C}"
+EndProject
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "Odyssey.Database", "Odyssey.Database\Odyssey.Database.sqlproj", "{B5879C91-62C4-434D-89B7-0F4D671DB48A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,6 +27,12 @@ Global
 		{8C5AFCC9-71D8-4AA5-8FA0-AC2FC8B3C30C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{8C5AFCC9-71D8-4AA5-8FA0-AC2FC8B3C30C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8C5AFCC9-71D8-4AA5-8FA0-AC2FC8B3C30C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B5879C91-62C4-434D-89B7-0F4D671DB48A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B5879C91-62C4-434D-89B7-0F4D671DB48A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B5879C91-62C4-434D-89B7-0F4D671DB48A}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{B5879C91-62C4-434D-89B7-0F4D671DB48A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B5879C91-62C4-434D-89B7-0F4D671DB48A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B5879C91-62C4-434D-89B7-0F4D671DB48A}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
