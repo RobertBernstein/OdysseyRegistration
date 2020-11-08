@@ -56,5 +56,36 @@
   <Import Condition="'$(SQLDBExtensionsRefPath)' == ''" Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
   <ItemGroup>
     <Folder Include="Properties" />
+    <Folder Include="dbo\" />
+    <Folder Include="dbo\Tables\" />
+    <Folder Include="dbo\Stored Procedures\" />
+    <Folder Include="Scripts\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Build Include="dbo\Tables\CoachesTrainingDivisions.sql" />
+    <Build Include="dbo\Tables\CoachesTrainingRegions.sql" />
+    <Build Include="dbo\Tables\CoachesTrainingRegistrations.sql" />
+    <Build Include="dbo\Tables\CoachesTrainingRoles.sql" />
+    <Build Include="dbo\Tables\Config.sql" />
+    <Build Include="dbo\Tables\ContactUsRecipients.sql" />
+    <Build Include="dbo\Tables\ContactUsSenderRoles.sql" />
+    <Build Include="dbo\Tables\Events.sql" />
+    <Build Include="dbo\Tables\Judges.sql" />
+    <Build Include="dbo\Tables\Problem.sql" />
+    <Build Include="dbo\Tables\Schools.sql" />
+    <Build Include="dbo\Tables\TournamentRegistration.sql" />
+    <Build Include="dbo\Tables\Volunteers.sql" />
+    <Build Include="dbo\Stored Procedures\DeleteAllTournamentRegistrationRecordsAndResetIdToZero.sql" />
+    <Build Include="dbo\Stored Procedures\DeleteNullJudgeRegistrations.sql" />
+    <Build Include="dbo\Stored Procedures\DeleteNullTournamentRegistrations.sql" />
+    <Build Include="dbo\Stored Procedures\DeleteNullVolunteerRegistrations.sql" />
+    <Build Include="dbo\Stored Procedures\DropAndRecreateTournamentRegistrationTable.sql" />
+    <Build Include="dbo\Stored Procedures\FindAllJudgesAssignedToMoreThanOneTeam.sql" />
+    <Build Include="dbo\Stored Procedures\FindNullJudgeRegistrations.sql" />
+    <Build Include="dbo\Stored Procedures\FindNullTournamentRegistrations.sql" />
+    <Build Include="dbo\Stored Procedures\FindNullVolunteerRegistrations.sql" />
+    <Build Include="dbo\Stored Procedures\GenerateImportFileForScoringProgram.sql" />
+    <Build Include="dbo\Stored Procedures\ListAllTeamsRegisteredForTournament.sql" />
+    <None Include="Scripts\ScriptsIgnoredOnImport.sql" />
   </ItemGroup>
 </Project>
