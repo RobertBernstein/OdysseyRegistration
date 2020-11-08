@@ -27,3 +27,4 @@ Make sure to copy the web.config file from **this directory** into the root dire
 ## SQL Server Database
 
 1. Make sure to back up the database after every season (or before the next one).
+1. TODO: Document how I added the SQL Project to Visual Studio and how to modify, use, and deploy it.
