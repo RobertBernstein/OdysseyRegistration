@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="CoachesTrainingRegistrationController.cs" company="Tardis Technologies">
-//   Copyright 2014 Tardis Technologies. All rights reserved.
+//   Copyright 2021 Tardis Technologies. All rights reserved.
 // </copyright>
 // <summary>
 //   The coaches training registration controller.
@@ -34,7 +34,7 @@ namespace OdysseyMvc4.Controllers
         public CoachesTrainingRegistrationController()
         {
             this.CurrentRegistrationType = RegistrationType.CoachesTraining;
-            this.FriendlyRegistrationName = this.GetFriendlyRegistrationName();
+            this.FriendlyRegistrationName = this.GetDisplayableRegistrationName();
         }
 
         /// <summary>

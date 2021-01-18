@@ -1,6 +1,6 @@
 // --------------------------------------------------------------------------------------------------------------------
 // <copyright file="TournamentRegistrationController.cs" company="Tardis Technologies">
-//   Copyright 2014 Tardis Technologies. All rights reserved.
+//   Copyright 2021 Tardis Technologies. All rights reserved.
 // </copyright>
 // <summary>
 //   Defines the TournamentRegistrationController type.
@@ -34,7 +34,7 @@ namespace OdysseyMvc4.Controllers
         public TournamentRegistrationController()
         {
             this.CurrentRegistrationType = RegistrationType.Tournament;
-            this.FriendlyRegistrationName = this.GetFriendlyRegistrationName();
+            this.FriendlyRegistrationName = this.GetDisplayableRegistrationName();
         }
 
         /// <summary>

@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Global.asax.cs" company="Tardis Technologies">
-//   Copyright 2014 Tardis Technologies. All rights reserved.
+//   Copyright 2021 Tardis Technologies. All rights reserved.
 // </copyright>
 // <summary>
 //   The MVC application.

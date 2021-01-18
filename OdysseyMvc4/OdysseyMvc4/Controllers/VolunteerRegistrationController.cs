@@ -1,6 +1,6 @@
 // --------------------------------------------------------------------------------------------------------------------
 // <copyright file="VolunteerRegistrationController.cs" company="Tardis Technologies">
-//   Copyright 2014 Tardis Technologies. All rights reserved.
+//   Copyright 2021 Tardis Technologies. All rights reserved.
 // </copyright>
 // <summary>
 //   Defines the VolunteerRegistrationController type.
@@ -33,7 +33,7 @@ namespace OdysseyMvc4.Controllers
         public VolunteerRegistrationController()
         {
             this.CurrentRegistrationType = RegistrationType.Volunteer;
-            this.FriendlyRegistrationName = this.GetFriendlyRegistrationName();
+            this.FriendlyRegistrationName = this.GetDisplayableRegistrationName();
         }
 
         /// <summary>

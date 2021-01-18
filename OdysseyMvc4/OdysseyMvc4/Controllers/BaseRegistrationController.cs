@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="BaseRegistrationController.cs" company="Tardis Technologies">
-//   Copyright 2014 Tardis Technologies. All rights reserved.
+//   Copyright 2021 Tardis Technologies. All rights reserved.
 // </copyright>
 // <summary>
 //   The base registration controller.
@@ -10,7 +10,6 @@
 namespace OdysseyMvc4.Controllers
 {
     using System;
-    using System.Net;
     using System.Net.Mail;
     using System.Threading;
     using System.Web.Mvc;
@@ -121,6 +120,24 @@ namespace OdysseyMvc4.Controllers
             return this.View(viewData);
         }
 
+        /// <summary>
+        /// Handle HTTP POST requests for the Closed page.
+        /// </summary>
+        /// <returns>
+        /// An ActionResult that sends the caller back to the home page.
+        /// </returns>
+        /// <remarks>
+        /// The ActionName attribute specifies the name of the function for which the MVC routing will search.
+        /// </remarks>
+        [ActionName("Closed")]
+        [HttpPost]
+        public ActionResult ClosedPost()
+        {
+            var viewData = new BaseViewData();
+            this.SetBaseViewData(viewData);
+            return this.Redirect(viewData.Config["HomePage"]);
+        }
+
         private string DetermineSiteCssFile()
         {
             if ((this.Request.Url != null) && this.Request.Url.AbsoluteUri.ToLowerInvariant().Contains("novasouth"))
@@ -161,6 +178,24 @@ namespace OdysseyMvc4.Controllers
         }
 
         /// <summary>
+        /// Handle HTTP POST requests for the Down page.
+        /// </summary>
+        /// <returns>
+        /// An ActionResult that sends the caller back to the home page.
+        /// </returns>
+        /// <remarks>
+        /// The ActionName attribute specifies the name of the function for which the MVC routing will search.
+        /// </remarks>
+        [ActionName("Down")]
+        [HttpPost]
+        public ActionResult DownPost()
+        {
+            var viewData = new BaseViewData();
+            this.SetBaseViewData(viewData);
+            return this.Redirect(viewData.Config["HomePage"]);
+        }
+
+        /// <summary>
         /// Handle HTTP GET requests for the Error page.
         /// </summary>
         /// <returns>
@@ -175,21 +210,35 @@ namespace OdysseyMvc4.Controllers
             return this.View(viewData);
         }
 
-        public string GetFriendlyRegistrationName()
+        /// <summary>
+        /// Gets the registration type name that is displayed to the user when they browse to the web page, e.g.
+        /// Judges, Tournament.
+        /// </summary>
+        /// <returns>
+        /// The <see cref="string"/> displayed to the user for the current registration type when they browse to the
+        /// web page.
+        /// </returns>
+        /// <remarks>
+        /// TODO: Write tests for this.
+        /// </remarks>
+        public string GetDisplayableRegistrationName()
         {
             // Make sure that CurrentRegistrationType has been set before calling this method.
             // TODO: we should probably assert here if CurrentRegistrationType has not been set.
+            // TODO: we should definitely log an error here if CurrentRegistrationType has not been set.
             if (this.CurrentRegistrationType == RegistrationType.None)
             {
                 return string.Empty;
             }
 
-            if (this.CurrentRegistrationType == RegistrationType.CoachesTraining)
+            switch (this.CurrentRegistrationType)
             {
-                return "Coaches Training Registration";
-            }
+                case RegistrationType.CoachesTraining:
+                    return "Coaches Training Registration";
 
-            return this.CurrentRegistrationType + " Registration";
+                default:
+                    return this.CurrentRegistrationType + " Registration";
+            }
         }
 
         /// <summary>
@@ -218,6 +267,7 @@ namespace OdysseyMvc4.Controllers
                 return true;
             }
 
+            // TODO: Add app setting to decide what timezone to consider local.
             // TODO: Adjust for Eastern Time if not in Eastern Time, e.g. Pacific Time
             DateTime currentEasternTime = DateTime.Now; ////.AddHours(3);
             return DateTime.Compare(registrationCloseDateTime, currentEasternTime) < 0;
@@ -249,6 +299,7 @@ namespace OdysseyMvc4.Controllers
                 return false;
             }
 
+            // TODO: Add app setting to decide what timezone to consider local.
             // TODO: Adjust for Eastern Time if not in Eastern Time, e.g. Pacific Time
             DateTime currentEasternTime = DateTime.Now; ////.AddHours(3);
             return DateTime.Compare(currentEasternTime, registrationOpenDate) < 0;
@@ -290,8 +341,9 @@ namespace OdysseyMvc4.Controllers
             SmtpClient smtpClient = new SmtpClient
             {
                 Host = viewData.Config["EmailServer"],
-                Credentials =
-                    new NetworkCredential(viewData.Config["WebmasterEmail"], viewData.Config["WebmasterEmailPassword"])
+                Credentials = new System.Net.NetworkCredential(
+                    viewData.Config["WebmasterEmail"],
+                    viewData.Config["WebmasterEmailPassword"])
             };
 
             // Send the mail message
@@ -359,6 +411,24 @@ namespace OdysseyMvc4.Controllers
             BaseViewData viewData = new BaseViewData();
             this.SetBaseViewData(viewData);
             return this.View(viewData);
+        }
+
+        /// <summary>
+        /// Handle HTTP POST requests for the Soon page.
+        /// </summary>
+        /// <returns>
+        /// An ActionResult that sends the caller back to the home page.
+        /// </returns>
+        /// <remarks>
+        /// The ActionName attribute specifies the name of the function for which the MVC routing will search.
+        /// </remarks>
+        [ActionName("Soon")]
+        [HttpPost]
+        public ActionResult SoonPost()
+        {
+            var viewData = new BaseViewData();
+            this.SetBaseViewData(viewData);
+            return this.Redirect(viewData.Config["HomePage"]);
         }
 
         /// <summary>

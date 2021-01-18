@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="JudgesRegistrationController.cs" company="Tardis Technologies">
-//   Copyright 2013 Tardis Technologies. All rights reserved.
+//   Copyright 2021 Tardis Technologies. All rights reserved.
 // </copyright>
 // <summary>
 //   Defines the JudgesRegistrationController type.
@@ -37,7 +37,7 @@ namespace OdysseyMvc4.Controllers
         public JudgesRegistrationController()
         {
             this.CurrentRegistrationType = RegistrationType.Judges;
-            this.FriendlyRegistrationName = this.GetFriendlyRegistrationName();
+            this.FriendlyRegistrationName = this.GetDisplayableRegistrationName();
         }
 
         public string BuildMailRegionalDirectorHyperLink(Page01ViewData viewData)
