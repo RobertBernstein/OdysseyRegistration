@@ -11,7 +11,6 @@ namespace OdysseyMvc4.ViewData.CoachesTrainingRegistration
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-    using System.Web.Mvc;
 
     using OdysseyMvc4.Models;
 
