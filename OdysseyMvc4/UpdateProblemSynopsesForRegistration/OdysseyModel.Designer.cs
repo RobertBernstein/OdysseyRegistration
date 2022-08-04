@@ -1,4 +1,4 @@
-﻿// T4 code generation is enabled for model 'C:\Dev\TFS-Home\Odyssey\OdysseyRegistration\OdysseyMvc4\UpdateProblemSynopsesForRegistration\OdysseyModel.edmx'. 
+﻿// T4 code generation is enabled for model 'D:\Dev\GitHub\RobertBernstein\OdysseyRegistration\OdysseyMvc4\UpdateProblemSynopsesForRegistration\OdysseyModel.edmx'. 
 // To enable legacy code generation, change the value of the 'Code Generation Strategy' designer
 // property to 'Legacy ObjectContext'. This property is available in the Properties Window when the model
 // is open in the designer.
