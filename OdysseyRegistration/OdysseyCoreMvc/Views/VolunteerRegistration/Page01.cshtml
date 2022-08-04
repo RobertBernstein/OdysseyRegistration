@@ -1,0 +1,107 @@
+﻿@{
+    // Package:	Odyssey of the Mind Web Site
+    // Module:	Volunteer Registration
+    // File:	Page01.cshtml
+    // Author:	Robert Bernstein
+    // Version:	3.0
+    // Created:	10/24/2010: Built in ASP.NET MVC 1.0 (based on ASP.NET 3.5 code from last year)
+    //          11/27/2012: Added Volunteer Registration
+    // Updated:	11/10/2013: v3.0 Rebuilt in ASP.NET MVC 4
+}
+
+@model OdysseyCoreMvc.ViewData.VolunteerRegistration.Page01ViewData
+
+@{
+    ViewBag.Title = Model.FriendlyRegistrationName + " Page 1 of 3";
+}
+
+<h1>
+    @ViewBag.Title
+</h1>
+<h2>
+    Welcome to the
+    @Model.RegionName Region @Model.RegionNumber @Model.Config["Year"]-@Model.Config["EndYear"] Odyssey of the Mind
+    @Model.FriendlyRegistrationName.
+</h2>
+<hr />
+<p>
+    Thank you for agreeing to be a volunteer at our regional tournament.
+</p>
+<p>
+    @Html.Raw(Model.Config["EventVolunteerInformationMessage"])
+</p>
+<p>
+    Because of the important role that our volunteers play in making such an event happen,
+    it is imperative that each volunteer understand his or her responsibilities before
+    signing up.&nbsp; For this reason, we are asking each volunteer to agree to the
+    information below before signing up. &nbsp;Thanks and welcome aboard!
+</p>
+<hr />
+<h2 style="text-align: center">
+    Agreement
+</h2>
+<p>
+    I understand that by submitting this registration form I am committing to be at
+    the following event:
+</p>
+<ul>
+    <li>
+        <strong>Region @Model.RegionNumber Odyssey of the Mind Tournament</strong>
+        <ul>
+            <li>
+                <strong>Location:</strong>
+                @* Begin the hyperlink code, if one is present in the database for the Regional Tournament. *@
+                @if (!string.IsNullOrWhiteSpace(Model.TournamentInfo.LocationURL))
+                {
+                    <a href="@Model.TournamentInfo.LocationURL" target="_blank">@Model.TournamentLocation</a>
+                }
+                else
+                {
+                    // Display the name of the Regional Tournament location (as a link if a URL is present in the database)
+                    @Model.TournamentLocation
+                }
+            </li>
+            <li>
+                <strong>Date: </strong>
+                @Model.TournamentDate
+            </li>
+            <li><strong>Time: </strong>2 hours during the day</li>
+        </ul>
+    </li>
+</ul>
+<p style="font-weight: bold">
+    I understand that:
+</p>
+<ul>
+    <li>
+        &nbsp; I must be at least 18 years of age.<br />
+    </li>
+    <li>
+        &nbsp; If at any time I find that I cannot attend the tournament, I will immediately notify the coach
+        of the team for which I am volunteering and the Region @Model.Config["RegionNumber"] Volunteer Coordinator.
+        You may contact the Volunteer Coordinator through our <a href="@Model.Config["ContactUsURL"]" target="_blank">Contact Us</a> page.
+    </li>
+    <li>
+        &nbsp; If I will miss the tournament, a replacement must be found for me by the team for which I am
+        volunteering. If no replacement is found for me, that team will not be scored at the regional tournament and
+        will not be eligible to go on to the state tournament.
+    </li>
+</ul>
+@if (!string.IsNullOrWhiteSpace(Model.Config["ContactUsURL"]))
+{
+    <p style="font-weight: bold">
+        If you do not meet these requirements but still want to help, please contact our Regional Director through our
+        <a href="@Model.Config["ContactUsURL"]" target="_blank">Contact Us</a> page.
+    </p>
+}
+<hr />
+
+@using (Html.BeginForm())
+{
+    <div style="text-align: right">
+        <input type="submit" value="Begin the Registration Process >>" id="nextButton" name="nextButton" />
+    </div>
+    <div style="text-align: left">
+        <a href="@Model.Config["HomePage"]">Return to the Home Page</a>
+    </div>
+}

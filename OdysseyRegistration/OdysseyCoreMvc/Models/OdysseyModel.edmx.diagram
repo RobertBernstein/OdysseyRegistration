@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="2.0" xmlns:edmx="http://schemas.microsoft.com/ado/2008/10/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2008/10/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="3b05b17b00f8481a997e0f5bb4a17a03" Name="Diagram1" ZoomLevel="101">
+        <EntityTypeShape EntityType="OdysseyModel.CoachesTrainingDivision" Width="1.5" PointX="0.75" PointY="0.75" />
+        <EntityTypeShape EntityType="OdysseyModel.CoachesTrainingRegion" Width="1.5" PointX="2.75" PointY="0.75" />
+        <EntityTypeShape EntityType="OdysseyModel.CoachesTrainingRegistration" Width="1.5" PointX="0.75" PointY="3.75" />
+        <EntityTypeShape EntityType="OdysseyModel.CoachesTrainingRole" Width="1.5" PointX="2.75" PointY="3.75" />
+        <EntityTypeShape EntityType="OdysseyModel.Config" Width="1.5" PointX="4.75" PointY="0.75" />
+        <EntityTypeShape EntityType="OdysseyModel.ContactUsRecipient" Width="1.5" PointX="4.75" PointY="3.75" />
+        <EntityTypeShape EntityType="OdysseyModel.ContactUsSenderRole" Width="1.5" PointX="6.75" PointY="0.75" />
+        <EntityTypeShape EntityType="OdysseyModel.Event" Width="1.5" PointX="2.75" PointY="6.75" />
+        <EntityTypeShape EntityType="OdysseyModel.Judge" Width="1.5" PointX="6.75" PointY="3.75" />
+        <EntityTypeShape EntityType="OdysseyModel.Problem" Width="1.5" PointX="8.75" PointY="0.75" />
+        <EntityTypeShape EntityType="OdysseyModel.School" Width="1.5" PointX="8.75" PointY="6.75" />
+        <EntityTypeShape EntityType="OdysseyModel.TournamentRegistration" Width="1.5" PointX="10.75" PointY="0.75" />
+        <EntityTypeShape EntityType="OdysseyModel.Volunteer" Width="1.5" PointX="12.75" PointY="0.75" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

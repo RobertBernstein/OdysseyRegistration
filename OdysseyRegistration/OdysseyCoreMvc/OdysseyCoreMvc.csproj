@@ -6,4 +6,57 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="Documentation\Registration - Configuration (In Progress).docx" />
+    <None Remove="Documentation\Registration - Configuring Open and Close Dates and Times.docx" />
+    <None Remove="Documentation\Registration - Connecting to the SQL Server Database.docx" />
+    <None Remove="Documentation\Website - Configuration Information.docx" />
+    <None Remove="Documentation\Website - Fixing WordPress Theme Problems.docx" />
+    <None Remove="Models\OdysseyModel.Context.tt" />
+    <None Remove="Models\OdysseyModel.edmx.diagram" />
+    <None Remove="Models\OdysseyModel.tt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Documentation\Registration - Configuration (In Progress).docx" />
+    <Content Include="Documentation\Registration - Configuring Open and Close Dates and Times.docx" />
+    <Content Include="Documentation\Registration - Connecting to the SQL Server Database.docx" />
+    <Content Include="Documentation\Website - Configuration Information.docx" />
+    <Content Include="Documentation\Website - Fixing WordPress Theme Problems.docx" />
+    <Content Include="Models\OdysseyModel.Context.tt">
+      <LastGenOutput>OdysseyModel.Context.cs</LastGenOutput>
+      <Generator>TextTemplatingFileGenerator</Generator>
+    </Content>
+    <Content Include="Models\OdysseyModel.edmx.diagram" />
+    <Content Include="Models\OdysseyModel.tt">
+      <LastGenOutput>OdysseyModel.cs</LastGenOutput>
+      <Generator>TextTemplatingFileGenerator</Generator>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.7" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Models\OdysseyModel.Context.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>OdysseyModel.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Models\OdysseyModel.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>OdysseyModel.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Models\OdysseyModel.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+
 </Project>

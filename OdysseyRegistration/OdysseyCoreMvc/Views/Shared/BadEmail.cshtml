@@ -1,0 +1,39 @@
+﻿@{
+    // Package:	Odyssey of the Mind Web Site
+    // Module:	Base Registration
+    // File:	Page02.aspx
+    // Author:	Robert Bernstein
+    // Version:	3.0
+    // Created:	before 08/04/2007
+    // Updated:	09/29/2007: Replaced PHP database query code with MDB2
+    //			11/29/2009: Rebuilt in ASP.NET 3.5
+    //			01/10/2009: Rebuild in ASP.NET MVC
+    //          11/10/2013: v3.0 Rebuilt in ASP.NET MVC 4
+}
+
+@model OdysseyCoreMvc.ViewData.BaseViewData
+
+@{
+    ViewBag.Title = "Bad E-mail Provided for " + Model.FriendlyRegistrationName;
+}
+
+<script>
+    $(function () {
+        $("#previousPageButton").click(function () {
+            history.go(-1);
+        });
+    });
+</script>
+
+<h1>
+    @ViewBag.Title
+</h1>
+<p>
+    The e-mail address you provided on the previous page was invalid. &nbsp;Please return to the
+    previous page by clicking the button below and making sure that your e-mail address is
+    correct.
+</p>
+
+<p style="text-align: center">
+    <input type="button" value="Return to the Previous Page" id="previousPageButton" />
+</p>

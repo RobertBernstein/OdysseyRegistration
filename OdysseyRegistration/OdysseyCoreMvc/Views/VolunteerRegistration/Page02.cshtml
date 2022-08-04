@@ -1,0 +1,120 @@
+﻿@{
+    // Package:	Odyssey of the Mind Web Site
+    // Module:	Volunteer Registration
+    // File:	Page02.cshtml
+    // Author:	Robert Bernstein
+    // Version:	3.0
+    // Created:	10/24/2010: Built in ASP.NET MVC 1.0 (based on ASP.NET 3.5 code from last year)
+    //          11/27/2012: Added Volunteer Registration.
+    //          12/01/2012: Added 3rd Page to Volunteer Registration.
+    // Updated:	11/10/2013: v3.0 Rebuilt in ASP.NET MVC 4
+}
+
+@model OdysseyCoreMvc.ViewData.VolunteerRegistration.Page02ViewData
+
+@{
+    ViewBag.Title = Model.FriendlyRegistrationName + " Page 2 of 3";
+}
+
+<script language="javascript" type="text/javascript">
+    $(function () {
+        // Set the focus to the default control and select its text.
+        $("#FirstName").focus().select();
+
+        $("#EveningPhone").inputmask("(999) 999-9999");
+        $("#DaytimePhone").inputmask("(999) 999-9999");
+        $("#MobilePhone").inputmask("(999) 999-9999");
+    });
+</script>
+
+<h1>
+    @ViewBag.Title
+</h1>
+<hr />
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary(true)
+    <div style="text-align: left; font-weight: bold">
+        Please provide the following information about yourself.
+    </div>
+    <div class="required" style="text-align: right; font-weight: bold">
+        <span style="text-decoration: underline">Note:</span> Fields marked with
+        <img alt="Required" src="@Url.Content("~/Content/Images/bullet.gif")" width="15" /> are required.
+    </div>
+    <p>
+        <img src="@Url.Content("~/Content/Images/bullet.gif")" alt="Required" width="15" />
+        @Html.LabelFor(x => x.FirstName)
+        @Html.TextBoxFor(x => x.FirstName, null, new { width = "25", maxlength = "50", style = "width:200px" })
+        @Html.ValidationMessageFor(x => x.FirstName)
+    </p>
+    <p>
+        <img src="@Url.Content("~/Content/Images/bullet.gif")" alt="Required" width="15" />
+        @Html.LabelFor(x => x.LastName)
+        @Html.TextBoxFor(x => x.LastName, null, new { width = "25", maxlength = "100", style = "width:200px" })
+        @Html.ValidationMessageFor(x => x.LastName)
+    </p>
+    <p>
+        <img src="@Url.Content("~/Content/Images/bullet.gif")" alt="Required" width="15" />
+        @Html.LabelFor(x => x.EveningPhone)
+        @Html.TextBoxFor(x => x.EveningPhone)
+        @Html.ValidationMessageFor(x => x.EveningPhone)
+    </p>
+    <p>
+        <img src="@Url.Content("~/Content/Images/bullet.gif")" alt="Required" width="15" />
+        @Html.LabelFor(x => x.DaytimePhone)
+        @Html.TextBoxFor(x => x.DaytimePhone)
+        @Html.ValidationMessageFor(x => x.DaytimePhone)
+    </p>
+    <hr />
+    <p>
+        NOTE: We request you provide a mobile phone number so we can contact you on tournament day if needed. &nbsp;If
+        you do not have a mobile phone, please re-enter your day-time phone number. &nbsp;Your phone numbers will not
+        be shared with anyone outside our region.
+    </p>
+    <p>
+        <img src="@Url.Content("~/Content/Images/bullet.gif")" alt="Required" width="15" />
+        @Html.LabelFor(x => x.MobilePhone)
+        @Html.TextBoxFor(x => x.MobilePhone)
+        @Html.ValidationMessageFor(x => x.MobilePhone)
+    </p>
+    <hr />
+    <p>
+        NOTE: We do not use your e-mail address for anything except keeping you informed
+        about the tournament. &nbsp;It will not be shared with anyone outside our region.
+    </p>
+    <p>
+        <img src="@Url.Content("~/Content/Images/bullet.gif")" alt="Required" width="15" />
+        @Html.LabelFor(x => x.EmailAddress)
+        @Html.TextBoxFor(x => x.EmailAddress, null, new { width = "50", maxlength = "50", style = "width:300px" })
+        @Html.ValidationMessageFor(x => x.EmailAddress)
+    </p>
+    <p>
+        <img src="@Url.Content("~/Content/Images/bullet.gif")" alt="Required" width="15" />
+        @Html.LabelFor(x => x.EmailConfirmation)
+        @Html.TextBoxFor(x => x.EmailConfirmation, null, new { width = "50", maxlength = "50", style = "width:300px" })
+        @Html.ValidationMessageFor(x => x.EmailConfirmation)
+    </p>
+    <hr />
+    <p>
+        @Html.Raw(Model.Config["TeamsVolunteerWantsToSeeMessage"])
+    </p>
+    <p>
+        @Html.TextAreaFor(x => x.VolunteerWantsToSee, 6, 100, null)
+        @Html.ValidationMessageFor(x => x.VolunteerWantsToSee)
+    </p>
+    <hr />
+    <p>
+        @Html.Raw(Model.Config["VolunteerNotesMessage"])
+    </p>
+    <p>
+        @Html.TextAreaFor(x => x.Notes, 6, 100, null)
+        @Html.ValidationMessageFor(x => x.Notes)
+    </p>
+    <hr />
+    <div style="text-align: right">
+        <input type="submit" value="Next Page >>" id="nextButton" name="nextButton" />
+    </div>
+    <div style="text-align: left">
+        <a href="@Model.Config["HomePage"]">Return to the Home Page</a>
+    </div>
+}

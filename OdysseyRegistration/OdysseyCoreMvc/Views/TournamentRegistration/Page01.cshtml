@@ -1,0 +1,131 @@
+@{
+    // Package:	Odyssey of the Mind Web Site
+    // Module:	Tournamet Registration
+    // File:	Page01.cshtml
+    // Author:	Robert Bernstein
+    // Version:	3.0
+    // Created:	10/24/2010: v2.0 Built in ASP.NET MVC 1.0 (based on ASP.NET 3.5 code from last year)
+    // Updated:	11/17/2013: v3.0 Rebuilt in ASP.NET MVC 4
+}
+
+@using OdysseyCoreMvc.Models
+@model OdysseyCoreMvc.ViewData.TournamentRegistration.Page01ViewData
+
+@{
+    ViewBag.Title = Model.FriendlyRegistrationName + " Page 1 of 9";
+}
+
+<script type="text/javascript">
+    $(function () {
+        // Initialize the dialog box, but don't open it.
+        $('#schoolAffiliationDialog').dialog({
+            autoOpen: false,
+            width: '30%'
+        });
+
+        // Open the dialog box when the user clicks the hyperlink.
+        $("#schoolAffiliationLink").click(function () {
+            $('#schoolAffiliationDialog').dialog('open');
+        });
+    });
+</script>
+
+<div id="schoolAffiliationDialog" title="School Affiliation">
+    Typically, an Odyssey of the Mind team is affiliated with a single school.&nbsp;
+    Select this school from the drop-down list.&nbsp; If your school is not in the list,
+    please contact our Regional Director using our
+    <a href="@Model.Config["ContactUsURL"]" target="_blank">Contact Us</a> page. &nbsp;Online registration
+    cannot be completed until your school/organization appears in this list.<br />
+    <br />
+    A team may include members from more than one school. &nbsp;A multischool team competes under the name of one of
+    the schools. &nbsp;Select the school for which your team will compete.<br />
+    <br />
+    A team may be made up of members from an established community organization. &nbsp;This group must have a mission
+    other than just entering participants in the Odyssey of the Mind program. &nbsp;Select the sponsoring community
+    organization from the list.<br />
+    <br />
+    For additional information, please see the Odyssey of the Mind Program Guide, which can be downloaded in its
+    entirety at
+    <a href="@Model.Config["ProgramGuideURL"]" target="_blank">@Model.Config["ProgramGuideURL"]</a> (1.5 megabytes).
+</div>
+
+<h1>
+    @ViewBag.Title
+</h1>
+
+<h2>
+    Welcome to the
+    @Model.RegionName Region @Model.RegionNumber @Model.Config["Year"]-@Model.Config["EndYear"] Odyssey of the Mind
+    @Model.FriendlyRegistrationName.
+</h2>
+<p>
+    Are you ready to register for the Region @Model.RegionNumber tournament, to be held on @Model.TournamentDate?
+</p>
+<p>
+    Before you begin, make sure to have ALL of the following:
+</p>
+<ul>
+    <li>
+        &nbsp;&nbsp;&nbsp; School Name (click <a id="schoolAffiliationLink" href="javascript:void(0)">here</a> for an explanation)
+    </li>
+    <li>
+        &nbsp;&nbsp;&nbsp; Your Judge's first and last names and ID number (from <a href="/Registration/JudgesRegistration" target="_blank">Judges Registration</a>)
+    </li>
+    @* TODO: Commented this out; check the database for disabled Volunteer Registration instead - Rob, 12/12/2014. *@
+@*<li>
+        &nbsp;&nbsp;&nbsp; Your Volunteer's first and last names and ID number (from <a href="/Registration/VolunteerRegistration" target="_blank">Volunteer Registration</a>)
+    </li>
+*@
+    <li>
+        &nbsp;&nbsp;&nbsp; Name and Grade for each team member
+    </li>
+    <li>
+        &nbsp;&nbsp;&nbsp; Problem Name (click <a href="@Model.Config["LinkToSynopses"]" target="_blank">here</a> for
+        the problem synopses)
+    </li>
+</ul>
+
+@if (Model.AcceptingPayPal)
+{
+    <p>
+        Payment for tournament registration can be made online or by mailing a check. &nbsp;The details for both options
+        will be shown once you have completed the registration process.
+    </p>
+}
+else
+{
+    <p>
+        Payment for tournament registration will be made by check and mailed to the address that you will receive upon
+        completion of the registration process. &nbsp;Due to numerous difficulties we experienced in previous years, we
+        are not accepting payment by PayPal.
+    </p>
+}
+
+@if (string.IsNullOrWhiteSpace(Model.LateTeamRegistrationFee))
+{
+    <p>
+        The registration fee is @Model.TeamRegistrationFee per team.
+    </p>
+}
+else
+{
+    <p>
+        The early registration fee is @Model.TeamRegistrationFee for teams that register by @Model.LateEventCostStartDate.
+        The fee is @Model.LateTeamRegistrationFee for teams that register by the final deadline of
+        @Model.TournamentRegistrationCloseDateTime.
+    </p>
+}
+<p style="font-weight: bold">
+    For this registration to be complete, the treasurer must <span style="text-decoration: underline">receive</span>
+    payment of the team’s @Model.FriendlyRegistrationName fee no later than @Model.PaymentDueDate.
+</p>
+<hr />
+@using (Html.BeginForm())
+{
+    <div style="text-align: right">
+        <input type="submit" value="Begin the Registration Process >>" id="nextButton" />
+    </div>
+    <div style="text-align: left">
+        <a href="@Model.Config["HomePage"]">Return to the Home Page</a>
+    </div>
+}
