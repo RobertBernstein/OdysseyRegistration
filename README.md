@@ -27,4 +27,34 @@ Make sure to copy the web.config file from **this directory** into the root dire
 ## SQL Server Database
 
 1. Make sure to back up the database after every season (or before the next one).
-1. TODO: Document how I added the SQL Project to Visual Studio and how to modify, use, and deploy it.
+2. TODO: Document how I added the SQL Project to Visual Studio and how to modify, use, and deploy it.
+
+### Manage Database
+
+Site: novanorth.org
+
+```
+Database Name:   DB_12824_registration
+Version:         MS SQL 2008 R2
+Database Server: s06.winhost.com
+Database User:   DB_12824_registration_user
+Assigned Quota:  25 MB
+```
+
+Connection String: "Data Source=tcp:s06.winhost.com;Initial Catalog=DB_12824_registration;User ID=DB_12824_registration_user;Password=******;Integrated Security=False;"
+
+### Run the SQL Server database in a Docker container
+
+1. Open a PowerShell prompt.
+1. `docker pull mcr.microsoft.com/mssql/server:2019-latest`
+1. `docker volume create sql-volume`
+1. `$mssql_sa_password = ""`
+1. `docker run -e 'ACCEPT_EULA=Y' -e "MSSQL_SA_PASSWORD=$mssql_sa_password" -p 1433:1433 --name sql1 --hostname sql1 --mount "source=sql-volume,target=/sqldata" -d mcr.microsoft.com/mssql/server:2019-latest`
+1. `docker exec -it -u 0 sql1 "bash"   # -u 0 lets us log in as root.`
+1. `chmod 777 /sqldata`
+1. `docker container exec sql1 /opt/mssql-tools/bin/sqlcmd -U sa -P "$mssql_sa_password" -Q "CREATE DATABASE [DB_12824_registration] ON  PRIMARY ( NAME = N'DB_12824_registration_data', FILENAME = N'/sqldata/DB_12824_registration_data.mdf' , SIZE = 4160KB , MAXSIZE = 25600KB , FILEGROWTH = 1024KB ) LOG ON ( NAME = N'DB_12824_registration_log', FILENAME = N'/sqldata/DB_12824_registration_log.ldf' , SIZE = 1024KB , MAXSIZE = 1024000KB , FILEGROWTH = 65536KB );"`
+1. `docker cp "2022-08-06 - NoVA North Production Database Export Script.sql" sql1:/sqldata`
+1. `docker container exec sql1 /opt/mssql-tools/bin/sqlcmd -U sa -P "$mssql_sa_password" -i "/sqldata/2022-08-06 - NoVA North Production Database Export Script.sql"`
+
+### Shutdown and clean up the Docker container
+`docker stop sql1 ; docker rm sql1`
