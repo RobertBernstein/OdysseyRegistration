@@ -1,6 +1,7 @@
 ﻿CREATE TABLE [dbo].[Schools](
 	[ID] [int] IDENTITY(1,1) NOT NULL,
 	[Name] [nvarchar](50) NULL,
+    [RegionNumber]     SMALLINT       NULL,
 	[Address] [nvarchar](255) NULL,
 	[City] [nvarchar](50) NULL,
 	[State] [nvarchar](20) NULL,
