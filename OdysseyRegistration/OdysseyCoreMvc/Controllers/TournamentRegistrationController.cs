@@ -1045,7 +1045,9 @@ namespace OdysseyCoreMvc.Controllers
             viewData.SchoolName = this.Repository.GetSchoolNameFromSchoolId(viewData.TournamentRegistration.SchoolID);
             viewData.ProblemName = this.Repository.GetProblemNameFromProblemId(viewData.TournamentRegistration.ProblemID);
             viewData.Division = (viewData.TournamentRegistration.Division == "0") ? "Primary" : viewData.TournamentRegistration.Division;
-            viewData.MailBody = this.GenerateEmailBody(viewData);
+
+            // TODO: Uncomment this and get it working again.
+            //viewData.MailBody = this.GenerateEmailBody(viewData);
 
             // Instantiate a new instance of MailMessage.
             MailMessage mailMessage = this.BuildMessage(
@@ -1135,7 +1137,9 @@ namespace OdysseyCoreMvc.Controllers
 
             viewData.SchoolName = this.Repository.GetSchoolNameFromSchoolId(viewData.TournamentRegistration.SchoolID);
             viewData.ProblemName = this.Repository.GetProblemNameFromProblemId(viewData.TournamentRegistration.ProblemID);
-            viewData.MailBody = this.GenerateEmailBody(viewData);
+
+            // TODO: Uncomment this and get it working again.
+            //viewData.MailBody = this.GenerateEmailBody(viewData);
 
             // Instantiate a new instance of MailMessage.
             MailMessage mailMessage = this.BuildMessage(
@@ -1248,6 +1252,7 @@ namespace OdysseyCoreMvc.Controllers
 
         #endregion
 
+        // TODO: Uncomment this method and get it working again.
         /// <summary>
         /// The generate email body.
         /// </summary>
@@ -1257,22 +1262,22 @@ namespace OdysseyCoreMvc.Controllers
         /// <returns>
         /// The <see cref="string"/>.
         /// </returns>
-        private string GenerateEmailBody(Page10ViewData page10ViewData)
-        {
-            using (StringWriter writer = new())
-            {
-                this.ViewData.Model = page10ViewData;
+        //private string GenerateEmailBody(Page10ViewData page10ViewData)
+        //{
+        //    using (StringWriter writer = new())
+        //    {
+        //        this.ViewData.Model = page10ViewData;
 
-                // TODO: See the following page to fix this:
-                // https://docs.microsoft.com/en-us/aspnet/core/mvc/views/partial?view=aspnetcore-6.0
-                ViewEngineResult result = ViewEngines.Engines.FindPartialView(this.ControllerContext, "TournamentRegistration/EmailPartial");
+        //        // TODO: See the following page to fix this:
+        //        // https://docs.microsoft.com/en-us/aspnet/core/mvc/views/partial?view=aspnetcore-6.0
+        //        ViewEngineResult result = ViewEngines.Engines.FindPartialView(this.ControllerContext, "TournamentRegistration/EmailPartial");
                 
-                // TODO: Test that adding HtmlHelperOptions actually worked!
-                HtmlHelperOptions helperOptions = new();
-                ViewContext viewContext = new(ControllerContext, result.View, this.ViewData, this.TempData, writer, helperOptions);
-                result.View.RenderAsync(viewContext);
-                return writer.GetStringBuilder().ToString();
-            }
-        }
+        //        // TODO: Test that adding HtmlHelperOptions actually worked!
+        //        HtmlHelperOptions helperOptions = new();
+        //        ViewContext viewContext = new(ControllerContext, result.View, this.ViewData, this.TempData, writer, helperOptions);
+        //        result.View.RenderAsync(viewContext);
+        //        return writer.GetStringBuilder().ToString();
+        //    }
+        //}
     }
 }
