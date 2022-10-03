@@ -63,7 +63,7 @@ BEGIN
 		  ,[TimeRegistrationStarted]
 		  ,[UserAgent]
 	  FROM TournamentRegistration as t,
-		   problem as p,
+		   Problem as p,
 		   Schools as s
 	  WHERE t.ProblemID = p.ProblemID
 	  AND t.SchoolID = s.ID
