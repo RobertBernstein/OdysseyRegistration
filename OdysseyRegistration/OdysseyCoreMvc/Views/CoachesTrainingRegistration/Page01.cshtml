@@ -105,9 +105,9 @@
         <strong>Coaches Training</strong>
     <li>
         <strong>Location:</strong>
-        @if (!string.IsNullOrWhiteSpace(Model.CoachesTrainingInfo.LocationURL))
+        @if (!string.IsNullOrWhiteSpace(Model.CoachesTrainingInfo.LocationUrl))
         {
-            <a href="@Model.CoachesTrainingInfo.LocationURL" target="_blank">@Model.CoachesTrainingInfo.Location</a>
+            <a href="@Model.CoachesTrainingInfo.LocationUrl" target="_blank">@Model.CoachesTrainingInfo.Location</a>
         }
         else
         {

@@ -51,7 +51,7 @@ namespace OdysseyCoreMvc.ViewData.TournamentRegistration
         /// <summary>
         /// Gets or sets the list of judges found.
         /// </summary>
-        public IQueryable<Judge>? ListOfJudgesFound { get; set; }
+        public IQueryable<Judges>? ListOfJudgesFound { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether no judges found.

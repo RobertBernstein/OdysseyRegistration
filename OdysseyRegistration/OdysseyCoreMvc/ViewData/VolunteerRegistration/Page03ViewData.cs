@@ -24,8 +24,8 @@ namespace OdysseyCoreMvc.ViewData.VolunteerRegistration
 
         public string? MailErrorMessage { get; set; }
 
-        public Volunteer? Volunteer { get; set; }
+        public Volunteers? Volunteer { get; set; }
 
-        public Event? VolunteerInfo { get; set; }
+        public Events? VolunteerInfo { get; set; }
     }
 }

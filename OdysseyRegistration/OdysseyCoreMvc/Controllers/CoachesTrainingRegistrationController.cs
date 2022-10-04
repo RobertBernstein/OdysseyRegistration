@@ -102,7 +102,7 @@ namespace OdysseyCoreMvc.Controllers
             {
                 ////this.UpdateModel(viewData);
 
-                var registration = new CoachesTrainingRegistration
+                var registration = new CoachesTrainingRegistrations
                 {
                     FirstName = viewData.FirstName,
                     LastName = viewData.LastName,
@@ -126,7 +126,7 @@ namespace OdysseyCoreMvc.Controllers
                 ////    //Session["ID"] = registration.JudgeID;
                 ////}
 
-                return this.RedirectToAction("Page02", new { id = registration.RegistrationID });
+                return this.RedirectToAction("Page02", new { id = registration.RegistrationId });
             }
             catch (Exception ex)
             {
@@ -206,9 +206,9 @@ namespace OdysseyCoreMvc.Controllers
             mailBody = Regex.Replace(mailBody, "<span>Region</span>", "Region " + viewData.Config["RegionNumber"]);
 
             StringBuilder stringBuilder = new StringBuilder();
-            if (!string.IsNullOrWhiteSpace(viewData.CoachesTrainingInfo.LocationURL))
+            if (!string.IsNullOrWhiteSpace(viewData.CoachesTrainingInfo.LocationUrl))
             {
-                stringBuilder.Append("<a href=\"" + viewData.CoachesTrainingInfo.LocationURL + "\" target=\"_blank\">");
+                stringBuilder.Append("<a href=\"" + viewData.CoachesTrainingInfo.LocationUrl + "\" target=\"_blank\">");
             }
 
             // Add the name of the Coaches Training location (as a link if a URL is present in the database).
@@ -230,7 +230,7 @@ namespace OdysseyCoreMvc.Controllers
             }
 
             // End the hyperlink code, if one is present in the database for Judges Training
-            if (!string.IsNullOrWhiteSpace(viewData.CoachesTrainingInfo.LocationURL))
+            if (!string.IsNullOrWhiteSpace(viewData.CoachesTrainingInfo.LocationUrl))
             {
                 stringBuilder.Append("</a>");
             }

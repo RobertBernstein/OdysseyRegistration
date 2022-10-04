@@ -25,7 +25,7 @@ namespace OdysseyCoreMvc.ViewData.JudgesRegistration
         /// <summary>
         /// Gets or sets the judges info.
         /// </summary>
-        public Event? JudgesInfo { get; set; }
+        public Events? JudgesInfo { get; set; }
 
         /// <summary>
         /// Gets the judges training date or "TBA" if it is not defined.

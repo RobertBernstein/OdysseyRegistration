@@ -194,7 +194,7 @@ namespace OdysseyCoreMvc.Controllers
 
                 // TODO: else case: Send an e-mail reporting database failure; could not create the record
                 this.Repository.AddTournamentRegistration(newRegistration);
-                return this.RedirectToAction("Page02", new { id = newRegistration.TeamID });
+                return this.RedirectToAction("Page02", new { id = newRegistration.TeamId });
             }
             catch (Exception exception)
             {
@@ -256,7 +256,7 @@ namespace OdysseyCoreMvc.Controllers
             {
                 TournamentRegistration newRegistrationData = new TournamentRegistration
                 {
-                    SchoolID = page02ViewData.SelectedSchool
+                    SchoolId = page02ViewData.SelectedSchool
                 };
 
                 // TODO: if case: Send an e-mail reporting database failure; could not find the record already added to the database
@@ -335,7 +335,7 @@ namespace OdysseyCoreMvc.Controllers
 
                 // Make sure any judge found is not already assigned to a team.
                 if ((page03ViewData.ListOfJudgesFound.First() != null) &&
-                    (page03ViewData.ListOfJudgesFound.First().TeamID != null))
+                    (page03ViewData.ListOfJudgesFound.First().TeamId != null))
                 {
                     page03ViewData.JudgeAlreadyTaken = true;
                     return this.View(page03ViewData);
@@ -343,7 +343,7 @@ namespace OdysseyCoreMvc.Controllers
 
                 TournamentRegistration newRegistrationData = new TournamentRegistration
                 {
-                    JudgeID = short.Parse(page03ViewData.JudgeId)
+                    JudgeId = short.Parse(page03ViewData.JudgeId)
                 };
 
                 // TODO: Send an e-mail reporting database failure; could not find the record already added to the database
@@ -443,7 +443,7 @@ namespace OdysseyCoreMvc.Controllers
                 }
 
                 // Make sure the volunteer found is not already assigned to a team.
-                if (page04ViewData.VolunteerFound.TeamID.HasValue)
+                if (page04ViewData.VolunteerFound.TeamId.HasValue)
                 {
                     page04ViewData.VolunteerAlreadyTaken = true;
                     return this.View(page04ViewData);
@@ -451,7 +451,7 @@ namespace OdysseyCoreMvc.Controllers
 
                 TournamentRegistration newRegistrationData = new TournamentRegistration
                 {
-                    VolunteerID = page04ViewData.VolunteerFound.VolunteerID
+                    VolunteerId = page04ViewData.VolunteerFound.VolunteerId
                 };
 
                 // TODO: Send an e-mail reporting database failure; could not find the record already added to the database.
@@ -751,14 +751,14 @@ namespace OdysseyCoreMvc.Controllers
                 }
 
                 // Only record Spontaneous if the team is competing in the Primary Division
-                newRegistrationData.ProblemID = 6;
+                newRegistrationData.ProblemId = 6;
                 newRegistrationData.Spontaneous = page07ViewData.IsDoingSpontaneous == "Yes";
                 goto Label_00E2;
             Label_00B0:
-                newRegistrationData.ProblemID = int.Parse(page07ViewData.Division123ProblemChoice);
+                newRegistrationData.ProblemId = int.Parse(page07ViewData.Division123ProblemChoice);
                 goto Label_00E2;
             Label_00C9:
-                newRegistrationData.ProblemID = int.Parse(page07ViewData.SelectedProblem);
+                newRegistrationData.ProblemId = int.Parse(page07ViewData.SelectedProblem);
             Label_00E2:
                 this.Repository.UpdateTournamentRegistration(id, 7, newRegistrationData);
 
@@ -863,11 +863,11 @@ namespace OdysseyCoreMvc.Controllers
             };
 
             this.SetBaseViewData(viewData);
-            viewData.SchoolName = this.Repository.GetSchoolNameFromSchoolId(viewData.TournamentRegistration.SchoolID);
+            viewData.SchoolName = this.Repository.GetSchoolNameFromSchoolId(viewData.TournamentRegistration.SchoolId);
 
             string judgeFirstName;
             string judgeLastName;
-            this.Repository.GetJudgeNameFromJudgeId(viewData.TournamentRegistration.JudgeID, out judgeFirstName, out judgeLastName);
+            this.Repository.GetJudgeNameFromJudgeId(viewData.TournamentRegistration.JudgeId, out judgeFirstName, out judgeLastName);
 
             viewData.JudgeFirstName = judgeFirstName;
             viewData.JudgeLastName = judgeLastName;
@@ -878,7 +878,7 @@ namespace OdysseyCoreMvc.Controllers
             ////viewData.VolunteerLastName = volunteerById.LastName;
 
             viewData.Division = (viewData.TournamentRegistration.Division == "0") ? "Primary" : viewData.TournamentRegistration.Division;
-            viewData.ProblemName = this.Repository.GetProblemNameFromProblemId(viewData.TournamentRegistration.ProblemID);
+            viewData.ProblemName = this.Repository.GetProblemNameFromProblemId(viewData.TournamentRegistration.ProblemId);
 
             if (viewData.TournamentRegistration.Spontaneous.HasValue)
             {
@@ -1042,8 +1042,8 @@ namespace OdysseyCoreMvc.Controllers
             ////viewData.VolunteerFirstName = volunteerById.FirstName;
             ////viewData.VolunteerLastName = volunteerById.LastName;
 
-            viewData.SchoolName = this.Repository.GetSchoolNameFromSchoolId(viewData.TournamentRegistration.SchoolID);
-            viewData.ProblemName = this.Repository.GetProblemNameFromProblemId(viewData.TournamentRegistration.ProblemID);
+            viewData.SchoolName = this.Repository.GetSchoolNameFromSchoolId(viewData.TournamentRegistration.SchoolId);
+            viewData.ProblemName = this.Repository.GetProblemNameFromProblemId(viewData.TournamentRegistration.ProblemId);
             viewData.Division = (viewData.TournamentRegistration.Division == "0") ? "Primary" : viewData.TournamentRegistration.Division;
 
             // TODO: Uncomment this and get it working again.
@@ -1126,7 +1126,7 @@ namespace OdysseyCoreMvc.Controllers
 
             string judgeFirstName;
             string judgeLastName;
-            this.Repository.GetJudgeNameFromJudgeId(viewData.TournamentRegistration.JudgeID, out judgeFirstName, out judgeLastName);
+            this.Repository.GetJudgeNameFromJudgeId(viewData.TournamentRegistration.JudgeId, out judgeFirstName, out judgeLastName);
 
             viewData.JudgeFirstName = judgeFirstName;
             viewData.JudgeLastName = judgeLastName;
@@ -1135,8 +1135,8 @@ namespace OdysseyCoreMvc.Controllers
             ////viewData.VolunteerFirstName = volunteerById.FirstName;
             ////viewData.VolunteerLastName = volunteerById.LastName;
 
-            viewData.SchoolName = this.Repository.GetSchoolNameFromSchoolId(viewData.TournamentRegistration.SchoolID);
-            viewData.ProblemName = this.Repository.GetProblemNameFromProblemId(viewData.TournamentRegistration.ProblemID);
+            viewData.SchoolName = this.Repository.GetSchoolNameFromSchoolId(viewData.TournamentRegistration.SchoolId);
+            viewData.ProblemName = this.Repository.GetProblemNameFromProblemId(viewData.TournamentRegistration.ProblemId);
 
             // TODO: Uncomment this and get it working again.
             //viewData.MailBody = this.GenerateEmailBody(viewData);

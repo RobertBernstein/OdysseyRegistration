@@ -21,7 +21,7 @@ namespace OdysseyCoreMvc.ViewData.CoachesTrainingRegistration
         /// <summary>
         /// Gets or sets the coaches training info.
         /// </summary>
-        public Event? CoachesTrainingInfo { get; set; }
+        public Events? CoachesTrainingInfo { get; set; }
 
         /// <summary>
         /// Gets or sets the first name.
@@ -119,7 +119,7 @@ namespace OdysseyCoreMvc.ViewData.CoachesTrainingRegistration
         /// <summary>
         /// Gets or sets the coaches training registration.
         /// </summary>
-        public Models.CoachesTrainingRegistration? CoachesTrainingRegistration { get; set; }
+        public Models.CoachesTrainingRegistrations? CoachesTrainingRegistration { get; set; }
 
         /// <summary>
         /// Gets the coordinators do not pay coaches training registration fee message.

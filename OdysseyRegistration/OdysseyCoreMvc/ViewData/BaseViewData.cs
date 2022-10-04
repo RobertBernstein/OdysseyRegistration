@@ -64,7 +64,7 @@ namespace OdysseyCoreMvc.ViewData
             }
         }
 
-        public Event? TournamentInfo { get; set; }
+        public Events? TournamentInfo { get; set; }
 
         public string TournamentLocation
         {

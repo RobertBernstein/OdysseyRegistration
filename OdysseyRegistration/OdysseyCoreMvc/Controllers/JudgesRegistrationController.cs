@@ -54,11 +54,11 @@ namespace OdysseyCoreMvc.Controllers
 
         protected string GenerateEmailBody(Page03ViewData page03ViewData)
         {
-            string input = Regex.Replace(Regex.Replace(Regex.Replace(Regex.Replace(page03ViewData.JudgesInfo.EventMailBody, "<span>JudgeID</span>", page03ViewData.Judge.JudgeID.ToString(CultureInfo.InvariantCulture)), "<span>FirstName</span>", page03ViewData.Judge.FirstName), "<span>LastName</span>", page03ViewData.Judge.LastName), "<span>Region</span>", "Region " + page03ViewData.Config["RegionNumber"]);
+            string input = Regex.Replace(Regex.Replace(Regex.Replace(Regex.Replace(page03ViewData.JudgesInfo.EventMailBody, "<span>JudgeID</span>", page03ViewData.Judge.JudgeId.ToString(CultureInfo.InvariantCulture)), "<span>FirstName</span>", page03ViewData.Judge.FirstName), "<span>LastName</span>", page03ViewData.Judge.LastName), "<span>Region</span>", "Region " + page03ViewData.Config["RegionNumber"]);
             StringBuilder mailBody = new StringBuilder();
-            if (!string.IsNullOrWhiteSpace(page03ViewData.JudgesInfo.LocationURL))
+            if (!string.IsNullOrWhiteSpace(page03ViewData.JudgesInfo.LocationUrl))
             {
-                mailBody.Append("<a href=\"" + page03ViewData.JudgesInfo.LocationURL + "\" target=\"_blank\">");
+                mailBody.Append("<a href=\"" + page03ViewData.JudgesInfo.LocationUrl + "\" target=\"_blank\">");
             }
 
             mailBody.Append(page03ViewData.JudgesInfo.Location);
@@ -77,16 +77,16 @@ namespace OdysseyCoreMvc.Controllers
                 mailBody.Append(", " + page03ViewData.JudgesInfo.LocationState);
             }
 
-            if (!string.IsNullOrWhiteSpace(page03ViewData.JudgesInfo.LocationURL))
+            if (!string.IsNullOrWhiteSpace(page03ViewData.JudgesInfo.LocationUrl))
             {
                 mailBody.Append("</a>");
             }
 
             input = Regex.Replace(Regex.Replace(Regex.Replace(input, "<span>JudgesTrainingLocation</span>", mailBody.ToString()), "<span>JudgesTrainingDate</span>", page03ViewData.JudgesInfo.StartDate.HasValue ? page03ViewData.JudgesInfo.StartDate.Value.ToLongDateString() : "TBA"), "<span>JudgesTrainingTime</span>", !string.IsNullOrWhiteSpace(page03ViewData.JudgesInfo.Time) ? page03ViewData.JudgesInfo.Time : "TBA");
             mailBody.Clear();
-            if (!string.IsNullOrWhiteSpace(page03ViewData.TournamentInfo.LocationURL))
+            if (!string.IsNullOrWhiteSpace(page03ViewData.TournamentInfo.LocationUrl))
             {
-                mailBody.Append("<a href=\"" + page03ViewData.TournamentInfo.LocationURL + "\" target=\"_blank\">");
+                mailBody.Append("<a href=\"" + page03ViewData.TournamentInfo.LocationUrl + "\" target=\"_blank\">");
             }
 
             mailBody.Append(page03ViewData.TournamentInfo.Location);
@@ -105,7 +105,7 @@ namespace OdysseyCoreMvc.Controllers
                 mailBody.Append(", " + page03ViewData.TournamentInfo.LocationState);
             }
 
-            if (!string.IsNullOrWhiteSpace(page03ViewData.TournamentInfo.LocationURL))
+            if (!string.IsNullOrWhiteSpace(page03ViewData.TournamentInfo.LocationUrl))
             {
                 mailBody.Append("</a>");
             }
@@ -243,7 +243,7 @@ namespace OdysseyCoreMvc.Controllers
 
             try
             {
-                Judge newJudge = new Judge
+                Judges newJudge = new Judges
                 {
                     TimeRegistrationStarted = DateTime.Now,
                     UserAgent = /*this.Request.UserAgent*/ Request.Headers["User-Agent"].ToString()
@@ -252,7 +252,7 @@ namespace OdysseyCoreMvc.Controllers
                 // TODO: else case: Send an e-mail reporting database failure; could not create the record
 
                 this.Repository.AddJudge(newJudge);
-                return this.RedirectToAction("Page02", new { id = newJudge.JudgeID });
+                return this.RedirectToAction("Page02", new { id = newJudge.JudgeId });
             }
             catch (Exception exception)
             {
@@ -312,7 +312,7 @@ namespace OdysseyCoreMvc.Controllers
                 // TODO: What should we do here if the ModelState isn't valid? - Rob, 09/30/2014
                 if (this.ModelState.IsValid)
                 {
-                    Judge newJudgeData = new Judge
+                    Judges newJudgeData = new Judges
                     {
                         FirstName = page02ViewData.FirstName,
                         LastName = page02ViewData.LastName,
@@ -329,15 +329,15 @@ namespace OdysseyCoreMvc.Controllers
                         ProblemChoice2 = page02ViewData.ProblemChoice2,
                         ProblemChoice3 = page02ViewData.ProblemChoice3,
                         HasChildrenCompeting = page02ViewData.HasChildrenCompeting,
-                        ProblemCOI1 = page02ViewData.ProblemConflict1,
-                        ProblemCOI2 = page02ViewData.ProblemConflict2,
-                        ProblemCOI3 = page02ViewData.ProblemConflict3,
+                        ProblemCoi1 = page02ViewData.ProblemConflict1,
+                        ProblemCoi2 = page02ViewData.ProblemConflict2,
+                        ProblemCoi3 = page02ViewData.ProblemConflict3,
                         YearsOfLongTermJudgingExperience = page02ViewData.YearsOfLongTermJudgingExperience,
                         YearsOfSpontaneousJudgingExperience = page02ViewData.YearsOfSpontaneousJudgingExperience,
                         PreviousPositions = GetPreviousPositions(page02ViewData),
                         WillingToBeScorechecker = page02ViewData.WillingToBeScorechecker,
                         TshirtSize = page02ViewData.TshirtSize,
-                        WantsCEUCredit = page02ViewData.WantsCeuCredit,
+                        WantsCeucredit = page02ViewData.WantsCeuCredit,
                         Notes = page02ViewData.Notes
                     };
 
@@ -404,7 +404,7 @@ namespace OdysseyCoreMvc.Controllers
             this.SetBaseViewData(viewData);
 
             // Update the DateTime of the registration in the Judge record
-            viewData.Judge = this.Repository.GetJudgeById(id).FirstOrDefault<Judge>();
+            viewData.Judge = this.Repository.GetJudgeById(id).FirstOrDefault<Judges>();
 
             // This should NEVER happen!
             if (viewData.Judge == null)

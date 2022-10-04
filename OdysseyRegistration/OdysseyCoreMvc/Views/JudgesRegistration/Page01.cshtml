@@ -1,4 +1,6 @@
-﻿@{
+﻿@page
+
+@{
     // Package:	Odyssey of the Mind Web Site
     // Module:	Judges Registration
     // File:	Page01.cshtml
@@ -50,9 +52,9 @@
             <li>
                 <strong>Location:</strong>
                 @* // Begin the hyperlink code, if one is present in the database for Judges Training. *@
-                @if (!string.IsNullOrWhiteSpace(Model.JudgesInfo.LocationURL))
+                @if (!string.IsNullOrWhiteSpace(Model.JudgesInfo.LocationUrl))
                 {
-                    <a href="@Model.JudgesInfo.LocationURL" target="_blank">@Model.JudgesInfo.Location</a>
+                    <a href="@Model.JudgesInfo.LocationUrl" target="_blank">@Model.JudgesInfo.Location</a>
                 }
                 else
                 {
@@ -76,9 +78,9 @@
             <li>
                 <strong>Location:</strong>
                 @* Begin the hyperlink code, if one is present in the database for the Regional Tournament. *@
-                @if (!string.IsNullOrWhiteSpace(Model.TournamentInfo.LocationURL))
+                @if (!string.IsNullOrWhiteSpace(Model.TournamentInfo.LocationUrl))
                 {
-                    <a href="@Model.TournamentInfo.LocationURL" target="_blank">@Model.TournamentLocation</a>
+                    <a href="@Model.TournamentInfo.LocationUrl" target="_blank">@Model.TournamentLocation</a>
                 }
                 else
                 {
@@ -135,7 +137,13 @@
     </p>
 }
 <hr />
-@using (Html.BeginForm(null, null, FormMethod.Post, new { defaultbutton = "nextButton", id = "MainForm" }))
+<form>
+    <p>
+        <a asp-page="Page02">Begin the Registration Process >></a>
+        <a asp-page="@Model.Config["HomePage"]">Return to the Home Page</a>
+    </p>
+</form>
+@*@using (Html.BeginForm(null, null, FormMethod.Post, new { defaultbutton = "nextButton", id = "MainForm" }))
 {
     <div style="text-align: right">
         <input type="submit" value="Begin the Registration Process >>" id="nextButton" name="nextButton" />
@@ -144,3 +152,4 @@
         <a href="@Model.Config["HomePage"]">Return to the Home Page</a>
     </div>
 }
+*@

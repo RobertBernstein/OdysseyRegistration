@@ -29,7 +29,7 @@ namespace OdysseyCoreMvc.Models
         /// <summary>
         /// The coaches training info.
         /// </summary>
-        private Event? coachesTrainingInfo;
+        private Events? coachesTrainingInfo;
 
         /// <summary>
         /// The registration system configuration.
@@ -39,17 +39,17 @@ namespace OdysseyCoreMvc.Models
         /// <summary>
         /// The divisions.
         /// </summary>
-        private IEnumerable<CoachesTrainingDivision>? divisions;
+        private IEnumerable<CoachesTrainingDivisions>? divisions;
 
         /// <summary>
         /// The judges.
         /// </summary>
-        private IEnumerable<Judge>? judges;
+        private IEnumerable<Judges>? judges;
 
         /// <summary>
         /// The judges info.
         /// </summary>
-        private Event? judgesInfo;
+        private Events? judgesInfo;
 
         /// <summary>
         /// The primary problem.
@@ -101,12 +101,12 @@ namespace OdysseyCoreMvc.Models
         /// <summary>
         /// The regions.
         /// </summary>
-        private IEnumerable<CoachesTrainingRegion> regions;
+        private IEnumerable<CoachesTrainingRegions> regions;
 
         /// <summary>
         /// The roles.
         /// </summary>
-        private IEnumerable<CoachesTrainingRole> roles;
+        private IEnumerable<CoachesTrainingRoles> roles;
 
         /// <summary>
         /// The schools.
@@ -116,12 +116,12 @@ namespace OdysseyCoreMvc.Models
         /// <summary>
         /// The tournament info.
         /// </summary>
-        private Event tournamentInfo;
+        private Events tournamentInfo;
 
         /// <summary>
         /// The volunteer info.
         /// </summary>
-        private Event volunteerInfo;
+        private Events volunteerInfo;
 
         ///// <summary>
         ///// The get column names.
@@ -179,7 +179,7 @@ namespace OdysseyCoreMvc.Models
         /// <summary>
         /// Gets or sets the coaches training info.
         /// </summary>
-        public Event CoachesTrainingInfo
+        public Events CoachesTrainingInfo
         {
             get
             {
@@ -197,12 +197,12 @@ namespace OdysseyCoreMvc.Models
         /// <summary>
         /// Gets the coaches training registrations.
         /// </summary>
-        public IEnumerable<CoachesTrainingRegistration> CoachesTrainingRegistrations
+        public IEnumerable<CoachesTrainingRegistrations> CoachesTrainingRegistrations
         {
             get
             {
                 return from c in this.context.CoachesTrainingRegistrations
-                       orderby c.RegistrationID
+                       orderby c.RegistrationId
                        select c;
             }
         }
@@ -234,13 +234,13 @@ namespace OdysseyCoreMvc.Models
         /// <summary>
         /// Gets the divisions.
         /// </summary>
-        public IEnumerable<CoachesTrainingDivision> Divisions
+        public IEnumerable<CoachesTrainingDivisions> Divisions
         {
             get
             {
                 // If divisions is null, run the LINQ query, assign the result to Divisions, and return the result.
                 return this.divisions ?? (this.Divisions = from d in this.context.CoachesTrainingDivisions
-                                                           orderby d.ID
+                                                           orderby d.Id
                                                            select d);
             }
 
@@ -253,13 +253,13 @@ namespace OdysseyCoreMvc.Models
         /// <summary>
         /// Gets the judges.
         /// </summary>
-        public IEnumerable<Judge> Judges
+        public IEnumerable<Judges> Judges
         {
             get
             {
                 // If judges is null, run the LINQ query, assign the result to Judges, and return the result.
                 return this.judges ?? (this.Judges = from j in this.context.Judges
-                                                     orderby j.JudgeID
+                                                     orderby j.JudgeId
                                                      select j);
             }
 
@@ -272,7 +272,7 @@ namespace OdysseyCoreMvc.Models
         /// <summary>
         /// Gets or sets the judges info.
         /// </summary>
-        public Event JudgesInfo
+        public Events JudgesInfo
         {
             get
             {
@@ -297,7 +297,7 @@ namespace OdysseyCoreMvc.Models
                 // If primaryProblem is null, run the LINQ query, assign the result to PrimaryProblem, and return the result.
                 // - The Primary problem is ProblemID 6
                 return this.primaryProblem ?? (this.PrimaryProblem = from p in this.context.Problems
-                                                                     where p.ProblemID == 6
+                                                                     where p.ProblemId == 6
                                                                      select p);
             }
 
@@ -316,10 +316,10 @@ namespace OdysseyCoreMvc.Models
             {
                 // If problems is null, run the LINQ query, assign the result to Problems, and return the result
                 IOrderedQueryable<Problem> temp = from p in this.context.Problems
-                                                  orderby p.ProblemID
+                                                  orderby p.ProblemId
                                                   select p;
 
-                Problem thePrimaryProblem = temp.FirstOrDefault(problem => problem.ProblemID == 6);
+                Problem thePrimaryProblem = temp.FirstOrDefault(problem => problem.ProblemId == 6);
                 if (thePrimaryProblem != null)
                 {
                     thePrimaryProblem.ProblemName += " (The Primary Problem)";
@@ -343,11 +343,11 @@ namespace OdysseyCoreMvc.Models
             {
                 // If problems is null, run the LINQ query, assign the result to Problems, and return the result
                 IQueryable<Problem> temp = from p in this.context.Problems
-                                           orderby p.ProblemID
+                                           orderby p.ProblemId
                                            where p.ProblemName != "Spontaneous"
                                            select p;
 
-                Problem thePrimaryProblem = temp.FirstOrDefault(problem => problem.ProblemID == 6);
+                Problem thePrimaryProblem = temp.FirstOrDefault(problem => problem.ProblemId == 6);
                 if (thePrimaryProblem != null)
                 {
                     thePrimaryProblem.ProblemName += " (The Primary Problem)";
@@ -367,8 +367,8 @@ namespace OdysseyCoreMvc.Models
             {
                 // If problems is null, run the LINQ query, assign the result to Problems, and return the result.
                 IOrderedQueryable<Problem> temp = from p in this.context.Problems
-                                                  where p.ProblemID != 7
-                                                  orderby p.ProblemID
+                                                  where p.ProblemId != 7
+                                                  orderby p.ProblemId
                                                   select p;
 
                 // TODO: When the following was uncommented, " (The Primary Problem)" showed up twice in the same dropdown entry.
@@ -400,7 +400,7 @@ namespace OdysseyCoreMvc.Models
                 // - Skip ProblemID 0, which is "Not Specified"
                 return this.problems ?? (this.Problems = from p in this.context.Problems
                                                          where p.ProblemCategory != null // not "No Preference" and not "Spontaneous"
-                                                         orderby p.ProblemID
+                                                         orderby p.ProblemId
                                                          select p);
             }
 
@@ -420,8 +420,8 @@ namespace OdysseyCoreMvc.Models
                 // If problems is null, run the LINQ query, assign the result to Problems, and return the result.
                 // - Skip ProblemIDs 0 ("Not Specified"), 6 (Primary), and 7 (Spontaneous)
                 return this.problemsWithoutPrimaryOrSpontaneous ?? (this.ProblemsWithoutPrimaryOrSpontaneous = from p in this.context.Problems
-                                                                                                               where p.ProblemID != 0 && p.ProblemID != 6 && p.ProblemID != 7
-                                                                                                               orderby p.ProblemID
+                                                                                                               where p.ProblemId != 0 && p.ProblemId != 6 && p.ProblemId != 7
+                                                                                                               orderby p.ProblemId
                                                                                                                select p);
             }
 
@@ -441,8 +441,8 @@ namespace OdysseyCoreMvc.Models
                 // If problems is null, run the LINQ query, assign the result to Problems, and return the result.
                 // - Skip ProblemID 0, which is "Not Specified"
                 return this.problemsWithoutSpontaneous ?? (this.ProblemsWithoutSpontaneous = from p in this.context.Problems
-                                                                                             where p.ProblemID != 0 && p.ProblemID != 7
-                                                                                             orderby p.ProblemID
+                                                                                             where p.ProblemId != 0 && p.ProblemId != 7
+                                                                                             orderby p.ProblemId
                                                                                              select p);
             }
 
@@ -489,14 +489,14 @@ namespace OdysseyCoreMvc.Models
         /// <summary>
         /// Gets the regions.
         /// </summary>
-        public IEnumerable<CoachesTrainingRegion> Regions
+        public IEnumerable<CoachesTrainingRegions> Regions
         {
             get
             {
                 // If _problems is null, run the LINQ query, assign the result to Problems, and return the result
                 // - Skip ProblemID 0, which is "Not Specified"
                 return this.regions ?? (this.Regions = from r in this.context.CoachesTrainingRegions
-                                                       orderby r.ID
+                                                       orderby r.Id
                                                        select r);
             }
 
@@ -509,14 +509,14 @@ namespace OdysseyCoreMvc.Models
         /// <summary>
         /// Gets the roles.
         /// </summary>
-        public IEnumerable<CoachesTrainingRole> Roles
+        public IEnumerable<CoachesTrainingRoles> Roles
         {
             get
             {
                 // If _problems is null, run the LINQ query, assign the result to Problems, and return the result
                 // - Skip ProblemID 0, which is "Not Specified"
                 return this.roles ?? (this.Roles = from r in this.context.CoachesTrainingRoles
-                                                   orderby r.ID
+                                                   orderby r.Id
                                                    select r);
             }
 
@@ -535,9 +535,9 @@ namespace OdysseyCoreMvc.Models
             {
                 // If schools is null, run the LINQ query, assign the result to Schools, and return the result.
                 return this.schools ?? (this.Schools = from s in this.context.Schools
-                                                       where s.Membership_1seen == "yes"
+                                                       where s.Membership1seen == "yes"
                                                        orderby s.Name
-                                                       select new { s.ID, s.Name });
+                                                       select new { s.Id, s.Name });
             }
 
             private set
@@ -549,7 +549,7 @@ namespace OdysseyCoreMvc.Models
         /// <summary>
         /// Gets or sets the tournament info.
         /// </summary>
-        public Event TournamentInfo
+        public Events TournamentInfo
         {
             get
             {
@@ -584,7 +584,7 @@ namespace OdysseyCoreMvc.Models
             get
             {
                 return from t in this.context.TournamentRegistrations
-                       orderby t.TeamID
+                       orderby t.TeamId
                        select t;
             }
         }
@@ -593,7 +593,7 @@ namespace OdysseyCoreMvc.Models
         /// Gets or sets the volunteer info.
         /// TODO: Test that this works. I copied it from TournamentInfo - Rob, 12/12/2014.
         /// </summary>
-        public Event VolunteerInfo
+        public Events VolunteerInfo
         {
             get
             {
@@ -634,7 +634,7 @@ namespace OdysseyCoreMvc.Models
         /// <returns>
         /// The <see cref="int"/>.
         /// </returns>
-        public int AddCoachesTrainingRegistration(CoachesTrainingRegistration newRegistration)
+        public int AddCoachesTrainingRegistration(CoachesTrainingRegistrations newRegistration)
         {
             if (newRegistration != null)
             {
@@ -655,7 +655,7 @@ namespace OdysseyCoreMvc.Models
         /// <returns>
         /// The number of objects added to the database.
         /// </returns>
-        public int AddJudge(Judge newJudge)
+        public int AddJudge(Judges newJudge)
         {
             if (newJudge != null)
             {
@@ -701,12 +701,12 @@ namespace OdysseyCoreMvc.Models
         /// The number of objects added to the database, i.e. the number of database
         /// records created.
         /// </returns>
-        public int AddVolunteer(Volunteer newVolunteer, int? tournamentRegistrationId = null)
+        public int AddVolunteer(Volunteers newVolunteer, int? tournamentRegistrationId = null)
         {
             // TODO: Add exception handling.
             if (newVolunteer != null)
             {
-                newVolunteer.TeamID = tournamentRegistrationId;
+                newVolunteer.TeamId = tournamentRegistrationId;
                 this.context.Volunteers.Add(newVolunteer);
                 return this.context.SaveChanges();
             }
@@ -728,13 +728,13 @@ namespace OdysseyCoreMvc.Models
         /// </param>
         public void ClearTeamIdFromJudgeRecord(int judgeId, string judgeFirstName, string judgeLastName)
         {
-            Judge judgeRecord = (from j in this.context.Judges
-                                 where j.JudgeID == judgeId
-                                 select j).FirstOrDefault();
+            Judges judgeRecord = (from j in this.context.Judges
+                                  where j.JudgeId == judgeId
+                                  select j).FirstOrDefault();
 
             if (judgeRecord != null)
             {
-                judgeRecord.TeamID = null;
+                judgeRecord.TeamId = null;
                 this.context.SaveChanges();
             }
         }
@@ -754,13 +754,13 @@ namespace OdysseyCoreMvc.Models
 
             // Solution for multiple joins came from http://stackoverflow.com/questions/267488/linq-to-sql-multiple-left-outer-joins
             return from j in this.context.Judges
-                   join p in this.context.Problems on j.ProblemCOI1 equals p.ProblemID.ToString(CultureInfo.InvariantCulture) into jp
+                   join p in this.context.Problems on j.ProblemCoi1 equals p.ProblemId.ToString(CultureInfo.InvariantCulture) into jp
                    from y in jp
-                   orderby j.JudgeID
+                   orderby j.JudgeId
                    select new JudgesExport
                               {
-                                  JudgeId = j.JudgeID,
-                                  TeamId = j.TeamID,
+                                  JudgeId = j.JudgeId,
+                                  TeamId = j.TeamId,
                                   FirstName = j.FirstName,
                                   LastName = j.LastName,
                                   Address = j.Address,
@@ -773,13 +773,13 @@ namespace OdysseyCoreMvc.Models
                                   Email = j.EmailAddress,
                                   Notes = j.Notes,
                                   ProblemConflictOfInterest1 = y.ProblemName,
-                                  ProblemConflictOfInterest2 = j.ProblemCOI2,
-                                  ProblemConflictOfInterest3 = j.ProblemCOI3,
+                                  ProblemConflictOfInterest2 = j.ProblemCoi2,
+                                  ProblemConflictOfInterest3 = j.ProblemCoi3,
                                   ProblemChoice1 = j.ProblemChoice1,
                                   ProblemChoice2 = j.ProblemChoice2,
                                   ProblemChoice3 = j.ProblemChoice3,
                                   TshirtSize = j.TshirtSize,
-                                  ContinuingEducationUnits = j.WantsCEUCredit,
+                                  ContinuingEducationUnits = j.WantsCeucredit,
                                   YearsOfLongTermJudgingExperience = j.YearsOfLongTermJudgingExperience,
                                   YearsOfSpontaneousJudgingExperience = j.YearsOfSpontaneousJudgingExperience,
                                   TimeRegistered = j.TimeRegistered,
@@ -798,10 +798,10 @@ namespace OdysseyCoreMvc.Models
         /// <returns>
         /// The <see cref="IQueryable"/>.
         /// </returns>
-        public IQueryable<CoachesTrainingRegistration> GetCoachById(int coachId)
+        public IQueryable<CoachesTrainingRegistrations> GetCoachById(int coachId)
         {
             return from c in this.context.CoachesTrainingRegistrations
-                   where c.RegistrationID == coachId
+                   where c.RegistrationId == coachId
                    select c;
         }
 
@@ -814,10 +814,10 @@ namespace OdysseyCoreMvc.Models
         /// <returns>
         /// The <see cref="IQueryable"/>.
         /// </returns>
-        public IQueryable<CoachesTrainingRegistration> GetCoachesTrainingRegistrationById(int id)
+        public IQueryable<CoachesTrainingRegistrations> GetCoachesTrainingRegistrationById(int id)
         {
             return from c in this.context.CoachesTrainingRegistrations
-                   where c.RegistrationID == id
+                   where c.RegistrationId == id
                    select c;
         }
 
@@ -830,10 +830,10 @@ namespace OdysseyCoreMvc.Models
         /// <returns>
         /// The <see cref="IQueryable"/>.
         /// </returns>
-        public IQueryable<Judge> GetJudgeById(int judgeId)
+        public IQueryable<Judges> GetJudgeById(int judgeId)
         {
             return from j in this.context.Judges
-                   where j.JudgeID == judgeId
+                   where j.JudgeId == judgeId
                    select j;
         }
 
@@ -852,10 +852,10 @@ namespace OdysseyCoreMvc.Models
         /// <returns>
         /// The <see cref="IQueryable"/>.
         /// </returns>
-        public IQueryable<Judge> GetJudgeByIdAndName(int judgeId, string judgeFirstName, string judgeLastName)
+        public IQueryable<Judges> GetJudgeByIdAndName(int judgeId, string judgeFirstName, string judgeLastName)
         {
             return from j in this.context.Judges
-                   where (j.JudgeID == judgeId) && (j.FirstName.ToLower() == judgeFirstName.ToLower()) && (j.LastName.ToLower() == judgeLastName.ToLower())
+                   where (j.JudgeId == judgeId) && (j.FirstName.ToLower() == judgeFirstName.ToLower()) && (j.LastName.ToLower() == judgeLastName.ToLower())
                    select j;
         }
 
@@ -906,9 +906,9 @@ namespace OdysseyCoreMvc.Models
         public short? GetJudgeIdFromTournamentRegistrationId(int tournamentRegistrationId)
         {
             var firstJudgeIdRecordOrDefault =
-                this.context.TournamentRegistrations.FirstOrDefault(t => t.TeamID == tournamentRegistrationId);
+                this.context.TournamentRegistrations.FirstOrDefault(t => t.TeamId == tournamentRegistrationId);
 
-            return firstJudgeIdRecordOrDefault?.JudgeID;
+            return firstJudgeIdRecordOrDefault?.JudgeId;
         }
 
         /// <summary>
@@ -925,8 +925,8 @@ namespace OdysseyCoreMvc.Models
         /// </param>
         public void GetJudgeNameFromJudgeId(short? judgeId, out string judgeFirstName, out string judgeLastName)
         {
-            Judge judgeRecord = (from j in this.context.Judges
-                                 where j.JudgeID == judgeId
+            Judges judgeRecord = (from j in this.context.Judges
+                                 where j.JudgeId == judgeId
                                  select j).FirstOrDefault();
 
             if (judgeRecord == null)
@@ -955,7 +955,7 @@ namespace OdysseyCoreMvc.Models
         public List<string> GetMemberGradesByRegistration(int id)
         {
             TournamentRegistration registration = (from t in this.context.TournamentRegistrations
-                                                   where t.TeamID == id
+                                                   where t.TeamId == id
                                                    select t).FirstOrDefault();
 
             if (registration == null)
@@ -984,7 +984,7 @@ namespace OdysseyCoreMvc.Models
         /// <returns>
         /// The <see cref="string"/>.
         /// </returns>
-        public string GetProblemNameFromProblemId(int? problemId)
+        public string? GetProblemNameFromProblemId(int? problemId)
         {
             try
             {
@@ -995,7 +995,7 @@ namespace OdysseyCoreMvc.Models
                 }
 
                 Problem firstProblemNameRecordOrDefault = (from p in this.context.Problems
-                                                           where p.ProblemID == problemId
+                                                           where p.ProblemId == problemId
                                                            select p).FirstOrDefault();
 
                 return firstProblemNameRecordOrDefault != null ? firstProblemNameRecordOrDefault.ProblemName : null;
@@ -1017,9 +1017,9 @@ namespace OdysseyCoreMvc.Models
         /// </returns>
         public string GetSchoolNameFromSchoolId(int? schoolId)
         {
-            School firstSchoolRecordOrDefault = (from s in this.context.Schools
-                                                 where s.ID == schoolId
-                                                 select s).FirstOrDefault();
+            Schools firstSchoolRecordOrDefault = (from s in this.context.Schools
+                                                  where s.Id == schoolId
+                                                  select s).FirstOrDefault();
 
             return firstSchoolRecordOrDefault != null ? firstSchoolRecordOrDefault.Name : null;
         }
@@ -1036,7 +1036,7 @@ namespace OdysseyCoreMvc.Models
         public TournamentRegistration GetTournamentRegistrationById(int tournamentRegistrationId)
         {
             return (from t in this.context.TournamentRegistrations
-                    where t.TeamID == tournamentRegistrationId
+                    where t.TeamId == tournamentRegistrationId
                     select t).FirstOrDefault();
         }
 
@@ -1049,9 +1049,9 @@ namespace OdysseyCoreMvc.Models
         /// <returns>
         /// The <see cref="Volunteer"/>.
         /// </returns>
-        public Volunteer GetVolunteerById(int? volunteerId)
+        public Volunteers GetVolunteerById(int? volunteerId)
         {
-            return this.context.Volunteers.FirstOrDefault(v => v.VolunteerID == volunteerId);
+            return this.context.Volunteers.FirstOrDefault(v => v.VolunteerId == volunteerId);
         }
 
         /// <summary>
@@ -1071,12 +1071,12 @@ namespace OdysseyCoreMvc.Models
         /// The first matching volunteer from the database if found, null otherwise.
         /// </returns>
         /// TODO: Verify that this still works - Rob, 12/12/2014.
-        public Volunteer GetVolunteerByIdAndName(int volunteerId, string volunteerFirstName, string volunteerLastName)
+        public Volunteers GetVolunteerByIdAndName(int volunteerId, string volunteerFirstName, string volunteerLastName)
         {
             return
                 this.context.Volunteers.FirstOrDefault(
                     v =>
-                    v.VolunteerID == volunteerId &&
+                    v.VolunteerId == volunteerId &&
                     string.Equals(v.FirstName, volunteerFirstName, StringComparison.CurrentCultureIgnoreCase) &&
                     string.Equals(v.LastName, volunteerLastName, StringComparison.CurrentCultureIgnoreCase));
         }
@@ -1095,7 +1095,7 @@ namespace OdysseyCoreMvc.Models
         [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "Reviewed. Suppression is OK here.")]
         public int? GetVolunteerIdFromTournamentRegistrationId(int tournamentRegistrationId)
         {
-            return this.context.TournamentRegistrations.First(t => t.TeamID == tournamentRegistrationId).VolunteerID;
+            return this.context.TournamentRegistrations.First(t => t.TeamId == tournamentRegistrationId).VolunteerId;
         }
 
         /// <summary>
@@ -1113,10 +1113,10 @@ namespace OdysseyCoreMvc.Models
         /// <returns>
         /// The <see cref="int"/>.
         /// </returns>
-        public int UpdateJudge(int judgeId, int pageNumber, Judge newRegistrationData)
+        public int UpdateJudge(int judgeId, int pageNumber, Judges newRegistrationData)
         {
-            IQueryable<Judge> judgesFound = from j in this.context.Judges
-                                            where j.JudgeID == judgeId
+            IQueryable<Judges> judgesFound = from j in this.context.Judges
+                                            where j.JudgeId == judgeId
                                             select j;
 
             if (!judgesFound.Any())
@@ -1142,15 +1142,15 @@ namespace OdysseyCoreMvc.Models
                     judgesFound.First().ProblemChoice2 = newRegistrationData.ProblemChoice2;
                     judgesFound.First().ProblemChoice3 = newRegistrationData.ProblemChoice3;
                     judgesFound.First().HasChildrenCompeting = newRegistrationData.HasChildrenCompeting;
-                    judgesFound.First().ProblemCOI1 = newRegistrationData.ProblemCOI1;
-                    judgesFound.First().ProblemCOI2 = newRegistrationData.ProblemCOI2;
-                    judgesFound.First().ProblemCOI3 = newRegistrationData.ProblemCOI3;
+                    judgesFound.First().ProblemCoi1 = newRegistrationData.ProblemCoi1;
+                    judgesFound.First().ProblemCoi2 = newRegistrationData.ProblemCoi2;
+                    judgesFound.First().ProblemCoi3 = newRegistrationData.ProblemCoi3;
                     judgesFound.First().YearsOfLongTermJudgingExperience = newRegistrationData.YearsOfLongTermJudgingExperience;
                     judgesFound.First().YearsOfSpontaneousJudgingExperience = newRegistrationData.YearsOfSpontaneousJudgingExperience;
                     judgesFound.First().PreviousPositions = newRegistrationData.PreviousPositions;
                     judgesFound.First().WillingToBeScorechecker = newRegistrationData.WillingToBeScorechecker;
                     judgesFound.First().TshirtSize = newRegistrationData.TshirtSize;
-                    judgesFound.First().WantsCEUCredit = newRegistrationData.WantsCEUCredit;
+                    judgesFound.First().WantsCeucredit = newRegistrationData.WantsCeucredit;
                     judgesFound.First().Notes = newRegistrationData.Notes;
 
                     // TODO: Is the following still used? - Rob, 12/12/2014.
@@ -1181,9 +1181,9 @@ namespace OdysseyCoreMvc.Models
         /// </returns>
         public int UpdateJudgeEmail(int judgeId, string email)
         {
-            IQueryable<Judge> judgesFound = from j in this.context.Judges
-                                            where j.JudgeID == judgeId
-                                            select j;
+            IQueryable<Judges> judgesFound = from j in this.context.Judges
+                                             where j.JudgeId == judgeId
+                                             select j;
 
             if (!judgesFound.Any())
             {
@@ -1220,17 +1220,17 @@ namespace OdysseyCoreMvc.Models
             // TODO: Can this be replaced by judgeId.HasValue? - Rob, 12/12/2014.
             if (judgeId != null)
             {
-                Judge judgeRecord = (from j in this.context.Judges
-                                     where j.JudgeID == judgeId
-                                     select j).First();
+                Judges judgeRecord = (from j in this.context.Judges
+                                      where j.JudgeId == judgeId
+                                      select j).First();
 
                 // Has this judge already been assigned to another team?
-                if (!string.IsNullOrWhiteSpace(judgeRecord.TeamID))
+                if (!string.IsNullOrWhiteSpace(judgeRecord.TeamId))
                 {
                     // Is this just the Coach backing up in the registration, changing a few values, and trying to
                     // re-register the team with the same judge?  If so, that's ok.
                     int teamId;
-                    if (int.TryParse(judgeRecord.TeamID, out teamId) && (teamId == tournamentRegistrationId))
+                    if (int.TryParse(judgeRecord.TeamId, out teamId) && (teamId == tournamentRegistrationId))
                     {
                         return 0;
                     }
@@ -1241,7 +1241,7 @@ namespace OdysseyCoreMvc.Models
                         "The webmaster has been notified and you will be contacted about how to complete your registration.";
                 }
 
-                judgeRecord.TeamID = tournamentRegistrationId.ToString(CultureInfo.InvariantCulture);
+                judgeRecord.TeamId = tournamentRegistrationId.ToString(CultureInfo.InvariantCulture);
                 judgeRecord.TimeAssignedToTeam = DateTime.Now;
 
                 // SaveChanges returns the number of objects added to the database
@@ -1268,7 +1268,7 @@ namespace OdysseyCoreMvc.Models
         /// </returns>
         public int UpdateTournamentRegistration(int id, int pageNumber, TournamentRegistration newRegistrationData)
         {
-            IQueryable<TournamentRegistration> registration = this.context.TournamentRegistrations.Where(r => r.TeamID == id);
+            IQueryable<TournamentRegistration> registration = this.context.TournamentRegistrations.Where(r => r.TeamId == id);
 
             // If no registrations are returned from the database, just return failure.
             if (!registration.Any())
@@ -1279,15 +1279,15 @@ namespace OdysseyCoreMvc.Models
             switch (pageNumber)
             {
                 case 2:
-                    registration.First().SchoolID = newRegistrationData.SchoolID;
+                    registration.First().SchoolId = newRegistrationData.SchoolId;
                     break;
 
                 case 3:
-                    registration.First().JudgeID = newRegistrationData.JudgeID;
+                    registration.First().JudgeId = newRegistrationData.JudgeId;
                     break;
 
                 case 4:
-                    registration.First().VolunteerID = newRegistrationData.VolunteerID;
+                    registration.First().VolunteerId = newRegistrationData.VolunteerId;
                     break;
 
                 case 5:
@@ -1334,7 +1334,7 @@ namespace OdysseyCoreMvc.Models
                     break;
 
                 case 7:
-                    registration.First().ProblemID = newRegistrationData.ProblemID;
+                    registration.First().ProblemId = newRegistrationData.ProblemId;
                     registration.First().Division = newRegistrationData.Division;
                     registration.First().Spontaneous = newRegistrationData.Spontaneous;
                     break;
@@ -1368,9 +1368,9 @@ namespace OdysseyCoreMvc.Models
         /// <returns>
         /// The number of objects updated in the database.
         /// </returns>
-        public int UpdateVolunteer(int volunteerId, int pageNumber, Volunteer newRegistrationData)
+        public int UpdateVolunteer(int volunteerId, int pageNumber, Volunteers newRegistrationData)
         {
-            Volunteer volunteerFound = this.context.Volunteers.FirstOrDefault(v => v.VolunteerID == volunteerId);
+            Volunteers volunteerFound = this.context.Volunteers.FirstOrDefault(v => v.VolunteerId == volunteerId);
 
             if (volunteerFound == null)
             {
@@ -1415,7 +1415,7 @@ namespace OdysseyCoreMvc.Models
         /// </returns>
         public int UpdateVolunteerEmail(int volunteerId, string email)
         {
-            Volunteer volunteerFound = this.context.Volunteers.FirstOrDefault(v => v.VolunteerID == volunteerId);
+            Volunteers volunteerFound = this.context.Volunteers.FirstOrDefault(v => v.VolunteerId == volunteerId);
 
             if (volunteerFound == null)
             {
@@ -1449,16 +1449,16 @@ namespace OdysseyCoreMvc.Models
             // TODO: Check the TeamID.  If it's the same as the currently registering team, just return.
             errorMessage = string.Empty;
 
-            Volunteer volunteerRecord = (from v in this.context.Volunteers
-                                         where v.VolunteerID == volunteerId
-                                         select v).First();
+            Volunteers volunteerRecord = (from v in this.context.Volunteers
+                                          where v.VolunteerId == volunteerId
+                                          select v).First();
 
             // Has this volunteer already been assigned to a team?
-            if (volunteerRecord.TeamID != null)
+            if (volunteerRecord.TeamId != null)
             {
                 // Is this just the Coach backing up in the registration, changing a few values, and trying to
                 // re-register the team with the same volunteer?  If so, that's ok.
-                int teamId = (int)volunteerRecord.TeamID;
+                int teamId = (int)volunteerRecord.TeamId;
                 if (teamId == tournamentRegistrationId)
                 {
                     return 0;
@@ -1471,7 +1471,7 @@ namespace OdysseyCoreMvc.Models
                     "The webmaster has been notified and you will be contacted about how to complete your registration.";
             }
 
-            volunteerRecord.TeamID = tournamentRegistrationId;
+            volunteerRecord.TeamId = tournamentRegistrationId;
             volunteerRecord.TimeAssignedToTeam = DateTime.Now;
 
             // SaveChanges returns the number of objects added to the database

@@ -21,7 +21,7 @@ namespace OdysseyCoreMvc.ViewData.TournamentRegistration
         [StringLength(0x19, ErrorMessage="The Volunteer's first name must not be more than 25 characters."), Required, Display(Name="Volunteer's First Name")]
         public string? VolunteerFirstName { get; set; }
 
-        public Volunteer? VolunteerFound { get; set; }
+        public Volunteers? VolunteerFound { get; set; }
 
         [Range(0, 0x7fffffff, ErrorMessage="The Volunteer's ID must only contain numeric digits."), StringLength(4, ErrorMessage="The Volunteer's ID must not be more than 3 digits."), Required, Display(Name="Volunteer's ID Number")]
         public string? VolunteerId { get; set; }

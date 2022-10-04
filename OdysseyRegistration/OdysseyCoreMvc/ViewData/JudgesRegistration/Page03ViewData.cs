@@ -22,12 +22,12 @@ namespace OdysseyCoreMvc.ViewData.JudgesRegistration
         /// <summary>
         /// Gets or sets the judges info.
         /// </summary>
-        public Event? JudgesInfo { get; set; }
+        public Events? JudgesInfo { get; set; }
 
         /// <summary>
         /// Gets or sets the judge.
         /// </summary>
-        public Judge? Judge { get; set; }
+        public Judges? Judge { get; set; }
 
         /// <summary>
         /// Gets or sets the mail body.

@@ -51,9 +51,9 @@
             <li>
                 <strong>Location:</strong>
                 @* Begin the hyperlink code, if one is present in the database for the Regional Tournament. *@
-                @if (!string.IsNullOrWhiteSpace(Model.TournamentInfo.LocationURL))
+                @if (!string.IsNullOrWhiteSpace(Model.TournamentInfo.LocationUrl))
                 {
-                    <a href="@Model.TournamentInfo.LocationURL" target="_blank">@Model.TournamentLocation</a>
+                    <a href="@Model.TournamentInfo.LocationUrl" target="_blank">@Model.TournamentLocation</a>
                 }
                 else
                 {

@@ -28,18 +28,18 @@ namespace OdysseyCoreMvc.Models
             //throw new UnintentionalCodeFirstException();
         }
     
-        public DbSet<CoachesTrainingDivision> CoachesTrainingDivisions { get; set; }
-        public DbSet<CoachesTrainingRegion> CoachesTrainingRegions { get; set; }
-        public DbSet<CoachesTrainingRegistration> CoachesTrainingRegistrations { get; set; }
-        public DbSet<CoachesTrainingRole> CoachesTrainingRoles { get; set; }
+        public DbSet<CoachesTrainingDivisions> CoachesTrainingDivisions { get; set; }
+        public DbSet<CoachesTrainingRegions> CoachesTrainingRegions { get; set; }
+        public DbSet<CoachesTrainingRegistrations> CoachesTrainingRegistrations { get; set; }
+        public DbSet<CoachesTrainingRoles> CoachesTrainingRoles { get; set; }
         public DbSet<Config> Configs { get; set; }
-        public DbSet<ContactUsRecipient> ContactUsRecipients { get; set; }
-        public DbSet<ContactUsSenderRole> ContactUsSenderRoles { get; set; }
-        public DbSet<Event> Events { get; set; }
-        public DbSet<Judge> Judges { get; set; }
+        public DbSet<ContactUsRecipients> ContactUsRecipients { get; set; }
+        public DbSet<ContactUsSenderRoles> ContactUsSenderRoles { get; set; }
+        public DbSet<Events> Events { get; set; }
+        public DbSet<Judges> Judges { get; set; }
         public DbSet<Problem> Problems { get; set; }
-        public DbSet<School> Schools { get; set; }
+        public DbSet<Schools> Schools { get; set; }
         public DbSet<TournamentRegistration> TournamentRegistrations { get; set; }
-        public DbSet<Volunteer> Volunteers { get; set; }
+        public DbSet<Volunteers> Volunteers { get; set; }
     }
 }

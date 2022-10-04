@@ -108,7 +108,7 @@ namespace OdysseyCoreMvc.Controllers
 
             try
             {
-                Volunteer newVolunteer = new()
+                Volunteers newVolunteer = new()
                 {
                     TimeRegistrationStarted = DateTime.Now,
                     UserAgent = /*this.Request.UserAgent*/ Request.Headers["User-Agent"].ToString()
@@ -117,7 +117,7 @@ namespace OdysseyCoreMvc.Controllers
                 // TODO: else case: Send an e-mail reporting database failure; could not create the record.
                 this.Repository.AddVolunteer(newVolunteer);
 
-                return this.RedirectToAction("Page02", new { id = newVolunteer.VolunteerID });
+                return this.RedirectToAction("Page02", new { id = newVolunteer.VolunteerId });
             }
             catch (Exception exception)
             {
@@ -175,17 +175,17 @@ namespace OdysseyCoreMvc.Controllers
             {
                 if (this.ModelState.IsValid)
                 {
-                    Volunteer newRegistrationData = new Volunteer
-                                                        {
-                                                            FirstName = page02ViewData.FirstName,
-                                                            LastName = page02ViewData.LastName,
-                                                            EveningPhone = page02ViewData.EveningPhone,
-                                                            DaytimePhone = page02ViewData.DaytimePhone,
-                                                            MobilePhone = page02ViewData.MobilePhone,
-                                                            EmailAddress = page02ViewData.EmailAddress,
-                                                            VolunteerWantsToSee = page02ViewData.VolunteerWantsToSee,
-                                                            Notes = page02ViewData.Notes
-                                                        };
+                    Volunteers newRegistrationData = new Volunteers
+                                                         {
+                                                             FirstName = page02ViewData.FirstName,
+                                                             LastName = page02ViewData.LastName,
+                                                             EveningPhone = page02ViewData.EveningPhone,
+                                                             DaytimePhone = page02ViewData.DaytimePhone,
+                                                             MobilePhone = page02ViewData.MobilePhone,
+                                                             EmailAddress = page02ViewData.EmailAddress,
+                                                             VolunteerWantsToSee = page02ViewData.VolunteerWantsToSee,
+                                                             Notes = page02ViewData.Notes
+                                                         };
 
                     // TODO: if case: Send an e-mail reporting database failure; could not find the record already added to the database
                     this.Repository.UpdateVolunteer(id, 2, newRegistrationData);
@@ -335,11 +335,11 @@ namespace OdysseyCoreMvc.Controllers
         /// </returns>
         protected string GenerateEmailBody(Page03ViewData page03ViewData)
         {
-            string input = Regex.Replace(Regex.Replace(Regex.Replace(Regex.Replace(page03ViewData.VolunteerInfo.EventMailBody, "<span>VolunteerID</span>", page03ViewData.Volunteer.VolunteerID.ToString(CultureInfo.InvariantCulture)), "<span>FirstName</span>", page03ViewData.Volunteer.FirstName), "<span>LastName</span>", page03ViewData.Volunteer.LastName), "<span>Region</span>", "Region " + page03ViewData.Config["RegionNumber"]);
+            string input = Regex.Replace(Regex.Replace(Regex.Replace(Regex.Replace(page03ViewData.VolunteerInfo.EventMailBody, "<span>VolunteerID</span>", page03ViewData.Volunteer.VolunteerId.ToString(CultureInfo.InvariantCulture)), "<span>FirstName</span>", page03ViewData.Volunteer.FirstName), "<span>LastName</span>", page03ViewData.Volunteer.LastName), "<span>Region</span>", "Region " + page03ViewData.Config["RegionNumber"]);
             StringBuilder builder = new StringBuilder();
-            if (!string.IsNullOrWhiteSpace(page03ViewData.TournamentInfo.LocationURL))
+            if (!string.IsNullOrWhiteSpace(page03ViewData.TournamentInfo.LocationUrl))
             {
-                builder.Append("<a href=\"" + page03ViewData.TournamentInfo.LocationURL + "\" target=\"_blank\">");
+                builder.Append("<a href=\"" + page03ViewData.TournamentInfo.LocationUrl + "\" target=\"_blank\">");
             }
 
             builder.Append(page03ViewData.TournamentInfo.Location);
@@ -358,7 +358,7 @@ namespace OdysseyCoreMvc.Controllers
                 builder.Append(", " + page03ViewData.TournamentInfo.LocationState);
             }
 
-            if (!string.IsNullOrWhiteSpace(page03ViewData.TournamentInfo.LocationURL))
+            if (!string.IsNullOrWhiteSpace(page03ViewData.TournamentInfo.LocationUrl))
             {
                 builder.Append("</a>");
             }

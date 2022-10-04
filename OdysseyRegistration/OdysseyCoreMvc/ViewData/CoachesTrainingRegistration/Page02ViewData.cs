@@ -19,12 +19,12 @@ namespace OdysseyCoreMvc.ViewData.CoachesTrainingRegistration
         /// <summary>
         /// Gets or sets the coaches training registration.
         /// </summary>
-        public Models.CoachesTrainingRegistration CoachesTraining { get; set; }
+        public Models.CoachesTrainingRegistrations CoachesTraining { get; set; }
 
         /// <summary>
         /// Gets or sets the coaches training info.
         /// </summary>
-        public @Event? CoachesTrainingInfo { get; set; }
+        public @Events? CoachesTrainingInfo { get; set; }
 
         /// <summary>
         /// Gets or sets the mail body.

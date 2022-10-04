@@ -5,10 +5,9 @@ using System.Collections.Generic;
 
 namespace OdysseyCoreMvc.Models
 {
-    public partial class Config
+    public partial class CoachesTrainingRegions
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public string Value { get; set; }
     }
 }

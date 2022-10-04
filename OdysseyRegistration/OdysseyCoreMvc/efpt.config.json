@@ -1,6 +1,6 @@
 ﻿{
    "CodeGenerationMode": 2,
-   "ContextClassName": null,
+   "ContextClassName": "OdysseyContext",
    "ContextNamespace": null,
    "DefaultDacpacSchema": null,
    "FilterSchemas": false,
@@ -9,12 +9,65 @@
    "OutputContextPath": null,
    "OutputPath": null,
    "PreserveCasingWithRegex": true,
-   "ProjectRootNamespace": null,
+   "ProjectRootNamespace": "OdysseyCoreMvc",
    "Schemas": null,
    "SelectedHandlebarsLanguage": 0,
    "SelectedToBeGenerated": 0,
-   "Tables": [ ],
-   "UiHint": "..\\Odyssey.Database\\Odyssey.Database.sqlproj",
+   "Tables": [
+      {
+         "Name": "[dbo].[CoachesTrainingDivisions]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[CoachesTrainingRegions]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[CoachesTrainingRegistrations]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[CoachesTrainingRoles]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Config]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ContactUsRecipients]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ContactUsSenderRoles]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Events]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Judges]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Problem]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Schools]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[TournamentRegistration]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Volunteers]",
+         "ObjectType": 0
+      }
+   ],
+   "UiHint": "sql1.DB_12824_registration",
    "UseBoolPropertiesWithoutDefaultSql": false,
    "UseDatabaseNames": false,
    "UseDbContextSplitting": false,
