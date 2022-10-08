@@ -9,7 +9,6 @@
 
 using Microsoft.AspNetCore.Mvc;
 using OdysseyCoreMvc.Models;
-using OdysseyCoreMvc.ViewData;
 using System.Diagnostics;
 
 namespace OdysseyCoreMvc.Controllers
@@ -61,6 +60,8 @@ namespace OdysseyCoreMvc.Controllers
             _logger = logger;
         }
 
+        // TODO: What do we do with this?
+
         /// <summary>
         /// The view for the Index page.
         /// GET: /Home/
@@ -68,24 +69,24 @@ namespace OdysseyCoreMvc.Controllers
         /// <returns>
         /// The <see cref="ActionResult"/>.
         /// </returns>
-        [HttpGet]
-        public ActionResult Index()
-        {
-            var viewData = new BaseViewData();
-            this.SetBaseViewData(viewData);
+        //[HttpGet]
+        //public ActionResult Index()
+        //{
+        //    var viewData = new BaseViewData();
+        //    this.SetBaseViewData(viewData);
 
-            this.ViewData["Message"] =
-                "Welcome to the " + this.repository.Config["RegionName"] + " Odyssey of the Mind Region " +
-                this.repository.Config["RegionNumber"] + " Registration web pages.";
+        //    this.ViewData["Message"] =
+        //        "Welcome to the " + this.repository.Config["RegionName"] + " Odyssey of the Mind Region " +
+        //        this.repository.Config["RegionNumber"] + " Registration web pages.";
 
-            return this.View(viewData);
-        }
+        //    return this.View(viewData);
+        //}
 
-        // TODO: This is the new Error() method in ASP.NET Core, renamed to prevent conflict with BaseRegistrationController.Error(). Which is correct?
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult NewError()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
+        //// TODO: This is the new Error() method in ASP.NET Core, renamed to prevent conflict with BaseRegistrationController.Error(). Which is correct?
+        //[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        //public IActionResult NewError()
+        //{
+        //    return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        //}
     }
 }

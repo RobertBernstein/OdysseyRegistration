@@ -4,6 +4,7 @@
         - Applied in multiple pages in the site.
     https://docs.microsoft.com/en-us/aspnet/core/mvc/views/layout?view=aspnetcore-6.0
 *@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -17,6 +18,9 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/OdysseyRegistration.styles.css" asp-append-version="true" />
+    
+    @* Determine which CSS to use based on the current URL. *@
+    @*<link href="@Model.PathToSiteCssFile" rel="stylesheet" />*@
 </head>
 <body>
     <header>
@@ -66,7 +70,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2022 - RazorPagesMovie - <a asp-area="" asp-page="/Privacy">Privacy</a>
+            &copy; 2022 - Odyssey Registration - <a asp-area="" asp-page="/Privacy">Privacy</a>
         </div>
     </footer>
 

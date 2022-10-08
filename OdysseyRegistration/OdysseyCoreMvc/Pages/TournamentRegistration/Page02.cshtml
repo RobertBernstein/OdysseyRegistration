@@ -1,0 +1,90 @@
+@{
+    // Package:	Odyssey of the Mind Web Site
+    // Module:	Tournament Registration
+    // File:	TournamentRegistration/Page02.aspx
+    // Author:	Robert Bernstein
+    // Version:	2.0
+    // Created:	before 08/04/2007: v1.0: Classic ASP
+    // Updated:	09/29/2007: v2.0: Replaced PHP database query code with MDB2
+    //			12/22/2009: v3.0: Rebuilt in ASP.NET 3.5
+    //			01/01/2010: v3.1: Rebuilt in ASP.NET MVC 1.0
+}
+
+@model Page02Model
+
+@{
+    ViewBag.Title = Model.FriendlyRegistrationName + " Page 2 of 9";
+}
+
+<script type="text/javascript">
+    $(function () {
+        // Initialize the dialog box, but don't open it.
+        $('#schoolAffiliationDialog').dialog({
+            autoOpen: false,
+            width: '30%'
+        });
+
+        // Open the dialog box when the user clicks the hyperlink.
+        $("#schoolAffiliationLink").click(function () {
+            $('#schoolAffiliationDialog').dialog('open');
+        });
+
+        // Set the focus to the default control and select its text
+        $("#SelectedSchool").focus();
+    });
+</script>
+
+<div id="schoolAffiliationDialog" title="School Affiliation">
+    Typically, an Odyssey of the Mind team is affiliated with a single school.&nbsp;
+    Select this school from the drop-down list.&nbsp; If your school is not in the list,
+    please contact our Regional Director using our
+    <a href="@Model.Config["ContactUsURL"]" target="_blank">Contact Us</a> page. &nbsp;Online registration
+    cannot be completed until your school/organization appears in this list.<br />
+    <br />
+    A team may include members from more than one school. &nbsp;A multischool team competes under the name of one of
+    the schools. &nbsp;Select the school for which your team will compete.<br />
+    <br />
+    A team may be made up of members from an established community organization. &nbsp;This group must have a mission
+    other than just entering participants in the Odyssey of the Mind program. &nbsp;Select the sponsoring community
+    organization from the list.<br />
+    <br />
+    For additional information, please see the Odyssey of the Mind Program Guide, which can be downloaded in its
+    entirety at
+    <a href="@Model.Config["ProgramGuideURL"]" target="_blank">@Model.Config["ProgramGuideURL"]</a> (1.5 megabytes).
+</div>
+
+<h1>
+    @ViewBag.Title
+</h1>
+
+<p style="text-align: left; font-weight: bold">
+    Please select your <a id="schoolAffiliationLink" href="javascript:void(0)">school or organization</a> from the list
+    below:
+</p>
+<p>
+    <span style="text-decoration: underline">Note</span>: If your team's school does not appear in the drop-down list
+    below, please contact our Regional Director using our <a href="@Model.Config["ContactUsURL"]" target="_blank">Contact Us</a> page.
+</p>
+
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary(true)
+    <p style="text-align: center">
+        @Html.LabelFor(x => x.SelectedSchool)
+        @Html.DropDownListFor(x => x.SelectedSchool, Model.SchoolList, "Select a School or Organization", new {@class="dropdown"})
+        @Html.ValidationMessageFor(x => x.SelectedSchool)
+    </p>
+    <hr />
+    <p class="required">
+        Please read all information on each of the following pages carefully before clicking
+        the &#8220;Next Page&#8221; button. &nbsp;If you back up at any time, you will need
+        to re-enter the information on the pages that follow it.
+    </p>
+    <hr />
+    <div style="text-align: right">
+        <input type="submit" value="Next Page >>" id="nextButton" name="nextButton" />
+    </div>
+    <div style="text-align: left">
+        <a href="@Model.Config["HomePage"]">Return to the Home Page</a>
+    </div>
+}

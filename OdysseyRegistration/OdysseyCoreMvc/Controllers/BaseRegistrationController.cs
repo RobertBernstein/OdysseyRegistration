@@ -19,7 +19,7 @@ namespace OdysseyCoreMvc.Controllers
     //using Elmah;
 
     using OdysseyCoreMvc.Models;
-    using OdysseyCoreMvc.ViewData;
+    using OdysseyCoreMvc.Pages;
 
     /// <summary>
     /// The base registration controller.
@@ -34,8 +34,9 @@ namespace OdysseyCoreMvc.Controllers
         [HttpGet]
         public ActionResult BadEmail()
         {
-            BaseViewData viewData = new();
-            SetBaseViewData(viewData);
+            // TODO: What do we do with this?
+            //BasePageModel viewData = new();
+            //SetBaseViewData(viewData);
 
             // TODO: Test that this is the correct path to the BadEmail page, Rob - 01/18/2015.
             return View("~/Views/Shared/BadEmail.cshtml");
@@ -117,9 +118,11 @@ namespace OdysseyCoreMvc.Controllers
         [HttpGet]
         public ActionResult Closed()
         {
-            BaseViewData viewData = new();
-            SetBaseViewData(viewData);
-            return View(viewData);
+            // TODO: What do we do with this?
+            //BasePageModel viewData = new();
+            //SetBaseViewData(viewData);
+            //return View(viewData);
+            return View();
         }
 
         /// <summary>
@@ -135,9 +138,11 @@ namespace OdysseyCoreMvc.Controllers
         [HttpPost]
         public ActionResult ClosedPost()
         {
-            var viewData = new BaseViewData();
-            SetBaseViewData(viewData);
-            return Redirect(viewData.Config["HomePage"]);
+            // TODO: What do we do with this?
+            //var viewData = new BasePageModel();
+            //SetBaseViewData(viewData);
+            //return Redirect(viewData.Config["HomePage"]);
+            return View();
         }
 
         private string DetermineSiteCssFile()
@@ -177,9 +182,11 @@ namespace OdysseyCoreMvc.Controllers
         [HttpGet]
         public ActionResult Down()
         {
-            BaseViewData viewData = new();
-            SetBaseViewData(viewData);
-            return View(viewData);
+            // TODO: What do we do with this?
+            //BasePageModel viewData = new();
+            //SetBaseViewData(viewData);
+            //return View(viewData);
+            return View();
         }
 
         /// <summary>
@@ -195,9 +202,11 @@ namespace OdysseyCoreMvc.Controllers
         [HttpPost]
         public ActionResult DownPost()
         {
-            BaseViewData viewData = new();
-            SetBaseViewData(viewData);
-            return Redirect(viewData.Config["HomePage"]);
+            // TODO: What do we do with this?
+            //BasePageModel viewData = new();
+            //SetBaseViewData(viewData);
+            //return Redirect(viewData.Config["HomePage"]);
+            return View();
         }
 
         /// <summary>
@@ -210,9 +219,11 @@ namespace OdysseyCoreMvc.Controllers
         [HttpGet]
         public ActionResult Error()
         {
-            BaseViewData viewData = new();
-            SetBaseViewData(viewData);
-            return View(viewData);
+            // TODO: What do we do with this?
+            //BasePageModel viewData = new();
+            //SetBaseViewData(viewData);
+            //return View(viewData);
+            return View();
         }
 
         /// <summary>
@@ -262,24 +273,26 @@ namespace OdysseyCoreMvc.Controllers
         /// </returns>
         public bool IsRegistrationClosed(RegistrationType registrationType)
         {
-            DateTime registrationCloseDateTime;
-            BaseViewData viewData = new();
-            SetBaseViewData(viewData);
+            // TODO: What do we do with this?
+            //DateTime registrationCloseDateTime;
+            //BasePageModel viewData = new();
+            //SetBaseViewData(viewData);
 
-            try
-            {
-                registrationCloseDateTime = DateTime.Parse(viewData.Config[registrationType + "RegistrationCloseDateTime"]);
-            }
-            catch (Exception)
-            {
-                // If we cannot even read the closing time from the database, close down registration!
-                return true;
-            }
+            //try
+            //{
+            //    registrationCloseDateTime = DateTime.Parse(viewData.Config[registrationType + "RegistrationCloseDateTime"]);
+            //}
+            //catch (Exception)
+            //{
+            //    // If we cannot even read the closing time from the database, close down registration!
+            //    return true;
+            //}
 
-            // TODO: Add app setting to decide what timezone to consider local.
-            // TODO: Adjust for Eastern Time if not in Eastern Time, e.g. Pacific Time
-            DateTime currentEasternTime = DateTime.Now; ////.AddHours(3);
-            return DateTime.Compare(registrationCloseDateTime, currentEasternTime) < 0;
+            //// TODO: Add app setting to decide what timezone to consider local.
+            //// TODO: Adjust for Eastern Time if not in Eastern Time, e.g. Pacific Time
+            //DateTime currentEasternTime = DateTime.Now; ////.AddHours(3);
+            //return DateTime.Compare(registrationCloseDateTime, currentEasternTime) < 0;
+            return false;
         }
 
         /// <summary>
@@ -294,24 +307,26 @@ namespace OdysseyCoreMvc.Controllers
         /// </returns>
         public bool IsRegistrationComingSoon(RegistrationType registrationType)
         {
-            DateTime registrationOpenDate;
-            BaseViewData viewData = new();
-            SetBaseViewData(viewData);
+            // TODO: What do we do with this?
+            //DateTime registrationOpenDate;
+            //BasePageModel viewData = new();
+            //SetBaseViewData(viewData);
 
-            try
-            {
-                registrationOpenDate = DateTime.Parse(viewData.Config[registrationType + "RegistrationOpenDateTime"]);
-            }
-            catch (Exception)
-            {
-                // If we cannot even read the opening time from the database, assume we've passed the opening date.
-                return false;
-            }
+            //try
+            //{
+            //    registrationOpenDate = DateTime.Parse(viewData.Config[registrationType + "RegistrationOpenDateTime"]);
+            //}
+            //catch (Exception)
+            //{
+            //    // If we cannot even read the opening time from the database, assume we've passed the opening date.
+            //    return false;
+            //}
 
-            // TODO: Add app setting to decide what timezone to consider local.
-            // TODO: Adjust for Eastern Time if not in Eastern Time, e.g. Pacific Time
-            DateTime currentEasternTime = DateTime.Now; ////.AddHours(3);
-            return DateTime.Compare(currentEasternTime, registrationOpenDate) < 0;
+            //// TODO: Add app setting to decide what timezone to consider local.
+            //// TODO: Adjust for Eastern Time if not in Eastern Time, e.g. Pacific Time
+            //DateTime currentEasternTime = DateTime.Now; ////.AddHours(3);
+            //return DateTime.Compare(currentEasternTime, registrationOpenDate) < 0;
+            return false;
         }
 
         /// <summary>
@@ -325,12 +340,14 @@ namespace OdysseyCoreMvc.Controllers
         /// </returns>
         public bool IsRegistrationDown(RegistrationType registrationType)
         {
-            BaseViewData viewData = new();
-            SetBaseViewData(viewData);
+            // TODO: What do we do with this?
+            //BasePageModel viewData = new();
+            //SetBaseViewData(viewData);
 
-            bool registrationIsDown;
-            bool.TryParse(viewData.Config["Is" + registrationType + "RegistrationDown"], out registrationIsDown);
-            return registrationIsDown;
+            //bool registrationIsDown;
+            //bool.TryParse(viewData.Config["Is" + registrationType + "RegistrationDown"], out registrationIsDown);
+            //return registrationIsDown;
+            return false;
         }
 
         /// <summary>
@@ -345,7 +362,7 @@ namespace OdysseyCoreMvc.Controllers
         /// <returns>
         /// null on success, an error message otherwise.
         /// </returns>
-        public string? SendMessage(BaseViewData viewData, MailMessage mailMessage)
+        public string? SendMessage(BasePageModel viewData, MailMessage mailMessage)
         {
             SmtpClient smtpClient = new()
             {
@@ -398,7 +415,7 @@ namespace OdysseyCoreMvc.Controllers
         /// <param name="viewData">
         /// The view data.
         /// </param>
-        protected void SetBaseViewData(BaseViewData viewData)
+        protected void SetBaseViewData(BasePageModel viewData)
         {
             viewData.Config = Repository.Config;
             viewData.RegionName = Repository.RegionName;
@@ -419,9 +436,11 @@ namespace OdysseyCoreMvc.Controllers
         [HttpGet]
         public ActionResult Soon()
         {
-            BaseViewData viewData = new();
-            SetBaseViewData(viewData);
-            return View(viewData);
+            // TODO: What do we do with this?
+            //BasePageModel viewData = new();
+            //SetBaseViewData(viewData);
+            //return View(viewData);
+            return View();
         }
 
         /// <summary>
@@ -437,9 +456,11 @@ namespace OdysseyCoreMvc.Controllers
         [HttpPost]
         public ActionResult SoonPost()
         {
-            var viewData = new BaseViewData();
-            SetBaseViewData(viewData);
-            return Redirect(viewData.Config["HomePage"]);
+            // TODO: What do we do with this?
+            //var viewData = new BasePageModel();
+            //SetBaseViewData(viewData);
+            //return Redirect(viewData.Config["HomePage"]);
+            return View();
         }
 
         /// <summary>
@@ -456,25 +477,27 @@ namespace OdysseyCoreMvc.Controllers
                 ////    return RegistrationState.Available;
                 ////}
 
-                BaseViewData viewData = new();
-                SetBaseViewData(viewData);
+                // TODO: What do we do with this?
+                //BasePageModel viewData = new();
+                //SetBaseViewData(viewData);
 
-                // Is it too early to register?
-                if (IsRegistrationComingSoon(CurrentRegistrationType))
-                {
-                    return RegistrationState.Soon;
-                }
+                //// Is it too early to register?
+                //if (IsRegistrationComingSoon(CurrentRegistrationType))
+                //{
+                //    return RegistrationState.Soon;
+                //}
 
-                // Is registration temporarily disabled?
-                if (IsRegistrationDown(CurrentRegistrationType))
-                {
-                    return RegistrationState.Down;
-                }
+                //// Is registration temporarily disabled?
+                //if (IsRegistrationDown(CurrentRegistrationType))
+                //{
+                //    return RegistrationState.Down;
+                //}
 
-                // Is it too late to register?
-                return IsRegistrationClosed(CurrentRegistrationType)
-                           ? RegistrationState.Closed
-                           : RegistrationState.Available;
+                //// Is it too late to register?
+                //return IsRegistrationClosed(CurrentRegistrationType)
+                //           ? RegistrationState.Closed
+                //           : RegistrationState.Available;
+                return RegistrationState.Available;
             }
         }
 

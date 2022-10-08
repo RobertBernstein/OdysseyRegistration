@@ -1,0 +1,131 @@
+@{
+    // Package:	Odyssey of the Mind Web Site
+    // Module:	Tournament Registration
+    // File:	Page10.cshtml
+    // Author:	Robert Bernstein
+    // Created:	before 08/04/2007: v1.0: Classic ASP
+    // Updated:	11/04/2007: v2.0: Overhauled tournament registration; Replaced database query code with MDB2
+    //			12/27/2009: v3.0: Rebuilt in ASP.NET 3.5
+    //			01/01/2010: v3.1: Rebuilt in ASP.NET MVC 1.0
+    //			11/20/2013: v4.0: Rebuilt in ASP.NET MVC 4
+}
+
+@model Page10Model
+
+@{
+    ViewBag.Title = Model.FriendlyRegistrationName + " Page 9 of 9";
+}
+
+<script src="@Url.Content("~/Scripts/PrintThisPage.js")" type="text/javascript"></script>
+<script>
+    $(function () {
+        $("#topPrintThisPage").click(function () {
+            PrintThisPage();
+        });
+
+        $("#bottomPrintThisPage").click(function () {
+            PrintThisPage();
+        });
+
+        $("#restartRegistrationButtonForJudgeError").click(function () {
+            location.href = '/Registration/JudgesRegistration/Page01';
+        });
+
+        $("#restartRegistrationButtonForVolunteerError").click(function () {
+            location.href = '/Registration/JudgesRegistration/Page01';
+        });
+
+        $("#homePageButton").click(function () {
+            location.href = '@Model.Config["HomePage"]';
+        });
+
+        $("#homePageButtonForJudgeError").click(function () {
+            location.href = '@Model.Config["HomePage"]';
+        });
+
+        $("#homePageButtonForVolunteerError").click(function () {
+            location.href = '@Model.Config["HomePage"]';
+        });
+    });
+</script>
+
+<h1>
+    @ViewBag.Title
+</h1>
+
+@if (!string.IsNullOrWhiteSpace(Model.JudgeErrorMessage))
+{
+    <p class="required">
+        @Model.JudgeErrorMessage
+    </p>
+    <hr />
+    <p style="text-align: right">
+        <input type="button" value="Start @Model.FriendlyRegistrationName Over" id="restartRegistrationButtonForJudgeError" />
+    </p>
+    <p style="text-align: left">
+        <input type="button" value="Return to the Home Page" id="homePageButtonForJudgeError" />
+    </p>
+
+    return;
+}
+
+@if (!string.IsNullOrWhiteSpace(Model.VolunteerErrorMessage))
+{
+    <p class="required">
+        @Model.VolunteerErrorMessage
+    </p>
+    <hr />
+    <p style="text-align: right">
+        <input type="button" value="Start @Model.FriendlyRegistrationName Over" id="restartRegistrationButtonForVolunteerError" />
+    </p>
+    <p style="text-align: left">
+        <input type="button" value="Return to the Home Page" id="homePageButtonForVolunteerError" />
+    </p>
+
+    return;
+}
+
+<hr />
+<p style="text-align: center">
+    <button type="button" id="topPrintThisPage">Click for Printer Friendly Version</button>
+</p>
+<hr />
+<div id="printableContent">
+    @Html.Raw(Model.MailBody)
+</div>
+<p class="required">
+    An e-mail has been sent to @Model.TournamentRegistration.CoachEmailAddress containing all of the information on this page.
+</p>
+<hr />
+<p style="text-align: center">
+    <button type="button" id="bottomPrintThisPage">Click for Printer Friendly Version</button>
+</p>
+<hr />
+<p style="text-align: center">
+    <button type="button" id="homePageButton">Return to the Home Page</button>
+</p>
+
+@if (Model.AcceptingPayPal)
+{
+    <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+        <input type="hidden" name="cmd" value="_s-xclick">
+        <input type="hidden" name="hosted_button_id" value="NYTRFY3YRCJMJ">
+        <table>
+            <tr><td><input type="hidden" name="on0" value="Online Payment">Online Payment</td></tr>
+            <tr>
+                <td>
+                    <select name="os0">
+                        <option value="Registration Fee -">Registration Fee - $85.00 USD</option>
+                    </select>
+                </td>
+            </tr>
+            <tr><td><input type="hidden" name="on1" value="Team's Tournament ID">Team's Tournament ID</td></tr>
+            <tr><td><input type="text" name="os1" maxlength="200" value="@Model.TournamentRegistration.TeamId"></td></tr>
+            <tr><td><input type="hidden" name="on2" value="Coach's Last Name">Coach's Last Name</td></tr>
+            <tr><td><input type="text" name="os2" maxlength="200" value="@Model.TournamentRegistration.CoachLastName"></td></tr>
+        </table>
+        <input type="hidden" name="currency_code" value="USD">
+        <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_paynowCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+        <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
+    </form>
+}
