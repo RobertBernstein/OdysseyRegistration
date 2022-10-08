@@ -19,7 +19,7 @@ namespace OdysseyCoreMvc.ViewData.CoachesTrainingRegistration
         /// <summary>
         /// Gets or sets the coaches training registration.
         /// </summary>
-        public Models.CoachesTrainingRegistrations CoachesTraining { get; set; }
+        public Models.CoachesTrainingRegistrations? CoachesTraining { get; set; }
 
         /// <summary>
         /// Gets or sets the coaches training info.
