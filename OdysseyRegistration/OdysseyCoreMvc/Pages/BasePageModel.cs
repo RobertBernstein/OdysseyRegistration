@@ -171,12 +171,12 @@ namespace OdysseyCoreMvc.Pages
             switch (CurrentRegistrationType)
             {
                 case RegistrationType.None:
-                case RegistrationType.Tournament:
-                case RegistrationType.Judges:
                 case RegistrationType.Volunteer:
                     return "Invalid Registration"; ;
                 case RegistrationType.CoachesTraining:
                     return "Coaches Training Registration";
+                case RegistrationType.Tournament:
+                case RegistrationType.Judges:
                 default:
                     return CurrentRegistrationType + " Registration";
             }
