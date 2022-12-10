@@ -46,15 +46,28 @@ Connection String: "Data Source=tcp:s06.winhost.com;Initial Catalog=DB_12824_reg
 ### Run the SQL Server database in a Docker container
 
 1. Open a PowerShell prompt.
-1. `docker pull mcr.microsoft.com/mssql/server:2019-latest`
+1. `docker pull mcr.microsoft.com/mssql/server:2022-latest`
 1. `docker volume create sql-volume`
 1. `$mssql_sa_password = ""`
-1. `docker run -e 'ACCEPT_EULA=Y' -e "MSSQL_SA_PASSWORD=$mssql_sa_password" -p 1433:1433 --name sql1 --hostname sql1 --mount "source=sql-volume,target=/sqldata" -d mcr.microsoft.com/mssql/server:2019-latest`
+1. `docker run -e 'ACCEPT_EULA=Y' -e "MSSQL_SA_PASSWORD=$mssql_sa_password" -p 1433:1433 --name sql1 --hostname sql1 --mount "source=sql-volume,target=/sqldata" -d mcr.microsoft.com/mssql/server:2022-latest`
 1. `docker exec -it -u 0 sql1 "bash"   # -u 0 lets us log in as root.`
 1. `chmod 777 /sqldata`
 1. `docker container exec sql1 /opt/mssql-tools/bin/sqlcmd -U sa -P "$mssql_sa_password" -Q "CREATE DATABASE [DB_12824_registration] ON  PRIMARY ( NAME = N'DB_12824_registration_data', FILENAME = N'/sqldata/DB_12824_registration_data.mdf' , SIZE = 4160KB , MAXSIZE = 25600KB , FILEGROWTH = 1024KB ) LOG ON ( NAME = N'DB_12824_registration_log', FILENAME = N'/sqldata/DB_12824_registration_log.ldf' , SIZE = 1024KB , MAXSIZE = 1024000KB , FILEGROWTH = 65536KB );"`
 1. `docker cp "2022-08-06 - NoVA North Production Database Export Script.sql" sql1:/sqldata`
 1. `docker container exec sql1 /opt/mssql-tools/bin/sqlcmd -U sa -P "$mssql_sa_password" -i "/sqldata/2022-08-06 - NoVA North Production Database Export Script.sql"`
+
+### Generate the Odyssey database schema with `mermerd`
+
+This will create a [Mermaid](https://mermaid-js.github.io/mermaid/#/) database schema diagram from your SQL Server database.
+
+1. Download latest version: [Release v0.4.1 · KarnerTh/mermerd · GitHub](https://github.com/KarnerTh/mermerd/releases/tag/v0.4.1)
+1. Unzip it.
+1. Make sure your SQL Server database is up, e.g., in Docker.
+1. Run the following command:
+
+    `Downloads\mermerd_0.4.1_windows_amd64.tar\mermerd -c "sqlserver://sa:<password>@localhost:1433?database=DB_12824_registration" -s dbo --useAllTables -o OdysseySchema.mmd`
+
+1. You will find your file created as OdysseySchema.mmd in the directory where you ran the tool.
 
 ### Shutdown and clean up the Docker container
 `docker stop sql1 ; docker rm sql1`

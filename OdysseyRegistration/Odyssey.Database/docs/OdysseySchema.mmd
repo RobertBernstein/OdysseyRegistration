@@ -1,0 +1,252 @@
+erDiagram
+    CoachesTrainingDivisions {
+        tinyint ID PK
+        nvarchar Name 
+    }
+
+    CoachesTrainingRegions {
+        int ID PK
+        nvarchar Name 
+    }
+
+    CoachesTrainingRegistrations {
+        int RegistrationID PK
+        nvarchar FirstName 
+        nvarchar LastName 
+        nvarchar SchoolName 
+        nvarchar Role 
+        nvarchar Division 
+        nvarchar SelectedProblem 
+        nvarchar EmailAddress 
+        nvarchar YearsInvolved 
+        nvarchar RegionNumber 
+        datetime TimeRegistered 
+        nvarchar UserAgent 
+    }
+
+    CoachesTrainingRoles {
+        tinyint ID PK
+        nvarchar Name 
+    }
+
+    Config {
+        nvarchar Name PK
+        nvarchar Value 
+    }
+
+    ContactUsRecipients {
+        tinyint ID PK
+        nvarchar contact_name 
+        nvarchar email_address 
+    }
+
+    ContactUsSenderRoles {
+        tinyint ID PK
+        nvarchar role_name 
+    }
+
+    Events {
+        int ID PK
+        nvarchar EventName 
+        nvarchar LocationURL 
+        nvarchar LocationURLColor 
+        nvarchar LocationAddress 
+        nvarchar LocationCity 
+        nvarchar LocationState 
+        nvarchar LocationPhone 
+        datetime StartDate 
+        datetime EndDate 
+        nvarchar Location 
+        nvarchar Time 
+        nvarchar EventCoordinatorName 
+        nvarchar EventCoordinatorEmail 
+        nvarchar EventCoordinatorPhone 
+        nvarchar InformationURL 
+        nvarchar LocationMapURL 
+        nvarchar EventPayeeName 
+        nvarchar EventPayeeAddress1 
+        nvarchar EventPayeeAddress2 
+        nvarchar EventPayeeCity 
+        nvarchar EventPayeeState 
+        nvarchar EventPayeeZipCode 
+        nvarchar EventPayeePhone1 
+        nvarchar EventPayeeEmail1 
+        nvarchar EventCost 
+        nvarchar LateEventCost 
+        date LateEventCostStartDate 
+        date PaymentDueDate 
+        nvarchar EventMakeChecksOutTo 
+        nvarchar EventVolunteerInformationMessage 
+        nvarchar TeamsVolunteerWantsToSeeMessage 
+        nvarchar EventMailBody 
+    }
+
+    Judges {
+        int JudgeID PK
+        nvarchar TeamID 
+        nvarchar FirstName 
+        nvarchar LastName 
+        nvarchar Address 
+        nvarchar AddressLine2 
+        nvarchar City 
+        nvarchar State 
+        nvarchar ZipCode 
+        nvarchar DaytimePhone 
+        nvarchar EveningPhone 
+        nvarchar MobilePhone 
+        nvarchar EmailAddress 
+        nvarchar Notes 
+        nvarchar ProblemChoice1 
+        nvarchar ProblemChoice2 
+        nvarchar ProblemChoice3 
+        nvarchar HasChildrenCompeting 
+        nvarchar COI 
+        nvarchar ProblemCOI1 
+        nvarchar ProblemCOI2 
+        nvarchar ProblemCOI3 
+        nvarchar ProblemAssigned 
+        bit InformationMailed 
+        bit AttendedJT 
+        bit Active 
+        nvarchar WillingToBeScorechecker 
+        nvarchar TshirtSize 
+        nvarchar WantsCEUCredit 
+        nvarchar YearsOfLongTermJudgingExperience 
+        nvarchar YearsOfSpontaneousJudgingExperience 
+        nvarchar PreviousPositions 
+        nvarchar ProblemID 
+        datetime TimeRegistered 
+        datetime TimeAssignedToTeam 
+        datetime TimeRegistrationStarted 
+        nvarchar UserAgent 
+    }
+
+    Problem {
+        int ProblemID PK
+        nvarchar ProblemCategory 
+        nvarchar ProblemName 
+        nvarchar ProblemDescription 
+        nvarchar Divisions 
+        nvarchar CostLimit 
+        nvarchar ProblemCaptainID 
+        nvarchar PCFirstName 
+        nvarchar PCLastName 
+        nvarchar PCAddress 
+        nvarchar PCCity 
+        nvarchar PCStateOrProvince 
+        nvarchar PCPostalCode 
+        nvarchar PCWorkPhone 
+        nvarchar PCHomePhone 
+        nvarchar PCMobilePhone 
+        nvarchar PCFaxNumber 
+        nvarchar PCEmail1 
+        nvarchar PCEmail2 
+        nvarchar Notes 
+    }
+
+    Schools {
+        int ID PK
+        nvarchar Name 
+        nvarchar Address 
+        nvarchar City 
+        nvarchar State 
+        nvarchar PostalCode 
+        nvarchar Phone 
+        nvarchar Membership1 
+        nvarchar Membership1seen 
+        nvarchar Membership2 
+        nvarchar Membership2seen 
+        nvarchar Membership3 
+        nvarchar Membership3seen 
+        nvarchar Membership4 
+        nvarchar Membership4seen 
+        nvarchar CoordNew 
+        nvarchar CoordFirstName 
+        nvarchar CoordLastName 
+        nvarchar CoordAddress 
+        nvarchar CoordCity 
+        nvarchar CoordState 
+        nvarchar CoordPostalCode 
+        nvarchar CoordPhone 
+        nvarchar CoordAltPhone 
+        nvarchar CoordMobilePhone 
+        nvarchar CoordFaxNumber 
+        nvarchar CoordEmailName 
+        nvarchar Share 
+        nvarchar Notes 
+    }
+
+    TournamentRegistration {
+        int TeamID PK
+        nvarchar MembershipName 
+        nvarchar MembershipNumber 
+        int ProblemID 
+        nvarchar Division 
+        int SchoolID 
+        nvarchar CoachFirstName 
+        nvarchar CoachLastName 
+        nvarchar CoachAddress 
+        nvarchar CoachCity 
+        nvarchar CoachState 
+        nvarchar CoachZipCode 
+        nvarchar CoachEveningPhone 
+        nvarchar CoachDaytimePhone 
+        nvarchar CoachMobilePhone 
+        nvarchar CoachEmailAddress 
+        nvarchar AltCoachFirstName 
+        nvarchar AltCoachLastName 
+        nvarchar AltCoachEveningPhone 
+        nvarchar AltCoachDaytimePhone 
+        nvarchar AltCoachMobilePhone 
+        nvarchar AltCoachEmailAddress 
+        nvarchar MemberFirstName1 
+        nvarchar MemberLastName1 
+        nvarchar MemberGrade1 
+        nvarchar MemberFirstName2 
+        nvarchar MemberLastName2 
+        nvarchar MemberGrade2 
+        nvarchar MemberFirstName3 
+        nvarchar MemberLastName3 
+        nvarchar MemberGrade3 
+        nvarchar MemberFirstName4 
+        nvarchar MemberLastName4 
+        nvarchar MemberGrade4 
+        nvarchar MemberFirstName5 
+        nvarchar MemberLastName5 
+        nvarchar MemberGrade5 
+        nvarchar MemberFirstName6 
+        nvarchar MemberLastName6 
+        nvarchar MemberGrade6 
+        nvarchar MemberFirstName7 
+        nvarchar MemberLastName7 
+        nvarchar MemberGrade7 
+        bit Spontaneous 
+        nvarchar Notes 
+        nvarchar SpecialConsiderations 
+        nvarchar SchedulingIssues 
+        smallint Paid 
+        smallint JudgeID 
+        nvarchar TeamRegistrationFee 
+        int VolunteerID 
+        datetime TimeRegistrationStarted 
+        datetime TimeRegistered 
+        nvarchar UserAgent 
+    }
+
+    Volunteers {
+        int VolunteerID PK
+        int TeamID 
+        nvarchar FirstName 
+        nvarchar LastName 
+        nvarchar DaytimePhone 
+        nvarchar EveningPhone 
+        nvarchar MobilePhone 
+        nvarchar EmailAddress 
+        nvarchar Notes 
+        nvarchar VolunteerWantsToSee 
+        datetime TimeRegistrationStarted 
+        datetime TimeRegistered 
+        datetime TimeAssignedToTeam 
+        nvarchar UserAgent 
+    }
+
