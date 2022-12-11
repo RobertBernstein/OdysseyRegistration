@@ -9,6 +9,7 @@
 
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using OdysseyCoreMvc.Data;
 using OdysseyCoreMvc.Models;
 
 namespace OdysseyCoreMvc.Pages.CoachesTrainingRegistration
@@ -22,10 +23,9 @@ namespace OdysseyCoreMvc.Pages.CoachesTrainingRegistration
     /// </summary>
     public class Page01Model : BasePageModel
     {
-        // The constructor uses dependency injection to add the RazorPagesMovieContext to the page.
+        // The constructor uses dependency injection to add the OdysseyContext and logging to the page.
         // https://docs.microsoft.com/en-us/aspnet/core/fundamentals/dependency-injection?view=aspnetcore-6.0
-        public Page01Model(Data.OdysseyContext context)
-            : base(context)
+        public Page01Model(OdysseyContext context, ILogger<BasePageModel> logger) : base(context, logger)
         {
         }
 

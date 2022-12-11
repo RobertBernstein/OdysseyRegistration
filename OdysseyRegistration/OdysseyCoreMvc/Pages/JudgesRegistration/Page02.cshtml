@@ -1,15 +1,17 @@
-﻿@{
-    // Package:	Odyssey of the Mind Web Site
-    // Module:	Judges Registration
-    // File:	Page02.cshtml
-    // Author:	Robert Bernstein
-    // Version:	3.0
-    // Created:	before 08/04/2007
-    // Updated:	09/29/2007: Replaced PHP database query code with MDB2
-    //			11/29/2009: Rebuilt in ASP.NET 3.5
-    //			01/10/2010: v2.0 Built in ASP.NET MVC 1.0 (based on ASP.NET 3.5 code from last year)
-    //          10/31/2013: v3.0 Rebuilt in ASP.NET MVC 4
-}
+﻿@page
+
+@*
+    Package: Odyssey of the Mind Web Site
+    Module:  Judges Registration
+    File:    Page02.cshtml
+    Author:  Robert Bernstein
+    Version: 3.0
+    Created: before 08/04/2007
+    Updated: 09/29/2007: Replaced PHP database query code with MDB2
+             11/29/2009: Rebuilt in ASP.NET 3.5
+             01/10/2010: v2.0 Built in ASP.NET MVC 1.0 (based on ASP.NET 3.5 code from last year)
+             10/31/2013: v3.0 Rebuilt in ASP.NET MVC 4
+*@
 
 @model Page02Model
 
@@ -17,7 +19,7 @@
     ViewBag.Title = Model.FriendlyRegistrationName + " Page 2 of 3";
 }
 
-<script type="text/javascript">
+@*<script type="text/javascript">
     $(function () {
         // Set the focus to the default control and select its text.
         $("#FirstName").focus().select();
@@ -90,7 +92,7 @@
         return true;
     }
 </script>
-
+*@
 <div id="privacyPolicyDialog" title="Privacy Policy">
     All data you provide us is kept strictly confidential. We do not give or sell your
     information to any other organization, public or private. We will contact you solely
@@ -125,7 +127,15 @@
     on tournament day. &nbsp;Please make sure that it is the name by which you wish to be identified for the entire day.
 </p>
 <hr />
-@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "mainForm", onsubmit = "return FormValidator();" }))
+
+<form>
+    <p>
+        <a asp-page="Page03">Next Page >></a>
+        <a asp-page="@Model.Config["HomePage"]">Return to the Home Page</a>
+    </p>
+</form>
+
+@*@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "mainForm", onsubmit = "return FormValidator();" }))
 {
     @Html.ValidationSummary(true)
     <div style="text-align: left; font-weight: bold">
@@ -369,3 +379,4 @@
         <a href="@Model.Config["HomePage"]">Return to the Home Page</a>
     </div>
 }
+*@

@@ -7,14 +7,15 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
+using OdysseyCoreMvc.Data;
+
 namespace OdysseyCoreMvc.Pages.TournamentRegistration
 {
     public class ResendEmailPageModel : BasePageModel
     {
-        // The constructor uses dependency injection to add the RazorPagesMovieContext to the page.
+        // The constructor uses dependency injection to add the OdysseyContext and logging to the page.
         // https://docs.microsoft.com/en-us/aspnet/core/fundamentals/dependency-injection?view=aspnetcore-6.0
-        public ResendEmailPageModel(Data.OdysseyContext context)
-            : base(context)
+        public ResendEmailPageModel(OdysseyContext context, ILogger<BasePageModel> logger) : base(context, logger)
         {
             this.CurrentRegistrationType = RegistrationType.Volunteer;
             this.FriendlyRegistrationName = this.GetDisplayableRegistrationName();

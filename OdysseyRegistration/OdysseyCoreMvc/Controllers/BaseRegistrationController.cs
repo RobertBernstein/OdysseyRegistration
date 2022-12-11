@@ -417,10 +417,11 @@ namespace OdysseyCoreMvc.Controllers
         /// </param>
         protected void SetBaseViewData(BasePageModel viewData)
         {
-            viewData.Config = Repository.Config;
-            viewData.RegionName = Repository.RegionName;
-            viewData.RegionNumber = Repository.RegionNumber;
-            viewData.TournamentInfo = Repository.TournamentInfo;
+            // TODO: Do we need the next line (or any of these)?
+            //viewData.Config = Repository.Config;
+            //viewData.RegionName = Repository.RegionName;
+            //viewData.RegionNumber = Repository.RegionNumber;
+            //viewData.TournamentInfo = Repository.TournamentInfo;
             viewData.FriendlyRegistrationName = FriendlyRegistrationName;
             viewData.SiteName = DetermineSiteName();
             viewData.PathToSiteCssFile = DetermineSiteCssFile();

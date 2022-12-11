@@ -3,7 +3,6 @@
     "OdysseyCoreMvc": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "JudgesRegistration/Page01",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },

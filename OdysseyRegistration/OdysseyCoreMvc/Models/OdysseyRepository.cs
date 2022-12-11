@@ -32,11 +32,6 @@ namespace OdysseyCoreMvc.Models
         private Events? coachesTrainingInfo;
 
         /// <summary>
-        /// The registration system configuration.
-        /// </summary>
-        private Dictionary<string, string>? config;
-
-        /// <summary>
         /// The divisions.
         /// </summary>
         private IEnumerable<CoachesTrainingDivisions>? divisions;
@@ -89,16 +84,6 @@ namespace OdysseyCoreMvc.Models
         private IQueryable<Problem> problemsWithoutSpontaneous;
 
         /// <summary>
-        /// The region name.
-        /// </summary>
-        private string regionName;
-
-        /// <summary>
-        /// The region number.
-        /// </summary>
-        private string regionNumber;
-
-        /// <summary>
         /// The regions.
         /// </summary>
         private IEnumerable<CoachesTrainingRegions> regions;
@@ -112,11 +97,6 @@ namespace OdysseyCoreMvc.Models
         /// The schools.
         /// </summary>
         private IEnumerable schools;
-
-        /// <summary>
-        /// The tournament info.
-        /// </summary>
-        private Events tournamentInfo;
 
         /// <summary>
         /// The volunteer info.
@@ -204,30 +184,6 @@ namespace OdysseyCoreMvc.Models
                 return from c in this.context.CoachesTrainingRegistrations
                        orderby c.RegistrationId
                        select c;
-            }
-        }
-
-        /// <summary>
-        /// Gets the registration system configuration.
-        /// </summary>
-        public Dictionary<string, string> Config
-        {
-            get
-            {
-                // If config is null, run the LINQ query, assign the result to Config as a Dictionary, and return the result.
-                if (this.config == null)
-                {
-                    this.Config = (from c in this.context.Configs
-                                   select c).ToDictionary(d => d.Name, d => d.Value);
-                }
-
-                return this.config;
-            }
-
-            private set
-            {
-                this.config = value;
-                this.config.Add("EndYear", (int.Parse(this.config["Year"]) + 1).ToString(CultureInfo.InvariantCulture));
             }
         }
 
@@ -453,40 +409,6 @@ namespace OdysseyCoreMvc.Models
         }
 
         /// <summary>
-        /// Gets the region name.
-        /// </summary>
-        public string RegionName
-        {
-            get
-            {
-                // If _regionName is null, run the LINQ query, assign the result to RegionName, and return the result
-                return this.regionName ?? (this.RegionName = this.Config["RegionName"]);
-            }
-
-            private set
-            {
-                this.regionName = value;
-            }
-        }
-
-        /// <summary>
-        /// Gets the region number.
-        /// </summary>
-        public string RegionNumber
-        {
-            get
-            {
-                // If _regionName is null, run the LINQ query, assign the result to RegionName, and return the result
-                return this.regionNumber ?? (this.RegionNumber = this.Config["RegionNumber"]);
-            }
-
-            private set
-            {
-                this.regionNumber = value;
-            }
-        }
-
-        /// <summary>
         /// Gets the regions.
         /// </summary>
         public IEnumerable<CoachesTrainingRegions> Regions
@@ -546,25 +468,7 @@ namespace OdysseyCoreMvc.Models
             }
         }
 
-        /// <summary>
-        /// Gets or sets the tournament info.
-        /// </summary>
-        public Events TournamentInfo
-        {
-            get
-            {
-                return this.tournamentInfo ?? (this.TournamentInfo = (from o in this.context.Events
-                                                                      where o.EventName.StartsWith(this.RegionName) && o.EventName.Contains("Tournament")
-                                                                      select o).First());
-            }
-
-            set
-            {
-                this.tournamentInfo = value;
-            }
-        }
-
-        /// <summary>
+         /// <summary>
         /// Gets the tournament registration.
         /// </summary>
         public IQueryable TournamentRegistration

@@ -8,8 +8,8 @@
 // --------------------------------------------------------------------------------------------------------------------
 
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
 using OdysseyCoreMvc.Models;
+using System.Globalization;
 
 namespace OdysseyCoreMvc.Pages
 {
@@ -56,21 +56,43 @@ namespace OdysseyCoreMvc.Pages
         /// </summary>
         public RegistrationType CurrentRegistrationType { get; set; }
 
-        // The constructor uses dependency injection to add the OdysseyContext to the page.
+        private readonly ILogger<BasePageModel> _logger;
+
+        // The constructor uses dependency injection to add the OdysseyContext and logging to the page.
         // https://docs.microsoft.com/en-us/aspnet/core/fundamentals/dependency-injection?view=aspnetcore-6.0
-        public BasePageModel(Data.OdysseyContext context)
+        public BasePageModel(Data.OdysseyContext context, ILogger<BasePageModel> logger)
         {
             _context = context;
+            _logger = logger;
         }
+
+        /// <summary>
+        /// Backing member variable for general configuration data for all registration types.
+        /// </summary>
+        public Dictionary<string, string>? _config;
 
         /// <summary>
         /// Gets or sets the general configuration data for all registration types.
         /// </summary>
-        public Dictionary<string, string>? Config { get; set; }
+        public Dictionary<string, string>? Config
+        {
+            get
+            {
+                // If config is null, run the LINQ query, assign the result to Config as a Dictionary, and return the result.
+                if (_config == null)
+                {
+                    _config = (from c in _context.Config
+                              select c).ToDictionary(d => d.Name, d => d.Value);
+
+                    _config.Add("EndYear", (int.Parse(_config["Year"]) + 1).ToString(CultureInfo.InvariantCulture));
+                }
+
+                return _config;
+            }
+        }
 
         /// <summary>
-        /// Gets or sets the displayable registration name, e.g. "Tournament
-        /// Registration".
+        /// Gets or sets the displayable registration name, e.g. "Tournament Registration".
         /// </summary>
         public string? FriendlyRegistrationName { get; set; }
 
@@ -81,16 +103,61 @@ namespace OdysseyCoreMvc.Pages
         public string? PathToSiteCssFile { get; set; }
 
         /// <summary>
-        /// Gets or sets the Odyssey of the Mind region name within Virginia (e.g. "NoVA
-        /// North").
+        /// Backing member variable for the Odyssey of the Mind region name within Virginia (e.g., "NoVA North").
         /// </summary>
-        public string? RegionName { get; set; }
+        public string? _regionName = string.Empty;
 
         /// <summary>
-        /// Gets or sets the Odyssey of the Mind region number within the state of
-        /// Virginia (e.g. 9).
+        /// Gets or sets the Odyssey of the Mind region name within Virginia (e.g., "NoVA North").
         /// </summary>
-        public string? RegionNumber { get; set; }
+        public string? RegionName
+        {
+            get
+            {
+                // If _regionName is null, run the LINQ query, assign the result to RegionName, and return the result
+                if (string.IsNullOrEmpty(_regionName))
+                {
+                    if (Config != null)
+                    {
+                        _regionName = Config["RegionName"];
+                    }
+                    else
+                    {
+                        _logger.LogWarning("Config was null and should not have been.");
+                    }
+                }
+
+                return _regionName;
+            }
+        }
+
+        /// <summary>
+        /// Backing member variable for the Odyssey of the Mind region number within the state of Virginia (e.g. 9).
+        /// </summary>
+        private string _regionNumber = string.Empty;
+
+        /// <summary>
+        /// Gets the Odyssey of the Mind region number within the state of Virginia (e.g. 9).
+        /// </summary>
+        public string RegionNumber
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_regionNumber))
+                {
+                    if (Config != null)
+                    {
+                        _regionNumber ??= Config["RegionNumber"];
+                    }
+                    else
+                    {
+                        _logger.LogWarning("Config was null and should not have been.");
+                    }
+                }
+
+                return _regionNumber;
+            }
+        }
 
         public string? SiteName { get; set; }
 
@@ -111,39 +178,92 @@ namespace OdysseyCoreMvc.Pages
             }
         }
 
-        public Events? TournamentInfo { get; set; }
+        /// <summary>
+        /// Backing member variable for information about the tournament.
+        /// </summary>
+        public Events? _tournamentInfo = null;
 
+        /// <summary>
+        /// Gets information about the tournament.
+        /// </summary>
+        public Events? TournamentInfo
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_regionNumber))
+                {
+                    if (Config != null && !string.IsNullOrEmpty(RegionName))
+                    {
+                        _tournamentInfo = (from o in _context.Events
+                                           where o.EventName.StartsWith(RegionName) && o.EventName.Contains("Tournament")
+                                           select o).First();
+                    }
+                    else
+                    {
+                        _logger.LogWarning("Config was null or RegionName was null or empty; neither should have been.");
+                    }
+                }
+
+                return _tournamentInfo;
+            }
+        }
+
+        /// <summary>
+        /// Backing member variable for the physical location where the tournament is being held.
+        /// </summary>
+        public string _tournamentLocation = string.Empty;
+
+        /// <summary>
+        /// Gets the physical location where the tournament is being held.
+        /// </summary>
         public string TournamentLocation
         {
             get
             {
-                if (TournamentInfo != null)
+                // Only set the value the first time through.
+                if (TournamentInfo != null && string.IsNullOrEmpty(_tournamentLocation))
                 {
-                    return !string.IsNullOrWhiteSpace(TournamentInfo.Location) ? TournamentInfo.Location : "TBA";
+                    _tournamentLocation =
+                        (!string.IsNullOrWhiteSpace(TournamentInfo.Location)
+                        ? TournamentInfo.Location
+                        : "TBA");
                 }
                 else
                 {
-                    // TODO: Add logging.
                     // TODO: Test that this actually works.
-                    return "TournamentInfo was null";
+                    _logger.LogWarning("TournamentInfo was null and should not have been.");
                 }
+                
+                return _tournamentLocation;
             }
         }
 
+        /// <summary>
+        /// Backing member variable for the date and time when the tournament is being held.
+        /// </summary>
+        public string _tournamentTime = string.Empty;
+
+        /// <summary>
+        /// Gets the date and time when the tournament is being held.
+        /// </summary>
         public string TournamentTime
         {
             get
             {
-                if (TournamentInfo != null)
+                if (TournamentInfo != null && string.IsNullOrEmpty(_tournamentTime))
                 {
-                    return !string.IsNullOrWhiteSpace(TournamentInfo.Time) ? TournamentInfo.Time : "TBA";
+                    _tournamentTime =
+                        (!string.IsNullOrWhiteSpace(TournamentInfo.Time)
+                        ? TournamentInfo.Time
+                        : "TBA");
                 }
                 else
                 {
-                    // TODO: Add logging.
                     // TODO: Test that this actually works.
-                    return "TournamentInfo was null";
+                    _logger.LogWarning("TournamentInfo was null and should not have been.");
                 }
+
+                return _tournamentTime;
             }
         }
 
@@ -180,13 +300,6 @@ namespace OdysseyCoreMvc.Pages
                 default:
                     return CurrentRegistrationType + " Registration";
             }
-        }
-
-        public async Task OnGetAsync()
-        {
-            // If config is null, run the LINQ query, assign the result to Config as a Dictionary, and return the result.
-            Config ??= await (from c in _context.Config
-                              select c).ToDictionaryAsync(d => d.Name, d => d.Value);
         }
     }
 }

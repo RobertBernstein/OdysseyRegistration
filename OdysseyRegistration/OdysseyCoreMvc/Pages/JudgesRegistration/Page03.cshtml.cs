@@ -10,6 +10,7 @@
 // </created>
 // --------------------------------------------------------------------------------------------------------------------
 
+using OdysseyCoreMvc.Data;
 using OdysseyCoreMvc.Models;
 
 namespace OdysseyCoreMvc.Pages.JudgesRegistration
@@ -23,10 +24,9 @@ namespace OdysseyCoreMvc.Pages.JudgesRegistration
     /// </summary>
     public class Page03Model : BasePageModel
     {
-        // The constructor uses dependency injection to add the OdysseyContext to the page.
+        // The constructor uses dependency injection to add the OdysseyContext and logging to the page.
         // https://docs.microsoft.com/en-us/aspnet/core/fundamentals/dependency-injection?view=aspnetcore-6.0
-        public Page03Model(Data.OdysseyContext context)
-            : base(context)
+        public Page03Model(OdysseyContext context, ILogger<BasePageModel> logger) : base(context, logger)
         {
         }
 

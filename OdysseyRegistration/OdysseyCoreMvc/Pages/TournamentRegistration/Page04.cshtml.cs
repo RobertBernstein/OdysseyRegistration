@@ -7,6 +7,7 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
+using OdysseyCoreMvc.Data;
 using OdysseyCoreMvc.Models;
 using System.ComponentModel.DataAnnotations;
 
@@ -21,10 +22,9 @@ namespace OdysseyCoreMvc.Pages.TournamentRegistration
     /// </summary>
     public class Page04Model : BasePageModel
     {
-        // The constructor uses dependency injection to add the OdysseyContext to the page.
+        // The constructor uses dependency injection to add the OdysseyContext and logging to the page.
         // https://docs.microsoft.com/en-us/aspnet/core/fundamentals/dependency-injection?view=aspnetcore-6.0
-        public Page04Model(Data.OdysseyContext context)
-            : base(context)
+        public Page04Model(OdysseyContext context, ILogger<BasePageModel> logger) : base(context, logger)
         {
             this.CurrentRegistrationType = RegistrationType.Tournament;
             this.FriendlyRegistrationName = this.GetDisplayableRegistrationName();

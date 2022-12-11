@@ -13,8 +13,8 @@
 // </updated>
 // --------------------------------------------------------------------------------------------------------------------
 
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using OdysseyCoreMvc.Data;
 using OdysseyCoreMvc.Models;
 using System.Text;
 
@@ -29,13 +29,13 @@ namespace OdysseyCoreMvc.Pages.JudgesRegistration
     /// </summary>
     public class Page01Model : BasePageModel
     {
-        // The constructor uses dependency injection to add the OdysseyContext to the page.
+        // The constructor uses dependency injection to add the OdysseyContext and logging to the page.
         // https://docs.microsoft.com/en-us/aspnet/core/fundamentals/dependency-injection?view=aspnetcore-6.0
-        public Page01Model(Data.OdysseyContext context)
-            : base(context)
+        public Page01Model(OdysseyContext context, ILogger<BasePageModel> logger) : base(context, logger)
         {
             this.CurrentRegistrationType = RegistrationType.Judges;
             this.FriendlyRegistrationName = this.GetDisplayableRegistrationName();
+            Context = context;
         }
 
         /// <summary>
@@ -99,6 +99,8 @@ namespace OdysseyCoreMvc.Pages.JudgesRegistration
                 return builder.ToString();
             }
         }
+
+        public OdysseyContext Context { get; }
 
         public async Task OnGetAsync()
         {
