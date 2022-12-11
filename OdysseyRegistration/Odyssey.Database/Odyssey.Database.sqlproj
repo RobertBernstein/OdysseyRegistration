@@ -62,6 +62,7 @@
     <Folder Include="dbo\Tables\" />
     <Folder Include="dbo\Stored Procedures\" />
     <Folder Include="Scripts\" />
+    <Folder Include="docs" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="dbo\Tables\CoachesTrainingDivisions.sql" />
@@ -89,5 +90,8 @@
     <Build Include="dbo\Stored Procedures\GenerateImportFileForScoringProgram.sql" />
     <Build Include="dbo\Stored Procedures\ListAllTeamsRegisteredForTournament.sql" />
     <None Include="Scripts\ScriptsIgnoredOnImport.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="docs\OdysseySchema.mmd" />
   </ItemGroup>
 </Project>
