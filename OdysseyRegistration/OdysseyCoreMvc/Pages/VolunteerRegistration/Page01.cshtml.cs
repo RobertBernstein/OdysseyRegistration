@@ -24,8 +24,7 @@ namespace OdysseyCoreMvc.Pages.VolunteerRegistration
         // https://docs.microsoft.com/en-us/aspnet/core/fundamentals/dependency-injection?view=aspnetcore-6.0
         public Page01Model(OdysseyContext context, ILogger<BasePageModel> logger) : base(context, logger)
         {
-            this.CurrentRegistrationType = RegistrationType.Volunteer;
-            this.FriendlyRegistrationName = this.GetDisplayableRegistrationName();
+            CurrentRegistrationType = RegistrationType.Volunteer;
         }
 
         public string? MailRegionalDirectorHyperLink { get; set; }

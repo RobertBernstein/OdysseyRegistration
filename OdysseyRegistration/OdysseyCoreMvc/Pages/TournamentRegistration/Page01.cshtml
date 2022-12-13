@@ -14,7 +14,7 @@
 @model Page01Model
 
 @{
-    ViewBag.Title = Model.FriendlyRegistrationName + " Page 1 of 9";
+    ViewBag.Title = Model.DisplayableRegistrationName + " Page 1 of 9";
 }
 
 <script type="text/javascript">
@@ -58,7 +58,7 @@
 <h2>
     Welcome to the
     @Model.RegionName Region @Model.RegionNumber @Model.Config["Year"]-@Model.Config["EndYear"] Odyssey of the Mind
-    @Model.FriendlyRegistrationName.
+    @Model.DisplayableRegistrationName.
 </h2>
 <p>
     Are you ready to register for the Region @Model.RegionNumber tournament, to be held on @Model.TournamentDate?
@@ -119,7 +119,7 @@ else
 }
 <p style="font-weight: bold">
     For this registration to be complete, the treasurer must <span style="text-decoration: underline">receive</span>
-    payment of the team’s @Model.FriendlyRegistrationName fee no later than @Model.PaymentDueDate.
+    payment of the team’s @Model.DisplayableRegistrationName fee no later than @Model.PaymentDueDate.
 </p>
 <hr />
 @using (Html.BeginForm())

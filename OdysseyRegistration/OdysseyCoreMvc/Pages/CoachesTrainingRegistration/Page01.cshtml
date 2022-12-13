@@ -13,7 +13,7 @@
 @model Page01Model
 
 @{
-    ViewBag.Title = Model.FriendlyRegistrationName + " Page 1 of 2";
+    ViewBag.Title = Model.DisplayableRegistrationName + " Page 1 of 2";
 }
 
 <script type="text/javascript">
@@ -74,7 +74,7 @@
 <h2>
     Welcome to the
     @Model.RegionName Region @Model.RegionNumber @Model.Config["Year"]-@Model.Config["EndYear"] Odyssey of the Mind
-    @Model.FriendlyRegistrationName.
+    @Model.DisplayableRegistrationName.
 </h2>
 <p>
     Thank you for volunteering to coach a team as they prepare for our regional tournament.
@@ -218,7 +218,7 @@
     <hr />
     <p>
         Please provide an e-mail address so we can notify you if any details regarding
-        @Model.FriendlyRegistrationName
+        @Model.DisplayableRegistrationName
         change between now and training day. &nbsp;We will not use this e-mail address for
         any other purpose.
     </p>

@@ -24,8 +24,7 @@ namespace OdysseyCoreMvc.Pages.TournamentRegistration
         // https://docs.microsoft.com/en-us/aspnet/core/fundamentals/dependency-injection?view=aspnetcore-6.0
         public Page08Model(OdysseyContext context, ILogger<BasePageModel> logger) : base(context, logger)
         {
-            this.CurrentRegistrationType = RegistrationType.Tournament;
-            this.FriendlyRegistrationName = this.GetDisplayableRegistrationName();
+            CurrentRegistrationType = RegistrationType.Tournament;
         }
 
         public string? SchedulingIssues { get; set; }

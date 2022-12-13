@@ -145,33 +145,6 @@ namespace OdysseyCoreMvc.Controllers
             return View();
         }
 
-        private string DetermineSiteCssFile()
-        {
-            // TODO: Test that this works correctly after removing Request.Uri and Request.Uri.AbsoluteUri.
-            if ((Request.GetEncodedPathAndQuery() != null) && Request.GetEncodedPathAndQuery().ToLowerInvariant().Contains("novasouth"))
-            {
-                return Url.Content("~/Content/NovaSouth.css");
-            }
-
-            return Url.Content("~/Content/NovaNorth.css");
-        }
-
-        private string DetermineSiteName()
-        {
-            // TODO: Test this.
-            string siteName = (Request.GetEncodedPathAndQuery() != null)
-                ? Request.Host.Host.ToLowerInvariant()
-                : "novanorth.org";
-
-            if (siteName.StartsWith("www."))
-            {
-                // TODO: Test this replacement of .Substring(4).
-                siteName = siteName[4..];
-            }
-
-            return siteName;
-        }
-
         /// <summary>
         /// Handle HTTP GET requests for the Down page.
         /// </summary>
@@ -224,41 +197,6 @@ namespace OdysseyCoreMvc.Controllers
             //SetBaseViewData(viewData);
             //return View(viewData);
             return View();
-        }
-
-        /// <summary>
-        /// Gets the registration type name that is displayed to the user when they browse to the web page, e.g.
-        /// Judges, Tournament.
-        /// </summary>
-        /// <returns>
-        /// The <see cref="string"/> displayed to the user for the current registration type when they browse to the
-        /// web page.
-        /// </returns>
-        /// <remarks>
-        /// TODO: Write tests for this.
-        /// </remarks>
-        public string GetDisplayableRegistrationName()
-        {
-            // Make sure that CurrentRegistrationType has been set before calling this method.
-            // TODO: we should probably assert here if CurrentRegistrationType has not been set.
-            // TODO: we should definitely log an error here if CurrentRegistrationType has not been set.
-            if (CurrentRegistrationType == RegistrationType.None)
-            {
-                return string.Empty;
-            }
-
-            switch (CurrentRegistrationType)
-            {
-                case RegistrationType.None:
-                case RegistrationType.Tournament:
-                case RegistrationType.Judges:
-                case RegistrationType.Volunteer:
-                    return "Invalid Registration"; ;
-                case RegistrationType.CoachesTraining:
-                    return "Coaches Training Registration";
-                default:
-                    return CurrentRegistrationType + " Registration";
-            }
         }
 
         /// <summary>
@@ -422,9 +360,9 @@ namespace OdysseyCoreMvc.Controllers
             //viewData.RegionName = Repository.RegionName;
             //viewData.RegionNumber = Repository.RegionNumber;
             //viewData.TournamentInfo = Repository.TournamentInfo;
-            viewData.FriendlyRegistrationName = FriendlyRegistrationName;
-            viewData.SiteName = DetermineSiteName();
-            viewData.PathToSiteCssFile = DetermineSiteCssFile();
+            //viewData.FriendlyRegistrationName = FriendlyRegistrationName;
+            //viewData.SiteName = DetermineSiteName();
+            //viewData.PathToSiteCssFile = DetermineSiteCssFile();
         }
 
         /// <summary>
@@ -506,11 +444,6 @@ namespace OdysseyCoreMvc.Controllers
         /// Gets or sets the current registration type.
         /// </summary>
         public RegistrationType CurrentRegistrationType { get; set; }
-
-        /// <summary>
-        /// Gets or sets the friendly, i.e. displayable, registration name.
-        /// </summary>
-        public string? FriendlyRegistrationName { get; set; }
 
         /// <summary>
         /// Determines the availability of a registration system.

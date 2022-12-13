@@ -25,8 +25,7 @@ namespace OdysseyCoreMvc.Pages.TournamentRegistration
         // https://docs.microsoft.com/en-us/aspnet/core/fundamentals/dependency-injection?view=aspnetcore-6.0
         public Page05Model(OdysseyContext context, ILogger<BasePageModel> logger) : base(context, logger)
         {
-            this.CurrentRegistrationType = RegistrationType.Tournament;
-            this.FriendlyRegistrationName = this.GetDisplayableRegistrationName();
+            CurrentRegistrationType = RegistrationType.Tournament;
         }
 
         [Display(Name="Alternate Coach's Daytime Phone"), Required, DataType(DataType.PhoneNumber), RegularExpression(@"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$", ErrorMessage="This is not a valid phone number")]

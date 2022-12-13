@@ -28,6 +28,7 @@ namespace OdysseyCoreMvc.Pages.JudgesRegistration
         // https://docs.microsoft.com/en-us/aspnet/core/fundamentals/dependency-injection?view=aspnetcore-6.0
         public Page03Model(OdysseyContext context, ILogger<BasePageModel> logger) : base(context, logger)
         {
+            this.CurrentRegistrationType = RegistrationType.Judges;
         }
 
         /// <summary>

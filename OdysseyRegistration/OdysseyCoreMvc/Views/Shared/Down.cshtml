@@ -1,7 +1,7 @@
 ﻿@model OdysseyCoreMvc.Pages.BasePageModel
 
 @{
-    ViewBag.Title = @Model.FriendlyRegistrationName + " Is Temporarily Down";
+    ViewBag.Title = @Model.DisplayableRegistrationName + " Is Temporarily Down";
 }
 
 <script>
@@ -16,7 +16,7 @@
     @ViewBag.Title
 </h1>
 <h2>
-    We're sorry! &nbsp;@Model.FriendlyRegistrationName is down for a little while in order to perform maintenance on the system.
+    We're sorry! &nbsp;@Model.DisplayableRegistrationName is down for a little while in order to perform maintenance on the system.
 </h2>
 <p>
     Please check back soon.

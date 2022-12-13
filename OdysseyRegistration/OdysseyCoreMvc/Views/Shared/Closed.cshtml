@@ -1,7 +1,7 @@
 ﻿@model OdysseyCoreMvc.Pages.BasePageModel
 
 @{
-    ViewBag.Title = @Model.FriendlyRegistrationName + " Is Closed";
+    ViewBag.Title = @Model.DisplayableRegistrationName + " Is Closed";
 }
 
 <script>
@@ -16,7 +16,7 @@
     @ViewBag.Title
 </h1>
 <h2>
-    @Model.FriendlyRegistrationName is now closed for the @Model.Config["Year"]-@Model.Config["EndYear"] season.
+    @Model.DisplayableRegistrationName is now closed for the @Model.Config["Year"]-@Model.Config["EndYear"] season.
 </h2>
 <p>
     Thank you for your interest in the @Model.Config["RegionName"] Region @Model.Config["RegionNumber"] Odyssey of the Mind program.

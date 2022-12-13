@@ -7,6 +7,7 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using OdysseyCoreMvc.Models;
 using System.Globalization;
@@ -66,6 +67,29 @@ namespace OdysseyCoreMvc.Pages
             _logger = logger;
         }
 
+        private string _siteCssFile = string.Empty;
+
+        public string SiteCssFile
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(_siteCssFile))
+                {
+                    // TODO: Test that this works correctly after removing Request.Uri and Request.Uri.AbsoluteUri.
+                    if ((Request.GetEncodedPathAndQuery() != null) && Request.GetEncodedPathAndQuery().ToLowerInvariant().Contains("novasouth"))
+                    {
+                        _siteCssFile = Url.Content("NovaSouth.css");
+                    }
+                    else
+                    {
+                        _siteCssFile = Url.Content("NovaNorth.css");
+                    }
+                }
+
+                return _siteCssFile;
+            }
+        }
+
         /// <summary>
         /// Backing member variable for general configuration data for all registration types.
         /// </summary>
@@ -92,9 +116,45 @@ namespace OdysseyCoreMvc.Pages
         }
 
         /// <summary>
-        /// Gets or sets the displayable registration name, e.g. "Tournament Registration".
+        /// Backing member variable for the displayable website name, e.g. "novanorth.org".
         /// </summary>
-        public string? FriendlyRegistrationName { get; set; }
+        public string? _siteName = string.Empty;
+
+        /// <summary>
+        /// Gets the displayable website name, e.g. "novanorth.org".
+        /// </summary>
+        public string? SiteName
+        {
+            get
+            {
+                // If _regionName is null, run the LINQ query, assign the result to RegionName, and return the result
+                if (string.IsNullOrEmpty(_siteName))
+                {
+                    if (Config != null)
+                    {
+                        _regionName = Config["RegionName"];
+
+                        // TODO: Test this.
+                        _siteName = (Request.GetEncodedPathAndQuery() != null)
+                            ? Request.Host.Host.ToLowerInvariant()
+                            : "novanorth.org";
+
+                        // Drop the "www." if present.
+                        if (_siteName.StartsWith("www."))
+                        {
+                            // TODO: Test this replacement of .Substring(4).
+                            _siteName = _siteName[4..];
+                        }
+                    }
+                    else
+                    {
+                        _logger.LogWarning("Config was null and should not have been.");
+                    }
+                }
+
+                return _siteName;
+            }
+        }
 
         /// <summary>
         /// Gets or sets the path to the web site's CSS file based on which server this is hosted on, NoVA North or
@@ -158,8 +218,6 @@ namespace OdysseyCoreMvc.Pages
                 return _regionNumber;
             }
         }
-
-        public string? SiteName { get; set; }
 
         public string TournamentDate
         {
@@ -267,6 +325,8 @@ namespace OdysseyCoreMvc.Pages
             }
         }
 
+        public string _displayableRegistrationName = string.Empty;
+
         /// <summary>
         /// Gets the registration type name that is displayed to the user when they browse to the web page, e.g.
         /// Judges, Tournament.
@@ -278,27 +338,41 @@ namespace OdysseyCoreMvc.Pages
         /// <remarks>
         /// TODO: Write tests for this.
         /// </remarks>
-        public string GetDisplayableRegistrationName()
+        public string DisplayableRegistrationName
         {
-            // Make sure that CurrentRegistrationType has been set before calling this method.
-            // TODO: we should probably assert here if CurrentRegistrationType has not been set.
-            // TODO: we should definitely log an error here if CurrentRegistrationType has not been set.
-            if (CurrentRegistrationType == RegistrationType.None)
+            get
             {
-                return string.Empty;
-            }
+                if (string.IsNullOrEmpty(_displayableRegistrationName))
+                {
+                    // Make sure that CurrentRegistrationType has been set before calling this method.
+                    // TODO: we should probably assert here if CurrentRegistrationType has not been set.
+                    // TODO: we should definitely log an error here if CurrentRegistrationType has not been set.
+                    if (CurrentRegistrationType == RegistrationType.None)
+                    {
+                        // TODO: Do nothing, since it's already string.Empty. We should be able to remove this.
+                        _displayableRegistrationName = string.Empty;
+                    }
 
-            switch (CurrentRegistrationType)
-            {
-                case RegistrationType.None:
-                case RegistrationType.Volunteer:
-                    return "Invalid Registration"; ;
-                case RegistrationType.CoachesTraining:
-                    return "Coaches Training Registration";
-                case RegistrationType.Tournament:
-                case RegistrationType.Judges:
-                default:
-                    return CurrentRegistrationType + " Registration";
+                    switch (CurrentRegistrationType)
+                    {
+                        case RegistrationType.None:
+                        case RegistrationType.Volunteer:
+                            _displayableRegistrationName = "Invalid Registration";
+                            break;
+
+                        case RegistrationType.CoachesTraining:
+                            _displayableRegistrationName = "Coaches Training Registration";
+                            break;
+
+                        case RegistrationType.Tournament:
+                        case RegistrationType.Judges:
+                        default:
+                            _displayableRegistrationName = CurrentRegistrationType + " Registration";
+                            break;
+                    }
+                }
+
+                return _displayableRegistrationName;
             }
         }
     }

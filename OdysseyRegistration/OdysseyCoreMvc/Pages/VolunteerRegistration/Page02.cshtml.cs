@@ -25,8 +25,7 @@ namespace OdysseyCoreMvc.Pages.VolunteerRegistration
         // https://docs.microsoft.com/en-us/aspnet/core/fundamentals/dependency-injection?view=aspnetcore-6.0
         public Page02Model(OdysseyContext context, ILogger<BasePageModel> logger) : base(context, logger)
         {
-            this.CurrentRegistrationType = RegistrationType.Volunteer;
-            this.FriendlyRegistrationName = this.GetDisplayableRegistrationName();
+            CurrentRegistrationType = RegistrationType.Volunteer;
         }
 
         [Display(Name="Daytime Phone"), DataType(DataType.PhoneNumber), Required, RegularExpression(@"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$", ErrorMessage="This is not a valid phone number")]

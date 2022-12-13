@@ -17,8 +17,7 @@ namespace OdysseyCoreMvc.Pages.TournamentRegistration
         // https://docs.microsoft.com/en-us/aspnet/core/fundamentals/dependency-injection?view=aspnetcore-6.0
         public ResendEmailPageModel(OdysseyContext context, ILogger<BasePageModel> logger) : base(context, logger)
         {
-            this.CurrentRegistrationType = RegistrationType.Volunteer;
-            this.FriendlyRegistrationName = this.GetDisplayableRegistrationName();
+            CurrentRegistrationType = RegistrationType.Tournament;
         }
 
         public string? AltCoachCheckbox { get; set; }

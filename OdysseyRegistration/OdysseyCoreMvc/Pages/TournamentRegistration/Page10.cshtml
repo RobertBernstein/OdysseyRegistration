@@ -15,7 +15,7 @@
 @model Page10Model
 
 @{
-    ViewBag.Title = Model.FriendlyRegistrationName + " Page 9 of 9";
+    ViewBag.Title = Model.DisplayableRegistrationName + " Page 9 of 9";
 }
 
 <script src="@Url.Content("~/Scripts/PrintThisPage.js")" type="text/javascript"></script>
@@ -62,7 +62,7 @@
     </p>
     <hr />
     <p style="text-align: right">
-        <input type="button" value="Start @Model.FriendlyRegistrationName Over" id="restartRegistrationButtonForJudgeError" />
+        <input type="button" value="Start @Model.DisplayableRegistrationName Over" id="restartRegistrationButtonForJudgeError" />
     </p>
     <p style="text-align: left">
         <input type="button" value="Return to the Home Page" id="homePageButtonForJudgeError" />
@@ -78,7 +78,7 @@
     </p>
     <hr />
     <p style="text-align: right">
-        <input type="button" value="Start @Model.FriendlyRegistrationName Over" id="restartRegistrationButtonForVolunteerError" />
+        <input type="button" value="Start @Model.DisplayableRegistrationName Over" id="restartRegistrationButtonForVolunteerError" />
     </p>
     <p style="text-align: left">
         <input type="button" value="Return to the Home Page" id="homePageButtonForVolunteerError" />

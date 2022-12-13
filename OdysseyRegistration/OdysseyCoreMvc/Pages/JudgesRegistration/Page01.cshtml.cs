@@ -34,8 +34,6 @@ namespace OdysseyCoreMvc.Pages.JudgesRegistration
         public Page01Model(OdysseyContext context, ILogger<BasePageModel> logger) : base(context, logger)
         {
             this.CurrentRegistrationType = RegistrationType.Judges;
-            this.FriendlyRegistrationName = this.GetDisplayableRegistrationName();
-            Context = context;
         }
 
         /// <summary>
@@ -99,8 +97,6 @@ namespace OdysseyCoreMvc.Pages.JudgesRegistration
                 return builder.ToString();
             }
         }
-
-        public OdysseyContext Context { get; }
 
         public async Task OnGetAsync()
         {

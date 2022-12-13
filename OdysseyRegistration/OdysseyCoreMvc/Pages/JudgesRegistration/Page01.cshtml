@@ -13,7 +13,7 @@
 @model Page01Model
 
 @{
-    ViewBag.Title = Model.FriendlyRegistrationName + " Page 1 of 3";
+    ViewBag.Title = Model.DisplayableRegistrationName + " Page 1 of 3";
 }
 
 <h1>
@@ -22,7 +22,7 @@
 <h2>
     Welcome to the
     @Model.RegionName Region @Model.RegionNumber @Model.Config["Year"]-@Model.Config["EndYear"] Odyssey of the Mind
-    @Model.FriendlyRegistrationName.
+    @Model.DisplayableRegistrationName.
 </h2>
 <p>
     Thank you for volunteering to be a judge at our regional tournament.
