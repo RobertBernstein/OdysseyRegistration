@@ -112,7 +112,7 @@ namespace OdysseyCoreMvc.Pages.JudgesRegistration
 
         public string BuildMailRegionalDirectorHyperLink()
         {
-            StringBuilder builder = new StringBuilder();
+            StringBuilder builder = new();
             builder.Append("mailto:");
             builder.Append(Config["RegionalDirectorEmail"]);
             string mailString =

@@ -42,70 +42,13 @@
         </div>
     </div>
     <div id="main">
+        @*
+        RenderBody is a placeholder where all the page-specific views show up, wrapped in the layout page. For
+        example, select the Privacy link and the Pages/Privacy.cshtml view is rendered inside the RenderBody
+        method.
+        *@
         @RenderBody()
         <div id="footer">
         </div>
     </div>
 </div>
-
-@*
-<body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
-                @*
-                The following anchor element is a Tag Helper. In this case, it's the Anchor Tag Helper. The
-                asp-page="/Movies/Index" Tag Helper attribute and value creates a link to the /Movies/Index Razor
-                Page.
-                https://docs.microsoft.com/en-us/aspnet/core/mvc/views/tag-helpers/intro?view=aspnetcore-6.0
-                https://docs.microsoft.com/en-us/aspnet/core/mvc/views/tag-helpers/built-in/anchor-tag-helper?view=aspnetcore-6.0
-
-                The asp-area attribute value is empty, so the area isn't used in the link. See Areas for more
-                information.
-                https://docs.microsoft.com/en-us/aspnet/core/mvc/controllers/areas?view=aspnetcore-6.0
-
-                TODO: Fix the links below for the Odyssey Registration website.
-                
-                <a class="navbar-brand" asp-page="/Movies/Index">RPMovie</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @*
-            RenderBody is a placeholder where all the page-specific views show up, wrapped in the layout page. For
-            example, select the Privacy link and the Pages/Privacy.cshtml view is rendered inside the RenderBody
-            method.
-            
-            @RenderBody()
-        </main>
-    </div>
-
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2022 - Odyssey Registration - <a asp-area="" asp-page="/Privacy">Privacy</a>
-        </div>
-    </footer>
-
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-
-    @await RenderSectionAsync("Scripts", required: false)
-</body>
-</html>
-*@

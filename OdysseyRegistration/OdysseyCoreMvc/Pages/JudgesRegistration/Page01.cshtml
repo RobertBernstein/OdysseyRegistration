@@ -139,17 +139,11 @@
 <hr />
 <form>
     <p>
-        <a asp-page="/JudgesRegistration/Page02">Begin the Registration Process >></a>
-        <a asp-page="@Model.Config["HomePage"]">Return to the Home Page</a>
+        <div style="text-align: right">
+            <button asp-page="/JudgesRegistration/Page02">Begin the Registration Process >></button>
+        </div>
+        <div style="text-align: left">
+            <a href="@Model.Config["HomePage"]">Return to the Home Page</a>
+        </div>
     </p>
 </form>
-@*@using (Html.BeginForm(null, null, FormMethod.Post, new { defaultbutton = "nextButton", id = "MainForm" }))
-{
-    <div style="text-align: right">
-        <input type="submit" value="Begin the Registration Process >>" id="nextButton" name="nextButton" />
-    </div>
-    <div style="text-align: left">
-        <a href="@Model.Config["HomePage"]">Return to the Home Page</a>
-    </div>
-}
-*@

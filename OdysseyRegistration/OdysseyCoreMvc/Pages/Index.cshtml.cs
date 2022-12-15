@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http.Extensions;
+﻿using Microsoft.AspNetCore.Mvc;
 using OdysseyCoreMvc.Data;
 
 namespace OdysseyCoreMvc.Pages
@@ -15,8 +15,18 @@ namespace OdysseyCoreMvc.Pages
         public void OnGet()
         {
             ViewData["Message"] =
-                "Welcome to the " + Config["RegionName"] + " Odyssey of the Mind Region " +
-                Config["RegionNumber"] + " Registration web pages.";
+                $"Welcome to the {Config["RegionName"]} Odyssey of the Mind Region {Config["RegionNumber"]} Registration web pages.";
+        }
+
+        // TODO: Change this back to OnPostAsync.
+        public IActionResult OnPost()
+        {
+            if (!ModelState.IsValid)
+            {
+                return Page();
+            }
+
+            return Redirect(Config["HomePage"]);
         }
     }
 }

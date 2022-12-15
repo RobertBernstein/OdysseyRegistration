@@ -2,7 +2,7 @@
 
 @*
     Package: Odyssey of the Mind Web Site
-    Module:  Coaches Training Registration
+    Module:  Registration Home Page
     File:    Index.cshtml
     Author:  Robert Bernstein
     Version: 3.0
@@ -25,7 +25,10 @@
         Click on one of the links below to being the specified registration process.
     </p>
     <ul>
-        <li><a href="CoachesTrainingRegistration/Page01">Coaches Training Registration</a></li>
+        @if (@Model.Config["WillHaveCoachesTrainingRegistration"] == "True")
+        {
+            <li><a href="CoachesTrainingRegistration/Page01">Coaches Training Registration</a></li>
+        }
         <li><a href="JudgesRegistration/Page01">Judges Registration</a></li>
         <li>Judges Registration (Coming Soon!)</li>
         @if (@Model.Config["WillHaveVolunteerRegistration"] == "True")
@@ -36,7 +39,9 @@
         <li><a href="TournamentRegistration/Page01">Tournament Registration</a></li>
         <li>Tournament Registration (Coming Soon!)</li>
     </ul>
-    <p style="text-align: center">
-        <button type="button" id="homePageButton">Return to the Home Page</button>
-    </p>
+    <form method="post">
+        <p style="text-align: center">
+            <input type="submit" value="Return to the Home Page">
+        </p>
+    </form>
 </div>
