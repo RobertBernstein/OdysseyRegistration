@@ -4,7 +4,6 @@
 // MVID: 7B658547-521F-44CB-80FA-52857CB94B72
 // Assembly location: C:\Users\rob\OneDrive\Odyssey\OdysseyProd\registration\bin\OdysseyMvc4.dll
 
-//using Elmah;
 using OdysseyMvc2023.ViewData;
 using System;
 using System.Collections;
@@ -15,6 +14,7 @@ using System.Net.Mail;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Web.Mvc;
+using Elmah;
 using OdysseyMvc2023.Models;
 using OdysseyMvc2023.ViewData.JudgesRegistration;
 
@@ -175,8 +175,7 @@ namespace OdysseyMvc2023.Controllers
             }
             catch (Exception ex)
             {
-                // TODO: Install ELMAH.
-                //ErrorSignal.FromCurrentContext().Raise(ex);
+                ErrorSignal.FromCurrentContext().Raise(ex);
                 return (ActionResult)this.RedirectToAction("Index", "Home");
             }
         }
@@ -241,8 +240,7 @@ namespace OdysseyMvc2023.Controllers
             }
             catch (Exception ex)
             {
-                // TODO: Install ELMAH.
-                //ErrorSignal.FromCurrentContext().Raise(ex);
+                ErrorSignal.FromCurrentContext().Raise(ex);
                 return (ActionResult)this.RedirectToAction("Index", "Home");
             }
         }

@@ -9,6 +9,7 @@ using System.Net;
 using System.Net.Mail;
 using System.Threading;
 using System.Web.Mvc;
+using Elmah;
 using OdysseyMvc2023.Models;
 using OdysseyMvc2023.ViewData;
 
@@ -160,8 +161,7 @@ namespace OdysseyMvc2023.Controllers
             }
             catch (SmtpFailedRecipientsException ex)
             {
-                // TODO: Install ELMAH.
-                //ErrorSignal.FromCurrentContext().Raise((Exception)ex);
+                ErrorSignal.FromCurrentContext().Raise((Exception)ex);
                 foreach (SmtpFailedRecipientException innerException in ex.InnerExceptions)
                 {
                     switch (innerException.StatusCode)
@@ -178,8 +178,7 @@ namespace OdysseyMvc2023.Controllers
             }
             catch (SmtpException ex)
             {
-                // TODO: Install ELMAH.
-                //ErrorSignal.FromCurrentContext().Raise((Exception)ex);
+                ErrorSignal.FromCurrentContext().Raise((Exception)ex);
                 return ex.StatusCode.ToString();
             }
             return (string)null;

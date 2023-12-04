@@ -13,6 +13,7 @@ using System.Linq;
 using System.Net.Mail;
 using System.Text;
 using System.Web.Mvc;
+using Elmah;
 using OdysseyMvc2023.Models;
 using OdysseyMvc2023.ViewData;
 using OdysseyMvc2023.ViewData.TournamentRegistration;
@@ -102,8 +103,7 @@ namespace OdysseyMvc2023.Controllers
             }
             catch (Exception ex)
             {
-                // TODO: Install ELMAH.
-                //ErrorSignal.FromCurrentContext().Raise(ex);
+                ErrorSignal.FromCurrentContext().Raise(ex);
                 return (ActionResult)this.RedirectToAction("Index", "Home");
             }
         }
@@ -140,8 +140,7 @@ namespace OdysseyMvc2023.Controllers
             }
             catch (Exception ex)
             {
-                // TODO: Install ELMAH.
-                //ErrorSignal.FromCurrentContext().Raise(ex);
+                ErrorSignal.FromCurrentContext().Raise(ex);
                 return (ActionResult)this.RedirectToAction("Index", "Home");
             }
         }
@@ -189,8 +188,7 @@ namespace OdysseyMvc2023.Controllers
             }
             catch (Exception ex)
             {
-                // TODO: Install ELMAH.
-                //ErrorSignal.FromCurrentContext().Raise(ex);
+                ErrorSignal.FromCurrentContext().Raise(ex);
                 return (ActionResult)this.RedirectToAction("Index", "Home");
             }
         }
@@ -244,8 +242,7 @@ namespace OdysseyMvc2023.Controllers
             }
             catch (Exception ex)
             {
-                // TODO: Install ELMAH.
-                //ErrorSignal.FromCurrentContext().Raise(ex);
+                ErrorSignal.FromCurrentContext().Raise(ex);
                 return (ActionResult)this.RedirectToAction("Error");
             }
         }
@@ -300,8 +297,7 @@ namespace OdysseyMvc2023.Controllers
             }
             catch (Exception ex)
             {
-                // TODO: Install ELMAH.
-                //ErrorSignal.FromCurrentContext().Raise(ex);
+                ErrorSignal.FromCurrentContext().Raise(ex);
                 return (ActionResult)this.RedirectToAction("Index", "Home");
             }
         }
@@ -365,8 +361,7 @@ namespace OdysseyMvc2023.Controllers
             }
             catch (Exception ex)
             {
-                // TODO: Install ELMAH.
-                //ErrorSignal.FromCurrentContext().Raise(ex);
+                ErrorSignal.FromCurrentContext().Raise(ex);
                 return (ActionResult)this.RedirectToAction("Index", "Home");
             }
         }
@@ -433,8 +428,7 @@ namespace OdysseyMvc2023.Controllers
             }
             catch (Exception ex)
             {
-                // TODO: Install ELMAH.
-                //ErrorSignal.FromCurrentContext().Raise(ex);
+                ErrorSignal.FromCurrentContext().Raise(ex);
                 return (ActionResult)this.RedirectToAction("Index", "Home");
             }
         }
@@ -469,8 +463,7 @@ namespace OdysseyMvc2023.Controllers
             }
             catch (Exception ex)
             {
-                // TODO: Install ELMAH.
-                //ErrorSignal.FromCurrentContext().Raise(ex);
+                ErrorSignal.FromCurrentContext().Raise(ex);
                 return (ActionResult)this.RedirectToAction("Index", "Home");
             }
         }

@@ -31,10 +31,12 @@ namespace OdysseyMvc2023.Models
         /// The database context.
         /// </summary>
         private readonly OdysseyEntities context = new OdysseyEntities();
+
         /// <summary>
         /// The coaches training info.
         /// </summary>
-        private Event coachesTrainingInfo;
+        //private Event coachesTrainingInfo;
+
         /// <summary>
         /// The registration system configuration.
         /// </summary>
