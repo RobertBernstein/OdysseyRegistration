@@ -1,0 +1,483 @@
+﻿@model OdysseyMvc2023.ViewData.TournamentRegistration.Page10ViewData
+<div id=contentstart>
+    <p style="text-align: center"><b>You have been assigned Team ID @Model.TournamentRegistration.TeamID.</b></p>
+    <p>Dear Coach @Model.TournamentRegistration.CoachLastName,</p>
+    <p>
+        You have registered the team listed below.&nbsp; Your judge @*and volunteer are *@is listed below,
+        as well.&nbsp; Please remind your judge that the team is counting on him or her
+        to attend both Judges Training and the Regional Tournament@*, and remind your volunteer that he or she must spend
+            two hours volunteering at the Regional Tournament*@.<br />
+
+    </p>
+    <p>
+        We recommend that you print this page and keep it for your records. &nbsp;If you need to change any information
+        that you entered during your registration,
+        please send an e-mail to the Webmaster for this site and include your Team ID # from this registration.
+    </p>
+
+    <p>
+        <b>
+            For this registration to be complete, the treasurer must
+            <span style="text-decoration: underline">receive</span> payment of the team’s @Model.FriendlyRegistrationName
+            fee no later than @Model.PaymentDueDate.
+        </b>
+    </p>
+
+    @* Only display the following text if the region accepts both PayPal and checks. *@
+    @if (Model.AcceptingPayPal)
+    {
+        <p>
+            <b>For Payments by Check:</b>
+        </p>
+    }
+
+    <p>
+        Payments by check must be made out to &quot;@Model.TournamentInfo.EventMakeChecksOutTo&quot; and mailed to the address
+        below. &nbsp;<b>Please put your team ID number (see top of this page), school name, and coach name on the check.</b> &nbsp;If your team’s
+        @Model.FriendlyRegistrationName fee is being paid as one of a group of teams (for example, the school PTA is
+        paying for all teams), be sure to advise your school coordinator of your team’s ID number so that all team ID numbers
+        can be included on the group check.
+    </p>
+    <p>Mail your check payment to:</p>
+    <blockquote>
+        @Model.TournamentInfo.EventPayeeName<br />
+        @Model.TournamentInfo.EventPayeeAddress1<br />
+        @if (!string.IsNullOrWhiteSpace(Model.TournamentInfo.EventPayeeAddress2))
+        {
+            @Model.TournamentInfo.EventPayeeAddress2<br />
+        }
+        @Model.TournamentInfo.EventPayeeCity, @Model.TournamentInfo.EventPayeeState @Model.TournamentInfo.EventPayeeZipCode
+    </blockquote>
+
+    @if (Model.AcceptingPayPal)
+    {
+        <p>
+            <b>For Online Payments by Debit or Credit Card:</b>
+        </p>
+
+        <p>
+            Online payments are processed through PayPal. &nbsp;You are not required to have an account with PayPal to
+            submit your payment online. &nbsp;Once the payment page appears, you can select the option to enter your debit or credit
+            card information rather than logging in. &nbsp;When submitting your payment, make sure you indicate your team ID
+            number (see top of this page) and the coach's last name.
+        </p>
+
+        <p>To submit your payment online, click the &quot;Pay Now&quot; button <b>at the bottom of the page</b>.</p>
+    }
+
+    <p>
+        You may also contact the Treasurer from our <a href="@Model.Config["HomePage"]@Model.Config["ContactUsURL"]" target="_blank">Contact Us</a> page.
+    </p>
+
+    <p>Please do not request a receipt from the Treasurer. &nbsp;Your cancelled check is your payment receipt.</p>
+
+    <p>Thanks for signing up!</p>
+
+    <table style="height: 100%; border: 0; padding: 0; margin: 0" width='736'>
+        <tr>
+            <td width='736' colspan='2' style='text-align: center'><hr /></td>
+        <tr>
+            <td width='736' colspan='2' style='text-align: center'><b>Your School:</b></td>
+        <tr>
+            <td width='305'><br /><b>Name:</b></td>
+            <td width='431'>@Model.SchoolName
+        </tr>
+        <tr>
+            <td width='736' colspan='2'>
+                <hr />
+            </td>
+        </tr>
+        <tr>
+            <td colspan='2'><p align='center'><b>Your Team:</b></td>
+        </tr>
+        <tr>
+            <td width='304'><br /><b>Name:</b></td>
+            <td rowspan='2' style="text-decoration: underline">
+                <br />
+                <b>
+                    Official team names and membership numbers will be announced
+                    in the Tournament Schedule when it is posted on the regional web site.
+                </b>
+                <br />
+            </td>
+        </tr>
+        <tr>
+            <td width='304'><b>Membership Number:</b></td>
+        </tr>
+        <tr>
+            <td width='304'><b>Division:</b></td>
+            <td width='185'>@Model.Division</td>
+        </tr>
+        @if (@Model.Division == "Primary")
+        {
+            if (Model.Config["PrimaryTeamsMayDoSpontaneous"] == "True")
+            {
+                <tr><td width='304'><b>Will Compete In Spontaneous:</b></td><td width='191'>@Model.TournamentRegistration.Spontaneous</td></tr>
+
+            }
+        }
+        else
+        {
+            <tr><td width='304'><b>Selected Problem:<br /></b></td><td width='191'>@Model.ProblemName</td></tr>
+        }
+        <tr>
+            <td colspan='2'><hr /></td>
+        </tr>
+        <tr>
+            <td width='736' colspan='2'>
+                <p align='center'><b>Your Judge:</b>
+            </td>
+        </tr>
+        <tr>
+            <td width='305'>
+                <br /><b>ID Number:</b>
+            </td>
+            <td width='431'><br />@Model.TournamentRegistration.JudgeID</td>
+        </tr>
+        <tr>
+            <td width='305'>
+                <b>First Name:</b>
+            </td>
+            <td width='431'>@Model.JudgeFirstName</td>
+        </tr>
+        <tr>
+            <td width='305'>
+                <b>Last Name:</b>
+            </td>
+            <td width='431'>@Model.JudgeLastName</td>
+        </tr>
+        <tr>
+            <td colspan='2'><hr /></td>
+        </tr>
+        @* TODO: Commented this out; check the database for disabled Volunteer Registration instead - Rob, 12/12/2014. *@
+        @*        <tr>
+                <td colspan='2'>
+                    <p align='center'><b>Your Volunteer:</b>
+                </td>
+            </tr>
+            <tr>
+                <td width='305'>
+                    <br /><b>ID Number:</b>
+                </td>
+                <td width='431'><br />@Model.TournamentRegistration.VolunteerID</td>
+            </tr>
+            <tr>
+                <td width='305'><b>First Name:</b></td>
+                <td width='431'>@Model.VolunteerFirstName</td>
+            </tr>
+            <tr>
+                <td width='305'><b>Last Name:</b></td>
+                <td width='431'>@Model.VolunteerLastName</td>
+            </tr>
+            <tr>
+                <td colspan='2'><hr /></td>
+            </tr>*@
+        <tr>
+            <td colspan='2'>
+                <p align='center'><b>Your Coach:</b>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <br /><b>First Name:</b>
+            </td>
+            <td><br />@Model.TournamentRegistration.CoachFirstName</td>
+        </tr>
+        <tr>
+            <td>
+                <b>Last Name:</b>
+            </td>
+            <td>@Model.TournamentRegistration.CoachLastName</td>
+        </tr>
+        <tr>
+            <td>
+                <b>Address:</b>
+            </td>
+            <td>@Model.TournamentRegistration.CoachAddress</td>
+        </tr>
+        <tr>
+            <td>
+                <b>City:</b>
+            </td>
+            <td>@Model.TournamentRegistration.CoachCity</td>
+        </tr>
+        <tr>
+            <td>
+                <b>State:</b>
+            </td>
+            <td>@Model.TournamentRegistration.CoachState</td>
+        </tr>
+        <tr>
+            <td>
+                <b>Zip Code:</b>
+            </td>
+            <td>@Model.TournamentRegistration.CoachZipCode</td>
+        </tr>
+        <tr>
+            <td>
+                <b>Evening Phone:</b>
+            </td>
+            <td>@Model.TournamentRegistration.CoachEveningPhone</td>
+        </tr>
+        <tr>
+            <td>
+                <b>Daytime Phone:</b>
+            </td>
+            <td>@Model.TournamentRegistration.CoachDaytimePhone</td>
+        </tr>
+        <tr>
+            <td>
+                <b>Mobile Phone:</b>
+            </td>
+            <td>@Model.TournamentRegistration.CoachMobilePhone</td>
+        </tr>
+        <tr>
+            <td width='304'>
+                <b>E-mail:</b>
+            </td>
+            <td>@Model.TournamentRegistration.CoachEmailAddress</td>
+        </tr>
+        <tr>
+            <td colspan='2'><hr /></td>
+        </tr>
+
+        <tr>
+            <td colspan='2'><p align='center'><b>Your Alternate Coach:</b></td>
+        </tr>
+        <tr>
+            <td width='304'><br /><b>First Name:</b></td>
+            <td><br />@Model.TournamentRegistration.AltCoachFirstName</td>
+        </tr>
+        <tr>
+            <td>
+                <b>Last Name:</b>
+            </td>
+            <td>@Model.TournamentRegistration.AltCoachLastName</td>
+        </tr>
+        <tr>
+            <td>
+                <b>Evening Phone:</b>
+            </td>
+            <td>@Model.TournamentRegistration.AltCoachEveningPhone</td>
+        </tr>
+        <tr>
+            <td>
+                <b>Daytime Phone:</b>
+            </td>
+            <td>@Model.TournamentRegistration.AltCoachDaytimePhone</td>
+        </tr>
+        <tr>
+            <td>
+                <b>Mobile Phone:</b>
+            </td>
+            <td>@Model.TournamentRegistration.AltCoachMobilePhone</td>
+        </tr>
+        <tr>
+            <td>
+                <b>E-mail:</b>
+            </td>
+            <td>@Model.TournamentRegistration.AltCoachEmailAddress</td>
+        </tr>
+        <tr>
+            <td colspan='2' style="text-align: center">
+                <hr />
+            </td>
+        </tr>
+        @if (!string.IsNullOrWhiteSpace(Model.TournamentRegistration.MemberFirstName1))
+        {
+            <tr><td colspan='2'><p align='center'><b>Team Member # 1:</b></td></tr>
+            <tr>
+                <td><br /><b>First Name:</b></td>
+                <td>
+                    <br />
+                    @Model.TournamentRegistration.MemberFirstName1
+                </td>
+            </tr>
+            <tr>
+                <td width='304'><b>Last Name:</b></td>
+                <td>@Model.TournamentRegistration.MemberLastName1</td>
+            </tr>
+            <tr>
+                <td><b>Grade:</b></td>
+                <td>@Model.TournamentRegistration.MemberGrade1</td>
+            </tr>
+            <tr>
+                <td colspan='2' style='text-align: center'><hr /></td>
+            </tr>
+        }
+
+        @if (!string.IsNullOrWhiteSpace(Model.TournamentRegistration.MemberFirstName2))
+        {
+            <tr><td colspan='2'><p align='center'><b>Team Member # 2:</b></td></tr>
+            <tr>
+                <td><br /><b>First Name:</b></td>
+                <td>
+                    <br />
+                    @Model.TournamentRegistration.MemberFirstName2
+                </td>
+            </tr>
+            <tr>
+                <td width='304'><b>Last Name:</b></td>
+                <td>@Model.TournamentRegistration.MemberLastName2</td>
+            </tr>
+            <tr>
+                <td><b>Grade:</b></td>
+                <td>@Model.TournamentRegistration.MemberGrade2</td>
+            </tr>
+            <tr>
+                <td colspan='2' style='text-align: center'><hr /></td>
+            </tr>
+        }
+
+        @if (!string.IsNullOrWhiteSpace(Model.TournamentRegistration.MemberFirstName3))
+        {
+            <tr><td colspan='2'><p align='center'><b>Team Member # 3:</b></td></tr>
+            <tr>
+                <td><br /><b>First Name:</b></td>
+                <td>
+                    <br />
+                    @Model.TournamentRegistration.MemberFirstName3
+                </td>
+            </tr>
+            <tr>
+                <td width='304'><b>Last Name:</b></td>
+                <td>@Model.TournamentRegistration.MemberLastName3</td>
+            </tr>
+            <tr>
+                <td><b>Grade:</b></td>
+                <td>@Model.TournamentRegistration.MemberGrade3</td>
+            </tr>
+            <tr>
+                <td colspan='2' style='text-align: center'><hr /></td>
+            </tr>
+        }
+
+        @if (!string.IsNullOrWhiteSpace(Model.TournamentRegistration.MemberFirstName4))
+        {
+            <tr><td colspan='2'><p align='center'><b>Team Member # 4:</b></td></tr>
+            <tr>
+                <td><br /><b>First Name:</b></td>
+                <td>
+                    <br />
+                    @Model.TournamentRegistration.MemberFirstName4
+                </td>
+            </tr>
+            <tr>
+                <td width='304'><b>Last Name:</b></td>
+                <td>@Model.TournamentRegistration.MemberLastName4</td>
+            </tr>
+            <tr>
+                <td><b>Grade:</b></td>
+                <td>@Model.TournamentRegistration.MemberGrade4</td>
+            </tr>
+            <tr>
+                <td colspan='2' style='text-align: center'><hr /></td>
+            </tr>
+        }
+
+        @if (!string.IsNullOrWhiteSpace(Model.TournamentRegistration.MemberFirstName5))
+        {
+            <tr><td colspan='2'><p align='center'><b>Team Member # 5:</b></td></tr>
+            <tr>
+                <td><br /><b>First Name:</b></td>
+                <td>
+                    <br />
+                    @Model.TournamentRegistration.MemberFirstName5
+                </td>
+            </tr>
+            <tr>
+                <td width='304'><b>Last Name:</b></td>
+                <td>@Model.TournamentRegistration.MemberLastName5</td>
+            </tr>
+            <tr>
+                <td><b>Grade:</b></td>
+                <td>@Model.TournamentRegistration.MemberGrade5</td>
+            </tr>
+            <tr>
+                <td colspan='2' style='text-align: center'><hr /></td>
+            </tr>
+        }
+
+        @if (!string.IsNullOrWhiteSpace(Model.TournamentRegistration.MemberFirstName6))
+        {
+            <tr><td colspan='2'><p align='center'><b>Team Member # 6:</b></td></tr>
+            <tr>
+                <td><br /><b>First Name:</b></td>
+                <td>
+                    <br />
+                    @Model.TournamentRegistration.MemberFirstName6
+                </td>
+            </tr>
+            <tr>
+                <td width='304'><b>Last Name:</b></td>
+                <td>@Model.TournamentRegistration.MemberLastName6</td>
+            </tr>
+            <tr>
+                <td><b>Grade:</b></td>
+                <td>@Model.TournamentRegistration.MemberGrade6</td>
+            </tr>
+            <tr>
+                <td colspan='2' style='text-align: center'><hr /></td>
+            </tr>
+        }
+
+        @if (!string.IsNullOrWhiteSpace(Model.TournamentRegistration.MemberFirstName7))
+        {
+            <tr><td colspan='2'><p align='center'><b>Team Member # 7:</b></td></tr>
+            <tr>
+                <td><br /><b>First Name:</b></td>
+                <td>
+                    <br />
+                    @Model.TournamentRegistration.MemberFirstName7
+                </td>
+            </tr>
+            <tr>
+                <td width='304'><b>Last Name:</b></td>
+                <td>@Model.TournamentRegistration.MemberLastName7</td>
+            </tr>
+            <tr>
+                <td><b>Grade:</b></td>
+                <td>@Model.TournamentRegistration.MemberGrade7</td>
+            </tr>
+            <tr>
+                <td colspan='2' style='text-align: center'><hr /></td>
+            </tr>
+        }
+
+        <tr>
+            <td width='736' colspan='2' style="text-align: center"><b>Scheduling Issues:</b></td>
+        </tr>
+        <tr>
+            <td colspan='2'>
+                <br />
+                @if (!string.IsNullOrWhiteSpace(Model.TournamentRegistration.SchedulingIssues))
+                {
+                    @Model.TournamentRegistration.SchedulingIssues
+                }
+                else
+                {
+                    <p style='text-align: center'>None</p>
+                }
+            </td>
+        </tr>
+        <tr><td colspan='2'><hr /></td></tr>
+        <tr>
+            <td width='736' colspan='2' style="text-align: center"><b>Special Considerations:</b></td>
+        </tr>
+        <tr>
+            <td colspan='2'>
+                <br />
+                @if (!string.IsNullOrWhiteSpace(Model.TournamentRegistration.SpecialConsiderations))
+                {
+                    @Model.TournamentRegistration.SpecialConsiderations
+                }
+                else
+                {
+                    <p style='text-align: center'>None</p>
+                }
+            </td>
+        </tr>
+    </table>
+
+    <p style="text-align: center"><b>You have been assigned Team ID @Model.TournamentRegistration.TeamID</b></p>
+</div>
