@@ -1,0 +1,295 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2008/09/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="OdysseyModelStoreContainer" CdmEntityContainer="OdysseyEntities">
+    <EntitySetMapping Name="CoachesTrainingDivisions">
+      <EntityTypeMapping TypeName="OdysseyModel.CoachesTrainingDivision">
+        <MappingFragment StoreEntitySet="CoachesTrainingDivisions">
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="CoachesTrainingRegions">
+      <EntityTypeMapping TypeName="OdysseyModel.CoachesTrainingRegion">
+        <MappingFragment StoreEntitySet="CoachesTrainingRegions">
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="CoachesTrainingRegistrations">
+      <EntityTypeMapping TypeName="OdysseyModel.CoachesTrainingRegistration">
+        <MappingFragment StoreEntitySet="CoachesTrainingRegistrations">
+          <ScalarProperty Name="UserAgent" ColumnName="UserAgent" />
+          <ScalarProperty Name="TimeRegistered" ColumnName="TimeRegistered" />
+          <ScalarProperty Name="RegionNumber" ColumnName="RegionNumber" />
+          <ScalarProperty Name="YearsInvolved" ColumnName="YearsInvolved" />
+          <ScalarProperty Name="EmailAddress" ColumnName="EmailAddress" />
+          <ScalarProperty Name="SelectedProblem" ColumnName="SelectedProblem" />
+          <ScalarProperty Name="Division" ColumnName="Division" />
+          <ScalarProperty Name="Role" ColumnName="Role" />
+          <ScalarProperty Name="SchoolName" ColumnName="SchoolName" />
+          <ScalarProperty Name="LastName" ColumnName="LastName" />
+          <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+          <ScalarProperty Name="RegistrationID" ColumnName="RegistrationID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="CoachesTrainingRoles">
+      <EntityTypeMapping TypeName="OdysseyModel.CoachesTrainingRole">
+        <MappingFragment StoreEntitySet="CoachesTrainingRoles">
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Configs">
+      <EntityTypeMapping TypeName="OdysseyModel.Config">
+        <MappingFragment StoreEntitySet="Config">
+          <ScalarProperty Name="Value" ColumnName="Value" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ContactUsRecipients">
+      <EntityTypeMapping TypeName="OdysseyModel.ContactUsRecipient">
+        <MappingFragment StoreEntitySet="ContactUsRecipients">
+          <ScalarProperty Name="email_address" ColumnName="email_address" />
+          <ScalarProperty Name="contact_name" ColumnName="contact_name" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ContactUsSenderRoles">
+      <EntityTypeMapping TypeName="OdysseyModel.ContactUsSenderRole">
+        <MappingFragment StoreEntitySet="ContactUsSenderRoles">
+          <ScalarProperty Name="role_name" ColumnName="role_name" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Events">
+      <EntityTypeMapping TypeName="OdysseyModel.Event">
+        <MappingFragment StoreEntitySet="Events">
+          <ScalarProperty Name="EventMailBody" ColumnName="EventMailBody" />
+          <ScalarProperty Name="TeamsVolunteerWantsToSeeMessage" ColumnName="TeamsVolunteerWantsToSeeMessage" />
+          <ScalarProperty Name="EventVolunteerInformationMessage" ColumnName="EventVolunteerInformationMessage" />
+          <ScalarProperty Name="EventMakeChecksOutTo" ColumnName="EventMakeChecksOutTo" />
+          <ScalarProperty Name="PaymentDueDate" ColumnName="PaymentDueDate" />
+          <ScalarProperty Name="LateEventCostStartDate" ColumnName="LateEventCostStartDate" />
+          <ScalarProperty Name="LateEventCost" ColumnName="LateEventCost" />
+          <ScalarProperty Name="EventCost" ColumnName="EventCost" />
+          <ScalarProperty Name="EventPayeeEmail1" ColumnName="EventPayeeEmail1" />
+          <ScalarProperty Name="EventPayeePhone1" ColumnName="EventPayeePhone1" />
+          <ScalarProperty Name="EventPayeeZipCode" ColumnName="EventPayeeZipCode" />
+          <ScalarProperty Name="EventPayeeState" ColumnName="EventPayeeState" />
+          <ScalarProperty Name="EventPayeeCity" ColumnName="EventPayeeCity" />
+          <ScalarProperty Name="EventPayeeAddress2" ColumnName="EventPayeeAddress2" />
+          <ScalarProperty Name="EventPayeeAddress1" ColumnName="EventPayeeAddress1" />
+          <ScalarProperty Name="EventPayeeName" ColumnName="EventPayeeName" />
+          <ScalarProperty Name="LocationMapURL" ColumnName="LocationMapURL" />
+          <ScalarProperty Name="InformationURL" ColumnName="InformationURL" />
+          <ScalarProperty Name="EventCoordinatorPhone" ColumnName="EventCoordinatorPhone" />
+          <ScalarProperty Name="EventCoordinatorEmail" ColumnName="EventCoordinatorEmail" />
+          <ScalarProperty Name="EventCoordinatorName" ColumnName="EventCoordinatorName" />
+          <ScalarProperty Name="Time" ColumnName="Time" />
+          <ScalarProperty Name="Location" ColumnName="Location" />
+          <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+          <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+          <ScalarProperty Name="LocationPhone" ColumnName="LocationPhone" />
+          <ScalarProperty Name="LocationState" ColumnName="LocationState" />
+          <ScalarProperty Name="LocationCity" ColumnName="LocationCity" />
+          <ScalarProperty Name="LocationAddress" ColumnName="LocationAddress" />
+          <ScalarProperty Name="LocationURLColor" ColumnName="LocationURLColor" />
+          <ScalarProperty Name="LocationURL" ColumnName="LocationURL" />
+          <ScalarProperty Name="EventName" ColumnName="EventName" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Judges">
+      <EntityTypeMapping TypeName="OdysseyModel.Judge">
+        <MappingFragment StoreEntitySet="Judges">
+          <ScalarProperty Name="UserAgent" ColumnName="UserAgent" />
+          <ScalarProperty Name="TimeRegistrationStarted" ColumnName="TimeRegistrationStarted" />
+          <ScalarProperty Name="TimeAssignedToTeam" ColumnName="TimeAssignedToTeam" />
+          <ScalarProperty Name="TimeRegistered" ColumnName="TimeRegistered" />
+          <ScalarProperty Name="ProblemID" ColumnName="ProblemID" />
+          <ScalarProperty Name="PreviousPositions" ColumnName="PreviousPositions" />
+          <ScalarProperty Name="YearsOfSpontaneousJudgingExperience" ColumnName="YearsOfSpontaneousJudgingExperience" />
+          <ScalarProperty Name="YearsOfLongTermJudgingExperience" ColumnName="YearsOfLongTermJudgingExperience" />
+          <ScalarProperty Name="WantsCEUCredit" ColumnName="WantsCEUCredit" />
+          <ScalarProperty Name="TshirtSize" ColumnName="TshirtSize" />
+          <ScalarProperty Name="WillingToBeScorechecker" ColumnName="WillingToBeScorechecker" />
+          <ScalarProperty Name="Active" ColumnName="Active" />
+          <ScalarProperty Name="AttendedJT_" ColumnName="AttendedJT?" />
+          <ScalarProperty Name="InformationMailed_" ColumnName="InformationMailed?" />
+          <ScalarProperty Name="ProblemAssigned" ColumnName="ProblemAssigned" />
+          <ScalarProperty Name="ProblemCOI3" ColumnName="ProblemCOI3" />
+          <ScalarProperty Name="ProblemCOI2" ColumnName="ProblemCOI2" />
+          <ScalarProperty Name="ProblemCOI1" ColumnName="ProblemCOI1" />
+          <ScalarProperty Name="COI" ColumnName="COI" />
+          <ScalarProperty Name="HasChildrenCompeting" ColumnName="HasChildrenCompeting" />
+          <ScalarProperty Name="ProblemChoice3" ColumnName="ProblemChoice3" />
+          <ScalarProperty Name="ProblemChoice2" ColumnName="ProblemChoice2" />
+          <ScalarProperty Name="ProblemChoice1" ColumnName="ProblemChoice1" />
+          <ScalarProperty Name="Notes" ColumnName="Notes" />
+          <ScalarProperty Name="EmailAddress" ColumnName="EmailAddress" />
+          <ScalarProperty Name="MobilePhone" ColumnName="MobilePhone" />
+          <ScalarProperty Name="EveningPhone" ColumnName="EveningPhone" />
+          <ScalarProperty Name="DaytimePhone" ColumnName="DaytimePhone" />
+          <ScalarProperty Name="ZipCode" ColumnName="ZipCode" />
+          <ScalarProperty Name="State" ColumnName="State" />
+          <ScalarProperty Name="City" ColumnName="City" />
+          <ScalarProperty Name="AddressLine2" ColumnName="AddressLine2" />
+          <ScalarProperty Name="Address" ColumnName="Address" />
+          <ScalarProperty Name="LastName" ColumnName="LastName" />
+          <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+          <ScalarProperty Name="TeamID" ColumnName="TeamID" />
+          <ScalarProperty Name="JudgeID" ColumnName="JudgeID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Problems">
+      <EntityTypeMapping TypeName="OdysseyModel.Problem">
+        <MappingFragment StoreEntitySet="Problem">
+          <ScalarProperty Name="Notes" ColumnName="Notes" />
+          <ScalarProperty Name="PCEmail2" ColumnName="PCEmail2" />
+          <ScalarProperty Name="PCEmail1" ColumnName="PCEmail1" />
+          <ScalarProperty Name="PCFaxNumber" ColumnName="PCFaxNumber" />
+          <ScalarProperty Name="PCMobilePhone" ColumnName="PCMobilePhone" />
+          <ScalarProperty Name="PCHomePhone" ColumnName="PCHomePhone" />
+          <ScalarProperty Name="PCWorkPhone" ColumnName="PCWorkPhone" />
+          <ScalarProperty Name="PCPostalCode" ColumnName="PCPostalCode" />
+          <ScalarProperty Name="PCStateOrProvince" ColumnName="PCStateOrProvince" />
+          <ScalarProperty Name="PCCity" ColumnName="PCCity" />
+          <ScalarProperty Name="PCAddress" ColumnName="PCAddress" />
+          <ScalarProperty Name="PCLastName" ColumnName="PCLastName" />
+          <ScalarProperty Name="PCFirstName" ColumnName="PCFirstName" />
+          <ScalarProperty Name="ProblemCaptainID" ColumnName="ProblemCaptainID" />
+          <ScalarProperty Name="CostLimit" ColumnName="CostLimit" />
+          <ScalarProperty Name="Divisions" ColumnName="Divisions" />
+          <ScalarProperty Name="ProblemDescription" ColumnName="ProblemDescription" />
+          <ScalarProperty Name="ProblemName" ColumnName="ProblemName" />
+          <ScalarProperty Name="ProblemCategory" ColumnName="ProblemCategory" />
+          <ScalarProperty Name="ProblemID" ColumnName="ProblemID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Schools">
+      <EntityTypeMapping TypeName="OdysseyModel.School">
+        <MappingFragment StoreEntitySet="Schools">
+          <ScalarProperty Name="Notes" ColumnName="Notes" />
+          <ScalarProperty Name="Share_" ColumnName="Share?" />
+          <ScalarProperty Name="CoordEmailName" ColumnName="CoordEmailName" />
+          <ScalarProperty Name="CoordFaxNumber" ColumnName="CoordFaxNumber" />
+          <ScalarProperty Name="CoordMobilePhone" ColumnName="CoordMobilePhone" />
+          <ScalarProperty Name="CoordAltPhone" ColumnName="CoordAltPhone" />
+          <ScalarProperty Name="CoordPhone" ColumnName="CoordPhone" />
+          <ScalarProperty Name="CoordPostalCode" ColumnName="CoordPostalCode" />
+          <ScalarProperty Name="CoordState" ColumnName="CoordState" />
+          <ScalarProperty Name="CoordCity" ColumnName="CoordCity" />
+          <ScalarProperty Name="CoordAddress" ColumnName="CoordAddress" />
+          <ScalarProperty Name="CoordLastName" ColumnName="CoordLastName" />
+          <ScalarProperty Name="CoordFirstName" ColumnName="CoordFirstName" />
+          <ScalarProperty Name="CoordNew_" ColumnName="CoordNew?" />
+          <ScalarProperty Name="Membership_4seen" ColumnName="Membership#4seen" />
+          <ScalarProperty Name="Membership_4" ColumnName="Membership#4" />
+          <ScalarProperty Name="Membership_3seen" ColumnName="Membership#3seen" />
+          <ScalarProperty Name="Membership_3" ColumnName="Membership#3" />
+          <ScalarProperty Name="Membership_2seen" ColumnName="Membership#2seen" />
+          <ScalarProperty Name="Membership_2" ColumnName="Membership#2" />
+          <ScalarProperty Name="Membership_1seen" ColumnName="Membership#1seen" />
+          <ScalarProperty Name="Membership_1" ColumnName="Membership#1" />
+          <ScalarProperty Name="Phone" ColumnName="Phone" />
+          <ScalarProperty Name="PostalCode" ColumnName="PostalCode" />
+          <ScalarProperty Name="State" ColumnName="State" />
+          <ScalarProperty Name="City" ColumnName="City" />
+          <ScalarProperty Name="Address" ColumnName="Address" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TournamentRegistrations">
+      <EntityTypeMapping TypeName="OdysseyModel.TournamentRegistration">
+        <MappingFragment StoreEntitySet="TournamentRegistration">
+          <ScalarProperty Name="UserAgent" ColumnName="UserAgent" />
+          <ScalarProperty Name="TimeRegistered" ColumnName="TimeRegistered" />
+          <ScalarProperty Name="TimeRegistrationStarted" ColumnName="TimeRegistrationStarted" />
+          <ScalarProperty Name="VolunteerID" ColumnName="VolunteerID" />
+          <ScalarProperty Name="TeamRegistrationFee" ColumnName="TeamRegistrationFee" />
+          <ScalarProperty Name="JudgeID" ColumnName="JudgeID" />
+          <ScalarProperty Name="Paid" ColumnName="Paid" />
+          <ScalarProperty Name="SchedulingIssues" ColumnName="SchedulingIssues" />
+          <ScalarProperty Name="SpecialConsiderations" ColumnName="SpecialConsiderations" />
+          <ScalarProperty Name="Notes" ColumnName="Notes" />
+          <ScalarProperty Name="Spontaneous" ColumnName="Spontaneous" />
+          <ScalarProperty Name="MemberGrade7" ColumnName="MemberGrade7" />
+          <ScalarProperty Name="MemberLastName7" ColumnName="MemberLastName7" />
+          <ScalarProperty Name="MemberFirstName7" ColumnName="MemberFirstName7" />
+          <ScalarProperty Name="MemberGrade6" ColumnName="MemberGrade6" />
+          <ScalarProperty Name="MemberLastName6" ColumnName="MemberLastName6" />
+          <ScalarProperty Name="MemberFirstName6" ColumnName="MemberFirstName6" />
+          <ScalarProperty Name="MemberGrade5" ColumnName="MemberGrade5" />
+          <ScalarProperty Name="MemberLastName5" ColumnName="MemberLastName5" />
+          <ScalarProperty Name="MemberFirstName5" ColumnName="MemberFirstName5" />
+          <ScalarProperty Name="MemberGrade4" ColumnName="MemberGrade4" />
+          <ScalarProperty Name="MemberLastName4" ColumnName="MemberLastName4" />
+          <ScalarProperty Name="MemberFirstName4" ColumnName="MemberFirstName4" />
+          <ScalarProperty Name="MemberGrade3" ColumnName="MemberGrade3" />
+          <ScalarProperty Name="MemberLastName3" ColumnName="MemberLastName3" />
+          <ScalarProperty Name="MemberFirstName3" ColumnName="MemberFirstName3" />
+          <ScalarProperty Name="MemberGrade2" ColumnName="MemberGrade2" />
+          <ScalarProperty Name="MemberLastName2" ColumnName="MemberLastName2" />
+          <ScalarProperty Name="MemberFirstName2" ColumnName="MemberFirstName2" />
+          <ScalarProperty Name="MemberGrade1" ColumnName="MemberGrade1" />
+          <ScalarProperty Name="MemberLastName1" ColumnName="MemberLastName1" />
+          <ScalarProperty Name="MemberFirstName1" ColumnName="MemberFirstName1" />
+          <ScalarProperty Name="AltCoachEmailAddress" ColumnName="AltCoachEmailAddress" />
+          <ScalarProperty Name="AltCoachMobilePhone" ColumnName="AltCoachMobilePhone" />
+          <ScalarProperty Name="AltCoachDaytimePhone" ColumnName="AltCoachDaytimePhone" />
+          <ScalarProperty Name="AltCoachEveningPhone" ColumnName="AltCoachEveningPhone" />
+          <ScalarProperty Name="AltCoachLastName" ColumnName="AltCoachLastName" />
+          <ScalarProperty Name="AltCoachFirstName" ColumnName="AltCoachFirstName" />
+          <ScalarProperty Name="CoachEmailAddress" ColumnName="CoachEmailAddress" />
+          <ScalarProperty Name="CoachMobilePhone" ColumnName="CoachMobilePhone" />
+          <ScalarProperty Name="CoachDaytimePhone" ColumnName="CoachDaytimePhone" />
+          <ScalarProperty Name="CoachEveningPhone" ColumnName="CoachEveningPhone" />
+          <ScalarProperty Name="CoachZipCode" ColumnName="CoachZipCode" />
+          <ScalarProperty Name="CoachState" ColumnName="CoachState" />
+          <ScalarProperty Name="CoachCity" ColumnName="CoachCity" />
+          <ScalarProperty Name="CoachAddress" ColumnName="CoachAddress" />
+          <ScalarProperty Name="CoachLastName" ColumnName="CoachLastName" />
+          <ScalarProperty Name="CoachFirstName" ColumnName="CoachFirstName" />
+          <ScalarProperty Name="SchoolID" ColumnName="SchoolID" />
+          <ScalarProperty Name="Division" ColumnName="Division" />
+          <ScalarProperty Name="ProblemID" ColumnName="ProblemID" />
+          <ScalarProperty Name="MembershipNumber" ColumnName="MembershipNumber" />
+          <ScalarProperty Name="MembershipName" ColumnName="MembershipName" />
+          <ScalarProperty Name="TeamID" ColumnName="TeamID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Volunteers">
+      <EntityTypeMapping TypeName="OdysseyModel.Volunteer">
+        <MappingFragment StoreEntitySet="Volunteers">
+          <ScalarProperty Name="UserAgent" ColumnName="UserAgent" />
+          <ScalarProperty Name="TimeAssignedToTeam" ColumnName="TimeAssignedToTeam" />
+          <ScalarProperty Name="TimeRegistered" ColumnName="TimeRegistered" />
+          <ScalarProperty Name="TimeRegistrationStarted" ColumnName="TimeRegistrationStarted" />
+          <ScalarProperty Name="VolunteerWantsToSee" ColumnName="VolunteerWantsToSee" />
+          <ScalarProperty Name="Notes" ColumnName="Notes" />
+          <ScalarProperty Name="EmailAddress" ColumnName="EmailAddress" />
+          <ScalarProperty Name="MobilePhone" ColumnName="MobilePhone" />
+          <ScalarProperty Name="EveningPhone" ColumnName="EveningPhone" />
+          <ScalarProperty Name="DaytimePhone" ColumnName="DaytimePhone" />
+          <ScalarProperty Name="LastName" ColumnName="LastName" />
+          <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+          <ScalarProperty Name="TeamID" ColumnName="TeamID" />
+          <ScalarProperty Name="VolunteerID" ColumnName="VolunteerID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

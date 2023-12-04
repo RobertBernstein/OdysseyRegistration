@@ -1,0 +1,295 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="OdysseyModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+  <EntityType Name="CoachesTrainingDivisions">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="tinyint" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+  </EntityType>
+  <EntityType Name="CoachesTrainingRegions">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="CoachesTrainingRegistrations">
+    <Key>
+      <PropertyRef Name="RegistrationID" />
+    </Key>
+    <Property Name="RegistrationID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="FirstName" Type="nvarchar" MaxLength="50" />
+    <Property Name="LastName" Type="nvarchar" MaxLength="100" />
+    <Property Name="SchoolName" Type="nvarchar" MaxLength="100" />
+    <Property Name="Role" Type="nvarchar" MaxLength="100" />
+    <Property Name="Division" Type="nvarchar" MaxLength="100" />
+    <Property Name="SelectedProblem" Type="nvarchar" MaxLength="100" />
+    <Property Name="EmailAddress" Type="nvarchar" MaxLength="100" />
+    <Property Name="YearsInvolved" Type="nvarchar" MaxLength="10" />
+    <Property Name="RegionNumber" Type="nvarchar" MaxLength="20" />
+    <Property Name="TimeRegistered" Type="datetime" />
+    <Property Name="UserAgent" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="CoachesTrainingRoles">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="tinyint" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Config">
+    <Key>
+      <PropertyRef Name="Name" />
+    </Key>
+    <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Value" Type="nvarchar" MaxLength="800" />
+  </EntityType>
+  <EntityType Name="ContactUsRecipients">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="tinyint" Nullable="false" />
+    <Property Name="contact_name" Type="nvarchar" MaxLength="100" Nullable="false" />
+    <Property Name="email_address" Type="nvarchar" MaxLength="100" Nullable="false" />
+  </EntityType>
+  <EntityType Name="ContactUsSenderRoles">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="tinyint" Nullable="false" />
+    <Property Name="role_name" Type="nvarchar" MaxLength="100" />
+  </EntityType>
+  <EntityType Name="Events">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" Nullable="false" />
+    <Property Name="EventName" Type="nvarchar" MaxLength="200" />
+    <Property Name="LocationURL" Type="nvarchar" MaxLength="200" />
+    <Property Name="LocationURLColor" Type="nvarchar" MaxLength="100" />
+    <Property Name="LocationAddress" Type="nvarchar" MaxLength="100" />
+    <Property Name="LocationCity" Type="nvarchar" MaxLength="30" />
+    <Property Name="LocationState" Type="nvarchar" MaxLength="5" />
+    <Property Name="LocationPhone" Type="nvarchar" MaxLength="50" />
+    <Property Name="StartDate" Type="datetime" />
+    <Property Name="EndDate" Type="datetime" />
+    <Property Name="Location" Type="nvarchar" MaxLength="100" />
+    <Property Name="Time" Type="nvarchar" MaxLength="100" />
+    <Property Name="EventCoordinatorName" Type="nvarchar" MaxLength="100" />
+    <Property Name="EventCoordinatorEmail" Type="nvarchar" MaxLength="100" />
+    <Property Name="EventCoordinatorPhone" Type="nvarchar" MaxLength="100" />
+    <Property Name="InformationURL" Type="nvarchar" MaxLength="100" />
+    <Property Name="LocationMapURL" Type="nvarchar" MaxLength="100" />
+    <Property Name="EventPayeeName" Type="nvarchar" MaxLength="100" />
+    <Property Name="EventPayeeAddress1" Type="nvarchar" MaxLength="100" />
+    <Property Name="EventPayeeAddress2" Type="nvarchar" MaxLength="100" />
+    <Property Name="EventPayeeCity" Type="nvarchar" MaxLength="50" />
+    <Property Name="EventPayeeState" Type="nvarchar" MaxLength="30" />
+    <Property Name="EventPayeeZipCode" Type="nvarchar" MaxLength="15" />
+    <Property Name="EventPayeePhone1" Type="nvarchar" MaxLength="20" />
+    <Property Name="EventPayeeEmail1" Type="nvarchar" MaxLength="100" />
+    <Property Name="EventCost" Type="nvarchar" MaxLength="20" />
+    <Property Name="LateEventCost" Type="nvarchar" MaxLength="20" />
+    <Property Name="LateEventCostStartDate" Type="date" />
+    <Property Name="PaymentDueDate" Type="date" />
+    <Property Name="EventMakeChecksOutTo" Type="nvarchar" MaxLength="150" />
+    <Property Name="EventVolunteerInformationMessage" Type="nvarchar(max)" />
+    <Property Name="TeamsVolunteerWantsToSeeMessage" Type="nvarchar(max)" />
+    <Property Name="EventMailBody" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="Judges">
+    <Key>
+      <PropertyRef Name="JudgeID" />
+    </Key>
+    <Property Name="JudgeID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="TeamID" Type="nvarchar" MaxLength="50" />
+    <Property Name="FirstName" Type="nvarchar" MaxLength="50" />
+    <Property Name="LastName" Type="nvarchar" MaxLength="50" />
+    <Property Name="Address" Type="nvarchar" MaxLength="255" />
+    <Property Name="AddressLine2" Type="nvarchar" MaxLength="255" />
+    <Property Name="City" Type="nvarchar" MaxLength="50" />
+    <Property Name="State" Type="nvarchar" MaxLength="20" />
+    <Property Name="ZipCode" Type="nvarchar" MaxLength="20" />
+    <Property Name="DaytimePhone" Type="nvarchar" MaxLength="30" />
+    <Property Name="EveningPhone" Type="nvarchar" MaxLength="30" />
+    <Property Name="MobilePhone" Type="nvarchar" MaxLength="30" />
+    <Property Name="EmailAddress" Type="nvarchar" MaxLength="50" />
+    <Property Name="Notes" Type="nvarchar(max)" />
+    <Property Name="ProblemChoice1" Type="nvarchar" MaxLength="60" />
+    <Property Name="ProblemChoice2" Type="nvarchar" MaxLength="60" />
+    <Property Name="ProblemChoice3" Type="nvarchar" MaxLength="60" />
+    <Property Name="HasChildrenCompeting" Type="nvarchar" MaxLength="3" />
+    <Property Name="COI" Type="nvarchar" MaxLength="50" />
+    <Property Name="ProblemCOI1" Type="nvarchar" MaxLength="60" />
+    <Property Name="ProblemCOI2" Type="nvarchar" MaxLength="60" />
+    <Property Name="ProblemCOI3" Type="nvarchar" MaxLength="60" />
+    <Property Name="ProblemAssigned" Type="nvarchar" MaxLength="50" />
+    <Property Name="InformationMailed?" Type="bit" />
+    <Property Name="AttendedJT?" Type="bit" />
+    <Property Name="Active" Type="bit" />
+    <Property Name="WillingToBeScorechecker" Type="nvarchar" MaxLength="3" />
+    <Property Name="TshirtSize" Type="nvarchar" MaxLength="50" />
+    <Property Name="WantsCEUCredit" Type="nvarchar" MaxLength="3" />
+    <Property Name="YearsOfLongTermJudgingExperience" Type="nvarchar" MaxLength="50" />
+    <Property Name="YearsOfSpontaneousJudgingExperience" Type="nvarchar" MaxLength="50" />
+    <Property Name="PreviousPositions" Type="nvarchar" MaxLength="100" />
+    <Property Name="ProblemID" Type="nvarchar" MaxLength="50" />
+    <Property Name="TimeRegistered" Type="datetime" />
+    <Property Name="TimeAssignedToTeam" Type="datetime" />
+    <Property Name="TimeRegistrationStarted" Type="datetime" />
+    <Property Name="UserAgent" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="Problem">
+    <Key>
+      <PropertyRef Name="ProblemID" />
+    </Key>
+    <Property Name="ProblemID" Type="int" Nullable="false" />
+    <Property Name="ProblemCategory" Type="nvarchar" MaxLength="30" />
+    <Property Name="ProblemName" Type="nvarchar" MaxLength="50" />
+    <Property Name="ProblemDescription" Type="nvarchar(max)" />
+    <Property Name="Divisions" Type="nvarchar" MaxLength="50" />
+    <Property Name="CostLimit" Type="nvarchar" MaxLength="50" />
+    <Property Name="ProblemCaptainID" Type="nvarchar" MaxLength="50" />
+    <Property Name="PCFirstName" Type="nvarchar" MaxLength="50" />
+    <Property Name="PCLastName" Type="nvarchar" MaxLength="50" />
+    <Property Name="PCAddress" Type="nvarchar" MaxLength="255" />
+    <Property Name="PCCity" Type="nvarchar" MaxLength="50" />
+    <Property Name="PCStateOrProvince" Type="nvarchar" MaxLength="20" />
+    <Property Name="PCPostalCode" Type="nvarchar" MaxLength="20" />
+    <Property Name="PCWorkPhone" Type="nvarchar" MaxLength="30" />
+    <Property Name="PCHomePhone" Type="nvarchar" MaxLength="30" />
+    <Property Name="PCMobilePhone" Type="nvarchar" MaxLength="30" />
+    <Property Name="PCFaxNumber" Type="nvarchar" MaxLength="30" />
+    <Property Name="PCEmail1" Type="nvarchar" MaxLength="50" />
+    <Property Name="PCEmail2" Type="nvarchar" MaxLength="50" />
+    <Property Name="Notes" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="Schools">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="50" />
+    <Property Name="Address" Type="nvarchar" MaxLength="255" />
+    <Property Name="City" Type="nvarchar" MaxLength="50" />
+    <Property Name="State" Type="nvarchar" MaxLength="20" />
+    <Property Name="PostalCode" Type="nvarchar" MaxLength="20" />
+    <Property Name="Phone" Type="nvarchar" MaxLength="30" />
+    <Property Name="Membership#1" Type="nvarchar" MaxLength="50" />
+    <Property Name="Membership#1seen" Type="nvarchar" MaxLength="50" />
+    <Property Name="Membership#2" Type="nvarchar" MaxLength="50" />
+    <Property Name="Membership#2seen" Type="nvarchar" MaxLength="50" />
+    <Property Name="Membership#3" Type="nvarchar" MaxLength="50" />
+    <Property Name="Membership#3seen" Type="nvarchar" MaxLength="50" />
+    <Property Name="Membership#4" Type="nvarchar" MaxLength="50" />
+    <Property Name="Membership#4seen" Type="nvarchar" MaxLength="50" />
+    <Property Name="CoordNew?" Type="nvarchar" MaxLength="50" />
+    <Property Name="CoordFirstName" Type="nvarchar" MaxLength="50" />
+    <Property Name="CoordLastName" Type="nvarchar" MaxLength="50" />
+    <Property Name="CoordAddress" Type="nvarchar" MaxLength="255" />
+    <Property Name="CoordCity" Type="nvarchar" MaxLength="50" />
+    <Property Name="CoordState" Type="nvarchar" MaxLength="20" />
+    <Property Name="CoordPostalCode" Type="nvarchar" MaxLength="20" />
+    <Property Name="CoordPhone" Type="nvarchar" MaxLength="30" />
+    <Property Name="CoordAltPhone" Type="nvarchar" MaxLength="30" />
+    <Property Name="CoordMobilePhone" Type="nvarchar" MaxLength="30" />
+    <Property Name="CoordFaxNumber" Type="nvarchar" MaxLength="30" />
+    <Property Name="CoordEmailName" Type="nvarchar" MaxLength="50" />
+    <Property Name="Share?" Type="nvarchar" MaxLength="50" />
+    <Property Name="Notes" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="TournamentRegistration">
+    <Key>
+      <PropertyRef Name="TeamID" />
+    </Key>
+    <Property Name="TeamID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="MembershipName" Type="nvarchar" MaxLength="50" />
+    <Property Name="MembershipNumber" Type="nvarchar" MaxLength="50" />
+    <Property Name="ProblemID" Type="int" />
+    <Property Name="Division" Type="nvarchar" MaxLength="50" />
+    <Property Name="SchoolID" Type="int" />
+    <Property Name="CoachFirstName" Type="nvarchar" MaxLength="50" />
+    <Property Name="CoachLastName" Type="nvarchar" MaxLength="50" />
+    <Property Name="CoachAddress" Type="nvarchar" MaxLength="255" />
+    <Property Name="CoachCity" Type="nvarchar" MaxLength="50" />
+    <Property Name="CoachState" Type="nvarchar" MaxLength="20" />
+    <Property Name="CoachZipCode" Type="nvarchar" MaxLength="20" />
+    <Property Name="CoachEveningPhone" Type="nvarchar" MaxLength="30" />
+    <Property Name="CoachDaytimePhone" Type="nvarchar" MaxLength="30" />
+    <Property Name="CoachMobilePhone" Type="nvarchar" MaxLength="30" />
+    <Property Name="CoachEmailAddress" Type="nvarchar" MaxLength="50" />
+    <Property Name="AltCoachFirstName" Type="nvarchar" MaxLength="50" />
+    <Property Name="AltCoachLastName" Type="nvarchar" MaxLength="50" />
+    <Property Name="AltCoachEveningPhone" Type="nvarchar" MaxLength="50" />
+    <Property Name="AltCoachDaytimePhone" Type="nvarchar" MaxLength="50" />
+    <Property Name="AltCoachMobilePhone" Type="nvarchar" MaxLength="30" />
+    <Property Name="AltCoachEmailAddress" Type="nvarchar" MaxLength="50" />
+    <Property Name="MemberFirstName1" Type="nvarchar" MaxLength="50" />
+    <Property Name="MemberLastName1" Type="nvarchar" MaxLength="50" />
+    <Property Name="MemberGrade1" Type="nvarchar" MaxLength="50" />
+    <Property Name="MemberFirstName2" Type="nvarchar" MaxLength="50" />
+    <Property Name="MemberLastName2" Type="nvarchar" MaxLength="50" />
+    <Property Name="MemberGrade2" Type="nvarchar" MaxLength="50" />
+    <Property Name="MemberFirstName3" Type="nvarchar" MaxLength="50" />
+    <Property Name="MemberLastName3" Type="nvarchar" MaxLength="50" />
+    <Property Name="MemberGrade3" Type="nvarchar" MaxLength="50" />
+    <Property Name="MemberFirstName4" Type="nvarchar" MaxLength="50" />
+    <Property Name="MemberLastName4" Type="nvarchar" MaxLength="50" />
+    <Property Name="MemberGrade4" Type="nvarchar" MaxLength="50" />
+    <Property Name="MemberFirstName5" Type="nvarchar" MaxLength="50" />
+    <Property Name="MemberLastName5" Type="nvarchar" MaxLength="50" />
+    <Property Name="MemberGrade5" Type="nvarchar" MaxLength="50" />
+    <Property Name="MemberFirstName6" Type="nvarchar" MaxLength="50" />
+    <Property Name="MemberLastName6" Type="nvarchar" MaxLength="50" />
+    <Property Name="MemberGrade6" Type="nvarchar" MaxLength="50" />
+    <Property Name="MemberFirstName7" Type="nvarchar" MaxLength="50" />
+    <Property Name="MemberLastName7" Type="nvarchar" MaxLength="50" />
+    <Property Name="MemberGrade7" Type="nvarchar" MaxLength="50" />
+    <Property Name="Spontaneous" Type="bit" />
+    <Property Name="Notes" Type="nvarchar(max)" />
+    <Property Name="SpecialConsiderations" Type="nvarchar(max)" />
+    <Property Name="SchedulingIssues" Type="nvarchar(max)" />
+    <Property Name="Paid" Type="smallint" />
+    <Property Name="JudgeID" Type="smallint" />
+    <Property Name="TeamRegistrationFee" Type="nvarchar" MaxLength="20" />
+    <Property Name="VolunteerID" Type="int" />
+    <Property Name="TimeRegistrationStarted" Type="datetime" />
+    <Property Name="TimeRegistered" Type="datetime" />
+    <Property Name="UserAgent" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="Volunteers">
+    <Key>
+      <PropertyRef Name="VolunteerID" />
+    </Key>
+    <Property Name="VolunteerID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="TeamID" Type="int" />
+    <Property Name="FirstName" Type="nvarchar" MaxLength="50" />
+    <Property Name="LastName" Type="nvarchar" MaxLength="50" />
+    <Property Name="DaytimePhone" Type="nvarchar" MaxLength="30" />
+    <Property Name="EveningPhone" Type="nvarchar" MaxLength="30" />
+    <Property Name="MobilePhone" Type="nvarchar" MaxLength="30" />
+    <Property Name="EmailAddress" Type="nvarchar" MaxLength="50" />
+    <Property Name="Notes" Type="nvarchar(max)" />
+    <Property Name="VolunteerWantsToSee" Type="nvarchar(max)" />
+    <Property Name="TimeRegistrationStarted" Type="datetime" />
+    <Property Name="TimeRegistered" Type="datetime" />
+    <Property Name="TimeAssignedToTeam" Type="datetime" />
+    <Property Name="UserAgent" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityContainer Name="OdysseyModelStoreContainer">
+    <EntitySet Name="CoachesTrainingDivisions" EntityType="Self.CoachesTrainingDivisions" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="CoachesTrainingRegions" EntityType="Self.CoachesTrainingRegions" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="CoachesTrainingRegistrations" EntityType="Self.CoachesTrainingRegistrations" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="CoachesTrainingRoles" EntityType="Self.CoachesTrainingRoles" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Config" EntityType="Self.Config" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="ContactUsRecipients" EntityType="Self.ContactUsRecipients" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="ContactUsSenderRoles" EntityType="Self.ContactUsSenderRoles" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Events" EntityType="Self.Events" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Judges" EntityType="Self.Judges" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Problem" EntityType="Self.Problem" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Schools" EntityType="Self.Schools" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="TournamentRegistration" EntityType="Self.TournamentRegistration" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Volunteers" EntityType="Self.Volunteers" Schema="dbo" store:Type="Tables" />
+  </EntityContainer>
+</Schema>
