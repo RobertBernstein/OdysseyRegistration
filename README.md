@@ -1,5 +1,9 @@
 # Odyssey of the Mind Registration
 
+## Next Todos
+
+1. Create Elmah test DB
+
 ## Overview
 
 This repository contains the code for the Judge and Tournament Registration for NoVA North Odyssey of the Mind.
@@ -60,7 +64,7 @@ Connection String: "Data Source=tcp:s06.winhost.com;Initial Catalog=DB_12824_reg
 
 This will create a [Mermaid](https://mermaid-js.github.io/mermaid/#/) database schema diagram from your SQL Server database.
 
-1. Download latest version: [Release v0.4.1 · KarnerTh/mermerd · GitHub](https://github.com/KarnerTh/mermerd/releases/tag/v0.4.1)
+1. Download latest version: [Release v0.4.1 ï¿½ KarnerTh/mermerd ï¿½ GitHub](https://github.com/KarnerTh/mermerd/releases/tag/v0.4.1)
 1. Unzip it.
 1. Make sure your SQL Server database is up, e.g., in Docker.
 1. Run the following command:
