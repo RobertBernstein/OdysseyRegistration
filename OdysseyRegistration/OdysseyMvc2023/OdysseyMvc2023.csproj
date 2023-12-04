@@ -287,6 +287,20 @@
     <Content Include="Views\Shared\Down.cshtml" />
     <Content Include="Views\Shared\EmailPartial.cshtml" />
     <Content Include="Views\Shared\Soon.cshtml" />
+    <Content Include="Views\TournamentRegistration\BadAltCoachEmail.cshtml" />
+    <Content Include="Views\TournamentRegistration\BadCoachEmail.cshtml" />
+    <Content Include="Views\TournamentRegistration\Error.cshtml" />
+    <Content Include="Views\TournamentRegistration\Page01.cshtml" />
+    <Content Include="Views\TournamentRegistration\Page02.cshtml" />
+    <Content Include="Views\TournamentRegistration\Page03.cshtml" />
+    <Content Include="Views\TournamentRegistration\Page04.cshtml" />
+    <Content Include="Views\TournamentRegistration\Page05.cshtml" />
+    <Content Include="Views\TournamentRegistration\Page06.cshtml" />
+    <Content Include="Views\TournamentRegistration\Page07.cshtml" />
+    <Content Include="Views\TournamentRegistration\Page08.cshtml" />
+    <Content Include="Views\TournamentRegistration\Page09.cshtml" />
+    <Content Include="Views\TournamentRegistration\Page10.cshtml" />
+    <Content Include="Views\TournamentRegistration\ResendEmail.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

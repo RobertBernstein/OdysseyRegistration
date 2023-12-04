@@ -1,0 +1,33 @@
+﻿<%@ Page Language="C#" MasterPageFile="~/Views/Shared/Site.Master" Inherits="System.Web.Mvc.ViewPage<OdysseyMvc2023.ViewData.BaseViewData>" %>
+
+<asp:Content ID="errorTitle" ContentPlaceHolderID="TitleContent" runat="server">
+    <%= Model.FriendlyRegistrationName %>
+    Error Occurred
+</asp:Content>
+<asp:Content ID="errorContent" ContentPlaceHolderID="MainContent" runat="server">
+    <h1>
+        An error occurred in
+        <%= Model.FriendlyRegistrationName %>.
+    </h1>
+    <h2>
+        We apologize for the inconvenience, but an error occurred while processing your
+        request.
+    </h2>
+    <p>
+        Please click one of the buttons below to continue.
+    </p>
+    <%
+        using (Html.BeginForm(null, null, FormMethod.Post, new { defaultbutton = "restartRegistrationButton", id = "MainForm" }))
+        {
+    %>
+    <p style="text-align: center">
+        <input type="button" value="Return to the Home Page" id="homePageButton" name="homePageButton"
+            onclick="location.href='<%= Model.Config["HomePage"] %>'" />
+        &nbsp;
+        <input type="button" value="Restart <%: Model.FriendlyRegistrationName %>" id="restartRegistrationButton"
+            name="restartRegistrationButton" onclick="location.href='Page01'" />
+    </p>
+    <%
+        }
+    %>
+</asp:Content>

@@ -1,0 +1,88 @@
+<%@ Page Title="" Language="C#" MasterPageFile="~/Views/Shared/Site.Master" Inherits="System.Web.Mvc.ViewPage<OdysseyMvc2023.ViewData.TournamentRegistration.ResendEmailViewData>" %>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="TitleContent" runat="server">
+	Resend Tournament Registration E-mail
+</asp:Content>
+<asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
+
+	<script type="text/javascript">
+		$(function() {
+			// Set the focus to the default control and select its text
+			$("#TeamNumber").focus().select();
+		});
+	</script>
+
+	<h1>
+		Resend Tournament Registration E-mail</h1>
+	<h2>
+		You have found the <%= Model.Config["RegionName"] %> Team Registration E-mail Resender</h2>
+	<%
+		if (!String.IsNullOrEmpty(Model.ErrorMessage))
+		{
+	%>
+	<p class="required">
+		<%= Model.ErrorMessage %></p>
+	<%
+		using (Html.BeginForm("Index", "Home"))
+		{
+	%>
+	<p style="text-align: center">
+		<input type="submit" value="Return to the Home Page" id="returnToHomePageButton"
+			name="returnToHomePageButton" /></p>
+	<%
+		}
+	%>
+	<%		
+		}
+		else
+		{
+			if (Model.Success)
+			{
+				%>
+				<p class="required">The e-mail was successfully sent.</p>
+				<%
+			}
+	%>
+	<p>
+		Please provide the team number and the e-mail recipients to resend the team registration
+		e-mail to:</p>
+	<%
+		using (Html.BeginForm(null, null, FormMethod.Post, new { defaultbutton = "nextButton", id = "MainForm", onsubmit = "return FormValidator();" }))
+		{
+	%>
+	<table style="height: 100%; border: 0" width="555">
+		<tr>
+			<td style="text-align: right; width:258px">
+				Team Number:
+			</td>
+			<td style="width:287px">
+				<%=Html.TextBox("TeamNumber")%>
+			</td>
+		</tr>
+		<tr>
+			<td style="text-align: right">
+				Send to Team's Coach?
+			</td>
+			<td>
+				<%=Html.CheckBox("CoachCheckbox", true)%>
+			</td>
+		</tr>
+		<tr>
+			<td style="text-align: right">
+				Send to Team's Alternate Coach?
+			</td>
+			<td>
+				<%=Html.CheckBox("AltCoachCheckbox")%>
+			</td>
+		</tr>
+	</table>
+	<hr />
+	<p style="text-align: right">
+		<input type="submit" value="Submit" id="nextButton" name="nextButton" /></p>
+	<p style="text-align: left">
+		<input type="button" value="Return to the Home Page" id="homePageButton" name="homePageButton" onclick="location.href='<%= Model.Config["HomePage"] %>'" /></p>
+	<%
+		}
+		}
+	%>
+</asp:Content>
