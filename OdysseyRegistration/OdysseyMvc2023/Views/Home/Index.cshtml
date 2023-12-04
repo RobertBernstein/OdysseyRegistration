@@ -1,33 +1,63 @@
 ﻿@{
-    ViewBag.Title = "Home Page";
+    // Package:	Odyssey of the Mind Web Site
+    // Module:	Registration Home Page
+    // File:	Index.cshtml
+    // Author:	Robert Bernstein
+    // Version:	3.0
+    // Created:	10/30/2010: v2.0 Built in ASP.NET MVC 1.0 (based on ASP.NET 3.5 code from last year)
+    // Updated:	09/22/2013: v3.0 Rebuilt in ASP.NET MVC 4
+    // Updated:	12/03/2023: v4.0 Rebuilt in ASP.NET MVC 4 from dotPeek reverse engineered code and files copied from novanorth.org.
 }
 
-<main>
-    <section class="row" aria-labelledby="aspnetTitle">
-        <h1 id="title">ASP.NET</h1>
-        <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-        <p><a href="https://asp.net" class="btn btn-primary btn-md">Learn more &raquo;</a></p>
-    </section>
+@model OdysseyMvc2023.ViewData.BaseViewData
 
-    <div class="row">
-        <section class="col-md-4" aria-labelledby="gettingStartedTitle">
-            <h2 id="gettingStartedTitle">Getting started</h2>
-            <p>
-                ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-                enables a clean separation of concerns and gives you full control over markup
-                for enjoyable, agile development.
-            </p>
-            <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
-        </section>
-        <section class="col-md-4" aria-labelledby="librariesTitle">
-            <h2 id="librariesTitle">Get more libraries</h2>
-            <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-            <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
-        </section>
-        <section class="col-md-4" aria-labelledby="hostingTitle">
-            <h2 id="hostingTitle">Web Hosting</h2>
-            <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-            <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
-        </section>
+@{
+    ViewBag.Title = "Registration Home Page";
+}
+
+@{
+    //Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>
+        @ViewBag.Title
+    </title>
+    <script>
+    $(function() {
+        $("#homePageButton").click(function() {
+            location.href = '@Model.Config["HomePage"]';
+        });
+    });
+    </script>
+</head>
+<body>
+    <h2>
+        @ViewData["Message"]
+    </h2>
+    <div>
+        <p>
+            Click on one of the links below to being the specified registration process.
+        </p>
+        <ul>
+            @*<li>@Html.ActionLink("Coaches Training Registration", "Page01", "CoachesTrainingRegistration")</li>*@
+            @*            <li>@Html.ActionLink("Judges Registration", "Page01", "JudgesRegistration")</li>*@
+            <li>Judges Registration (Coming Soon!)</li>
+            @if (Model.Config["WillHaveVolunteerRegistration"] == "True")
+            {
+                @*<li>@Html.ActionLink("Volunteer Registration", "Page01", "VolunteerRegistration")</li>*@
+                <li>Volunteer Registration (Coming Soon!)</li>
+            }
+            @*<li>@Html.ActionLink("Tournament Registration", "Page01", "TournamentRegistration")</li>*@
+            <li>Tournament Registration (Coming Soon!)</li>
+        </ul>
+        <p style="text-align: center">
+            <button type="button" id="homePageButton">Return to the Home Page</button>
+        </p>
     </div>
-</main>
+</body>
+</html>
