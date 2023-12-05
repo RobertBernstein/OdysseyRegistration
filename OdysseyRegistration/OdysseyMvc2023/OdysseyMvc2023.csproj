@@ -243,6 +243,9 @@
     <Content Include="Models\OdysseyModel.csdl" />
     <Content Include="Models\OdysseyModel.msl" />
     <Content Include="Models\OdysseyModel.ssdl" />
+    <None Include="Elmah.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
