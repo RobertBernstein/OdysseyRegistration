@@ -74,4 +74,23 @@ This will create a [Mermaid](https://mermaid-js.github.io/mermaid/#/) database s
 1. You will find your file created as OdysseySchema.mmd in the directory where you ran the tool.
 
 ### Shutdown and clean up the Docker container
+
 `docker stop sql1 ; docker rm sql1`
+
+## Created the new test website
+
+### Created new "Application Starting Point" for the test website
+
+1. Navigate to [Application Starting Point](https://cp.winhost.com/sites/application.aspx?create=success).
+1. Click "Create".
+1. Enter "/test" as the subdirectory.
+1. Click "Create".
+1. You should see a message that the site was created successfully.
+
+### Created new SQL registration database for the test website
+
+1. TODO: Add instructions.
+
+### Created new SQL Elmah database for the test website
+
+1. TODO: Add instructions.
