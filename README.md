@@ -98,3 +98,7 @@ This will create a [Mermaid](https://mermaid-js.github.io/mermaid/#/) database s
 ### Add connection strings for new SQL registration and Elmah test databases for the test website
 
 1. TODO: Add instructions.
+
+## TODO
+
+1. I rolled back to EF 4.4 to make sure everything worked.  See if the code works as-is with EF 6.x.
