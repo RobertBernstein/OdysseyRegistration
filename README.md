@@ -94,3 +94,7 @@ This will create a [Mermaid](https://mermaid-js.github.io/mermaid/#/) database s
 ### Created new SQL Elmah database for the test website
 
 1. TODO: Add instructions.
+
+### Add connection strings for new SQL registration and Elmah test databases for the test website
+
+1. TODO: Add instructions.
