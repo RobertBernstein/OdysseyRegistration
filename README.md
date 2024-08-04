@@ -131,3 +131,6 @@ Created a new project in the solution named `OdysseyRegistrationWebApi`
    5. The only project using it looks like OdysseyMvc4.
 5. I still got vulnerability warnings in my build output.
    1. Upgraded jQuery 2.0.3 in OdysseyMvc4.
+   2. jQuery.UI.Combined 1.10.3 OdysseyMvc4.
+   3. 
+
