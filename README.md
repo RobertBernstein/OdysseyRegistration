@@ -37,7 +37,7 @@ Make sure to copy the web.config file from **this directory** into the root dire
 
 Site: novanorth.org
 
-```
+```makefile
 Database Name:   DB_12824_registration
 Version:         MS SQL 2008 R2
 Database Server: s06.winhost.com
@@ -45,20 +45,25 @@ Database User:   DB_12824_registration_user
 Assigned Quota:  25 MB
 ```
 
+```makefile
 Connection String: "Data Source=tcp:s06.winhost.com;Initial Catalog=DB_12824_registration;User ID=DB_12824_registration_user;Password=******;Integrated Security=False;"
+```
 
 ### Run the SQL Server database in a Docker container
 
-1. Open a PowerShell prompt.
-1. `docker pull mcr.microsoft.com/mssql/server:2022-latest`
-1. `docker volume create sql-volume`
-1. `$mssql_sa_password = ""`
-1. `docker run -e 'ACCEPT_EULA=Y' -e "MSSQL_SA_PASSWORD=$mssql_sa_password" -p 1433:1433 --name sql1 --hostname sql1 --mount "source=sql-volume,target=/sqldata" -d mcr.microsoft.com/mssql/server:2022-latest`
-1. `docker exec -it -u 0 sql1 "bash"   # -u 0 lets us log in as root.`
-1. `chmod 777 /sqldata`
-1. `docker container exec sql1 /opt/mssql-tools/bin/sqlcmd -U sa -P "$mssql_sa_password" -Q "CREATE DATABASE [DB_12824_registration] ON  PRIMARY ( NAME = N'DB_12824_registration_data', FILENAME = N'/sqldata/DB_12824_registration_data.mdf' , SIZE = 4160KB , MAXSIZE = 25600KB , FILEGROWTH = 1024KB ) LOG ON ( NAME = N'DB_12824_registration_log', FILENAME = N'/sqldata/DB_12824_registration_log.ldf' , SIZE = 1024KB , MAXSIZE = 1024000KB , FILEGROWTH = 65536KB );"`
-1. `docker cp "2022-08-06 - NoVA North Production Database Export Script.sql" sql1:/sqldata`
-1. `docker container exec sql1 /opt/mssql-tools/bin/sqlcmd -U sa -P "$mssql_sa_password" -i "/sqldata/2022-08-06 - NoVA North Production Database Export Script.sql"`
+Open a PowerShell prompt.
+
+```powershell
+docker pull mcr.microsoft.com/mssql/server:2022-latest
+docker volume create sql-volume
+$mssql_sa_password = ""
+docker run -e 'ACCEPT_EULA=Y' -e "MSSQL_SA_PASSWORD=$mssql_sa_password" -p 1433:1433 --name sql1 --hostname sql1 --mount "source=sql-volume,target=/sqldata" -d mcr.microsoft.com/mssql/server:2022-latest
+docker exec -it -u 0 sql1 "bash"   # -u 0 lets us log in as root.
+chmod 777 /sqldata
+docker container exec sql1 /opt/mssql-tools/bin/sqlcmd -U sa -P "$mssql_sa_password" -Q "CREATE DATABASE [DB_12824_registration] ON  PRIMARY ( NAME = N'DB_12824_registration_data', FILENAME = N'/sqldata/DB_12824_registration_data.mdf' , SIZE = 4160KB , MAXSIZE = 25600KB , FILEGROWTH = 1024KB ) LOG ON ( NAME = N'DB_12824_registration_log', FILENAME = N'/sqldata/DB_12824_registration_log.ldf' , SIZE = 1024KB , MAXSIZE = 1024000KB , FILEGROWTH = 65536KB );"`
+docker cp "2022-08-06 - NoVA North Production Database Export Script.sql" sql1:/sqldata
+docker container exec sql1 /opt/mssql-tools/bin/sqlcmd -U sa -P "$mssql_sa_password" -i "/sqldata/2022-08-06 - NoVA North Production Database Export Script.sql"
+```
 
 ### Generate the Odyssey database schema with `mermerd`
 
@@ -75,11 +80,13 @@ This will create a [Mermaid](https://mermaid-js.github.io/mermaid/#/) database s
 
 ### Shutdown and clean up the Docker container
 
-`docker stop sql1 ; docker rm sql1`
+```powershell
+docker stop sql1 ; docker rm sql1`
+```
 
-## Created the new test website
+## Create the new test website
 
-### Created new "Application Starting Point" for the test website
+### Create new "Application Starting Point" for the test website
 
 1. Navigate to [Application Starting Point](https://cp.winhost.com/sites/application.aspx?create=success).
 1. Click "Create".
@@ -87,7 +94,7 @@ This will create a [Mermaid](https://mermaid-js.github.io/mermaid/#/) database s
 1. Click "Create".
 1. You should see a message that the site was created successfully.
 
-### Created new SQL registration database for the test website
+### Create new SQL registration database for the test website
 
 1. TODO: Add instructions.
 
@@ -102,3 +109,25 @@ This will create a [Mermaid](https://mermaid-js.github.io/mermaid/#/) database s
 ## TODO
 
 1. I rolled back to EF 4.4 to make sure everything worked.  See if the code works as-is with EF 6.x.
+
+## 08/04/2024
+
+Created a new project in the solution named `OdysseyRegistrationWebApi`
+1. Right-clicked on the sln and selected "Add, New Project..."
+2. Selected "ASP.NET Core Web API".
+3. Used the following options:
+   1. .NET 8.0 (Long Term Support)
+   2. Authentication type: None (I may need to fix this later)
+   3. Configure for HTTPS: checked
+   4. Enable container support: checked
+   5. Do not use top-level statements: unchecked
+   6. Use controllers: checked
+   7. Enlist in .NET Aspire orchestration: unchecked
+4. I was then prompted with:
+   1. ⚠️ This solution contains packages with vulnerabilities. Manage NuGet Packages.
+   2. Clicked the "Manage NuGet Packages" link.
+   3. I checked "Show only vulnerable".
+   4. jQuery.UI.Combined needed to be updated from 1.10.3 to 1.13.2.
+   5. The only project using it looks like OdysseyMvc4.
+5. I still got vulnerability warnings in my build output.
+   1. Upgraded jQuery 2.0.3 in OdysseyMvc4.
