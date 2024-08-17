@@ -1,12 +1,8 @@
 # Odyssey of the Mind Registration
 
-## Next Todos
-
-1. Create Elmah test DB
-
 ## Overview
 
-This repository contains the code for the Judge and Tournament Registration for NoVA North Odyssey of the Mind.
+This repository contains the code for the Judge and Tournament Registration websites for NoVA North Odyssey of the Mind.
 
 ## Technologies
 
@@ -40,7 +36,7 @@ Site: novanorth.org
 ```makefile
 Database Name:   DB_12824_registration
 Version:         MS SQL 2008 R2
-Database Server: s06.winhost.com
+Database Server: s01.winhost.com
 Database User:   DB_12824_registration_user
 Assigned Quota:  25 MB
 ```
@@ -74,7 +70,7 @@ This will create a [Mermaid](https://mermaid-js.github.io/mermaid/#/) database s
 1. Make sure your SQL Server database is up, e.g., in Docker.
 1. Run the following command:
 
-    `Downloads\mermerd_0.4.1_windows_amd64.tar\mermerd -c "sqlserver://sa:<password>@localhost:1433?database=DB_12824_registration" -s dbo --useAllTables -o OdysseySchema.mmd`
+    `Downloads\mermerd_0.4.1_windows_amd64.tar\mermerd -c "sqlserver://sa:********@localhost:1433?database=DB_12824_registration" -s dbo --useAllTables -o OdysseySchema.mmd`
 
 1. You will find your file created as OdysseySchema.mmd in the directory where you ran the tool.
 
@@ -109,10 +105,12 @@ docker stop sql1 ; docker rm sql1`
 ## TODO
 
 1. I rolled back to EF 4.4 to make sure everything worked.  See if the code works as-is with EF 6.x.
+1. Create Elmah test DB
 
 ## 08/04/2024
 
 Created a new project in the solution named `OdysseyRegistrationWebApi`
+
 1. Right-clicked on the sln and selected "Add, New Project..."
 2. Selected "ASP.NET Core Web API".
 3. Used the following options:
@@ -132,5 +130,44 @@ Created a new project in the solution named `OdysseyRegistrationWebApi`
 5. I still got vulnerability warnings in my build output.
    1. Upgraded jQuery 2.0.3 in OdysseyMvc4.
    2. jQuery.UI.Combined 1.10.3 OdysseyMvc4.
-   3. 
 
+## 08/05/2024
+
+1. In VS 2022, I right-clicked on the solution and selected Add, Container Orchestrator Support.
+   1. Docker Compose
+   2. Linux Containers
+1. I updated the docker-compose.yml file with the contents of one I found for adding a SQL Server 2022 database, modifying it by leveraging Docker Compose secrets.
+
+    ```dockerfile
+    db:
+      image: mcr.microsoft.com/mssql/server:2022-latest
+      environment:
+        MSSQL_SA_PASSWORD_FILE: /run/secrets/sa_password
+        ACCEPT_EULA: "Y"
+      ports:
+        - "1433:1433"
+    ```
+
+1. I followed the instructions here: <https://stackoverflow.com/questions/69941444/how-to-have-docker-compose-init-a-sql-server-database>.
+1. I created init\init.sql with the following content.
+
+   ```sql
+    USE [master];
+    GO
+    
+    IF NOT EXISTS (SELECT * FROM sys.sql_logins WHERE name = 'vaodyssey')
+    BEGIN
+        CREATE LOGIN [vaodyssey] WITH PASSWORD = '********', CHECK_POLICY = OFF;
+        ALTER SERVER ROLE [sysadmin] ADD MEMBER [vaodyssey];
+    END
+    GO
+   ```
+
+1. I copied "OdysseyRegistration\Odyssey.Database\Scripts\2023-12-02 - NoVA North Registration Prod Backup.sql" to OdysseyRegistration\init\novanorth-prod.sql.
+1. I added a new command to the dockercompose.yml file to create and initialize the Odyssey Registration database:
+
+   ```bash
+   /opt/mssql-tools/bin/sqlcmd -S sqlserver -U sa -P ${Sa_Password:-********} -d master -i docker-entrypoint-initdb.d/novanorth-prod.sql;
+    ```
+
+1. Replaced passwords in docker-compose.yml file: <https://docs.docker.com/compose/use-secrets/>
