@@ -171,3 +171,47 @@ Created a new project in the solution named `OdysseyRegistrationWebApi`
     ```
 
 1. Replaced passwords in docker-compose.yml file: <https://docs.docker.com/compose/use-secrets/>
+
+## Managing MySQL on the Hosting Company's Server
+
+Run MySQL in a Docker container locally:
+
+```powershell
+docker run --name mysql -e MYSQL_ROOT_PASSWORD=<any password to connect> -v C:\Users\Rob\Downloads:/downloads -d mysql:latest
+```
+
+Open a shell in the Docker container:
+
+```powershell
+docker exec -it mysql bash
+```
+
+Create a dump file of the MySQL database:
+
+```bash
+mysqldump -u vaodyss -p mysql_12824_wordpress -h my01.winhost.com > dump.sql
+```
+
+or
+
+Connect to the MySQL server:
+
+```bash
+mysql -u vaodyss -p mysql_12824_wordpress -h my01.winhost.com
+```
+
+Copy the dump file out of the Docker container:
+
+```powershell
+docker cp mysql:/dump.sql C:\Users\rob\Downloads\
+```
+
+Restore/Import the MySQL database on the new server:
+
+```bash
+mysql -u vaodyssey -p mysql_12824_wordpress24 -h my06.winhost.com < dump.sql
+```
+
+## 08/24/2024
+
+I modified our /wp/wp-config.php file to point to the new MySQL 8.x database.
