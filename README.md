@@ -31,32 +31,37 @@ Make sure to copy the web.config file from **this directory**, i.e., the top-mos
 ## SQL Server Database
 
 1. Make sure to back up the database after every season (or before the next one).
-2. TODO: Document how I added the SQL Project to Visual Studio and how to modify, use, and deploy it.
+
+> [!tip]
+> TODO: Document how I added the SQL Project to Visual Studio and how to modify, use, and deploy it.
 
 ### Manage Database
 
 Site: novanorth.org
 
+As of 09/29/2024, this is the configuration of the registration database.
+
 ```makefile
 Database Name:   DB_12824_registration
 Version:         MS SQL 2008 R2
-Database Server: s01.winhost.com
+Database Server: s06.winhost.com
 Database User:   DB_12824_registration_user
 Assigned Quota:  25 MB
+Usage:	         4 MB
 ```
 
 ```makefile
 Connection String: "Data Source=tcp:s06.winhost.com;Initial Catalog=DB_12824_registration;User ID=DB_12824_registration_user;Password=******;Integrated Security=False;"
 ```
 
-### Run the SQL Server database in a Docker container
+### Run the SQL Server database in a Docker container (manually)
 
 Open a PowerShell prompt.
 
 ```powershell
 docker pull mcr.microsoft.com/mssql/server:2022-latest
 docker volume create sql-volume
-$mssql_sa_password = ""
+$mssql_sa_password = "" # set this to a strong password
 docker run -e 'ACCEPT_EULA=Y' -e "MSSQL_SA_PASSWORD=$mssql_sa_password" -p 1433:1433 --name sql1 --hostname sql1 --mount "source=sql-volume,target=/sqldata" -d mcr.microsoft.com/mssql/server:2022-latest
 docker exec -it -u 0 sql1 "bash"   # -u 0 lets us log in as root.
 chmod 777 /sqldata
@@ -77,6 +82,11 @@ This will create a [Mermaid](https://mermaid-js.github.io/mermaid/#/) database s
     `Downloads\mermerd_0.4.1_windows_amd64.tar\mermerd -c "sqlserver://sa:********@localhost:1433?database=DB_12824_registration" -s dbo --useAllTables -o OdysseySchema.mmd`
 
 1. You will find your file created as OdysseySchema.mmd in the directory where you ran the tool.
+
+> [!tip]
+> TODO: Read "Get started with Entity Framework Core and an existing database in minutes - Quick Start Guide":
+> https://x.com/ErikEJ/status/1740635086742069720.
+> This can produce Mermaid diagrams, as well.
 
 ### Shutdown and clean up the Docker container
 
@@ -108,8 +118,11 @@ docker stop sql1 ; docker rm sql1`
 
 ## TODO
 
-1. I rolled back to EF 4.4 to make sure everything worked.  See if the code works as-is with EF 6.x.
-1. Create Elmah test DB
+> [!tip]
+> TODO: rolled back to EF 4.4 to make sure everything worked.  See if the code works as-is with EF 6.x.
+
+> [!tip]
+> TODO: Create Elmah test DB
 
 ## 08/04/2024
 
