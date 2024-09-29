@@ -8,13 +8,16 @@ This repository contains the code for the Judge and Tournament Registration webs
 
 It is currently built using ASP.NET MVC version 4.
 
+> TODO: Update the project to use ASP.NET (Core).
+
 ## Configuration
 
 ### Files to Configure
 
-Make sure to copy the web.config file from **this directory** into the root directory of your website.
+Make sure to copy the web.config file from **this directory**, i.e., the top-most directory, into the root directory of your website.
 
-1. Note: This should be placed in a higher directory than your bin, Content, Views, etc. directories.  The directory containing those subdirectories will likely have its own web.config file.
+> ![Note]
+> This should be placed in a higher directory than your bin, Content, Views, etc. directories.  The directory containing those subdirectories will likely have its own web.config file.
 
 ### Hosting Company Configuration
 
