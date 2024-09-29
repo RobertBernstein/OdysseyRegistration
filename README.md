@@ -8,8 +8,8 @@ This repository contains the code for the Judge and Tournament Registration webs
 
 It is currently built using ASP.NET MVC version 4.
 
-> [!todo]
-> Update the project to use ASP.NET (Core).
+> [!tip]
+> TODO: Update the project to use ASP.NET (Core).
 
 ## Configuration
 
