@@ -4,6 +4,19 @@
 
 This repository contains the code for the Judge and Tournament Registration websites for NoVA North Odyssey of the Mind.
 
+## Projects in this Solution (.sln)
+
+| Project Name                         | .NET Version       | Purpose             |
+|--------------------------------------|--------------------|---------------------|
+| docker-compose                       | N/A                | Docker Compose file |
+| Odyssey.Database                     | SQL Server 2019    | Database management |
+| OdysseyCoreMvc                       | .NET 6.0           | Core MVC framework  |
+| OdysseyMvc2023                       | .NET Framework 4.8 | MVC framework 2023  |
+| OdysseyMvc4                          | .NET Framework 4.8 | MVC framework 4     |
+| OdysseyMvc4.Tests                    | .NET Framework 4.8 | MVC framework 4 tests |
+| OdysseyRegistrationWebApi            | .NET 8.0           | Web API for registration |
+| UpdateProblemSynopsesForRegistration | .NET Framework 4.8 | Update problem synopses |
+
 ## Technologies
 
 It is currently built using ASP.NET MVC version 4.
@@ -118,11 +131,10 @@ docker stop sql1 ; docker rm sql1`
 
 ## TODO
 
-> [!tip]
-> TODO: rolled back to EF 4.4 to make sure everything worked.  See if the code works as-is with EF 6.x.
-
-> [!tip]
-> TODO: Create Elmah test DB
+1. [ ] Rolled back to EF 4.4 to make sure everything worked. See if the code works as-is with EF 6.x.
+1. [ ] Create Elmah test DB
+1. [ ] Determine what all the projects in this solution are for.
+1. [ ] Upgrade the Odyssey.Database project to SQL Server 2022.
 
 ## 08/04/2024
 
