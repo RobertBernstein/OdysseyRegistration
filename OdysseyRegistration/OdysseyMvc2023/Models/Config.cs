@@ -15,7 +15,7 @@
 
 namespace OdysseyMvc2023.Models
 {
-    public class Config
+    public partial class Config
     {
         public string Name { get; set; }
         public string Value { get; set; }

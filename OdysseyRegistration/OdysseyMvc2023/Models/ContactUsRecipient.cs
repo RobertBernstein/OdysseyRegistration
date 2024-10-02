@@ -15,7 +15,7 @@
 
 namespace OdysseyMvc2023.Models
 {
-    public class ContactUsRecipient
+    public partial class ContactUsRecipient
     {
         public byte ID { get; set; }
         public string contact_name { get; set; }
