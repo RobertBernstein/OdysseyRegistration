@@ -396,7 +396,7 @@ namespace OdysseyMvc2023.Controllers
                 // Is it too late to register?
                 return this.IsRegistrationClosed(this.CurrentRegistrationType)
                     ? BaseRegistrationController.RegistrationState.Closed
-                    : BaseRegistrationController.RegistrationState.Available);
+                    : BaseRegistrationController.RegistrationState.Available;
             }
         }
 
