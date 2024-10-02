@@ -10,7 +10,7 @@ This repository contains the code for the Judge and Tournament Registration webs
 |--------------------------------------|--------------------|---------------------|
 | docker-compose                       | N/A                | Docker Compose file |
 | Odyssey.Database                     | SQL Server 2019    | Database management |
-| OdysseyCoreMvc                       | .NET 6.0           | Core MVC framework  |
+| OdysseyCoreMvc                       | .NET 6.0           | Unused (I think): Core MVC framework  |
 | OdysseyMvc2023                       | .NET Framework 4.8 | MVC framework 2023  |
 | OdysseyMvc4                          | .NET Framework 4.8 | MVC framework 4     |
 | OdysseyMvc4.Tests                    | .NET Framework 4.8 | MVC framework 4 tests |
@@ -19,10 +19,10 @@ This repository contains the code for the Judge and Tournament Registration webs
 
 ## Technologies
 
-It is currently built using ASP.NET MVC version 4.
+The OdysseyMvc4 (original) and OdysseyMvc2023 (current) projects are currently built using ASP.NET MVC version 4 on .NET Framework 4.8.
 
 > [!tip]
-> TODO: Update the project to use ASP.NET (Core).
+> TODO: Update the projects to use ASP.NET (Core) 8.0 or later.
 
 ## Configuration
 
@@ -135,6 +135,9 @@ docker stop sql1 ; docker rm sql1`
 1. [ ] Create Elmah test DB
 1. [ ] Determine what all the projects in this solution are for.
 1. [ ] Upgrade the Odyssey.Database project to SQL Server 2022.
+1. [ ] Clean up the "Purpose" column in the Projects table above.
+1. [ ] Add logging to all projects!
+1. [ ] Make all "Return to the Home Page" buttons return to the home page at the current base URL, not hard-coded to a specific Odyssey Registration home page.
 
 ## 08/04/2024
 
@@ -200,6 +203,32 @@ Created a new project in the solution named `OdysseyRegistrationWebApi`
     ```
 
 1. Replaced passwords in docker-compose.yml file: <https://docs.docker.com/compose/use-secrets/>
+
+## 10/01/2024
+
+1. I'm figuring out where I left off and what everything does in the .sln.
+1. I believe the OdysseyMvc2023 project is the main project that runs on my desktop against a SQL Server database running in a local Docker container.
+1. When I built the docker-compose project in the .sln, it built two projects:
+    1. OdysseyRegistrationWebApi
+    1. docker-compose
+1. Then I right-click on the docker-compose project and select "Compose Up".
+    1. The sqlserver.configurator-1 container starts and exits.
+    1. The sqlserver-1 container starts and keeps running.
+    1. The odysseyregistrationwebapi-1 container starts and keeps running.
+    1. I can now run SQL Server Management Studio (SSMS) and connect to the SQL Server database running in the sqlserver-1 container.
+        1. The database is fully populated with the data from the novanorth-prod.sql script.
+            1. I think that's where the data came from. I need to verify this.
+1. The login for the user in the Odyssey Registration MVC app failed, but otherwise I think it's working on my desktop.
+    1. I updated OdysseyRegistration\OdysseyMvc2023\Web.config with Data Source=localhost (i.e., Docker), user=sa, and password=********.
+1. The following code threw an exception in OdysseyRegistration\OdysseyMvc2023\Models\OdysseyRepository.cs on line 355.
+    1. `Event tournamentInfo = this.tournamentInfo ?? (this.TournamentInfo = Queryable.Where<Event>((IQueryable<Event>)this.context.Events, (Expression<Func<Event, bool>>)(o => o.EventName.StartsWith(this.RegionName) && o.EventName.Contains("Tournament"))).First<Event>());`
+    1. The `EventName` in the `Events` DB table needed to be renamed from "NoVA North Regional Tournament" to "NoVA North and NoVA South Regional Tournament".
+    1. This is because I'm using last year's DB data and we were a combined region last year.
+    1. The code continued after this name change!!!
+1. The web site is running locally!
+1. Judges and Tournament Registration show as "(Coming Soon!)"
+    1. I commented these lines out and uncommented the lines that allow you to proceed to the registration pages.
+1. Now both the Judges and Tournament Registration pages are showing Closed.
 
 ## Managing MySQL on the Hosting Company's Server
 

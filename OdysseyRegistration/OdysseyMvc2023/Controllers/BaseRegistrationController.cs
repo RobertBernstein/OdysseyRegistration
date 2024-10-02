@@ -111,10 +111,13 @@ namespace OdysseyMvc2023.Controllers
             DateTime t1;
             try
             {
+                // TODO: Change this to TryParse (everywhere).
+                // TODO: This will fail if you specify an invalid date, such as 2/29 on a non-leap year! Log such possibilities. Add a unit test for this.
                 t1 = DateTime.Parse(viewData.Config[registrationType.ToString() + "RegistrationCloseDateTime"]);
             }
             catch (Exception ex)
             {
+                // TODO: Log the exception.
                 return true;
             }
             DateTime now = DateTime.Now;

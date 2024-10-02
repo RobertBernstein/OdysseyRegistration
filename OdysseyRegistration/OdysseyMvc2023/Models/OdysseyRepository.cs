@@ -352,10 +352,14 @@ namespace OdysseyMvc2023.Models
         {
             get
             {
+                // TODO: Add try/catch.
+                // TODO: Add logging for when "NoVA North Regional Tournament" cannot be found in the database and display the current value of any containing "Tournament".
+                // TODO: Figure out how to cache this value so we don't query for/set it every time a page is displayed.
                 Event tournamentInfo = this.tournamentInfo ?? (this.TournamentInfo = Queryable.Where<Event>((IQueryable<Event>)this.context.Events, (Expression<Func<Event, bool>>)(o => o.EventName.StartsWith(this.RegionName) && o.EventName.Contains("Tournament"))).First<Event>());
 
                 return tournamentInfo;
             }
+
             set => this.tournamentInfo = value;
         }
 
