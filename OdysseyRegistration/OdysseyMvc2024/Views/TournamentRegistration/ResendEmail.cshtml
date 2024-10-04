@@ -1,0 +1,61 @@
+@model OdysseyMvc2024.ViewData.TournamentRegistration.ResendEmailViewData
+
+@{
+    ViewData["Title"] = "Resend Tournament Registration E-mail";
+}
+
+<h1>Resend Tournament Registration E-mail</h1>
+<h2>You have found the @Model.Config["RegionName"] Team Registration E-mail Resender</h2>
+
+@if (!string.IsNullOrEmpty(Model.ErrorMessage))
+{
+    <p class="required">@Model.ErrorMessage</p>
+    <form asp-controller="Home" asp-action="Index">
+        <p style="text-align: center">
+            <button type="submit" id="returnToHomePageButton" name="returnToHomePageButton">Return to the Home Page</button>
+        </p>
+    </form>
+}
+else
+{
+    @if (Model.Success)
+    {
+        <p class="required">The e-mail was successfully sent.</p>
+    }
+    <p>Please provide the team number and the e-mail recipients to resend the team registration e-mail to:</p>
+    <form asp-action="Index" asp-controller="Home" method="post" onsubmit="return FormValidator();">
+        <table style="height: 100%; border: 0" width="555">
+            <tr>
+                <td style="text-align: right; width:258px">
+                    Team Number:
+                </td>
+                <td style="width:287px">
+                    <input type="text" id="TeamNumber" name="TeamNumber" />
+                </td>
+            </tr>
+            <tr>
+                <td style="text-align: right">
+                    Send to Team's Coach?
+                </td>
+                <td>
+                    <input type="checkbox" id="CoachCheckbox" name="CoachCheckbox" checked />
+                </td>
+            </tr>
+            <tr>
+                <td style="text-align: right">
+                    Send to Team's Alternate Coach?
+                </td>
+                <td>
+                    <input type="checkbox" id="AltCoachCheckbox" name="AltCoachCheckbox" />
+                </td>
+            </tr>
+        </table>
+        <hr />
+        <p style="text-align: right">
+            <button type="submit" id="nextButton" name="nextButton">Submit</button>
+        </p>
+        <p style="text-align: left">
+            <button type="button" id="homePageButton" name="homePageButton" onclick="location.href='@Model.Config["HomePage"]'">Return to the Home Page</button>
+        </p>
+    </form>
+}

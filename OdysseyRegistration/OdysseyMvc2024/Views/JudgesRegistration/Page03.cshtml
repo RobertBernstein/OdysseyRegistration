@@ -1,0 +1,126 @@
+﻿@{
+    // Package:	Odyssey of the Mind Web Site
+    // Module:	Judges Registration
+    // File:	Page03.cshtml
+    // Author:	Robert Bernstein
+    // Version:	3.0
+    // Created:	before 08/04/2007
+    // Updated:	09/29/2007: Replaced PHP database query code with MDB2
+    //			11/29/2009: Rebuilt in ASP.NET 3.5
+    //          10/24/2010: v2.0 Built in ASP.NET MVC 1.0 (based on ASP.NET 3.5 code from last year)
+    //          10/31/2013: v3.0 Rebuilt in ASP.NET MVC 4
+    //          12/03/2023: v4.0 Rebuilt in ASP.NET MVC 4 from dotPeek reverse engineered code and files copied from novanorth.org.
+}
+
+@model OdysseyMvc2024.ViewData.JudgesRegistration.Page03ViewData
+
+@{
+    ViewBag.Title = Model.FriendlyRegistrationName + " Page 3 of 3";
+}
+
+<script src="@Url.Content("~/Scripts/PrintThisPage.js")" type="text/javascript"></script>
+<script>
+    $(function () {
+        $("#topPrintThisPage").click(function () {
+            PrintThisPage();
+        });
+
+        $("#bottomPrintThisPage").click(function () {
+            PrintThisPage();
+        });
+
+        $("#restartRegistrationButton").click(function () {
+            location.href = '/Registration/JudgesRegistration/Page01';
+        });
+
+        $("#homePageButton").click(function () {
+            location.href = '@Model.Config["HomePage"]';
+        });
+
+        $("#homePageButtonOnError").click(function () {
+            location.href = '@Model.Config["HomePage"]';
+        });
+    });
+</script>
+
+<h1>
+    @ViewBag.Title
+</h1>
+@using (Html.BeginForm())
+{
+    if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
+    {
+        <p class="required">
+            @Model.ErrorMessage
+        </p>
+        <hr />
+        <p style="text-align: right">
+            <input type="button" value="Start @Model.FriendlyRegistrationName Over" id="restartRegistrationButton" />
+        </p>
+        <p style="text-align: left">
+            <input type="button" value="Return to the Home Page" id="homePageButtonOnError" />
+        </p>
+
+        return;
+    }
+
+    // If we attempted to send an e-mail and sending failed, then MailErrorMessage will contain a value.
+    if (!string.IsNullOrWhiteSpace(Model.MailErrorMessage))
+    {
+        <p class="required">
+            We were unable to send you an e-mail with the address you provided.
+        </p>
+        <p>
+            Error Message:
+            @Model.MailErrorMessage
+        </p>
+        <p>
+            Please enter the correct e-mail address and resubmit:
+        </p>
+        <p>
+            <img alt="Required" src="@Url.Content("~/Content/Images/bullet.gif")" width="15" />&nbsp;E-mail:
+            &nbsp;
+            @Html.TextBox("NewEmailTextBox", Model.Judge.EmailAddress, new { width = "50", maxlength = "50", style = "width:300px" })
+        </p>
+        <p style="text-align: right">
+            <input type="submit" value="Submit" id="submitButton" />
+        </p>
+    }
+    else // Either we did not attempt to send an e-mail or sending the e-mail succeeded.
+    {
+        <hr />
+        <p style="text-align: center">
+            <button type="button" id="topPrintThisPage">Click for Printer Friendly Version</button>
+        </p>
+        <hr />
+        <div id="printableContent">
+            @Html.Raw(Model.MailBody)
+        </div>
+
+        @*// Did the user provide an e-mail address?*@
+        if (Model.EmailAddressWasSpecified)
+        {
+            <p>
+                <span class="required">
+                    An e-mail has been sent to @Model.Judge.EmailAddress containing all of the information on this page.
+                </span>
+            </p>
+        }
+        else // The user did not provide an e-mail address.
+        {
+            <p>
+                <span class="required">
+                    Since you entered no e-mail address, please make sure to print this page.
+                </span>
+            </p>
+        }
+        <hr />
+        <p style="text-align: center">
+            <button type="button" id="bottomPrintThisPage">Click for Printer Friendly Version</button>
+        </p>
+        <hr />
+        <p style="text-align: right">
+            <button type="button" id="homePageButton">Return to the Home Page</button>
+        </p>
+    }
+}

@@ -1,0 +1,35 @@
+﻿@model OdysseyMvc2024.ViewData.BaseViewData
+
+@{
+    ViewBag.Title = @Model.FriendlyRegistrationName + " Is Closed";
+}
+
+<script>
+    $(function() {
+        $("#homePageButton").click(function() {
+            location.href = '@Model.Config["HomePage"]';
+        });
+    });
+</script>
+
+<h1>
+    @ViewBag.Title
+</h1>
+<h2>
+    @Model.FriendlyRegistrationName is now closed for the @Model.Config["Year"]-@Model.Config["EndYear"] season.
+</h2>
+<p>
+    Thank you for your interest in the @Model.Config["RegionName"] Region @Model.Config["RegionNumber"] Odyssey of the Mind program.
+</p>
+<p>
+    Sincerely,
+</p>
+<p>
+    Your Region @Model.Config["RegionNumber"] @Model.Config["RegionName"] Odyssey of the Mind Webmaster
+</p>
+@using (Html.BeginForm())
+{
+    <p style="text-align: center">
+        <button type="button" id="homePageButton">Return to the Home Page</button>
+    </p>
+}

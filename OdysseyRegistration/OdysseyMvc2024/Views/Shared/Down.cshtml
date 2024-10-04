@@ -1,0 +1,35 @@
+﻿@model OdysseyMvc2024.ViewData.BaseViewData
+
+@{
+    ViewBag.Title = @Model.FriendlyRegistrationName + " Is Temporarily Down";
+}
+
+<script>
+    $(function() {
+        $("#homePageButton").click(function() {
+            location.href = '@Model.Config["HomePage"]';
+        });
+    });
+</script>
+
+<h1>
+    @ViewBag.Title
+</h1>
+<h2>
+    We're sorry! &nbsp;@Model.FriendlyRegistrationName is down for a little while in order to perform maintenance on the system.
+</h2>
+<p>
+    Please check back soon.
+</p>
+<p>
+    Sincerely,
+</p>
+<p>
+    Your Region @Model.Config["RegionNumber"] @Model.Config["RegionName"] Odyssey of the Mind Webmaster
+</p>
+@using (Html.BeginForm())
+{
+    <p style="text-align: center">
+        <button type="button" id="homePageButton">Return to the Home Page</button>
+    </p>
+}

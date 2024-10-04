@@ -1,0 +1,147 @@
+﻿@{
+    // Package:	Odyssey of the Mind Web Site
+    // Module:	Judges Registration
+    // File:	Page01.cshtml
+    // Author:	Robert Bernstein
+    // Version:	3.0
+    // Created:	10/24/2010: v2.0 Built in ASP.NET MVC 1.0 (based on ASP.NET 3.5 code from last year)
+    // Updated:	10/27/2013: v3.0 Rebuilt in ASP.NET MVC 4
+    //         	12/03/2023: v4.0 Rebuilt in ASP.NET MVC 4 from dotPeek reverse engineered code and files copied from novanorth.org.
+}
+
+@model OdysseyMvc2024.ViewData.JudgesRegistration.Page01ViewData
+
+@{
+    ViewBag.Title = Model.FriendlyRegistrationName + " Page 1 of 3";
+}
+
+<h1>
+    @ViewBag.Title
+</h1>
+<h2>
+    Welcome to the
+    @Model.RegionName Region @Model.RegionNumber @Model.Config["Year"]-@Model.Config["EndYear"] Odyssey of the Mind
+    @Model.FriendlyRegistrationName.
+</h2>
+<p>
+    Thank you for volunteering to be a judge at our regional tournament.
+</p>
+<p>
+    If you will not be judging at this tournament (at @Model.TournamentLocation), but need the training for another
+    tournament, we will gladly accommodate you, but please do not complete this registration process. &nbsp;Instead,
+    please contact the Region @Model.RegionNumber judges coordinator using our <a href="@Model.Config["ContactUsURL"]" target="_blank">Contact Us</a>
+    page and provide your name and the region for which you will be judging.
+</p>
+<p>
+    Because of the important role that our judges play in making such an event happen,
+    it is imperative that each judge understand his or her responsibilities before signing
+    up.&nbsp; For this reason, we are asking each judge to agree to the information
+    below before signing up. &nbsp;Thanks and welcome aboard!
+</p>
+<hr />
+<h2 style="text-align: center">Agreement</h2>
+<p>
+    I understand that by submitting this registration form I am committing to be at
+    the following two events:
+</p>
+<ul>
+    <li>
+        <strong>Judges Training</strong>
+        <ul>
+            <li>
+                <strong>Location:</strong>
+                @* // Begin the hyperlink code, if one is present in the database for Judges Training. *@
+                @if (!string.IsNullOrWhiteSpace(Model.JudgesInfo.LocationURL))
+                {
+                    <a href="@Model.JudgesInfo.LocationURL" target="_blank">@Model.JudgesInfo.Location</a>
+                }
+                else
+                {
+                    @* Display the name of the Judges Training location (as a link if a URL is present in the database). *@
+                    @Model.JudgesInfo.Location
+                }
+            </li>
+            <li>
+                <strong>Date: </strong>@Model.JudgesTrainingDate
+            </li>
+            <li>
+                <strong>Time: </strong>@Model.JudgesTrainingTime
+            </li>
+        </ul>
+    </li>
+</ul>
+<ul>
+    <li>
+        <strong>Region @Model.RegionNumber Odyssey of the Mind Tournament</strong>
+        <ul>
+            <li>
+                <strong>Location:</strong>
+                @* Begin the hyperlink code, if one is present in the database for the Regional Tournament. *@
+                @if (!string.IsNullOrWhiteSpace(Model.TournamentInfo.LocationURL))
+                {
+                    <a href="@Model.TournamentInfo.LocationURL" target="_blank">@Model.TournamentLocation</a>
+                }
+                else
+                {
+                    // Display the name of the Regional Tournament location (as a link if a URL is present in the database)
+                    @Model.TournamentLocation
+                }
+            </li>
+            <li>
+                <strong>Date: </strong>
+                @Model.TournamentDate
+            </li>
+            <li>
+                <strong>Time: </strong>
+                @Model.TournamentTime
+            </li>
+        </ul>
+    </li>
+</ul>
+<p style="font-weight: bold">
+    I understand that:
+</p>
+<ul>
+    <li>
+        &nbsp; I will not see my own child perform.<br />
+        &nbsp;
+    </li>
+    <li>
+        &nbsp; I must be at least 18 years of age by the date of the tournament.<br />
+        &nbsp;
+    </li>
+    <li>
+        &nbsp; I cannot be a judge without attending Judges Training.<br />
+        &nbsp;
+    </li>
+    <li>
+        &nbsp; If at any time I find that I cannot attend either event, I will immediately
+        notify the coach of the team for which I am judging <span style="font-weight: bold; font-style: italic">and</span> the Region
+        @Model.Config["RegionNumber"] Judges Coordinator. &nbsp;I may contact the Judges Coordinator through our
+        <a href="@Model.Config["ContactUsURL"]" target="_blank">Contact Us</a> page.<br />
+        &nbsp;
+    </li>
+    <li>
+        &nbsp; If I will miss either Judges Training or the tournament, a replacement must
+        be found for me by the team for which I am judging.&nbsp; If no replacement is found
+        for me, that team will not be scored at the regional tournament and will not be
+        eligible to go on to the state tournament.
+    </li>
+</ul>
+@if (!string.IsNullOrWhiteSpace(Model.Config["ContactUsURL"]))
+{
+    <p style="font-weight: bold">
+        If you do not meet these requirements but still want to help, please contact our Regional Director through our
+        <a href="@Model.Config["ContactUsURL"]" target="_blank">Contact Us</a> page.
+    </p>
+}
+<hr />
+@using (Html.BeginForm(null, null, FormMethod.Post, new { defaultbutton = "nextButton", id = "MainForm" }))
+{
+    <div style="text-align: right">
+        <input type="submit" value="Begin the Registration Process >>" id="nextButton" name="nextButton" />
+    </div>
+    <div style="text-align: left">
+        <a href="@Model.Config["HomePage"]">Return to the Home Page</a>
+    </div>
+}

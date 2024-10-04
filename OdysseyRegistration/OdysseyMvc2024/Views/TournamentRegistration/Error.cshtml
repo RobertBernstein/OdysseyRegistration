@@ -1,0 +1,39 @@
+﻿@page
+@model dynamic
+
+@{
+    // Package:   Odyssey of the Mind Web Site
+    // Module:    Tournament Registration
+    // File:      Error.cshtml
+    // Author:    Robert Bernstein
+    // Version:   2.0
+    // Created:   before 08/04/2007
+    // Updated:   09/29/2007: Replaced PHP database query code with MDB2
+    //            11/29/2009: Rebuilt in ASP.NET 3.5
+    //            01/10/2009: Rebuild in ASP.NET MVC
+}
+
+@{
+    ViewData["Title"] = Model.FriendlyRegistrationName + "Error Occurred";
+}
+
+@{
+    Layout = "~/Views/Shared/Site.Master";
+}
+
+<h1>
+    An error occurred in @Model.FriendlyRegistrationName.
+</h1>
+<h2>
+    We apologize for the inconvenience, but an error occurred while processing your request.
+</h2>
+<p>
+    Please click one of the buttons below to continue.
+</p>
+
+<form asp-action="RestartRegistration" asp-controller="TournamentRegistration" method="post" id="MainForm">
+    <div class="text-center">
+        <button type="submit" class="btn btn-primary">Return to the Home Page</button>
+        <button type="submit" class="btn btn-primary" formaction="Page01">Restart @Model.FriendlyRegistrationName</button>
+    </div>
+</form>

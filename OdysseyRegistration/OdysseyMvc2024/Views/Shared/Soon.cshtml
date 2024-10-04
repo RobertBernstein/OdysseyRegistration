@@ -1,0 +1,35 @@
+﻿@model OdysseyMvc2024.ViewData.BaseViewData
+
+@{
+    ViewBag.Title = @Model.FriendlyRegistrationName + " Is Coming Soon";
+}
+
+<script>
+    $(function() {
+        $("#homePageButton").click(function() {
+            location.href = '@Model.Config["HomePage"]';
+        });
+    });
+</script>
+
+<h1>
+    @ViewBag.Title
+</h1>
+<h2>
+    We're sorry! &nbsp;We are still working on @Model.FriendlyRegistrationName and will make it available as soon as possible.
+</h2>
+<p>
+    Please check back shortly.
+</p>
+<p>
+    Sincerely,
+</p>
+<p>
+    Your Region @Model.Config["RegionNumber"] @Model.Config["RegionName"] Odyssey of the Mind Webmaster
+</p>
+@using (Html.BeginForm())
+{
+    <p style="text-align: center">
+        <button type="button" id="homePageButton">Return to the Home Page</button>
+    </p>
+}

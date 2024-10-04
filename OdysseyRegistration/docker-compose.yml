@@ -1,0 +1,55 @@
+version: '3.4'
+
+volumes:
+  sqlserver_odyssey:
+
+services:
+  odysseyregistrationwebapi:
+    image: ${DOCKER_REGISTRY-}odysseyregistrationwebapi
+    build:
+      context: .
+      dockerfile: OdysseyRegistrationWebApi/Dockerfile
+
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      MSSQL_SA_PASSWORD_FILE: /run/secrets/sa_password
+      ACCEPT_EULA: "Y"
+      MSSQL_PID: Developer
+      CONFIG_EDGE_BUILD: 0
+    secrets:
+      - sa_password
+    ports:
+      - "1433:1433"
+    volumes:
+#      - ./init:/docker-entrypoint-initdb.d
+      - sqlserver_odyssey:/var/opt/mssql
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P $$(cat /run/secrets/sa_password) -Q 'SELECT 1' || exit 1"]
+      interval: 10s
+      retries: 10
+      start_period: 10s
+      timeout: 3s
+  sqlserver.configurator:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      CONFIG_EDGE_BUILD: 0
+      MSSQL_SA_PASSWORD_FILE: /run/secrets/sa_password
+    secrets:
+      - sa_password
+    volumes:
+      - ./init:/docker-entrypoint-initdb.d
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+    command: >
+      bash -c '
+      /opt/mssql-tools/bin/sqlcmd -S sqlserver -U sa -P $$(cat /run/secrets/sa_password) -d master -v sa_password=$$(cat /run/secrets/sa_password) -i docker-entrypoint-initdb.d/init.sql;
+      /opt/mssql-tools/bin/sqlcmd -S sqlserver -U sa -P $$(cat /run/secrets/sa_password) -d master -i docker-entrypoint-initdb.d/novanorth-prod.sql;
+      echo "All done!";
+      '
+
+secrets:
+  sa_password:
+    file: sa_password.txt

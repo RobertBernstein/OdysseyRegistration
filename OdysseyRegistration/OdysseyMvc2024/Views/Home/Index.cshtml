@@ -1,0 +1,66 @@
+﻿@{
+    // Package:	Odyssey of the Mind Web Site
+    // Module:	Registration Home Page
+    // File:	Index.cshtml
+    // Author:	Robert Bernstein
+    // Version:	3.0
+    // Created:	10/30/2010: v2.0 Built in ASP.NET MVC 1.0 (based on ASP.NET 3.5 code from last year)
+    // Updated:	09/22/2013: v3.0 Rebuilt in ASP.NET MVC 4
+    //         	12/03/2023: v4.0 Rebuilt in ASP.NET MVC 4 from dotPeek reverse engineered code and files copied from novanorth.org.
+}
+
+@model OdysseyMvc2024.ViewData.BaseViewData
+
+@{
+    ViewBag.Title = "Odyssey Registration Home Page";
+}
+
+@{
+    //Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>
+        @ViewBag.Title
+    </title>
+    <script>
+    $(function() {
+        $("#homePageButton").click(function() {
+            location.href = '@Model.Config["HomePage"]';
+        });
+    });
+    </script>
+</head>
+<body>
+    <h2>
+        @ViewData["Message"]
+    </h2>
+    <div>
+        <p>
+            Click on one of the links below to being the specified registration process.
+        </p>
+        <ul>
+            @*<li>@Html.ActionLink("Coaches Training Registration", "Page01", "CoachesTrainingRegistration")</li>*@
+
+            @* TODO: Make Coming Soon dynamically displayable with DB config value. *@
+            <li>@Html.ActionLink("Judges Registration", "Page01", "JudgesRegistration")</li>
+            @*<li>Judges Registration (Coming Soon!)</li>*@
+            @if (Model.Config["WillHaveVolunteerRegistration"] == "True")
+            {
+                @*<li>@Html.ActionLink("Volunteer Registration", "Page01", "VolunteerRegistration")</li>*@
+                <li>Volunteer Registration (Coming Soon!)</li>
+            }
+            @* TODO: Make Coming Soon dynamically displayable with DB config value. *@
+            <li>@Html.ActionLink("Tournament Registration", "Page01", "TournamentRegistration")</li>
+            @*<li>Tournament Registration (Coming Soon!)</li>*@
+        </ul>
+        <p style="text-align: center">
+            <button type="button" id="homePageButton">Return to the Home Page</button>
+        </p>
+    </div>
+</body>
+</html>
