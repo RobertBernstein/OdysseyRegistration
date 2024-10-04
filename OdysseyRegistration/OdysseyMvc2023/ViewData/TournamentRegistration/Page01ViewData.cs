@@ -1,4 +1,13 @@
-﻿// Decompiled with JetBrains decompiler
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="Page01ViewData.cs" company="Tardis Technologies">
+//   Copyright 2015 Tardis Technologies. All rights reserved.
+// </copyright>
+// <summary>
+//   Defines the Page01ViewData type.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
+
+// Decompiled with JetBrains decompiler
 // Type: OdysseyMvc4.ViewData.TournamentRegistration.Page01ViewData
 // Assembly: OdysseyMvc4, Version=1.0.5460.36587, Culture=neutral, PublicKeyToken=null
 // MVID: 7B658547-521F-44CB-80FA-52857CB94B72
@@ -8,15 +17,18 @@ using System;
 
 namespace OdysseyMvc2023.ViewData.TournamentRegistration
 {
+    /// <summary>
+    /// The backing data for Page 01 of the Tournament Registration wizard.
+    /// </summary>
     public class Page01ViewData : BaseViewData
     {
         public bool AcceptingPayPal
         {
             get
             {
-                bool result;
-                bool.TryParse(this.Config[nameof(AcceptingPayPal)], out result);
-                return result;
+                bool flag;
+                bool.TryParse(this.Config[nameof(AcceptingPayPal)], out flag);
+                return flag;
             }
         }
 
@@ -37,21 +49,55 @@ namespace OdysseyMvc2023.ViewData.TournamentRegistration
             }
         }
 
-        public string LateTeamRegistrationFee => !string.IsNullOrWhiteSpace(this.TournamentInfo.LateEventCost) ? "$" + this.TournamentInfo.LateEventCost : string.Empty;
+        public string LateTeamRegistrationFee => !string.IsNullOrWhiteSpace(this.TournamentInfo.LateEventCost)
+            ? "$" + this.TournamentInfo.LateEventCost
+            : string.Empty;
 
-        public string PaymentDueDate => !this.TournamentInfo.PaymentDueDate.HasValue ? "TBA" : this.TournamentInfo.PaymentDueDate.Value.ToLongDateString();
+        public string PaymentDueDate => TournamentInfo.PaymentDueDate.HasValue
+            ? this.TournamentInfo.PaymentDueDate.Value.ToLongDateString()
+            : "TBA";
 
-        public string TeamRegistrationFee => !string.IsNullOrWhiteSpace(this.TournamentInfo.EventCost) ? "$" + this.TournamentInfo.EventCost : "TBA";
+        /// <summary>
+        /// Gets the team registration fee.  If the late registration date has passed, returns the higher, late fee.
+        /// </summary>
+        public string TeamRegistrationFee
+        {
+            get
+            {
+                var eventRegistrationFee = !string.IsNullOrWhiteSpace(this.TournamentInfo.EventCost)
+                    ? "$" + this.TournamentInfo.EventCost
+                    : "TBA";
+
+                var lateEventRegistrationFee = !string.IsNullOrWhiteSpace(this.TournamentInfo.LateEventCost)
+                    ? "$" + this.TournamentInfo.LateEventCost
+                    : "TBA";
+
+                // If we have not set a late event cost start date, then the standard registration fee is the only one
+                // for this year.
+                if (this.TournamentInfo.LateEventCostStartDate == null)
+                {
+                    return eventRegistrationFee;
+                }
+
+                bool registrationFeeIsLate =
+                    DateTime.Compare((DateTime)this.TournamentInfo.LateEventCostStartDate, DateTime.Now) < 0;
+
+                return !registrationFeeIsLate ? eventRegistrationFee : lateEventRegistrationFee;
+            }
+        }
 
         public string TournamentRegistrationCloseDateTime
         {
             get
             {
                 if (this.Config[nameof(TournamentRegistrationCloseDateTime)] == null)
+                {
                     return "TBA";
-                DateTime result;
-                DateTime.TryParse(this.Config[nameof(TournamentRegistrationCloseDateTime)], out result);
-                return result.ToLongDateString();
+                }
+				
+                DateTime closeDateTime;
+                DateTime.TryParse(this.Config[nameof(TournamentRegistrationCloseDateTime)], out closeDateTime);
+                return closeDateTime.ToLongDateString();
             }
         }
     }
