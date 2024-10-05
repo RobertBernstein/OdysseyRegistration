@@ -13,17 +13,19 @@
 // MVID: 7B658547-521F-44CB-80FA-52857CB94B72
 // Assembly location: C:\Users\rob\OneDrive\Odyssey\OdysseyProd\registration\bin\OdysseyMvc4.dll
 
+using OdysseyMvc2024.Models;
+
 namespace OdysseyMvc2024.ViewData.TournamentRegistration
 {
     /// <summary>
     /// Backing data for Page 08 of the Tournament Registration wizard.
     /// </summary>
-    public class Page08ViewData : BaseViewData
+    public class Page08ViewData(IOdysseyRepository repository) : BaseViewData(repository)
     {
-        public string SchedulingIssues { get; set; }
+        public string? SchedulingIssues { get; set; }
 
-        public string SpecialConsiderations { get; set; }
+        public string? SpecialConsiderations { get; set; }
 
-        public Models.TournamentRegistration TournamentRegistration { get; set; }
+        public required Models.TournamentRegistration TournamentRegistration { get; set; }
     }
 }

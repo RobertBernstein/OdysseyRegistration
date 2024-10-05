@@ -13,6 +13,7 @@
 // MVID: 7B658547-521F-44CB-80FA-52857CB94B72
 // Assembly location: C:\Users\rob\OneDrive\Odyssey\OdysseyProd\registration\bin\OdysseyMvc4.dll
 
+using OdysseyMvc2024.Models;
 using System;
 
 namespace OdysseyMvc2024.ViewData.TournamentRegistration
@@ -20,7 +21,7 @@ namespace OdysseyMvc2024.ViewData.TournamentRegistration
     /// <summary>
     /// The backing data for Page 01 of the Tournament Registration wizard.
     /// </summary>
-    public class Page01ViewData : BaseViewData
+    public class Page01ViewData(IOdysseyRepository repository) : BaseViewData(repository)
     {
         public bool AcceptingPayPal
         {

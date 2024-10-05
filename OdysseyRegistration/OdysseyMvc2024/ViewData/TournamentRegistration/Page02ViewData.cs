@@ -14,6 +14,7 @@
 // Assembly location: C:\Users\rob\OneDrive\Odyssey\OdysseyProd\registration\bin\OdysseyMvc4.dll
 
 using Microsoft.AspNetCore.Mvc.Rendering;
+using OdysseyMvc2024.Models;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -22,12 +23,12 @@ namespace OdysseyMvc2024.ViewData.TournamentRegistration
     /// <summary>
     /// The backing data for Page 02 of the Tournament Registration wizard.
     /// </summary>
-    public class Page02ViewData : BaseViewData
+    public class Page02ViewData(IOdysseyRepository repository) : BaseViewData(repository)
     {
         /// <summary>
-        /// Gets or sets the school list.
+        /// Gets or sets the list of schools eligible to compete in the tournament.
         /// </summary>
-        public IEnumerable<SelectListItem> SchoolList { get; set; }
+        public required IEnumerable<SelectListItem> SchoolList { get; set; }
 
         /// <summary>
         /// Gets or sets the selected school.

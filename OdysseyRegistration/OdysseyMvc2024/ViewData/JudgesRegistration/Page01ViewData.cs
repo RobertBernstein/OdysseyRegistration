@@ -26,36 +26,37 @@ namespace OdysseyMvc2024.ViewData.JudgesRegistration
     /// <summary>
     /// The page 01 view data.
     /// </summary>
-    public class Page01ViewData : BaseViewData
+    public class Page01ViewData(IOdysseyRepository repository) : BaseViewData(repository)
     {
+
         /// <summary>
         /// Gets or sets the judges info.
         /// </summary>
-        public Event JudgesInfo { get; set; }
+        public required Event JudgesInfo { get; set; }
 
         /// <summary>
         /// Gets the judges training date or "TBA" if it is not defined.
         /// </summary>
-        public string JudgesTrainingDate => this.JudgesInfo.StartDate.HasValue
-            ? this.JudgesInfo.StartDate.Value.ToLongDateString()
+        public string JudgesTrainingDate => JudgesInfo.StartDate.HasValue
+            ? JudgesInfo.StartDate.Value.ToLongDateString()
             : "TBA";
 
         /// <summary>
         /// Gets the judges training location or "TBA" if it is not defined.
         /// </summary>
-        public string JudgesTrainingLocation => !string.IsNullOrWhiteSpace(this.JudgesInfo.Location)
-            ? this.JudgesInfo.Location
+        public string JudgesTrainingLocation => !string.IsNullOrWhiteSpace(JudgesInfo.Location)
+            ? JudgesInfo.Location
             : "TBA";
 
         /// <summary>
         /// Gets the judges training time or "TBA" if it is not defined.
         /// </summary>
-        public string JudgesTrainingTime => !string.IsNullOrWhiteSpace(this.JudgesInfo.Time)
-            ? this.JudgesInfo.Time
+        public string JudgesTrainingTime => !string.IsNullOrWhiteSpace(JudgesInfo.Time)
+            ? JudgesInfo.Time
             : "TBA";
 
-        public string MailRegionalDirectorHyperLink { get; set; }
+        public required string MailRegionalDirectorHyperLink { get; set; }
 
-        public string MailRegionalDirectorHyperLinkText { get; set; }
+        public required string MailRegionalDirectorHyperLinkText { get; set; }
     }
 }

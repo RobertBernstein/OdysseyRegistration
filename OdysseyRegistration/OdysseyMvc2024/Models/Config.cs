@@ -17,6 +17,7 @@ namespace OdysseyMvc2024.Models
 {
     public partial class Config
     {
+        //public int Id { get; set; } // Primary key
         public string Name { get; set; }
         public string Value { get; set; }
     }

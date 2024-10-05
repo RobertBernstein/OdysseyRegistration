@@ -23,27 +23,27 @@ namespace OdysseyMvc2024.ViewData.JudgesRegistration
     /// <summary>
     /// The page 03 view data.
     /// </summary>
-    public class Page03ViewData : BaseViewData
+    public class Page03ViewData(IOdysseyRepository repository) : BaseViewData(repository)
     {
         /// <summary>
         /// Gets or sets the judges info.
         /// </summary>
-        public Event JudgesInfo { get; set; }
+        public required Event JudgesInfo { get; set; }
 
         /// <summary>
         /// Gets or sets the judge.
         /// </summary>
-        public Judge Judge { get; set; }
+        public Judge? Judge { get; set; }
 
         /// <summary>
         /// Gets or sets the mail body.
         /// </summary>
-        public string MailBody { get; set; }
+        public string? MailBody { get; set; }
 
         /// <summary>
         /// Gets or sets the mail error message.
         /// </summary>
-        public string MailErrorMessage { get; set; }
+        public string? MailErrorMessage { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether email address was specified.
@@ -53,6 +53,6 @@ namespace OdysseyMvc2024.ViewData.JudgesRegistration
         /// <summary>
         /// Gets or sets the error message.
         /// </summary>
-        public string ErrorMessage { get; set; }
+        public string? ErrorMessage { get; set; }
     }
 }

@@ -14,6 +14,7 @@
 // Assembly location: C:\Users\rob\OneDrive\Odyssey\OdysseyProd\registration\bin\OdysseyMvc4.dll
 
 using Microsoft.AspNetCore.Mvc.Rendering;
+using OdysseyMvc2024.Models;
 using System.Collections.Generic;
 
 namespace OdysseyMvc2024.ViewData.TournamentRegistration
@@ -21,27 +22,27 @@ namespace OdysseyMvc2024.ViewData.TournamentRegistration
     /// <summary>
     /// Backing data for Page 07 of the Tournament Registration wizard.
     /// </summary>
-    public class Page07ViewData : BaseViewData
+    public class Page07ViewData(IOdysseyRepository repository) : BaseViewData(repository)
     {
         /// <summary>
         /// Gets or sets the division 123 and primary list of problems as html list.
         /// </summary>
-        public string Division123AndPrimaryListOfProblemsAsHtmlList { get; set; }
+        public string? Division123AndPrimaryListOfProblemsAsHtmlList { get; set; }
 
         /// <summary>
         /// Gets or sets the division 123 list of problems as html list.
         /// </summary>
-        public string Division123ListOfProblemsAsHtmlList { get; set; }
+        public string? Division123ListOfProblemsAsHtmlList { get; set; }
 
         /// <summary>
         /// Gets or sets the division 123 problem choice.
         /// </summary>
-        public string Division123ProblemChoice { get; set; }
+        public string? Division123ProblemChoice { get; set; }
 
         /// <summary>
         /// Gets or sets the division 123 problem drop down.
         /// </summary>
-        public IEnumerable<SelectListItem> Division123ProblemDropDown { get; set; }
+        public required IEnumerable<SelectListItem> Division123ProblemDropDown { get; set; }
 
         /// <summary>
         /// Gets or sets the division of team.
@@ -51,26 +52,26 @@ namespace OdysseyMvc2024.ViewData.TournamentRegistration
         /// <summary>
         /// Gets or sets the division radio group.
         /// </summary>
-        public string DivisionRadioGroup { get; set; }
+        public string? DivisionRadioGroup { get; set; }
 
         /// <summary>
         /// Gets or sets the is doing spontaneous.
         /// </summary>
-        public string IsDoingSpontaneous { get; set; }
+        public string? IsDoingSpontaneous { get; set; }
 
         /// <summary>
         /// Gets or sets the is doing spontaneous drop down.
         /// </summary>
-        public IEnumerable<SelectListItem> IsDoingSpontaneousDropDown { get; set; }
+        public required IEnumerable<SelectListItem> IsDoingSpontaneousDropDown { get; set; }
 
         /// <summary>
         /// Gets or sets the primary problem name.
         /// </summary>
-        public string PrimaryProblemName { get; set; }
+        public string? PrimaryProblemName { get; set; }
 
         /// <summary>
         /// Gets or sets the selected problem.
         /// </summary>
-        public string SelectedProblem { get; set; }
+        public string? SelectedProblem { get; set; }
     }
 }

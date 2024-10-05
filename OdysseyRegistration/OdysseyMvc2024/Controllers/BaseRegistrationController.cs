@@ -15,10 +15,11 @@
 
 using System.Net;
 using System.Net.Mail;
-using Elmah;
 using OdysseyMvc2024.Models;
 using OdysseyMvc2024.ViewData;
 using Microsoft.AspNetCore.Mvc;
+using ElmahCore;
+using System;
 
 namespace OdysseyMvc2024.Controllers
 {
@@ -40,8 +41,14 @@ namespace OdysseyMvc2024.Controllers
         [HttpGet]
         public ActionResult BadEmail()
         {
-            this.SetBaseViewData(new BaseViewData());
-            return (ActionResult)this.View();
+            BaseViewData baseViewData = new(Repository)
+            {
+                Config = Repository.Config,
+                TournamentInfo = Repository.TournamentInfo
+            };
+
+            SetBaseViewData(baseViewData);
+            return View();
 
             // TODO: Test that this is the correct path to the BadEmail page, Rob - 01/18/2015.
             // return this.View("~/Views/Shared/BadEmail.cshtml");
@@ -71,7 +78,7 @@ namespace OdysseyMvc2024.Controllers
         /// <returns>
         /// The constructed e-mail message.
         /// </returns>
-        protected MailMessage BuildMessage(
+        protected MailMessage? BuildMessage(
           string from,
           string subject,
           string body,
@@ -90,7 +97,7 @@ namespace OdysseyMvc2024.Controllers
 
             // Set the recipient address of the mail message.
             string str = to;
-            char[] chArray = new char[1] { ',' };
+            char[] chArray = [','];
             foreach (string recipient in str.Split(chArray))
             {
                 try
@@ -99,9 +106,10 @@ namespace OdysseyMvc2024.Controllers
                 }
                 catch (FormatException ex)
                 {
-                    return (MailMessage)null;
+                    return null;
                 }
             }
+
             // Check if the bcc value is null or an empty string
             if (!string.IsNullOrWhiteSpace(bcc))
             {
@@ -129,9 +137,14 @@ namespace OdysseyMvc2024.Controllers
         [HttpGet]
         public ActionResult Closed()
         {
-            BaseViewData baseViewData = new BaseViewData();
-            this.SetBaseViewData(baseViewData);
-            return (ActionResult)this.View((object)baseViewData);
+            BaseViewData baseViewData = new(Repository)
+            {
+                Config = Repository.Config,
+                TournamentInfo = Repository.TournamentInfo
+            };
+
+            SetBaseViewData(baseViewData);
+            return View((object)baseViewData);
         }
 
         private string DetermineSiteCssFile() =>
@@ -166,9 +179,14 @@ namespace OdysseyMvc2024.Controllers
         [HttpGet]
         public ActionResult Down()
         {
-            BaseViewData baseViewData = new BaseViewData();
-            this.SetBaseViewData(baseViewData);
-            return (ActionResult)this.View((object)baseViewData);
+            BaseViewData baseViewData = new(Repository)
+            {
+                Config = Repository.Config,
+                TournamentInfo = Repository.TournamentInfo
+            };
+
+            SetBaseViewData(baseViewData);
+            return View((object)baseViewData);
         }
 
         /// <summary>
@@ -181,9 +199,14 @@ namespace OdysseyMvc2024.Controllers
         [HttpGet]
         public ActionResult Error()
         {
-            BaseViewData baseViewData = new BaseViewData();
-            this.SetBaseViewData(baseViewData);
-            return (ActionResult)this.View((object)baseViewData);
+            BaseViewData baseViewData = new(Repository)
+            {
+                Config = Repository.Config,
+                TournamentInfo = Repository.TournamentInfo
+            };
+
+            SetBaseViewData(baseViewData);
+            return View((object)baseViewData);
         }
 
         public string GetFriendlyRegistrationName()
@@ -213,15 +236,20 @@ namespace OdysseyMvc2024.Controllers
         public bool IsRegistrationClosed(
           BaseRegistrationController.RegistrationType registrationType)
         {
-            BaseViewData viewData = new BaseViewData();
-            this.SetBaseViewData(viewData);
+            BaseViewData baseViewData = new(Repository)
+            {
+                Config = Repository.Config,
+                TournamentInfo = Repository.TournamentInfo
+            };
+
+            SetBaseViewData(baseViewData);
 
             DateTime registrationCloseDateTime;
             try
             {
                 // TODO: Change this to TryParse (everywhere).
                 // TODO: This will fail if you specify an invalid date, such as 2/29 on a non-leap year! Log such possibilities. Add a unit test for this.
-                registrationCloseDateTime = DateTime.Parse(viewData.Config[registrationType.ToString() + "RegistrationCloseDateTime"]);
+                registrationCloseDateTime = DateTime.Parse(baseViewData.Config[registrationType.ToString() + "RegistrationCloseDateTime"]);
             }
             catch (Exception ex)
             {
@@ -248,13 +276,18 @@ namespace OdysseyMvc2024.Controllers
         public bool IsRegistrationComingSoon(
           BaseRegistrationController.RegistrationType registrationType)
         {
-            BaseViewData viewData = new BaseViewData();
-            this.SetBaseViewData(viewData);
+            BaseViewData baseViewData = new(Repository)
+            {
+                Config = Repository.Config,
+                TournamentInfo = Repository.TournamentInfo
+            };
+
+            SetBaseViewData(baseViewData);
 
             DateTime registrationOpenDate;
             try
             {
-                registrationOpenDate = DateTime.Parse(viewData.Config[registrationType.ToString() + "RegistrationOpenDateTime"]);
+                registrationOpenDate = DateTime.Parse(baseViewData.Config[registrationType.ToString() + "RegistrationOpenDateTime"]);
             }
             catch (Exception ex)
             {
@@ -280,11 +313,16 @@ namespace OdysseyMvc2024.Controllers
         public bool IsRegistrationDown(
           BaseRegistrationController.RegistrationType registrationType)
         {
-            BaseViewData viewData = new BaseViewData();
-            this.SetBaseViewData(viewData);
+            BaseViewData baseViewData = new(Repository)
+            {
+                Config = Repository.Config,
+                TournamentInfo = Repository.TournamentInfo
+            };
+
+            SetBaseViewData(baseViewData);
 
             bool registrationIsDown;
-            bool.TryParse(viewData.Config["Is" + (object)registrationType + "RegistrationDown"], out registrationIsDown);
+            bool.TryParse(baseViewData.Config["Is" + registrationType + "RegistrationDown"], out registrationIsDown);
             return registrationIsDown;
         }
 
@@ -300,12 +338,12 @@ namespace OdysseyMvc2024.Controllers
         /// <returns>
         /// null on success, an error message otherwise.
         /// </returns>
-        public string SendMessage(BaseViewData viewData, MailMessage mailMessage)
+        public string? SendMessage(BaseViewData viewData, MailMessage mailMessage)
         {
             SmtpClient smtpClient = new SmtpClient()
             {
                 Host = viewData.Config["EmailServer"],
-                Credentials = (ICredentialsByHost)new NetworkCredential(viewData.Config["WebmasterEmail"], viewData.Config["WebmasterEmailPassword"])
+                Credentials = new NetworkCredential(viewData.Config["WebmasterEmail"], viewData.Config["WebmasterEmailPassword"])
             };
 
             // Send the mail message
@@ -315,7 +353,7 @@ namespace OdysseyMvc2024.Controllers
             }
             catch (SmtpFailedRecipientsException exception)
             {
-                ErrorSignal.FromCurrentContext().Raise((Exception)exception);
+                ElmahExtensions.RaiseError(exception);
 
                 // TODO: Should we rename innerException to smtpFailedRecipientException?
                 foreach (SmtpFailedRecipientException innerException in exception.InnerExceptions)
@@ -328,16 +366,17 @@ namespace OdysseyMvc2024.Controllers
                             smtpClient.Send(mailMessage);
                             continue;
                         default:
-                            return string.Format("Failed to deliver message to {0}", (object)innerException.FailedRecipient);
+                            return string.Format("Failed to deliver message to {0}", innerException.FailedRecipient);
                     }
                 }
             }
             catch (SmtpException smtpException)
             {
-                ErrorSignal.FromCurrentContext().Raise((Exception)smtpException);
+                ElmahExtensions.RaiseError(smtpException);
                 return smtpException.StatusCode.ToString();
             }
-            return (string)null;
+
+            return null;
         }
 
         /// <summary>
@@ -353,8 +392,8 @@ namespace OdysseyMvc2024.Controllers
             viewData.RegionNumber = this.Repository.RegionNumber;
             viewData.TournamentInfo = this.Repository.TournamentInfo;
             viewData.FriendlyRegistrationName = this.FriendlyRegistrationName;
-            viewData.SiteName = this.DetermineSiteName();
-            viewData.PathToSiteCssFile = this.DetermineSiteCssFile();
+            viewData.SiteName = DetermineSiteName();
+            viewData.PathToSiteCssFile = DetermineSiteCssFile();
         }
 
         /// <summary>
@@ -367,9 +406,14 @@ namespace OdysseyMvc2024.Controllers
         [HttpGet]
         public ActionResult Soon()
         {
-            BaseViewData baseViewData = new BaseViewData();
-            this.SetBaseViewData(baseViewData);
-            return (ActionResult)this.View((object)baseViewData);
+            BaseViewData baseViewData = new(Repository)
+            {
+                Config = Repository.Config,
+                TournamentInfo = Repository.TournamentInfo
+            };
+
+            SetBaseViewData(baseViewData);
+            return View((object)baseViewData);
         }
 
         /// <summary>
@@ -386,22 +430,28 @@ namespace OdysseyMvc2024.Controllers
                 ////    return RegistrationState.Available;
                 ////}
 
-                this.SetBaseViewData(new BaseViewData());
+                BaseViewData baseViewData = new(Repository)
+                {
+                    Config = Repository.Config,
+                    TournamentInfo = Repository.TournamentInfo
+                };
+
+                SetBaseViewData(baseViewData);
 
                 // Is it too early to register?
-                if (this.IsRegistrationComingSoon(this.CurrentRegistrationType))
+                if (IsRegistrationComingSoon(this.CurrentRegistrationType))
                 {
                     return BaseRegistrationController.RegistrationState.Soon;
                 }
 
                 // Is registration temporarily disabled?
-                if (this.IsRegistrationDown(this.CurrentRegistrationType))
+                if (IsRegistrationDown(this.CurrentRegistrationType))
                 {
                     return BaseRegistrationController.RegistrationState.Down;
                 }
 
                 // Is it too late to register?
-                return this.IsRegistrationClosed(this.CurrentRegistrationType)
+                return IsRegistrationClosed(this.CurrentRegistrationType)
                     ? BaseRegistrationController.RegistrationState.Closed
                     : BaseRegistrationController.RegistrationState.Available;
             }
@@ -415,7 +465,7 @@ namespace OdysseyMvc2024.Controllers
         /// <summary>
         /// Gets or sets the friendly, i.e. displayable, registration name.
         /// </summary>
-        public string FriendlyRegistrationName { get; set; }
+        public required string FriendlyRegistrationName { get; set; }
 
         /// <summary>
         /// Determines the availability of a registration system.

@@ -41,10 +41,10 @@ namespace OdysseyMvc2024.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Config>().ToTable("Config");
+            modelBuilder.Entity<Config>().ToTable("Config").HasKey(c => c.Name);
             modelBuilder.Entity<ContactUsRecipient>().ToTable("ContactUsRecipient");
             modelBuilder.Entity<ContactUsSenderRole>().ToTable("ContactUsSenderRole");
-            modelBuilder.Entity<Event>().ToTable("Event");
+            modelBuilder.Entity<Event>().ToTable("Events");
             modelBuilder.Entity<Judge>().ToTable("Judge");
             modelBuilder.Entity<Problem>().ToTable("Problem");
             modelBuilder.Entity<School>().ToTable("School");

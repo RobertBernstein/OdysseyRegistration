@@ -21,47 +21,48 @@ using OdysseyMvc2024.Models;
 /// </summary>
 namespace OdysseyMvc2024.ViewData
 {
-    public class BaseViewData
+    public class BaseViewData(IOdysseyRepository repository)
     {
+
         /// <summary>
         /// Gets or sets the general configuration data for all registration types.
         /// </summary>
-        public Dictionary<string, string> Config { get; set; }
+        public required Dictionary<string, string> Config { get; set; } = repository.Config;
 
         /// <summary>
         /// Gets or sets the displayable registration name, e.g., "Tournament Registration" or "Judges Registration".
         /// </summary>
-        public string FriendlyRegistrationName { get; set; }
+        public string? FriendlyRegistrationName { get; set; }
 
         /// <summary>
         /// Gets or sets the path to the web site's CSS file based on which server this is hosted on, NoVA North or
         /// NoVA South.
         /// </summary>
-        public string PathToSiteCssFile { get; set; }
+        public string? PathToSiteCssFile { get; set; }
 
         /// <summary>
         /// Gets or sets the Odyssey of the Mind region name within Virginia, e.g., "NoVA North".
         /// </summary>
-        public string RegionName { get; set; }
+        public string? RegionName { get; set; }
 
         /// <summary>
         /// Gets or sets the Odyssey of the Mind region number within the state of Virginia, e.g., 9.
         /// </summary>
-        public string RegionNumber { get; set; }
+        public string? RegionNumber { get; set; }
 
-        public string SiteName { get; set; }
+        public string? SiteName { get; set; }
 
-        public string TournamentDate => this.TournamentInfo.StartDate.HasValue
+        public string? TournamentDate => this.TournamentInfo.StartDate.HasValue
             ? this.TournamentInfo.StartDate.Value.ToLongDateString()
             : "TBA";
 
-        public Event TournamentInfo { get; set; }
+        public required Event TournamentInfo { get; set; } = repository.TournamentInfo;
 
-        public string TournamentLocation => !string.IsNullOrWhiteSpace(this.TournamentInfo.Location)
+        public string? TournamentLocation => !string.IsNullOrWhiteSpace(this.TournamentInfo.Location)
             ? this.TournamentInfo.Location
             : "TBA";
 
-        public string TournamentTime => !string.IsNullOrWhiteSpace(this.TournamentInfo.Time)
+        public string? TournamentTime => !string.IsNullOrWhiteSpace(this.TournamentInfo.Time)
             ? this.TournamentInfo.Time
             : "TBA";
     }

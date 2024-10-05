@@ -7,6 +7,7 @@ builder.Services.AddSystemWebAdapters();
 builder.Services.AddHttpForwarder();
 
 builder.Services.AddScoped<IOdysseyEntities, OdysseyEntities>();
+builder.Services.AddScoped<IOdysseyRepository, OdysseyRepository>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();

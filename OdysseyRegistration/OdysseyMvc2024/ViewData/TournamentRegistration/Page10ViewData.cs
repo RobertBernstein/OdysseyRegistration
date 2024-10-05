@@ -13,6 +13,7 @@
 // MVID: 7B658547-521F-44CB-80FA-52857CB94B72
 // Assembly location: C:\Users\rob\OneDrive\Odyssey\OdysseyProd\registration\bin\OdysseyMvc4.dll
 
+using OdysseyMvc2024.Models;
 using System;
 
 namespace OdysseyMvc2024.ViewData.TournamentRegistration
@@ -20,7 +21,7 @@ namespace OdysseyMvc2024.ViewData.TournamentRegistration
     /// <summary>
     /// Backing data for Page 10 of the Tournament Registration wizard.
     /// </summary>
-    public class Page10ViewData : BaseViewData
+    public class Page10ViewData(IOdysseyRepository repository) : BaseViewData(repository)
     {
         public bool AcceptingPayPal
         {
@@ -32,19 +33,19 @@ namespace OdysseyMvc2024.ViewData.TournamentRegistration
             }
         }
 
-        public string Division { get; set; }
+        public string? Division { get; set; }
 
-        public string JudgeErrorMessage { get; set; }
+        public string? JudgeErrorMessage { get; set; }
 
-        public string JudgeFirstName { get; set; }
+        public string? JudgeFirstName { get; set; }
 
-        public string JudgeLastName { get; set; }
+        public string? JudgeLastName { get; set; }
 
-        public string MailBody { get; set; }
+        public string? MailBody { get; set; }
 
-        public string MailErrorMessage { get; set; }
+        public string? MailErrorMessage { get; set; }
 
-        public string PaymentDueDate
+        public string? PaymentDueDate
         {
             get
             {
@@ -53,16 +54,16 @@ namespace OdysseyMvc2024.ViewData.TournamentRegistration
             }
         }
 
-        public string ProblemName { get; set; }
+        public string? ProblemName { get; set; }
 
-        public string SchoolName { get; set; }
+        public string? SchoolName { get; set; }
 
-        public Models.TournamentRegistration TournamentRegistration { get; set; }
+        public required Models.TournamentRegistration TournamentRegistration { get; set; }
 
-        public string VolunteerErrorMessage { get; set; }
+        public string? VolunteerErrorMessage { get; set; }
 
-        public string VolunteerFirstName { get; set; }
+        public string? VolunteerFirstName { get; set; }
 
-        public string VolunteerLastName { get; set; }
+        public string? VolunteerLastName { get; set; }
     }
 }

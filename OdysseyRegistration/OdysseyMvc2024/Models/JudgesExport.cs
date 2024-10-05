@@ -30,117 +30,117 @@ namespace OdysseyMvc2024.Models
         /// <summary>
         /// Gets or sets the team id.
         /// </summary>
-        public string TeamId { get; set; }
+        public string? TeamId { get; set; }
 
         /// <summary>
         /// Gets or sets the first name.
         /// </summary>
-        public string FirstName { get; set; }
+        public string? FirstName { get; set; }
 
         /// <summary>
         /// Gets or sets the last name.
         /// </summary>
-        public string LastName { get; set; }
+        public string? LastName { get; set; }
 
         /// <summary>
         /// Gets or sets the address.
         /// </summary>
-        public string Address { get; set; }
+        public string? Address { get; set; }
 
         /// <summary>
         /// Gets or sets the address 2.
         /// </summary>
-        public string Address2 { get; set; }
+        public string? Address2 { get; set; }
 
         /// <summary>
         /// Gets or sets the city.
         /// </summary>
-        public string City { get; set; }
+        public string? City { get; set; }
 
         /// <summary>
         /// Gets or sets the state or province.
         /// </summary>
-        public string StateOrProvince { get; set; }
+        public string? StateOrProvince { get; set; }
 
         /// <summary>
         /// Gets or sets the postal code.
         /// </summary>
-        public string PostalCode { get; set; }
+        public string? PostalCode { get; set; }
 
         /// <summary>
         /// Gets or sets the daytime phone.
         /// </summary>
-        public string DaytimePhone { get; set; }
+        public string? DaytimePhone { get; set; }
 
         /// <summary>
         /// Gets or sets the evening phone.
         /// </summary>
-        public string EveningPhone { get; set; }
+        public string? EveningPhone { get; set; }
 
         /// <summary>
         /// Gets or sets the email.
         /// </summary>
-        public string Email { get; set; }
+        public string? Email { get; set; }
 
         /// <summary>
         /// Gets or sets the notes.
         /// </summary>
-        public string Notes { get; set; }
+        public string? Notes { get; set; }
 
         /// <summary>
         /// Gets or sets the when and where trained.
         /// </summary>
-        public string WhenAndWhereTrained { get; set; }
+        public string? WhenAndWhereTrained { get; set; }
 
         /// <summary>
         /// Gets or sets the problem conflict of interest 1.
         /// </summary>
-        public string ProblemConflictOfInterest1 { get; set; }
+        public string? ProblemConflictOfInterest1 { get; set; }
 
         /// <summary>
         /// Gets or sets the problem conflict of interest 2.
         /// </summary>
-        public string ProblemConflictOfInterest2 { get; set; }
+        public string? ProblemConflictOfInterest2 { get; set; }
 
         /// <summary>
         /// Gets or sets the problem conflict of interest 3.
         /// </summary>
-        public string ProblemConflictOfInterest3 { get; set; }
+        public string? ProblemConflictOfInterest3 { get; set; }
 
         /// <summary>
         /// Gets or sets the problem choice 1.
         /// </summary>
-        public string ProblemChoice1 { get; set; }
+        public string? ProblemChoice1 { get; set; }
 
         /// <summary>
         /// Gets or sets the problem choice 2.
         /// </summary>
-        public string ProblemChoice2 { get; set; }
+        public string? ProblemChoice2 { get; set; }
 
         /// <summary>
         /// Gets or sets the problem choice 3.
         /// </summary>
-        public string ProblemChoice3 { get; set; }
+        public string? ProblemChoice3 { get; set; }
 
         /// <summary>
         /// Gets or sets the t-shirt size.
         /// </summary>
-        public string TshirtSize { get; set; }
+        public string? TshirtSize { get; set; }
 
         /// <summary>
         /// Gets or sets the continuing education units.
         /// </summary>
-        public string ContinuingEducationUnits { get; set; }
+        public string? ContinuingEducationUnits { get; set; }
 
         /// <summary>
         /// Gets or sets the years of long-term judging experience.
         /// </summary>
-        public string YearsOfLongTermJudgingExperience { get; set; }
+        public string? YearsOfLongTermJudgingExperience { get; set; }
 
         /// <summary>
         /// Gets or sets the years of spontaneous judging experience.
         /// </summary>
-        public string YearsOfSpontaneousJudgingExperience { get; set; }
+        public string? YearsOfSpontaneousJudgingExperience { get; set; }
 
         /// <summary>
         /// Gets or sets the time registered.
@@ -160,6 +160,6 @@ namespace OdysseyMvc2024.Models
         /// <summary>
         /// Gets or sets the user agent.
         /// </summary>
-        public string UserAgent { get; set; }
+        public string? UserAgent { get; set; }
     }
 }

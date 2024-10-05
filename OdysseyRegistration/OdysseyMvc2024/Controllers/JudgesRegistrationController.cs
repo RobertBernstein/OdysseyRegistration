@@ -5,19 +5,16 @@
 // Assembly location: C:\Users\rob\OneDrive\Odyssey\OdysseyProd\registration\bin\OdysseyMvc4.dll
 
 using OdysseyMvc2024.ViewData;
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Net.Mail;
 using System.Text;
 using System.Text.RegularExpressions;
-using Elmah;
 using OdysseyMvc2024.Models;
 using OdysseyMvc2024.ViewData.JudgesRegistration;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using ElmahCore;
+using System;
 
 namespace OdysseyMvc2024.Controllers
 {
@@ -26,8 +23,8 @@ namespace OdysseyMvc2024.Controllers
         public JudgesRegistrationController(IOdysseyEntities context)
             : base(context)
         {
-            this.CurrentRegistrationType = BaseRegistrationController.RegistrationType.Judges;
-            this.FriendlyRegistrationName = this.GetFriendlyRegistrationName();
+            CurrentRegistrationType = BaseRegistrationController.RegistrationType.Judges;
+            FriendlyRegistrationName = GetFriendlyRegistrationName();
         }
 
         public string BuildMailRegionalDirectorHyperLink(Page01ViewData viewData)
@@ -42,7 +39,7 @@ namespace OdysseyMvc2024.Controllers
 
         protected string GenerateEmailBody(Page03ViewData page03ViewData)
         {
-            string input1 = Regex.Replace(Regex.Replace(Regex.Replace(Regex.Replace(page03ViewData.JudgesInfo.EventMailBody, "<span>JudgeID</span>", page03ViewData.Judge.JudgeID.ToString((IFormatProvider)CultureInfo.InvariantCulture)), "<span>FirstName</span>", page03ViewData.Judge.FirstName), "<span>LastName</span>", page03ViewData.Judge.LastName), "<span>Region</span>", "Region " + page03ViewData.Config["RegionNumber"]);
+            string input1 = Regex.Replace(Regex.Replace(Regex.Replace(Regex.Replace(page03ViewData.JudgesInfo.EventMailBody, "<span>JudgeID</span>", page03ViewData.Judge.JudgeID.ToString(CultureInfo.InvariantCulture)), "<span>FirstName</span>", page03ViewData.Judge.FirstName), "<span>LastName</span>", page03ViewData.Judge.LastName), "<span>Region</span>", "Region " + page03ViewData.Config["RegionNumber"]);
             StringBuilder stringBuilder = new StringBuilder();
             if (!string.IsNullOrWhiteSpace(page03ViewData.JudgesInfo.LocationURL))
                 stringBuilder.Append("<a href=\"" + page03ViewData.JudgesInfo.LocationURL + "\" target=\"_blank\">");
@@ -97,7 +94,8 @@ namespace OdysseyMvc2024.Controllers
 
         private static string GetPreviousPositions(Page02ViewData page02ViewData)
         {
-            StringBuilder stringBuilder = new StringBuilder();
+            // TODO: Add curly braces to all of this.
+            StringBuilder stringBuilder = new();
             if (page02ViewData.PreviouslyHeadJudge)
                 stringBuilder.Append("Head Judge");
             if (page02ViewData.PreviouslyProblemJudge)
@@ -113,93 +111,99 @@ namespace OdysseyMvc2024.Controllers
             if (page02ViewData.PreviouslyWeighInJudge)
                 stringBuilder.Append(";Weigh-In Judge");
             if (stringBuilder.Length <= 0)
-                return (string)null;
+                return null;
             if (stringBuilder[0] == ';')
                 stringBuilder.Remove(0, 1);
             return stringBuilder.ToString().Trim();
         }
 
         [HttpGet]
-        public ActionResult Index() => (ActionResult)this.RedirectToAction("Page01");
+        public ActionResult Index() => RedirectToAction("Page01");
 
         private void InitializePage02ViewData(Page02ViewData page02ViewData)
         {
-            page02ViewData.TshirtSizes = (IEnumerable<SelectListItem>)new SelectList((IEnumerable)Enumerable.Select((IEnumerable<string>)new string[6]
-            {
-        "S",
-        "M",
-        "L",
-        "XL",
-        "XXL",
-        "XXXL"
-            }, x =>
-            {
-                var data = new { value = x, text = x };
-                return data;
-            }), "value", "text");
-            page02ViewData.ProblemChoices = (IEnumerable<SelectListItem>)new SelectList((IEnumerable)this.Repository.ProblemChoices, "ProblemID", "ProblemName");
-            this.SetBaseViewData((BaseViewData)page02ViewData);
+            page02ViewData.TshirtSizes = (IEnumerable<SelectListItem>)new SelectList(Enumerable.Select((IEnumerable<string>)new string[6] { "S", "M", "L", "XL", "XXL", "XXXL" }, x => { var data = new { value = x, text = x }; return data; }), "value", "text");
+            page02ViewData.ProblemChoices = (IEnumerable<SelectListItem>)new SelectList(Repository.ProblemChoices, "ProblemID", "ProblemName");
+            SetBaseViewData(page02ViewData);
         }
 
         [HttpGet]
         public ActionResult Page01()
         {
-            if (this.CurrentRegistrationState != BaseRegistrationController.RegistrationState.Available)
-                return (ActionResult)this.RedirectToAction(this.CurrentRegistrationState.ToString());
-            Page01ViewData page01ViewData = new Page01ViewData()
+            if (CurrentRegistrationState != BaseRegistrationController.RegistrationState.Available)
+                return RedirectToAction(CurrentRegistrationState.ToString());
+
+            Page01ViewData page01ViewData = new Page01ViewData(Repository)
             {
-                JudgesInfo = this.Repository.JudgesInfo
+                Config = Repository.Config,
+                TournamentInfo = Repository.TournamentInfo,
+                JudgesInfo = Repository.JudgesInfo,
+
+                // TODO: Do I need to set these to actual values here?
+                MailRegionalDirectorHyperLink = string.Empty,
+                MailRegionalDirectorHyperLinkText = string.Empty
             };
-            this.SetBaseViewData((BaseViewData)page01ViewData);
-            page01ViewData.MailRegionalDirectorHyperLink = this.BuildMailRegionalDirectorHyperLink(page01ViewData);
+
+            SetBaseViewData(page01ViewData);
+            page01ViewData.MailRegionalDirectorHyperLink = BuildMailRegionalDirectorHyperLink(page01ViewData);
             page01ViewData.MailRegionalDirectorHyperLinkText = "send an e-mail to " + page01ViewData.Config["RegionalDirectorText"];
-            return (ActionResult)this.View((object)page01ViewData);
+            return View(page01ViewData);
         }
 
         [HttpPost]
         [ActionName("Page01")]
         public ActionResult Page01Post()
         {
-            if (this.CurrentRegistrationState != BaseRegistrationController.RegistrationState.Available)
-                return (ActionResult)this.RedirectToAction(this.CurrentRegistrationState.ToString());
+            if (CurrentRegistrationState != BaseRegistrationController.RegistrationState.Available)
+                return RedirectToAction(CurrentRegistrationState.ToString());
             try
             {
                 Judge newJudge = new Judge()
                 {
                     TimeRegistrationStarted = new DateTime?(DateTime.Now),
-                    UserAgent = this.Request.Headers["User-Agent"].ToString()
+                    UserAgent = Request.Headers["User-Agent"].ToString()
                 };
-                this.Repository.AddJudge(newJudge);
-                return (ActionResult)this.RedirectToAction("Page02", (object)new
+                Repository.AddJudge(newJudge);
+                return RedirectToAction("Page02", (object)new
                 {
                     id = newJudge.JudgeID
                 });
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                ErrorSignal.FromCurrentContext().Raise(ex);
-                return (ActionResult)this.RedirectToAction("Index", "Home");
+                ElmahExtensions.RaiseError(exception);
+                return RedirectToAction("Index", "Home");
             }
         }
 
         [HttpGet]
         public ActionResult Page02(int id)
         {
-            if (this.CurrentRegistrationState != BaseRegistrationController.RegistrationState.Available)
-                return (ActionResult)this.RedirectToAction(this.CurrentRegistrationState.ToString());
-            Page02ViewData page02ViewData = new Page02ViewData();
-            this.InitializePage02ViewData(page02ViewData);
-            return (ActionResult)this.View((object)page02ViewData);
+            if (CurrentRegistrationState != BaseRegistrationController.RegistrationState.Available)
+                return RedirectToAction(CurrentRegistrationState.ToString());
+
+            Page02ViewData page02ViewData = new Page02ViewData(Repository)
+            {
+                Config = Repository.Config,
+                TournamentInfo = Repository.TournamentInfo,
+
+                // TODO: These two cannot be set here like this. Find a better way.
+                TshirtSizes = (IEnumerable<SelectListItem>)new SelectList(Enumerable.Select((IEnumerable<string>)["S", "M", "L", "XL", "XXL", "XXXL"], x => { var data = new { value = x, text = x }; return data; }), "value", "text"),
+                ProblemChoices = (IEnumerable<SelectListItem>)new SelectList(Repository.ProblemChoices, "ProblemID", "ProblemName")
+            };
+
+            InitializePage02ViewData(page02ViewData);
+            return View(page02ViewData);
         }
 
         [HttpPost]
         public ActionResult Page02(int id, Page02ViewData page02ViewData)
         {
-            if (this.CurrentRegistrationState != BaseRegistrationController.RegistrationState.Available)
-                return (ActionResult)this.RedirectToAction(this.CurrentRegistrationState.ToString());
+            if (CurrentRegistrationState != BaseRegistrationController.RegistrationState.Available)
+                return RedirectToAction(CurrentRegistrationState.ToString());
             try
             {
-                if (this.ModelState.IsValid)
+                if (ModelState.IsValid)
                 {
                     Judge newRegistrationData = new Judge()
                     {
@@ -231,51 +235,55 @@ namespace OdysseyMvc2024.Controllers
                     };
                     if (string.IsNullOrWhiteSpace(newRegistrationData.EmailAddress))
                         newRegistrationData.EmailAddress = "None";
-                    this.Repository.UpdateJudge(id, 2, newRegistrationData);
-                    return (ActionResult)this.RedirectToAction("Page03", (object)new
+                    Repository.UpdateJudge(id, 2, newRegistrationData);
+                    return RedirectToAction("Page03", (object)new
                     {
                         id = id
                     });
                 }
-                this.InitializePage02ViewData(page02ViewData);
-                return (ActionResult)this.View((object)page02ViewData);
+                InitializePage02ViewData(page02ViewData);
+                return View(page02ViewData);
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                ErrorSignal.FromCurrentContext().Raise(ex);
-                return (ActionResult)this.RedirectToAction("Index", "Home");
+                ElmahExtensions.RaiseError(exception);
+                return RedirectToAction("Index", "Home");
             }
         }
 
         [HttpGet]
         public ActionResult Page03(int id)
         {
-            if (this.CurrentRegistrationState != BaseRegistrationController.RegistrationState.Available)
-                return (ActionResult)this.RedirectToAction(this.CurrentRegistrationState.ToString());
-            Page03ViewData page03ViewData = new Page03ViewData()
+            if (CurrentRegistrationState != BaseRegistrationController.RegistrationState.Available)
+                return RedirectToAction(CurrentRegistrationState.ToString());
+
+            Page03ViewData page03ViewData = new Page03ViewData(Repository)
             {
-                JudgesInfo = this.Repository.JudgesInfo
+                Config = Repository.Config,
+                TournamentInfo = Repository.TournamentInfo,
+                JudgesInfo = Repository.JudgesInfo
             };
-            this.SetBaseViewData((BaseViewData)page03ViewData);
-            page03ViewData.Judge = this.Repository.GetJudgeById(id).FirstOrDefault<Judge>();
+
+            SetBaseViewData(page03ViewData);
+            page03ViewData.Judge = Repository.GetJudgeById(id).FirstOrDefault<Judge>();
             if (page03ViewData.Judge == null)
             {
                 page03ViewData.ErrorMessage = "Your registration failed.  Please try the registration process over again.";
-                return (ActionResult)this.View((object)page03ViewData);
+                return View(page03ViewData);
             }
-            this.Repository.UpdateJudge(id, 3, page03ViewData.Judge);
-            page03ViewData.MailBody = this.GenerateEmailBody(page03ViewData);
+            Repository.UpdateJudge(id, 3, page03ViewData.Judge);
+            page03ViewData.MailBody = GenerateEmailBody(page03ViewData);
             if (!string.IsNullOrWhiteSpace(page03ViewData.Judge.EmailAddress) && page03ViewData.Judge.EmailAddress != "None")
             {
                 page03ViewData.EmailAddressWasSpecified = true;
-                MailMessage mailMessage = this.BuildMessage(page03ViewData.Config["WebmasterEmail"], page03ViewData.RegionName + " Odyssey Region " + page03ViewData.RegionNumber + " " + page03ViewData.FriendlyRegistrationName, page03ViewData.MailBody, page03ViewData.Judge.EmailAddress, (string)null, (string)null);
+                MailMessage mailMessage = BuildMessage(page03ViewData.Config["WebmasterEmail"], page03ViewData.RegionName + " Odyssey Region " + page03ViewData.RegionNumber + " " + page03ViewData.FriendlyRegistrationName, page03ViewData.MailBody, page03ViewData.Judge.EmailAddress, (string)null, (string)null);
                 if (mailMessage == null)
-                    return (ActionResult)this.RedirectToAction("BadEmail");
-                page03ViewData.MailErrorMessage = this.SendMessage((BaseViewData)page03ViewData, mailMessage);
+                    return RedirectToAction("BadEmail");
+                page03ViewData.MailErrorMessage = SendMessage(page03ViewData, mailMessage);
             }
             else
                 page03ViewData.EmailAddressWasSpecified = false;
-            return (ActionResult)this.View((object)page03ViewData);
+            return View(page03ViewData);
         }
 
         [HttpPost]
@@ -287,18 +295,24 @@ namespace OdysseyMvc2024.Controllers
           string restartRegistrationButton,
           FormCollection collection)
         {
-            if (this.CurrentRegistrationState != BaseRegistrationController.RegistrationState.Available)
-                return (ActionResult)this.RedirectToAction(this.CurrentRegistrationState.ToString());
+            if (CurrentRegistrationState != BaseRegistrationController.RegistrationState.Available)
+                return RedirectToAction(CurrentRegistrationState.ToString());
             if (!string.IsNullOrEmpty(restartRegistrationButton))
-                return (ActionResult)this.RedirectToAction("Page01");
+                return RedirectToAction("Page01");
             if (!string.IsNullOrEmpty(submitButton))
             {
-                this.Repository.UpdateJudgeEmail(id, collection["NewEmailTextBox"]);
-                return this.Page03(id);
+                Repository.UpdateJudgeEmail(id, collection["NewEmailTextBox"]);
+                return Page03(id);
             }
-            BaseViewData viewData = new BaseViewData();
-            this.SetBaseViewData(viewData);
-            return (ActionResult)new RedirectResult(viewData.Config["HomePage"]);
+
+            BaseViewData baseViewData = new(Repository)
+            {
+                Config = Repository.Config,
+                TournamentInfo = Repository.TournamentInfo
+            };
+
+            SetBaseViewData(baseViewData);
+            return new RedirectResult(baseViewData.Config["HomePage"]);
         }
     }
 }

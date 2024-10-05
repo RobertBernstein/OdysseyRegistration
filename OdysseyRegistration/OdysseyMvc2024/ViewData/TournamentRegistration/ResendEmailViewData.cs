@@ -13,18 +13,20 @@
 // MVID: 7B658547-521F-44CB-80FA-52857CB94B72
 // Assembly location: C:\Users\rob\OneDrive\Odyssey\OdysseyProd\registration\bin\OdysseyMvc4.dll
 
+using OdysseyMvc2024.Models;
+
 namespace OdysseyMvc2024.ViewData.TournamentRegistration
 {
     /// <summary>
     /// Backing data for the email that gets resent to the requester.
     /// </summary>
-    public class ResendEmailViewData : BaseViewData
+    public class ResendEmailViewData(IOdysseyRepository repository) : BaseViewData(repository)
     {
-        public string AltCoachCheckbox { get; set; }
+        public string? AltCoachCheckbox { get; set; }
 
-        public string CoachCheckbox { get; set; }
+        public string? CoachCheckbox { get; set; }
 
-        public string ErrorMessage { get; set; }
+        public string? ErrorMessage { get; set; }
 
         public bool Success { get; set; }
 

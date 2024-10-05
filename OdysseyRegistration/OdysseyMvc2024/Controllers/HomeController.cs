@@ -46,14 +46,19 @@ namespace OdysseyMvc2024.Controllers
         [HttpGet]
         public ActionResult Index()
         {
-            BaseViewData baseViewData = new BaseViewData();
-            this.SetBaseViewData(baseViewData);
+            BaseViewData baseViewData = new(Repository)
+            {
+                Config = Repository.Config,
+                TournamentInfo = Repository.TournamentInfo
+            };
 
-            this.ViewData["Message"] =
-                      (object)("Welcome to the " + this.repository.Config["RegionName"] + " Odyssey of the Mind Region " +
-                      this.repository.Config["RegionNumber"] + " Registration web pages.");
+            SetBaseViewData(baseViewData);
 
-            return (ActionResult)this.View((object)baseViewData);
+            ViewData["Message"] =
+                (object)("Welcome to the " + repository.Config["RegionName"] + " Odyssey of the Mind Region " +
+                repository.Config["RegionNumber"] + " Registration web pages.");
+
+            return View((object)baseViewData);
         }
     }
 }

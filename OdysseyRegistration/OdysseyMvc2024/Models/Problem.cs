@@ -10,42 +10,42 @@ namespace OdysseyMvc2024.Models
     {
         public int ProblemID { get; set; }
 
-        public string ProblemCategory { get; set; }
+        public string? ProblemCategory { get; set; }
 
-        public string ProblemName { get; set; }
+        public string? ProblemName { get; set; }
 
-        public string ProblemDescription { get; set; }
+        public string? ProblemDescription { get; set; }
 
-        public string Divisions { get; set; }
+        public string? Divisions { get; set; }
 
-        public string CostLimit { get; set; }
+        public string? CostLimit { get; set; }
 
-        public string ProblemCaptainID { get; set; }
+        public string? ProblemCaptainID { get; set; }
 
-        public string PCFirstName { get; set; }
+        public string? PCFirstName { get; set; }
 
-        public string PCLastName { get; set; }
+        public string? PCLastName { get; set; }
 
-        public string PCAddress { get; set; }
+        public string? PCAddress { get; set; }
 
-        public string PCCity { get; set; }
+        public string? PCCity { get; set; }
 
-        public string PCStateOrProvince { get; set; }
+        public string? PCStateOrProvince { get; set; }
 
-        public string PCPostalCode { get; set; }
+        public string? PCPostalCode { get; set; }
 
-        public string PCWorkPhone { get; set; }
+        public string? PCWorkPhone { get; set; }
 
-        public string PCHomePhone { get; set; }
+        public string? PCHomePhone { get; set; }
 
-        public string PCMobilePhone { get; set; }
+        public string? PCMobilePhone { get; set; }
 
-        public string PCFaxNumber { get; set; }
+        public string? PCFaxNumber { get; set; }
 
-        public string PCEmail1 { get; set; }
+        public string? PCEmail1 { get; set; }
 
-        public string PCEmail2 { get; set; }
+        public string? PCEmail2 { get; set; }
 
-        public string Notes { get; set; }
+        public string? Notes { get; set; }
     }
 }
