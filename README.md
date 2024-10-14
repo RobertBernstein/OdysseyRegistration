@@ -277,6 +277,11 @@ I modified our /wp/wp-config.php file to point to the new MySQL 8.x database.
 ## 10/13/2024
 
 1. Used EF Core Power Tools to reverse engineer the Odyssey Registration database.
+1. To export data from the current SQL database as JSON, run a query like the following in SSMS:
+
+    ```sql
+    SELECT * FROM Schools FOR JSON AUTO
+    ```
 1. Add a link like `entity.HasData(SeedHelper.SeedData<School>("Schools.json"));` to the `modelBuilder.Entity<School>()` code within the `OnModelCreating` method in the `OdysseyContext` class.
 1. Added EF migrations using the Developer PowerShell for VS 2022 window.
 1. Used the following commands:
