@@ -273,3 +273,16 @@ mysql -u vaodyssey -p mysql_12824_wordpress24 -h my06.winhost.com < dump.sql
 ## 08/24/2024
 
 I modified our /wp/wp-config.php file to point to the new MySQL 8.x database.
+
+## 10/13/2024
+
+1. Used EF Core Power Tools to reverse engineer the Odyssey Registration database.
+1. Add a link like `entity.HasData(SeedHelper.SeedData<School>("Schools.json"));` to the `modelBuilder.Entity<School>()` code within the `OnModelCreating` method in the `OdysseyContext` class.
+1. Added EF migrations using the Developer PowerShell for VS 2022 window.
+1. Used the following commands:
+    1. dotnet ef migrations add InitialCreate
+    1. dotnet ef database update
+    1. dotnet ef migrations add UpdateConfigSeedData
+    1. dotnet ef database update
+    1. dotnet ef migrations add UpdateSchoolsSeedData
+    1. dotnet ef database update
