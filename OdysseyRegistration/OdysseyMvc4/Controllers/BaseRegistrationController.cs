@@ -259,6 +259,7 @@ namespace OdysseyMvc4.Controllers
 
             try
             {
+                // TODO: (Rob) Add a check for leap year dates, other invalid dates.
                 registrationCloseDateTime = DateTime.Parse(viewData.Config[registrationType + "RegistrationCloseDateTime"]);
             }
             catch (Exception)

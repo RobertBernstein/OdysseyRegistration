@@ -291,3 +291,20 @@ I modified our /wp/wp-config.php file to point to the new MySQL 8.x database.
     1. dotnet ef database update
     1. dotnet ef migrations add UpdateSchoolsSeedData
     1. dotnet ef database update
+    1. dotnet ef migrations add UpdateEventSeedData
+    1. dotnet ef database update
+    1. dotnet ef migrations add UpdateProblemSeedData
+    1. dotnet ef database update
+
+## 10/15/2024
+
+1. Don't forget that the Problem table Id had to start at 1 where it used to start at 0. So, the code needs to be updated to handle this.
+
+## 11/09/2024
+
+1. Add https://github.com/sweetalert2/sweetalert2 to replace alerts.
+
+## 11/17/2024
+
+[ ] 1. Mandatory: Add the membership name and number to the tournament registration email sent to the coach.
+[ ] 1. Preferable: Populate the membership name and number from the schools table into the tournament registration table at the time of registration.

@@ -26,6 +26,10 @@ Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-co
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OdysseyMvc2024", "OdysseyMvc2024\OdysseyMvc2024.csproj", "{59A17AF8-FF3A-4A9D-8E8F-2479B4A2A9DC}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JudgeRegistrationRazor", "..\JudgeRegistrationRazor\JudgeRegistrationRazor.csproj", "{41FB3D72-98A3-4F4D-9B5D-CFD8FDAEBFC5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EFCoreToolReverseEngineeringTest", "..\EFCoreToolReverseEngineeringTest\EFCoreToolReverseEngineeringTest.csproj", "{B84AC63A-C009-4732-A241-F983288917FE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -61,6 +65,14 @@ Global
 		{59A17AF8-FF3A-4A9D-8E8F-2479B4A2A9DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{59A17AF8-FF3A-4A9D-8E8F-2479B4A2A9DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{59A17AF8-FF3A-4A9D-8E8F-2479B4A2A9DC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{41FB3D72-98A3-4F4D-9B5D-CFD8FDAEBFC5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{41FB3D72-98A3-4F4D-9B5D-CFD8FDAEBFC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{41FB3D72-98A3-4F4D-9B5D-CFD8FDAEBFC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{41FB3D72-98A3-4F4D-9B5D-CFD8FDAEBFC5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B84AC63A-C009-4732-A241-F983288917FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B84AC63A-C009-4732-A241-F983288917FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B84AC63A-C009-4732-A241-F983288917FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B84AC63A-C009-4732-A241-F983288917FE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

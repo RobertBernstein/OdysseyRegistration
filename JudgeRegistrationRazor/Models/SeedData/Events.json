@@ -1,0 +1,121 @@
+﻿[
+    {
+        "Id": 10,
+        "EventName": "Coordinators Meeting",
+        "LocationURL": "http:\/\/www.fairfaxcounty.gov\/library\/branches\/ch\/direct.htm",
+        "LocationURLColor": "#FFFF00",
+        "StartDate": "2019-09-26T00:00:00",
+        "Location": "Dolley Madison Library",
+        "Time": "7:00 to 8:30 PM"
+    },
+    {
+        "Id": 20,
+        "EventName": "Coordinators Meeting #2",
+        "LocationURL": "http:\/\/www.fairfaxcounty.gov\/library\/BRANCHES\/po\/",
+        "LocationURLColor": "#FFFF00",
+        "StartDate": "2009-10-21T00:00:00",
+        "Location": "Pohick Regional Library conference room",
+        "Time": "6:45 to 7:45 PM"
+    },
+    {
+        "Id": 30,
+        "EventName": "Coaches' Training",
+        "LocationURL": "http:\/\/www.fcps.edu\/HughesMS\/",
+        "LocationURLColor": "#FFFF00",
+        "StartDate": "2018-10-20T00:00:00",
+        "Location": "MITRE CORP",
+        "Time": "Check-in begins at 8:30 am. Program runs from 9:00 am to 4:30 pm.",
+        "EventCost": "20.00",
+        "EventMakeChecksOutTo": "NoVA North Odyssey of the Mind",
+        "EventMailBody": "<p><strong>Thank you for being an Odyssey coach!<\/strong><\/p><p>You are registered for:<\/p><div><strong>Coaches Training in NoVA South (<span>Region<\/span>)<\/strong><\/div>    <li><strong>Location:<\/strong> <span>Location<\/span><\/li>   <li><b>Date: <\/b><span>Date<\/span><\/li>    <li><b>Time: <\/b><span>Time<\/span><\/li><\/ul><p>Please remember to bring the following:<\/p><ul>    <li>Lunch (we will provide beverages),<\/li>    <li>a copy of the <span>Years<\/span> Program Guide (available at <span>ProgramGuide<\/span>),<\/li>    <span>VirginiaHandbook<\/span>    <li>A check for $<span>Fee<\/span> made payable to \"<span>MakeChecksOutTo<\/span>\".        <span>CoordinatorsDoNotPay<\/span>    <\/li><\/ul><p>We look forward to seeing you there.<\/p><p>    If you have any questions or need to discuss anything regarding your registration,contact <span>RegionalDirectorEmail<\/span>.<\/p>"
+    },
+    {
+        "Id": 60,
+        "EventName": "Regional Tournament Team Registration Deadline",
+        "LocationState": "VA",
+        "StartDate": "2024-01-15T00:00:00",
+        "EndDate": "2024-01-15T00:00:00",
+        "Time": "11 PM"
+    },
+    {
+        "Id": 70,
+        "EventName": "Coaches Q&A",
+        "LocationURL": "http:\/\/tinyurl.com\/4dlmc2u",
+        "LocationURLColor": "#FFFF00",
+        "LocationAddress": "13625 Eds Blvd",
+        "LocationCity": "Herndon",
+        "LocationState": "VA",
+        "StartDate": "2023-12-02T00: 00: 00",
+        "EndDate": "2023-12-03T00: 00: 00",
+        "Location": "Sully District Community Rooms",
+        "Time": "9: 30 AM to 12: 45 PM,1 PM - 4 PM",
+        "EventCoordinatorName": "Michelle O'Brien",
+        "EventCoordinatorEmail": "director@novanorth.org"
+    },
+    {
+        "Id": 90,
+        "EventName": "Judges Training",
+        "LocationURLColor": "#FFFF00",
+        "LocationAddress": "6801 Union Mill Road",
+        "LocationCity": "Clifton",
+        "LocationState": "VA",
+        "StartDate": "2024-02-10T00: 00: 00",
+        "EndDate": "2024-02-10T00: 00: 00",
+        "Location": "Liberty Middle School",
+        "Time": "8: 30 AM - 2 PM",
+        "EventCoordinatorName": "Margaret Eccles",
+        "EventCoordinatorEmail": "judgescoordinator@novanorth.org",
+        "EventMailBody": "<div id=\"contentstart\"><p style=\"text-align: center\"><b>You have been assigned Judge ID <span>JudgeID<\/span><\/b><\/p>\r\n<p><b>Congratulations, your judge registration is complete.&nbsp; Please print this page for your records.<\/b><\/p>\r\n<p>Our system has registered you with the following information: \r\n<ul><li>Judge ID:   <span>JudgeID<\/span><\/li>\r\n<li>First Name: <span>FirstName<\/span><\/li>\r\n<li>Last Name:  <span>LastName<\/span><\/li>\r\n<\/ul>\r\n<p>Should a coach request that you be a judge for their team, please provide them with all of this information.&nbsp; \r\nPlease do not give out your ID number to more than one team since you may only judge on behalf of <b>ONE<\/b> team.<\/p>\r\n<p>As a reminder, you have agreed to attend the following two events:<\/p>\r\n<ul><li><b>Region <span>Region<\/span> Odyssey of the Mind Judges Training<\/b><br \/><br \/>\r\n<ul><li> <b>Location:<\/b> <span>JudgesTrainingLocation<\/span><\/li>\r\n<li> <b>Date:<\/b> <span>JudgesTrainingDate<\/span><\/li>\r\n<li> <b>Time:<\/b> <span>JudgesTrainingTime<\/span><\/li>\r\n<\/ul><\/li><\/ul>\r\n\r\n<ul>\r\n<li>\r\n<b>Region <span>Region<\/span> Odyssey of the Mind Tournament<\/b><br \/><br \/>\r\n<ul>\r\n<li> <b>Location:<\/b> <span>TournamentLocation<\/span><\/li>\r\n<li> <b>Date:<\/b> <span>TournamentDate<\/span><\/li>\r\n<li> <b>Time:<\/b> <span>TournamentTime<\/span><\/li>\r\n<\/ul>\r\n<\/li>\r\n<\/ul>\r\n\r\n<p>In February, you will receive information about Judges Training which will include the problem you have been\r\nassigned to and any other information that you will need.<\/p>\r\n<p>We will serve breakfast on the morning of Judges Training, including coffee and juice. &nbsp;Breakfast typically \r\nconsists of bagels and muffins. &nbsp;<span style=\"font-weight: bold;\">You will need to bring a packed lunch to Judges\r\nTraining.<\/span> &nbsp;At the tournament, we will provide breakfast and lunch for judges.<\/p>\r\n<p>If you have any questions or find you cannot attend either judges training or the tournament, please use our \r\n<a href=\"<span>ContactUsURL<\/span>\" target=\"_blank\">Contact Us<\/a> page to reach the Judges Coordinator.<\/p>\r\n\r\n<p>If you agreed to judge on behalf of a team and find that you cannot attend either Judges Training or the tournament, you must contact the \r\ncoach and advise him\/her so that the team knows they need to find another judge.<\/p>\r\n\r\n<p>We invite you to explore our web site at <a href=\"http:\/\/www.novanorth.org\" target=\"_blank\">www.novanorth.org<\/a> to learn more about Odyssey of the Mind and the NoVA North Region.\r\nA good starting point are these two brief videos:<p>\r\n<ul>\r\n<li><a href=\"http:\/\/www.novanorth.org\/wp\/?page_id=2827\" target=\"_blank\">A Creative Experience<\/a> (http:\/\/www.novanorth.org\/wp\/?page_id=2827)<\/li>\r\n<li><a href=\"http:\/\/www.novanorth.org\/wp\/?page_id=2913\" target=\"_blank\">The Basics of the Program<\/a> (http:\/\/www.novanorth.org\/wp\/?page_id=2913)<\/li>\r\n<\/ul>\r\n\r\n<p>Our NoVA North Regional Board has a few openings for those who would like to become more involved. &nbsp;Please\r\ncontact our Regional Director through our <a href=\"<span>ContactUsURL<\/span>\" target=\"_blank\">Contact Us<\/a> page if\r\nyou are interested or would like further information.<\/p>\r\n\r\n<p align=\"center\"><b>You have been assigned Judge ID <span>JudgeID<\/span><\/b><\/p>\r\n<\/div>\r\n"
+    },
+    {
+        "Id": 95,
+        "EventName": "Volunteer Registration",
+        "EventMailBody": "<div id=\"contentstart\"><p style=\"text-align: center\"><b>You have been assigned Volunteer ID <span>VolunteerID<\/span>.<\/b><\/p>\r\n<p><b>Congratulations, your volunteer registration is complete.&nbsp; Please print this page for your records.<\/b><\/p>\r\n<p>Our system has registered you with the following information: \r\n<ul><li>Volunteer ID:   <span>VolunteerID<\/span><\/li>\r\n<li>First Name: <span>FirstName<\/span><\/li>\r\n<li>Last Name:  <span>LastName<\/span><\/li>\r\n<\/ul>\r\n<p>Our Volunteer Coordinator will reach out to you in late January\/early February to clarify your scheduled volunteer time and assignment.<\/p>\r\n<p>Volunteers will be responsible for their own breakfast and lunch at the tournament.<\/p>\r\n<p>Should a coach request that you be a volunteer for their team, please provide them with all of this information.&nbsp; \r\nPlease do not give out your ID number to more than one team since you may only volunteer on behalf of <b>ONE<\/b> team.<\/p>\r\n<p>As a reminder, you have agreed to attend the following event:<\/p>\r\n\r\n<ul>\r\n<li>\r\n<b>Region <span>Region<\/span> Odyssey of the Mind Tournament<\/b><br \/><br \/>\r\n<ul>\r\n<li> <b>Location:<\/b> <span>TournamentLocation<\/span><\/li>\r\n<li> <b>Date:<\/b> <span>TournamentDate<\/span><\/li>\r\n<li> <b>Time:<\/b> <span>TournamentTime<\/span><\/li>\r\n<\/ul>\r\n<\/li>\r\n<\/ul>\r\n\r\n<p>If you have any questions or find you cannot attend the tournament, please use our \r\n<a href=\"<span>ContactUsURL<\/span>\" target=\"_blank\">Contact Us<\/a> page to reach the Volunteer Coordinator.<\/p>\r\n\r\n<p>If you agreed to volunteer on behalf of a team and find that you cannot attend the tournament, you must contact the\r\ncoach and advise him\/her so that the team knows they need to find another volunteer.<\/p>\r\n\r\n<p>We invite you to explore our web site at <a href=\"http:\/\/www.novanorth.org\" target=\"_blank\">www.novanorth.org<\/a> to learn more about Odyssey of the Mind and the NoVA North Region.\r\nA good starting point are these two brief videos:<p>\r\n<ul>\r\n<li><a href=\"http:\/\/www.novanorth.org\/wp\/?page_id=2827\" target=\"_blank\">A Creative Experience<\/a> (http:\/\/www.novanorth.org\/wp\/?page_id=2827)<\/li>\r\n<li><a href=\"http:\/\/www.novanorth.org\/wp\/?page_id=2913\" target=\"_blank\">The Basics of the Program<\/a> (http:\/\/www.novanorth.org\/wp\/?page_id=2913)<\/li>\r\n<\/ul>\r\n<p>Our NoVA North Regional Board has a few openings for those who would like to become more involved. &nbsp;Please\r\ncontact our Regional Director through our <a href=\"<span>ContactUsURL<\/span>\" target=\"_blank\">Contact Us<\/a> page if\r\nyou are interested or would like further information.<\/p>\r\n\r\n<p align=\"center\"><b>You have been assigned Volunteer ID <span>VolunteerID<\/span>.<\/b><\/p>\r\n<\/div>\r\n"
+    },
+    {
+        "Id": 100,
+        "EventName": "NoVA North Regional Tournament",
+        "LocationURLColor": "#FFFF00",
+        "LocationAddress": "2900 Sutton Road",
+        "LocationCity": "Vienna",
+        "LocationState": "VA",
+        "StartDate": "2023-03-02T08:00:00",
+        "Location": "Oakton High School",
+        "Time": "8 AM to 5 PM",
+        "EventCoordinatorName": "Michelle O'Brien",
+        "EventCoordinatorEmail": "director@novanorth.org",
+        "EventPayeeName": "Nova North, Inc.",
+        "EventPayeeAddress1": "PO Box 302",
+        "EventPayeeCity": "Oakton",
+        "EventPayeeState": "VA",
+        "EventPayeeZipCode": "22124",
+        "EventPayeeEmail1": "treasurer@novanorth.org",
+        "EventCost": "90",
+        "PaymentDueDate": "2023-01-31",
+        "EventMakeChecksOutTo": "NoVA North Odyssey of the Mind",
+        "EventMailBody": "<div id=contentstart>\r\n    <p style=\"text-align: center\"><b>You have been assigned Team ID <span>TeamID<\/span><\/b><\/p>\r\n    <p>Dear Coach <span>CoachLastName<\/span>,<\/p>\r\n    <p>\r\n        You have registered the team listed below.&nbsp; Your judge is listed below,\r\n        as well.&nbsp; Please remind your judge that the team is counting on him or her\r\n        to attend both Judges Training and the Regional Tournament.<br \/>\r\n\r\n    <\/p>\r\n    <p>\r\n        We recommend that you print this page and keep it for your records. &nbsp;If you need to change any information\r\n        that you entered during your registration,\r\n        please send an e-mail to the Webmaster for this site and include your Team ID # from this registration.\r\n    <\/p>\r\n\r\n    <p>\r\n        <b>\r\n            For this registration to be complete, the treasurer must\r\n            <span style=\"text-decoration: underline\">receive<\/span> payment of the team’s <span>EventCost<\/span> <span>FriendlyRegistrationName<\/span>\r\n            fee no later than <span>PaymentDueDate<\/span>\r\n        <\/b>. &nbsp;Payment must be by check, made out to &quot;<span>EventMakeChecksOutTo<\/span>&quot;,\r\n        and mailed to the address below. &nbsp;Please put your team ID number (see top of this page) on the check. &nbsp;If your team’s\r\n        <span>FriendlyRegistrationName<\/span> fee is being paid as one of a group of teams (for example, the school PTA is\r\n        paying for all teams) be sure to advise your school coordinator of your team’s ID number so that all team ID numbers\r\n        can be included on the group check.\r\n    <\/p>\r\n\r\n    <p>Mail your payment to:<\/p>\r\n    <blockquote>\r\n        <span>EventPayeeName<\/span><br \/>\r\n        <span>EventPayeeAddress1<\/span><br \/>\r\n        <span>EventPayeeAddress2<\/span><br \/>\r\n        <span>EventPayeeCity<\/span>, <span>EventPayeeState<\/span> <span>EventPayeeZipCode<\/span>\r\n    <\/blockquote>\r\n\r\n    <p>\r\n        You may also contact the Treasurer from our <a href=\"<span>ContactUsURL<\/span>\" target=\"_blank\">Contact Us<\/a> page.\r\n    <\/p>\r\n\r\n    <p>Please do not request a receipt from the Treasurer. &nbsp;Your cancelled check is your payment receipt.<\/p>\r\n\r\n    <p>Thanks for signing up!<\/p>\r\n\r\n    <table border='0' cellpadding='0' cellspacing='0' style='border-collapse: collapse' id='AutoNumber16' width='736'>\r\n        <tr>\r\n            <td width='736' colspan='2' align='center'><hr \/><\/td>\r\n        <tr>\r\n            <td width='736' colspan='2' align='center'><b>Your School:<\/b><\/td>\r\n        <tr>\r\n            <td width='305'><br \/><b>Name:<\/b><\/td>\r\n            <td width='431'>\r\n                <span>SchoolName<\/span>\r\n        <\/tr>\r\n        <tr>\r\n            <td width='736' colspan='2'>\r\n                <hr \/>\r\n            <\/td>\r\n        <\/tr>\r\n        <tr>\r\n            <td colspan='2'><p align='center'><b>Your Team:<\/b><\/td>\r\n        <\/tr>\r\n        <tr>\r\n            <td width='304'><br \/><b>Name:<\/b><\/td>\r\n            <td rowspan='2'>\r\n                <u>\r\n                    <br \/><b>\r\n                        Official team names and membership numbers will be announced\r\n                        in the Tournament Schedule when it is posted on the regional web site.\r\n                    <\/b>\r\n                <\/u><br \/>\r\n            <\/td>\r\n        <\/tr>\r\n        <tr>\r\n            <td width='304'><b>Membership Number:<\/b><\/td>\r\n        <\/tr>\r\n        <tr>\r\n            <td width='304'><b>Division:<\/b><\/td>\r\n            <td width='185'>\r\n                <span>Division<\/span>\r\n            <\/td>\r\n        <\/tr>\r\n        <span>SpontaneousOrProblemName<\/span>\r\n        <tr>\r\n            <td colspan='2'><hr \/><\/td>\r\n        <\/tr>\r\n        <tr>\r\n            <td width='736' colspan='2'>\r\n                <p align='center'><b>Your Judge:<\/b>\r\n            <\/td>\r\n        <\/tr>\r\n        <tr>\r\n            <td width='305'>\r\n                <br \/><b>ID Number:<\/b>\r\n            <\/td>\r\n            <td width='431'><br \/><span>JudgeID<\/span><\/td>\r\n        <\/tr>\r\n        <tr>\r\n            <td width='305'>\r\n                <b>First Name:<\/b>\r\n            <\/td>\r\n            <td width='431'><span>JudgeFirstName<\/span><\/td>\r\n        <\/tr>\r\n        <tr>\r\n            <td width='305'>\r\n                <b>Last Name:<\/b>\r\n            <\/td>\r\n            <td width='431'><span>JudgeLastName<\/span><\/td>\r\n        <\/tr>\r\n        <tr>\r\n            <td colspan='2'><hr \/><\/td>\r\n        <\/tr>\r\n        <td colspan='2'>\r\n            <p align='center'><b>Your Volunteer:<\/b>\r\n        <\/td>\r\n        <tr>\r\n            <td width='305'>\r\n                <br \/><b>ID Number:<\/b>\r\n            <\/td>\r\n            <td width='431'><br \/><span>VolunteerID<\/span><\/td>\r\n        <\/tr>\r\n        <tr>\r\n            <td width='305'><b>First Name:<\/b><\/td>\r\n            <td width='431'><span>VolunteerFirstName<\/span><\/td>\r\n        <\/tr>\r\n        <tr>\r\n            <td width='305'><b>Last Name:<\/b><\/td>\r\n            <td width='431'><span>VolunteerLastName<\/span><\/td>\r\n        <\/tr>\r\n        <tr>\r\n            <td colspan='2'><hr \/><\/td>\r\n        <\/tr>\r\n        <tr>\r\n            <td colspan='2'>\r\n                <p align='center'><b>Your Coach:<\/b>\r\n            <\/td>\r\n        <\/tr>\r\n        <tr>\r\n            <td>\r\n                <br \/><b>First Name:<\/b>\r\n            <\/td>\r\n            <td><br \/><span>CoachFirstName<\/span><\/td>\r\n        <\/tr>\r\n        <tr>\r\n            <td>\r\n                <b>Last Name:<\/b>\r\n            <\/td>\r\n            <td><span>CoachLastName<\/span><\/td>\r\n        <\/tr>\r\n        <tr>\r\n            <td>\r\n                <b>Address:<\/b>\r\n            <\/td>\r\n            <td><span>CoachAddress<\/span><\/td>\r\n        <\/tr>\r\n        <tr>\r\n            <td>\r\n                <b>City:<\/b>\r\n            <\/td>\r\n            <td><span>CoachCity<\/span><\/td>\r\n        <\/tr>\r\n        <tr>\r\n            <td>\r\n                <b>State:<\/b>\r\n            <\/td>\r\n            <td><span>CoachState<\/span><\/td>\r\n        <\/tr>\r\n        <tr>\r\n            <td>\r\n                <b>Zip Code:<\/b>\r\n            <\/td>\r\n            <td><span>CoachZipCode<\/span><\/td>\r\n        <\/tr>\r\n        <tr>\r\n            <td>\r\n                <b>Evening Phone:<\/b>\r\n            <\/td>\r\n            <td><span>CoachEveningPhone<\/span><\/td>\r\n        <\/tr>\r\n        <tr>\r\n            <td>\r\n                <b>Daytime Phone:<\/b>\r\n            <\/td>\r\n            <td><span>CoachDaytimePhone<\/span><\/td>\r\n        <\/tr>\r\n        <tr>\r\n            <td>\r\n                <b>Mobile Phone:<\/b>\r\n            <\/td>\r\n            <td><span>CoachMobilePhone<\/span><\/td>\r\n        <\/tr>\r\n        <tr>\r\n            <td width='304'>\r\n                <b>E-mail:<\/b>\r\n            <\/td>\r\n            <td><span>CoachEmailAddress<\/span><\/td>\r\n        <\/tr>\r\n        <tr>\r\n            <td colspan='2'><hr \/><\/td>\r\n        <\/tr>\r\n\r\n        <tr>\r\n            <td colspan='2'><p align='center'><b>Your Alternate Coach:<\/b><\/td>\r\n        <\/tr>\r\n        <tr>\r\n            <td width='304'><br \/><b>First Name:<\/b><\/td>\r\n            <td><br \/><span>AltCoachFirstName<\/span><\/td>\r\n        <\/tr>\r\n        <tr>\r\n            <td>\r\n                <b>Last Name:<\/b>\r\n            <\/td>\r\n            <td><span>AltCoachLastName<\/span><\/td>\r\n        <\/tr>\r\n        <tr>\r\n            <td>\r\n                <b>Evening Phone:<\/b>\r\n            <\/td>\r\n            <td><span>AltCoachEveningPhone<\/span><\/td>\r\n        <\/tr>\r\n        <tr>\r\n            <td>\r\n                <b>Daytime Phone:<\/b>\r\n            <\/td>\r\n            <td><span>AltCoachDaytimePhone<\/span><\/td>\r\n        <\/tr>\r\n        <tr>\r\n            <td>\r\n                <b>Mobile Phone:<\/b>\r\n            <\/td>\r\n            <td><span>AltCoachMobilePhone<\/span><\/td>\r\n        <\/tr>\r\n        <tr>\r\n            <td>\r\n                <b>E-mail:<\/b>\r\n            <\/td>\r\n            <td><span>AltCoachEmailAddress<\/span><\/td>\r\n        <\/tr>\r\n        <tr>\r\n            <td colspan='2' style=\"text-align: center\">\r\n                <hr \/>\r\n            <\/td>\r\n        <\/tr>\r\n        <span>FirstTeamMember<\/span>\r\n        <span>SecondTeamMember<\/span>\r\n        <span>ThirdTeamMember<\/span>\r\n        <span>FourthTeamMember<\/span>\r\n        <span>FifthTeamMember<\/span>\r\n        <span>SixthTeamMember<\/span>\r\n        <span>SeventhTeamMember<\/span>\r\n\r\n        <tr>\r\n            <td width='736' colspan='2' style=\"text-align: center\"><b>Scheduling Issues:<\/b><\/td>\r\n        <\/tr>\r\n        <tr>\r\n            <td colspan='2'>\r\n                <br \/>\r\n                <span>SchedulingIssues<\/span>\r\n            <\/td>\r\n        <\/tr>\r\n        <tr><td colspan='2'><hr \/><\/td><\/tr>\r\n        <tr>\r\n            <td width='736' colspan='2' style=\"text-align: center\"><b>Special Considerations:<\/b><\/td>\r\n        <\/tr>\r\n        <tr>\r\n            <td colspan='2'>\r\n                <br \/>\r\n                <span>SpecialConsiderations<\/span>\r\n            <\/td>\r\n        <\/tr>\r\n    <\/table>\r\n\r\n    <p style=\"text-align: center\"><b>You have been assigned Team ID <span>TeamID<\/span><\/b><\/p>\r\n<\/div>"
+    },
+    {
+        "Id": 110,
+        "EventName": "Virginia State Tournament",
+        "LocationAddress": "801 N King St",
+        "LocationCity": "Leesburg",
+        "LocationState": "VA",
+        "StartDate": "2023-04-15T00:00:00",
+        "Location": "Tuscarora High School",
+        "Time": "All Day"
+    },
+    {
+        "Id": 120,
+        "EventName": "Odyssey of the Mind World Finals",
+        "LocationURL": "https:\/\/www.iastate.edu\/",
+        "LocationURLColor": "#FFFF00",
+        "LocationAddress": "2229 Lincoln Way",
+        "LocationCity": "Ames",
+        "LocationState": "IA",
+        "StartDate": "2023-05-24T00:00:00",
+        "EndDate": "2023-05-27T00:00:00",
+        "Location": "Iowa State University",
+        "Time": "All Day"
+    }
+]

@@ -1,0 +1,119 @@
+﻿[
+    {
+        "Id": 1,
+        "Name": "AcceptingPayPal",
+        "Value": "True"
+    },
+    {
+        "Id": 2,
+        "Name": "CoachesHandbookURL",
+        "Value": ""
+    },
+    {
+        "Id": 3,
+        "Name": "CoachesTrainingRegistrationCloseDateTime",
+        "Value": "2013-11-08 22:00"
+    },
+    {
+        "Id": 4,
+        "Name": "CoachesTrainingRegistrationOpenDateTime",
+        "Value": "2013-08-01 00:00"
+    },
+    {
+        "Id": 5,
+        "Name": "ContactUsURL",
+        "Value": "\/wp\/?page_id=129"
+    },
+    {
+        "Id": 6,
+        "Name": "CoordinatorsDoNotPayCoachesTrainingRegistrationFee",
+        "Value": "True"
+    },
+    {
+        "Id": 7,
+        "Name": "EmailServer",
+        "Value": "mail.novanorth.org"
+    },
+    {
+        "Id": 8,
+        "Name": "EventVolunteerInformationMessage",
+        "Value": "Each team is required to provide one volunteer. &nbsp;As that volunteer, you will be asked to work about 2 hours at morning registration for judges and teams, souvenir sales, the spontaneous waiting area, or other similar jobs. &nbsp;Volunteers will be informed by e-mail of their assignment."
+    },
+    {
+        "Id": 9,
+        "Name": "HomePage",
+        "Value": "https:\/\/www.novanorth.org"
+    },
+    {
+        "Id": 10,
+        "Name": "IsCoachesTrainingRegistrationDown",
+        "Value": "False"
+    },
+    {
+        "Id": 11,
+        "Name": "IsJudgesRegistrationDown",
+        "Value": "False"
+    },
+    {
+        "Id": 12,
+        "Name": "IsTournamentRegistrationDown",
+        "Value": "False"
+    },
+    {
+        "Id": 13,
+        "Name": "IsVolunteerRegistrationDown",
+        "Value": "False"
+    },
+    {
+        "Id": 14,
+        "Name": "JudgesRegistrationCloseDateTime",
+        "Value": "2024-02-29 23:59"
+    },
+    {
+        "Id": 15,
+        "Name": "JudgesRegistrationOpenDateTime",
+        "Value": "2023-11-28 00:00"
+    },
+    {
+        "Id": 16,
+        "Name": "LinkToSynopses",
+        "Value": "https:\/\/www.odysseyofthemind.com\/wp-content\/uploads\/2023\/06\/2024-SYNOPSIS.pdf"
+    },
+    {
+        "Id": 17,
+        "Name": "PrimaryTeamsMayDoSpontaneous",
+        "Value": "True"
+    },
+    {
+        "Id": 18,
+        "Name": "ProgramGuideURL",
+        "Value": "https:\/\/www.odysseyofthemind.com\/program-guide"
+    },
+    {
+        "Id": 19,
+        "Name": "RegionalDirectorEmail",
+        "Value": "director@novanorth.org"
+    },
+    {
+        "Id": 20,
+        "Name": "RegionalDirectorText",
+        "Value": "our Regional Director"
+    },
+    {
+        "Id": 21,
+        "Name": "RegionName",
+        "Value": "NoVA North and NoVA South"
+    },
+    {
+        "Id": 22,
+        "Name": "RegionNumber",
+        "Value": "9  & 12"
+    },
+    {
+        "Id": 23,
+        "Name": "SchoolCoordinatorsDoNotPayMessage",
+        "Value": "<ul><li>Note that School Coordinators do not pay this fee.<\/li><\/ul>"
+    },
+    {
+        "Id": 24,
+        "Name":"TeamsVolunteerWantsToSeeMessage","Value":"Please list the teams that you would like to see perform during the day so we may do our best to schedule around this conflict. &nbsp;For each team, list the school, division, problem name, and coach's name so that we know which team you mean. &nbsp;Also let us know if there is any time the day of the tournament that you will not be available to serve as a volunteer: "},{"Id":25,"Name":"TournamentRegistrationCloseDateTime","Value":"2024-1-25 23: 59"},{"Id":26,"Name":"TournamentRegistrationOpenDateTime","Value":"2023-12-15 00: 00"},{"Id":27,"Name":"VolunteerNotesMessage","Value":"Please provide us with any other information you would like to share as part of your registration.&nbsp; For example, this is a good place to let us know if you have any previous experience volunteering at Odyssey tournaments, and if so, what that was. &nbsp;Also let us know if you would be interested in doing that again or if you would prefer to do something else. &nbsp;Please keep your comments to 500 characters or less: "},{"Id":28,"Name":"VolunteerRegistrationCloseDateTime","Value":"2014-1-18 14: 00"},{"Id":29,"Name":"VolunteerRegistrationOpenDateTime","Value":"2013-11-10 00: 00"},{"Id":30,"Name":"WebmasterEmailPassword","Value":"webmaster@novanorth.org"},{"Id":31,"Name":"WebmasterEmailPassword","Value":""},{"Id":32,"Name":"WillHaveCoachesTrainingRegistration","Value":"False"},{"Id":33,"Name":"WillHaveVolunteerRegistration","Value":"False"},{"Id":34,"Name":"Year","Value":"2023"}]

@@ -1,0 +1,344 @@
+﻿@page
+
+@{
+    // Package:	Odyssey of the Mind Web Site
+    // Module:	Judges Registration
+    // File:	Page01.cshtml
+    // Author:	Robert Bernstein
+    // Version:	5.0
+    // Created:	before 08/04/2007
+    // Updated:	09/29/2007: Replaced PHP database query code with MDB2
+    //			11/29/2009: Rebuilt in ASP.NET 3.5
+    //			01/10/2010: v2.0 Built in ASP.NET MVC 1.0 (based on ASP.NET 3.5 code from last year)
+    //          10/31/2013: v3.0 Rebuilt in ASP.NET MVC 4
+    //         	12/03/2023: v4.0 Rebuilt in ASP.NET MVC 4 from dotPeek reverse engineered code and files copied from novanorth.org.
+    //         	10/19/2024: v5.0 Built in ASP.NET Core 8.0 Razor Pages from dotPeek reverse engineered code and other sources.
+}
+
+@model Page02Model
+
+<h1>
+    @Model.Title
+</h1>
+
+<script type="text/javascript">
+    // Set the focus to the default control and select its text.
+    window.onload = function () {
+        document.getElementById('Judge_FirstName').focus().select();
+    };
+
+    $(function () {
+        $("#EveningPhone").inputmask("(999) 999-9999");
+        $("#DaytimePhone").inputmask("(999) 999-9999");
+        $("#MobilePhone").inputmask("(999) 999-9999");
+
+        // Initialize the dialog box, but don't open it.
+        $('#privacyPolicyDialog').dialog({
+            autoOpen: false
+        });
+
+        $('#tshirtDialog').dialog({
+            autoOpen: false,
+            width: '30%'
+        });
+
+        $('#ceuCreditDialog').dialog({
+            autoOpen: false,
+            width: '30%'
+        });
+
+        // Initially hide the fields allowing a judge to specify conflicts of interest.
+        $("#hasChildrenCompetingDiv").hide();
+
+        // Display or hide the fields allowing a judge to specify conflicts of interest.
+        // See http://stackoverflow.com/questions/2777139/how-to-use-jquery-to-show-hide-divs-based-on-radio-button-selection
+        $("input[name$='HasChildrenCompeting']").click(function () {
+            var hasChildrenCompeting = $(this).val();
+            if (hasChildrenCompeting == "Yes") {
+                $("#hasChildrenCompetingDiv").show();
+            } else {
+                $("#hasChildrenCompetingDiv").hide();
+            }
+        });
+
+        // Open the dialog box when the user clicks the hyperlink.
+        $("#contactLink").click(function () {
+            $('#privacyPolicyDialog').dialog('open');
+        });
+
+        $("#tshirtLink").click(function () {
+            $('#tshirtDialog').dialog('open');
+        });
+
+        $("#ceuCreditLink").click(function () {
+            $('#ceuCreditDialog').dialog('open');
+        });
+    });
+
+    function FormValidator() {
+        // Verify that the user wants to make no selection for the "First Problem Choice" form field.
+        var form = $("#mainForm");
+        //form.validate();
+
+        if (form.valid()) {
+            var result;
+            if ($("#ProblemChoice1").val() == "0") {
+                result = confirm("Click OK to continue without selecting a specific problem for your \"First Problem Choice\".");
+
+                // result = true if "OK" is clicked, result = false if "Cancel" is clicked.
+                if (result == false) {
+                    $("#ProblemChoice1").focus();
+                    return result;
+                }
+            }
+        }
+
+        return true;
+    }
+</script>
+
+<div id="privacyPolicyDialog" title="Privacy Policy" hidden>
+    All data you provide us is kept strictly confidential. We do not give or sell your
+    information to any other organization, public or private. We will contact you solely
+    for the purpose of running an Odyssey of the Mind tournament.
+</div>
+
+<div id="tshirtDialog" title="Why do we want your t-shirt size?" hidden>
+    One of the many benefits of being a judge for Odyssey of the Mind is the limited
+    edition, highly collectable, official's t-shirt you receive absolutely for free!
+</div>
+
+<div id="ceuCreditDialog" title="How many Continuing Education Units (CEUs) do I get?" hidden>
+    We get many questions about what CEUs actually are. They are typically intended
+    to assist school teachers and other professional educators to maintain their educational certifications.<br />
+    <br />
+    We&rsquo;ll write you a letter recommending that you receive 15 hours of CEU credit
+    for judging. The final determination, however, is with your Principal.
+    The letters will be available from your Problem Captain when you&rsquo;ve finished
+    judging on the day of the tournament.
+</div>
+
+<p>
+    Thank you for volunteering to judge for @Model.RegionName Odyssey of the Mind. &nbsp;We can't run
+    a tournament without people like you! &nbsp; Please provide us with the following
+    information in order to complete your registration.
+</p>
+<p>
+    <b>Note</b>: We will use whatever first and last name you provide here to print the name tag that you will wear
+    on tournament day. &nbsp;Please make sure that it is the name by which you wish to be identified for the entire day.
+</p>
+
+<h4>Your Judge's Information</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            @*          <div class="form-group">
+            <label asp-for="Judge.TeamId" class="control-label"></label>
+            <input asp-for="Judge.TeamId" class="form-control" />
+            <span asp-validation-for="Judge.TeamId" class="text-danger"></span>
+            </div>
+            *@
+            <div class="form-group">
+                <label asp-for="Judge.FirstName" class="control-label">First Name</label>
+                <input asp-for="Judge.FirstName" class="form-control" />
+                <span asp-validation-for="Judge.FirstName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Judge.LastName" class="control-label">Last Name</label>
+                <input asp-for="Judge.LastName" class="form-control" />
+                <span asp-validation-for="Judge.LastName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Judge.Address" class="control-label"></label>
+                <input asp-for="Judge.Address" class="form-control" />
+                <span asp-validation-for="Judge.Address" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Judge.AddressLine2" class="control-label">Address Line 2</label>
+                <input asp-for="Judge.AddressLine2" class="form-control" />
+                <span asp-validation-for="Judge.AddressLine2" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Judge.City" class="control-label"></label>
+                <input asp-for="Judge.City" class="form-control" />
+                <span asp-validation-for="Judge.City" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Judge.State" class="control-label"></label>
+                <input asp-for="Judge.State" class="form-control" />
+                <span asp-validation-for="Judge.State" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Judge.ZipCode" class="control-label">Zip Code</label>
+                <input asp-for="Judge.ZipCode" class="form-control" />
+                <span asp-validation-for="Judge.ZipCode" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Judge.DaytimePhone" class="control-label">Daytime Phone Number</label>
+                <input asp-for="Judge.DaytimePhone" class="form-control" />
+                <span asp-validation-for="Judge.DaytimePhone" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Judge.EveningPhone" class="control-label">Evening Phone Number</label>
+                <input asp-for="Judge.EveningPhone" class="form-control" />
+                <span asp-validation-for="Judge.EveningPhone" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Judge.MobilePhone" class="control-label">Mobile Phone Number</label>
+                <input asp-for="Judge.MobilePhone" class="form-control" />
+                <span asp-validation-for="Judge.MobilePhone" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Judge.EmailAddress" class="control-label">Email Address</label>
+                <input asp-for="Judge.EmailAddress" class="form-control" />
+                <span asp-validation-for="Judge.EmailAddress" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Judge.Notes" class="control-label">Notes about anything we need to know regarding you as a judge</label>
+                <input asp-for="Judge.Notes" class="form-control" />
+                <span asp-validation-for="Judge.Notes" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Judge.ProblemChoice1" class="control-label">First Problem Choice</label>
+                <input asp-for="Judge.ProblemChoice1" class="form-control" />
+                <span asp-validation-for="Judge.ProblemChoice1" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Judge.ProblemChoice2" class="control-label">Second Problem Choice</label>
+                <input asp-for="Judge.ProblemChoice2" class="form-control" />
+                <span asp-validation-for="Judge.ProblemChoice2" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Judge.ProblemChoice3" class="control-label">Third Problem Choice</label>
+                <input asp-for="Judge.ProblemChoice3" class="form-control" />
+                <span asp-validation-for="Judge.ProblemChoice3" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Judge.HasChildrenCompeting" class="control-label">Do you have children competing in this Odyssey Tournament?</label>
+                <input asp-for="Judge.HasChildrenCompeting" class="form-control" />
+                <span asp-validation-for="Judge.HasChildrenCompeting" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Judge.Coi" class="control-label">Do you have a conflict of interest judging a specific problem?</label>
+                <input asp-for="Judge.Coi" class="form-control" />
+                <span asp-validation-for="Judge.Coi" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Judge.ProblemCoi1" class="control-label">First Conflict of Interest Problem</label>
+                <input asp-for="Judge.ProblemCoi1" class="form-control" />
+                <span asp-validation-for="Judge.ProblemCoi1" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Judge.ProblemCoi2" class="control-label">Second Conflict of Interest Problem</label>
+                <input asp-for="Judge.ProblemCoi2" class="form-control" />
+                <span asp-validation-for="Judge.ProblemCoi2" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Judge.ProblemCoi3" class="control-label">Third Conflict of Interest Problem</label>
+                <input asp-for="Judge.ProblemCoi3" class="form-control" />
+                <span asp-validation-for="Judge.ProblemCoi3" class="text-danger"></span>
+            </div>
+            @*             <div class="form-group">
+            <label asp-for="Judge.ProblemAssigned" class="control-label"></label>
+            <input asp-for="Judge.ProblemAssigned" class="form-control" />
+            <span asp-validation-for="Judge.ProblemAssigned" class="text-danger"></span>
+            </div> *@
+            @*             <div class="form-group">
+            <label asp-for="Judge.InformationMailed" class="control-label"></label>
+            <input asp-for="Judge.InformationMailed" class="form-control" />
+            <span asp-validation-for="Judge.InformationMailed" class="text-danger"></span>
+            </div> *@
+            @*             <div class="form-group">
+            <label asp-for="Judge.AttendedJt" class="control-label"></label>
+            <input asp-for="Judge.AttendedJt" class="form-control" />
+            <span asp-validation-for="Judge.AttendedJt" class="text-danger"></span>
+            </div> *@
+            @*             <div class="form-group">
+            <label asp-for="Judge.Active" class="control-label"></label>
+            <input asp-for="Judge.Active" class="form-control" />
+            <span asp-validation-for="Judge.Active" class="text-danger"></span>
+            </div> *@
+            <div class="form-group">
+                <label asp-for="Judge.WillingToBeScorechecker" class="control-label">Are you willing to be a scorechecker?</label>
+                <input asp-for="Judge.WillingToBeScorechecker" class="form-control" />
+                <span asp-validation-for="Judge.WillingToBeScorechecker" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Judge.TshirtSize" class="control-label">Your T-Shirt Size</label>
+                <input asp-for="Judge.TshirtSize" class="form-control" />
+                <span asp-validation-for="Judge.TshirtSize" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Judge.WantsCeucredit" class="control-label">Do you want <a id="ceuCreditLink" href="javascript:void(0)">CEU credit</a> for judging?</label>
+                <label for="ceu_yes">
+                    <input type="radio" asp-for="Judge.WantsCeucredit" id="ceu_yes" class="form-control" value="Yes" />Yes
+                </label>
+                <label for="ceu_no">
+                    <input type="radio" asp-for="Judge.WantsCeucredit" id="ceu_no" class="form-control" value="No" checked />No
+                </label>
+                <span asp-validation-for="Judge.WantsCeucredit" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Judge.YearsOfLongTermJudgingExperience" class="control-label">How many years of Long-Term (non-Sponateneous) judging experience do you have?</label>
+                <input asp-for="Judge.YearsOfLongTermJudgingExperience" class="form-control" />
+                <span asp-validation-for="Judge.YearsOfLongTermJudgingExperience" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Judge.YearsOfSpontaneousJudgingExperience" class="control-label">How many years of Sponateneous (non-Long-Term) judging experience do you have?</label>
+                <input asp-for="Judge.YearsOfSpontaneousJudgingExperience" class="form-control" />
+                <span asp-validation-for="Judge.YearsOfSpontaneousJudgingExperience" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Judge.PreviousPositions" class="control-label"></label>
+                <input asp-for="Judge.PreviousPositions" class="form-control" />
+                <span asp-validation-for="Judge.PreviousPositions" class="text-danger"></span>
+            </div>
+            @*             <div class="form-group">
+            <label asp-for="Judge.ProblemId" class="control-label"></label>
+            <input asp-for="Judge.ProblemId" class="form-control" />
+            <span asp-validation-for="Judge.ProblemId" class="text-danger"></span>
+            </div> *@
+            @*             <div class="form-group">
+            <label asp-for="Judge.TimeRegistered" class="control-label"></label>
+            <input asp-for="Judge.TimeRegistered" class="form-control" />
+            <span asp-validation-for="Judge.TimeRegistered" class="text-danger"></span>
+            </div> *@
+            @*             <div class="form-group">
+            <label asp-for="Judge.TimeAssignedToTeam" class="control-label"></label>
+            <input asp-for="Judge.TimeAssignedToTeam" class="form-control" />
+            <span asp-validation-for="Judge.TimeAssignedToTeam" class="text-danger"></span>
+            </div> *@
+            @*             <div class="form-group">
+            <label asp-for="Judge.TimeRegistrationStarted" class="control-label"></label>
+            <input asp-for="Judge.TimeRegistrationStarted" class="form-control" />
+            <span asp-validation-for="Judge.TimeRegistrationStarted" class="text-danger"></span>
+            </div> *@
+            @*             <div class="form-group">
+            <label asp-for="Judge.UserAgent" class="control-label"></label>
+            <input asp-for="Judge.UserAgent" class="form-control" />
+            <span asp-validation-for="Judge.UserAgent" class="text-danger"></span>
+            </div> *@
+            <div class="form-group">
+                <input type="submit" value="Next Page >>" class="btn btn-primary" />
+            </div>
+            @*             <div style="text-align: right">
+            <input type="submit" value="Next Page >>" id="nextButton" name="nextButton" />
+            </div> *@
+        </form>
+    </div>
+</div>
+
+<div>
+    @*     <a asp-page="Index">Back to List</a> *@
+    @*     <div style="text-align: left" *@>
+    <a href='@Model?.Config?["HomePage"]'>Return to the Home Page</a>
+    @*     </div> *@
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

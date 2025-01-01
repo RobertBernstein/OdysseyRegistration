@@ -1,0 +1,94 @@
+﻿{
+   "CodeGenerationMode": 4,
+   "ContextClassName": "OdysseyContext",
+   "ContextNamespace": null,
+   "FilterSchemas": false,
+   "IncludeConnectionString": false,
+   "ModelNamespace": null,
+   "OutputContextPath": "Data",
+   "OutputPath": "Models",
+   "PreserveCasingWithRegex": true,
+   "ProjectRootNamespace": "JudgeRegistrationRazor",
+   "Schemas": null,
+   "SelectedHandlebarsLanguage": 2,
+   "SelectedToBeGenerated": 0,
+   "T4TemplatePath": null,
+   "Tables": [
+      {
+         "Name": "[dbo].[CoachesTrainingDivisions]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[CoachesTrainingRegions]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[CoachesTrainingRegistrations]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[CoachesTrainingRoles]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Config]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ContactUsRecipients]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[ContactUsSenderRoles]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Events]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Judges]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Problem]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Schools]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[TournamentRegistration]",
+         "ObjectType": 0
+      },
+      {
+         "Name": "[dbo].[Volunteers]",
+         "ObjectType": 0
+      }
+   ],
+   "UiHint": null,
+   "UncountableWords": null,
+   "UseAsyncStoredProcedureCalls": true,
+   "UseBoolPropertiesWithoutDefaultSql": false,
+   "UseDatabaseNames": false,
+   "UseDateOnlyTimeOnly": true,
+   "UseDbContextSplitting": false,
+   "UseDecimalDataAnnotationForSprocResult": true,
+   "UseFluentApiOnly": true,
+   "UseHandleBars": false,
+   "UseHierarchyId": false,
+   "UseInflector": true,
+   "UseLegacyPluralizer": false,
+   "UseManyToManyEntity": false,
+   "UseNoDefaultConstructor": false,
+   "UseNoNavigations": false,
+   "UseNoObjectFilter": false,
+   "UseNodaTime": false,
+   "UseNullableReferences": false,
+   "UsePrefixNavigationNaming": false,
+   "UseSchemaFolders": false,
+   "UseSchemaNamespaces": false,
+   "UseSpatial": false,
+   "UseT4": false
+}

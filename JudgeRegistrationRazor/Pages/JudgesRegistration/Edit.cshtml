@@ -1,0 +1,210 @@
+﻿@page
+@model EditModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Judge</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Judge.Id" />
+            <div class="form-group">
+                <label asp-for="Judge.TeamId" class="control-label"></label>
+                <input asp-for="Judge.TeamId" class="form-control" />
+                <span asp-validation-for="Judge.TeamId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Judge.FirstName" class="control-label"></label>
+                <input asp-for="Judge.FirstName" class="form-control" />
+                <span asp-validation-for="Judge.FirstName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Judge.LastName" class="control-label"></label>
+                <input asp-for="Judge.LastName" class="form-control" />
+                <span asp-validation-for="Judge.LastName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Judge.Address" class="control-label"></label>
+                <input asp-for="Judge.Address" class="form-control" />
+                <span asp-validation-for="Judge.Address" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Judge.AddressLine2" class="control-label"></label>
+                <input asp-for="Judge.AddressLine2" class="form-control" />
+                <span asp-validation-for="Judge.AddressLine2" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Judge.City" class="control-label"></label>
+                <input asp-for="Judge.City" class="form-control" />
+                <span asp-validation-for="Judge.City" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Judge.State" class="control-label"></label>
+                <input asp-for="Judge.State" class="form-control" />
+                <span asp-validation-for="Judge.State" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Judge.ZipCode" class="control-label"></label>
+                <input asp-for="Judge.ZipCode" class="form-control" />
+                <span asp-validation-for="Judge.ZipCode" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Judge.DaytimePhone" class="control-label"></label>
+                <input asp-for="Judge.DaytimePhone" class="form-control" />
+                <span asp-validation-for="Judge.DaytimePhone" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Judge.EveningPhone" class="control-label"></label>
+                <input asp-for="Judge.EveningPhone" class="form-control" />
+                <span asp-validation-for="Judge.EveningPhone" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Judge.MobilePhone" class="control-label"></label>
+                <input asp-for="Judge.MobilePhone" class="form-control" />
+                <span asp-validation-for="Judge.MobilePhone" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Judge.EmailAddress" class="control-label"></label>
+                <input asp-for="Judge.EmailAddress" class="form-control" />
+                <span asp-validation-for="Judge.EmailAddress" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Judge.Notes" class="control-label"></label>
+                <input asp-for="Judge.Notes" class="form-control" />
+                <span asp-validation-for="Judge.Notes" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Judge.ProblemChoice1" class="control-label"></label>
+                <input asp-for="Judge.ProblemChoice1" class="form-control" />
+                <span asp-validation-for="Judge.ProblemChoice1" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Judge.ProblemChoice2" class="control-label"></label>
+                <input asp-for="Judge.ProblemChoice2" class="form-control" />
+                <span asp-validation-for="Judge.ProblemChoice2" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Judge.ProblemChoice3" class="control-label"></label>
+                <input asp-for="Judge.ProblemChoice3" class="form-control" />
+                <span asp-validation-for="Judge.ProblemChoice3" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Judge.HasChildrenCompeting" class="control-label"></label>
+                <input asp-for="Judge.HasChildrenCompeting" class="form-control" />
+                <span asp-validation-for="Judge.HasChildrenCompeting" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Judge.Coi" class="control-label"></label>
+                <input asp-for="Judge.Coi" class="form-control" />
+                <span asp-validation-for="Judge.Coi" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Judge.ProblemCoi1" class="control-label"></label>
+                <input asp-for="Judge.ProblemCoi1" class="form-control" />
+                <span asp-validation-for="Judge.ProblemCoi1" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Judge.ProblemCoi2" class="control-label"></label>
+                <input asp-for="Judge.ProblemCoi2" class="form-control" />
+                <span asp-validation-for="Judge.ProblemCoi2" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Judge.ProblemCoi3" class="control-label"></label>
+                <input asp-for="Judge.ProblemCoi3" class="form-control" />
+                <span asp-validation-for="Judge.ProblemCoi3" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Judge.ProblemAssigned" class="control-label"></label>
+                <input asp-for="Judge.ProblemAssigned" class="form-control" />
+                <span asp-validation-for="Judge.ProblemAssigned" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Judge.InformationMailed" class="control-label"></label>
+                <input asp-for="Judge.InformationMailed" class="form-control" />
+                <span asp-validation-for="Judge.InformationMailed" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Judge.AttendedJt" class="control-label"></label>
+                <input asp-for="Judge.AttendedJt" class="form-control" />
+                <span asp-validation-for="Judge.AttendedJt" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Judge.Active" class="control-label"></label>
+                <input asp-for="Judge.Active" class="form-control" />
+                <span asp-validation-for="Judge.Active" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Judge.WillingToBeScorechecker" class="control-label"></label>
+                <input asp-for="Judge.WillingToBeScorechecker" class="form-control" />
+                <span asp-validation-for="Judge.WillingToBeScorechecker" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Judge.TshirtSize" class="control-label"></label>
+                <input asp-for="Judge.TshirtSize" class="form-control" />
+                <span asp-validation-for="Judge.TshirtSize" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Judge.WantsCeucredit" class="control-label"></label>
+                <input asp-for="Judge.WantsCeucredit" class="form-control" />
+                <span asp-validation-for="Judge.WantsCeucredit" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Judge.YearsOfLongTermJudgingExperience" class="control-label"></label>
+                <input asp-for="Judge.YearsOfLongTermJudgingExperience" class="form-control" />
+                <span asp-validation-for="Judge.YearsOfLongTermJudgingExperience" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Judge.YearsOfSpontaneousJudgingExperience" class="control-label"></label>
+                <input asp-for="Judge.YearsOfSpontaneousJudgingExperience" class="form-control" />
+                <span asp-validation-for="Judge.YearsOfSpontaneousJudgingExperience" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Judge.PreviousPositions" class="control-label"></label>
+                <input asp-for="Judge.PreviousPositions" class="form-control" />
+                <span asp-validation-for="Judge.PreviousPositions" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Judge.ProblemId" class="control-label"></label>
+                <input asp-for="Judge.ProblemId" class="form-control" />
+                <span asp-validation-for="Judge.ProblemId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Judge.TimeRegistered" class="control-label"></label>
+                <input asp-for="Judge.TimeRegistered" class="form-control" />
+                <span asp-validation-for="Judge.TimeRegistered" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Judge.TimeAssignedToTeam" class="control-label"></label>
+                <input asp-for="Judge.TimeAssignedToTeam" class="form-control" />
+                <span asp-validation-for="Judge.TimeAssignedToTeam" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Judge.TimeRegistrationStarted" class="control-label"></label>
+                <input asp-for="Judge.TimeRegistrationStarted" class="form-control" />
+                <span asp-validation-for="Judge.TimeRegistrationStarted" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Judge.UserAgent" class="control-label"></label>
+                <input asp-for="Judge.UserAgent" class="form-control" />
+                <span asp-validation-for="Judge.UserAgent" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="./Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

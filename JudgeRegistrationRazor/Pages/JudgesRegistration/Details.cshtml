@@ -1,0 +1,235 @@
+﻿@page
+@model DetailsModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Judge</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Judge.TeamId)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Judge.TeamId)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Judge.FirstName)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Judge.FirstName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Judge.LastName)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Judge.LastName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Judge.Address)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Judge.Address)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Judge.AddressLine2)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Judge.AddressLine2)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Judge.City)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Judge.City)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Judge.State)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Judge.State)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Judge.ZipCode)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Judge.ZipCode)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Judge.DaytimePhone)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Judge.DaytimePhone)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Judge.EveningPhone)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Judge.EveningPhone)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Judge.MobilePhone)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Judge.MobilePhone)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Judge.EmailAddress)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Judge.EmailAddress)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Judge.Notes)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Judge.Notes)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Judge.ProblemChoice1)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Judge.ProblemChoice1)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Judge.ProblemChoice2)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Judge.ProblemChoice2)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Judge.ProblemChoice3)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Judge.ProblemChoice3)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Judge.HasChildrenCompeting)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Judge.HasChildrenCompeting)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Judge.Coi)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Judge.Coi)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Judge.ProblemCoi1)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Judge.ProblemCoi1)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Judge.ProblemCoi2)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Judge.ProblemCoi2)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Judge.ProblemCoi3)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Judge.ProblemCoi3)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Judge.ProblemAssigned)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Judge.ProblemAssigned)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Judge.InformationMailed)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Judge.InformationMailed)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Judge.AttendedJt)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Judge.AttendedJt)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Judge.Active)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Judge.Active)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Judge.WillingToBeScorechecker)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Judge.WillingToBeScorechecker)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Judge.TshirtSize)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Judge.TshirtSize)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Judge.WantsCeucredit)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Judge.WantsCeucredit)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Judge.YearsOfLongTermJudgingExperience)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Judge.YearsOfLongTermJudgingExperience)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Judge.YearsOfSpontaneousJudgingExperience)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Judge.YearsOfSpontaneousJudgingExperience)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Judge.PreviousPositions)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Judge.PreviousPositions)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Judge.ProblemId)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Judge.ProblemId)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Judge.TimeRegistered)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Judge.TimeRegistered)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Judge.TimeAssignedToTeam)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Judge.TimeAssignedToTeam)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Judge.TimeRegistrationStarted)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Judge.TimeRegistrationStarted)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Judge.UserAgent)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Judge.UserAgent)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-page="./Edit" asp-route-id="@Model.Judge.Id">Edit</a> |
+    <a asp-page="./Index">Back to List</a>
+</div>

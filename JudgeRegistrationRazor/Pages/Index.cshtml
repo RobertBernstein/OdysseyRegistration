@@ -1,0 +1,39 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+    ViewData["Message"] =
+        $"Welcome to the {@Model?.Config?["RegionName"]} Odyssey of the Mind Region {@Model?.Config?["RegionNumber"]} Registration web pages.";
+}
+
+@{
+    <div class="text-center">
+        <h1 class="display-5">@ViewData["Message"]</h1>
+    </div>
+
+    <div>
+        <p>
+            Click on one of the links below to being the specified registration process.
+        </p>
+        <ul>
+            @if (@Model?.Config?["WillHaveCoachesTrainingRegistration"] == "True")
+            {
+                <li><a href="CoachesTrainingRegistration/Page01">Coaches Training Registration</a></li>
+            }
+            <li><a href="JudgesRegistration/Page01">Judges Registration</a></li>
+            <li>Judges Registration (Coming Soon!)</li>
+            @if (@Model?.Config?["WillHaveVolunteerRegistration"] == "True")
+            {
+                <li><a href="VolunteerRegistration/Page01">Volunteer Registration</a></li>
+                <li>Volunteer Registration (Coming Soon!)</li>
+            }
+            <li><a href="TournamentRegistration/Page01">Tournament Registration</a></li>
+            <li>Tournament Registration (Coming Soon!)</li>
+        </ul>
+        <form method="post">
+            <p style="text-align: center">
+                <input type="submit" value="Return to the Home Page">
+            </p>
+        </form>
+    </div>
+}

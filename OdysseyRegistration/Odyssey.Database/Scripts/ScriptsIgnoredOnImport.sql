@@ -655,7 +655,7 @@ GO
 INSERT [dbo].[Config] ([Name], [Value]) VALUES (N'WebmasterEmail', N'webmaster@novanorth.org')
 GO
 
-INSERT [dbo].[Config] ([Name], [Value]) VALUES (N'WebmasterEmailPassword', N'xY7eBd#KJN^B*SCFt%pL')
+INSERT [dbo].[Config] ([Name], [Value]) VALUES (N'WebmasterEmailPassword', N'')
 GO
 
 INSERT [dbo].[Config] ([Name], [Value]) VALUES (N'WillHaveVolunteerRegistration', N'False')
