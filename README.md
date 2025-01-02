@@ -47,7 +47,7 @@ The OdysseyMvc4 (original) and OdysseyMvc2023 (current) projects are currently b
 Make sure to copy the web.config file from **this directory**, i.e., the top-most/root directory, into the root directory of your website at the hosting company.
 
 > [!Note]
-> This should be placed in a higher directory than your bin, Content, Views, etc. directories.  The directory containing those subdirectories will likely have its own web.config file.
+> This should be placed in a higher directory than your `bin`, `Content`, `Views`, etc. directories.  The directory containing those subdirectories will likely have its own web.config file.
 
 ### Hosting Company Configuration
 
@@ -120,7 +120,8 @@ This will create a [Mermaid](https://mermaid-js.github.io/mermaid/#/) database s
 docker rm -f sql1
 ```
 
-> [!note] Using `rm -f` will remove the container even if it is still running.
+> [!note]
+> Using `rm -f` will remove the container even if it is still running.
 
 ## Create the new test website
 
@@ -332,6 +333,7 @@ Usage:              36 MB
 > 1. The database version increased from 5 to 8.
 > 2. The current database name ends in "24" for 2024.
 > 3. The server moved from my01 to my06.
+> 4. The username changed from vaodyss to vaodyssey.
 
 I modified our `/wp/wp-config.php` file on the hosting company's site to point to the new MySQL 8.x database via SFTP.
 
@@ -347,17 +349,20 @@ I modified our `/wp/wp-config.php` file on the hosting company's site to point t
 3. Add a link like `entity.HasData(SeedHelper.SeedData<School>("Schools.json"));` to the `modelBuilder.Entity<School>()` code within the `OnModelCreating` method in the `OdysseyContext` class.
 4. Added EF migrations using the Developer PowerShell for VS 2022 window.
 5. Used the following commands:
-    1. dotnet ef migrations add InitialCreate
-    2. dotnet ef database update
-    3. dotnet ef migrations add UpdateConfigSeedData
-    4. dotnet ef database update
-    5. dotnet ef migrations add UpdateSchoolsSeedData
-    6. dotnet ef database update
-    7. dotnet ef migrations add UpdateEventSeedData
-    8. dotnet ef database update
-    9. dotnet ef migrations add UpdateProblemSeedData
-    10. dotnet ef database update
 
+   ```powershell
+   dotnet ef migrations add InitialCreate
+   dotnet ef database update
+   dotnet ef migrations add UpdateConfigSeedData
+   dotnet ef database update
+   dotnet ef migrations add UpdateSchoolsSeedData
+   dotnet ef database update
+   dotnet ef migrations add UpdateEventSeedData
+   dotnet ef database update
+   dotnet ef migrations add UpdateProblemSeedData
+   dotnet ef database update
+   ```
+        
 ## 10/15/2024
 
 1. Don't forget that the Problem table Id had to start at 1 where it used to start at 0. So, the code needs to be updated to handle this.
