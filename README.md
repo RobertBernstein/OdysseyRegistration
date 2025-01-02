@@ -14,7 +14,7 @@ This repository contains the code for the Judge and Tournament Registration webs
 | /OdysseyRegistration/ | init                                 | N/A                | SQL Server initialization files for the Docker Compose project |
 | /OdysseyRegistration/ | Odyssey.Database                     | SQL Server 2019 (==how can you tell which version?==)   | Database management project (.sqlproj) |
 | /OdysseyRegistration/ | OdysseyCoreMvc                       | .NET 6.0           | Unused (I think): Core MVC framework  |
-| /OdysseyRegistration/ | OdysseyMvc4                          | .NET Framework 4.8 | MVC framework 4     |
+| /OdysseyRegistration/ | OdysseyMvc4                          | .NET Framework 4.8 | MVC framework 4<br />**This is what is running in production today (01/01/2025).** |
 | /OdysseyRegistration/ | OdysseyMvc4.Tests                    | .NET Framework 4.8 | MVC framework 4 tests |
 | /OdysseyRegistration/ | OdysseyMvc2023                       | .NET Framework 4.8 | MVC framework 2023  |
 | /OdysseyRegistration/ | OdysseyMvc2024                       | .NET 8.0           | ==Is this the current project or is it the 2023 project? I think it's this one.== |

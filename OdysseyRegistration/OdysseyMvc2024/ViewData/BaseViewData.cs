@@ -12,22 +12,20 @@
 // Assembly: OdysseyMvc4, Version=1.0.5460.36587, Culture=neutral, PublicKeyToken=null
 // MVID: 7B658547-521F-44CB-80FA-52857CB94B72
 // Assembly location: C:\Users\rob\OneDrive\Odyssey\OdysseyProd\registration\bin\OdysseyMvc4.dll
-
-using System.Collections.Generic;
 using OdysseyMvc2024.Models;
 
-/// <summary>
-/// The base ViewData class for all other ViewData classes.
-/// </summary>
 namespace OdysseyMvc2024.ViewData
 {
+    /// <summary>
+    /// The base ViewData class for all other ViewData classes.
+    /// </summary>
     public class BaseViewData(IOdysseyRepository repository)
     {
 
         /// <summary>
         /// Gets or sets the general configuration data for all registration types.
         /// </summary>
-        public required Dictionary<string, string> Config { get; set; } = repository.Config;
+        public required Dictionary<string, string>? Config { get; set; } = repository.Config;
 
         /// <summary>
         /// Gets or sets the displayable registration name, e.g., "Tournament Registration" or "Judges Registration".

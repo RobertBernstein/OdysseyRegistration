@@ -13,23 +13,23 @@ namespace OdysseyMvc2024.Models
 {
     public interface IOdysseyRepository
     {
-        Dictionary<string, string> Config { get; }
-        IEnumerable<Judge> Judges { get; }
-        Event JudgesInfo { get; set; }
-        IQueryable<Problem> PrimaryProblem { get; }
+        Dictionary<string, string>? Config { get; }
+        IEnumerable<Judge>? Judges { get; }
+        Event? JudgesInfo { get; set; }
+        IQueryable<Problem>? PrimaryProblem { get; }
         IEnumerable<Problem> ProblemChoices { get; }
         IEnumerable<Problem> ProblemChoicesWithoutSpontaneous { get; }
         IEnumerable<Problem> ProblemConflicts { get; }
-        IEnumerable<Problem> Problems { get; }
-        IQueryable<Problem> ProblemsWithoutPrimaryOrSpontaneous { get; }
-        IQueryable<Problem> ProblemsWithoutSpontaneous { get; }
+        IEnumerable<Problem>? Problems { get; }
+        IQueryable<Problem>? ProblemsWithoutPrimaryOrSpontaneous { get; }
+        IQueryable<Problem>? ProblemsWithoutSpontaneous { get; }
         string RegionName { get; }
         string RegionNumber { get; }
-        IEnumerable Schools { get; }
+        IEnumerable? Schools { get; }
         Event TournamentInfo { get; set; }
         IQueryable TournamentRegistration { get; }
         IEnumerable<TournamentRegistration> TournamentRegistrations { get; }
-        Event VolunteerInfo { get; set; }
+        // Event? VolunteerInfo { get; }
 
         int AddJudge(Judge newJudge);
         int AddTournamentRegistration(TournamentRegistration newRegistration);

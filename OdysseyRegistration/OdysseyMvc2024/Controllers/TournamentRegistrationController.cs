@@ -56,7 +56,7 @@ namespace OdysseyMvc2024.Controllers
 
         public string GetProblemsAsHtmlList(bool thisTeamIsPrimary)
         {
-            IQueryable<Problem> primaryOrSpontaneous = Repository.ProblemsWithoutPrimaryOrSpontaneous;
+            IQueryable<Problem>? primaryOrSpontaneous = Repository.ProblemsWithoutPrimaryOrSpontaneous;
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.Append("<ol>\n");
             if (thisTeamIsPrimary)

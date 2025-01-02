@@ -34,7 +34,7 @@ namespace OdysseyMvc2023.ViewData.TournamentRegistration
 
         [Required]
         [Display(Name = "Confirm Alternate Coach's E-mail Address")]
-        [System.Web.Mvc.Compare("AltCoachEmailAddress", ErrorMessage = "Your e-mail addresses do not match")]
+        [Compare("AltCoachEmailAddress", ErrorMessage = "Your e-mail addresses do not match")]
         public string AltCoachEmailConfirmation { get; set; }
 
         [Required]
@@ -81,7 +81,7 @@ namespace OdysseyMvc2023.ViewData.TournamentRegistration
 
         [Required]
         [Display(Name = "Confirm E-mail Address")]
-        [System.Web.Mvc.Compare("CoachEmailAddress", ErrorMessage = "Your e-mail addresses do not match")]
+        [Compare("CoachEmailAddress", ErrorMessage = "Your e-mail addresses do not match")]
         public string CoachEmailConfirmation { get; set; }
 
         [Required]

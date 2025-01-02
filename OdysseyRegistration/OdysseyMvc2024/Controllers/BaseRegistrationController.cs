@@ -13,30 +13,25 @@
 // MVID: 7B658547-521F-44CB-80FA-52857CB94B72
 // Assembly location: C:\Users\rob\OneDrive\Odyssey\OdysseyProd\registration\bin\OdysseyMvc4.dll
 
+using System;
 using System.Net;
 using System.Net.Mail;
+using ElmahCore;
+using Microsoft.AspNetCore.Mvc;
 using OdysseyMvc2024.Models;
 using OdysseyMvc2024.ViewData;
-using Microsoft.AspNetCore.Mvc;
-using ElmahCore;
-using System;
 
 namespace OdysseyMvc2024.Controllers
 {
     /// <summary>
     /// The base registration controller.
     /// </summary>
-    public class BaseRegistrationController : Controller
+    public class BaseRegistrationController(IOdysseyEntities context) : Controller
     {
         /// <summary>
         /// The object that provides access to the database.
         /// </summary>
-        protected readonly OdysseyRepository Repository;
-
-        public BaseRegistrationController(IOdysseyEntities context)
-        {
-            Repository = new OdysseyRepository(context);                              
-        }
+        protected readonly OdysseyRepository Repository = new(context);
 
         [HttpGet]
         public ActionResult BadEmail()
@@ -86,7 +81,7 @@ namespace OdysseyMvc2024.Controllers
           string bcc,
           string cc)
         {
-            MailMessage mailMessage = new MailMessage()
+            var mailMessage = new MailMessage
             {
                 From = new MailAddress(from),
                 Subject = subject,

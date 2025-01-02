@@ -94,7 +94,7 @@ namespace OdysseyMvc2023.Controllers
                 {
                     mailMessage.To.Add(new MailAddress(recipient));
                 }
-                catch (FormatException ex)
+                catch (FormatException /*ex*/)
                 {
                     return (MailMessage)null;
                 }
@@ -216,7 +216,7 @@ namespace OdysseyMvc2023.Controllers
                 // TODO: This will fail if you specify an invalid date, such as 2/29 on a non-leap year! Log such possibilities. Add a unit test for this.
                 registrationCloseDateTime = DateTime.Parse(viewData.Config[registrationType.ToString() + "RegistrationCloseDateTime"]);
             }
-            catch (Exception ex)
+            catch (Exception /*ex*/)
             {
                 // TODO: Log the exception.
                 // If we cannot even read the closing time from the database, close down registration!
@@ -249,7 +249,7 @@ namespace OdysseyMvc2023.Controllers
             {
                 registrationOpenDate = DateTime.Parse(viewData.Config[registrationType.ToString() + "RegistrationOpenDateTime"]);
             }
-            catch (Exception ex)
+            catch (Exception /*ex*/)
             {
                 // TODO: Log the exception.
                 // If we cannot even read the opening time from the database, assume we've passed the opening date.

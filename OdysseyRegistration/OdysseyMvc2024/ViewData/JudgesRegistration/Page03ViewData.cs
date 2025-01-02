@@ -28,7 +28,7 @@ namespace OdysseyMvc2024.ViewData.JudgesRegistration
         /// <summary>
         /// Gets or sets the judges info.
         /// </summary>
-        public required Event JudgesInfo { get; set; }
+        public required Event? JudgesInfo { get; set; }
 
         /// <summary>
         /// Gets or sets the judge.

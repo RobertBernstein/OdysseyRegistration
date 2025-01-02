@@ -60,7 +60,7 @@ namespace OdysseyCoreMvc.Models
         /// The problem choices without spontaneous.
         /// </summary>
         /// TODO: Is this still needed?  Can it be removed?  Why is it never initialized? - Rob, 12/17/2018.
-        private readonly IEnumerable<Problem>? problemChoicesWithoutSpontaneous;
+        private IEnumerable<Problem>? problemChoicesWithoutSpontaneous;
 
         /// <summary>
         /// The problem conflicts.
@@ -270,12 +270,13 @@ namespace OdysseyCoreMvc.Models
         {
             get
             {
-                // If problems is null, run the LINQ query, assign the result to Problems, and return the result
+                // If problems is null, run the LINQ query, assign the result to ProblemChoices, and return the result.
                 IOrderedQueryable<Problem> temp = from p in this.context.Problems
                                                   orderby p.ProblemId
                                                   select p;
 
-                Problem thePrimaryProblem = temp.FirstOrDefault(problem => problem.ProblemId == 6);
+                var thePrimaryProblem = temp.FirstOrDefault(problem => problem.ProblemId == 6);
+
                 if (thePrimaryProblem != null)
                 {
                     thePrimaryProblem.ProblemName += " (The Primary Problem)";
@@ -284,10 +285,7 @@ namespace OdysseyCoreMvc.Models
                 return this.problemChoices ?? (this.ProblemChoices = temp);
             }
 
-            private set
-            {
-                this.problemChoices = value;
-            }
+            private set => problemChoices = value;
         }
 
         /// <summary>
@@ -303,15 +301,19 @@ namespace OdysseyCoreMvc.Models
                                            where p.ProblemName != "Spontaneous"
                                            select p;
 
-                Problem thePrimaryProblem = temp.FirstOrDefault(problem => problem.ProblemId == 6);
+                var thePrimaryProblem = temp.FirstOrDefault(problem => problem.ProblemId == 6);
+
                 if (thePrimaryProblem != null)
                 {
                     thePrimaryProblem.ProblemName += " (The Primary Problem)";
                 }
 
                 // TODO: Look into what this does - Rob, 12/12/2014.
-                return this.problemChoicesWithoutSpontaneous ?? (this.ProblemChoices = temp);
+                // TODO: Is this fixed now? - Rob, 01/01/2025.
+                return this.problemChoicesWithoutSpontaneous ?? (this.ProblemChoicesWithoutSpontaneous = temp);
             }
+
+            private set => problemChoicesWithoutSpontaneous = value;
         }
 
         /// <summary>

@@ -13,11 +13,8 @@
 // MVID: 7B658547-521F-44CB-80FA-52857CB94B72
 // Assembly location: C:\Users\rob\OneDrive\Odyssey\OdysseyProd\registration\bin\OdysseyMvc4.dll
 
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Linq.Expressions;
 
 namespace OdysseyMvc2024.Models
@@ -27,161 +24,214 @@ namespace OdysseyMvc2024.Models
     /// </summary>
     public class OdysseyRepository : IOdysseyRepository
     {
-        public OdysseyRepository(IOdysseyEntities context)
-        {
-            this.context = (OdysseyEntities)context;
-        }
-
         /// <summary>
         /// The database context.
         /// </summary>
-        private readonly OdysseyEntities context;
-
-        /// <summary>
-        /// The coaches training info.
-        /// </summary>
-        //private Event coachesTrainingInfo;
+        private readonly OdysseyEntities _context;
 
         /// <summary>
         /// The registration system configuration.
         /// </summary>
-        private Dictionary<string, string> config;
+        /// <remarks>
+        /// Benefits of Lazy Initialization:
+        /// * Lazy Initialization: By using Lazy&lt;Dictionary&lt;string, string&gt;&gt;, the Config dictionary is initialized only once, the first time it's accessed.
+        /// * Thread Safety: Lazy&lt;T&gt; is thread-safe by default, preventing multiple threads from causing multiple database queries.
+        /// * Constructor Initialization: The Lazy&lt;T&gt; instance _config is initialized in the constructor, capturing the context needed to query the database.
+        /// * Direct Property Access: The Config property returns _config.Value, ensuring the dictionary is available without additional checks.
+        /// </remarks>
+        private readonly Lazy<Dictionary<string, string>> _config;
+
+        public OdysseyRepository(IOdysseyEntities context)
+        {
+            _context = (OdysseyEntities)context;
+            _config = new Lazy<Dictionary<string, string>>(() =>
+            {
+                var config = _context.Configs.ToDictionary(d => d.Name, d => d.Value);
+                config.Add("EndYear", (int.Parse(config["Year"]) + 1).ToString(CultureInfo.InvariantCulture));
+                return config;
+            });
+        }
 
         /// <summary>
-        /// The divisions.
+        /// Gets the registration system configuration.
         /// </summary>
-        //private IEnumerable<CoachesTrainingDivision> divisions;
+        public Dictionary<string, string> Config => _config.Value;
+
+        ///// <summary>
+        ///// The Coaches Training event information.
+        ///// </summary>
+        // private Event coachesTrainingInfo;
+
+        ///// <summary>
+        ///// The list of Coaches Training divisions.
+        ///// </summary>
+        // private IEnumerable<CoachesTrainingDivision> divisions;
 
         /// <summary>
         /// The judges.
         /// </summary>
-        private IEnumerable<Event> events;
+        private IEnumerable<Event>? _events;
 
         /// <summary>
         /// The judges.
         /// </summary>
-        private IEnumerable<Judge> judges;
+        private IEnumerable<Judge>? _judges;
 
         /// <summary>
         /// The judges info.
         /// </summary>
-        private Event judgesInfo;
+        private Event? _judgesInfo;
 
         /// <summary>
         /// The primary problem.
         /// </summary>
-        private IQueryable<Problem> primaryProblem;
+        private IQueryable<Problem>? _primaryProblem;
 
         /// <summary>
         /// The problem choices.
         /// </summary>
-        private IEnumerable<Problem> problemChoices;
+        private IEnumerable<Problem>? _problemChoices;
 
         /// <summary>
         /// The problem choices without spontaneous.
         /// </summary>
         /// TODO: Is this still needed?  Can it be removed?  Why is it never initialized? - Rob, 12/17/2018.
-        private readonly IEnumerable<Problem> problemChoicesWithoutSpontaneous;
+        private IEnumerable<Problem>? _problemChoicesWithoutSpontaneous;
 
         /// <summary>
         /// The problem conflicts.
         /// </summary>
-        private IEnumerable<Problem> problemConflicts;
+        private IEnumerable<Problem>? _problemConflicts;
 
         /// <summary>
         /// The problems.
         /// </summary>
-        private IEnumerable<Problem> problems;
+        private IEnumerable<Problem>? _problems;
 
         /// <summary>
         /// The problems without primary or spontaneous.
         /// </summary>
-        private IQueryable<Problem> problemsWithoutPrimaryOrSpontaneous;
+        private IQueryable<Problem>? _problemsWithoutPrimaryOrSpontaneous;
 
         /// <summary>
         /// The problems without spontaneous.
         /// TODO: Delete?
         /// </summary>
-        private IQueryable<Problem> problemsWithoutSpontaneous;
+        private IQueryable<Problem>? _problemsWithoutSpontaneous;
 
         /// <summary>
         /// The region name.
         /// </summary>
-        private string regionName;
+        private string? _regionName;
 
         /// <summary>
         /// The region number.
         /// </summary>
-        private string regionNumber;
+        private string? _regionNumber;
 
-        /// <summary>
-        /// The regions.
-        /// </summary>
-        //private IEnumerable<CoachesTrainingRegion> regions;
+        ///// <summary>
+        ///// The list of Coaches Training regions.
+        ///// </summary>
+        // private IEnumerable<CoachesTrainingRegion> regions;
 
-        /// <summary>
-        /// The roles.
-        /// </summary>
-        //private IEnumerable<CoachesTrainingRole> roles;
+        ///// <summary>
+        ///// The list of Coaches Training roles.
+        ///// </summary>
+        // private IEnumerable<CoachesTrainingRole> roles;
+
         /// <summary>
         /// The schools.
         /// </summary>
-        private IEnumerable schools;
+        private IEnumerable? _schools;
 
         /// <summary>
         /// The tournament info.
         /// </summary>
-        private Event tournamentInfo;
+        private Event? _tournamentInfo;
 
         /// <summary>
         /// The volunteer info.
         /// </summary>
-        private Event volunteerInfo;
+        private Event? _volunteerInfo;
 
-        //public Event CoachesTrainingInfo
-        //{
-        //  get
-        //  {
-        //    Event coachesTrainingInfo = this.coachesTrainingInfo;
-        //    if (coachesTrainingInfo == null)
-        //      coachesTrainingInfo = this.CoachesTrainingInfo = Queryable.Where<Event>((IQueryable<Event>) this.context.Events, (Expression<Func<Event, bool>>) (o => o.EventName.Contains("Coaches") && o.EventName.Contains("Training"))).First<Event>();
-        //    return coachesTrainingInfo;
-        //  }
-        //  set => this.coachesTrainingInfo = value;
-        //}
+        ///// <summary>
+        ///// Get the column names for the specified database table.
+        ///// TODO: Uncomment this code if it's ever needed again. (9/19/2013)
+        ///// </summary>
+        ///// <param name="tableName">The table name to get the column names for.</param>
+        ///// <returns>The <see><cref>string[]</cref></see>.</returns>
+        ///// <remarks>This code is no longer used, but it was difficult to figure out how to query for this. So, it remains here but commented-out.</remarks>
+        // public string[] GetColumnNames(string tableName)
+        // {
+        //     ObjectQuery tableContext;
+        //     switch (tableName)
+        //     {
+        //         case "CoachesTrainingRegistration":
+        //             tableContext = this.context.coaches_training;
+        //             break;
 
-        //public IEnumerable<CoachesTrainingRegistration> CoachesTrainingRegistrations => (IEnumerable<CoachesTrainingRegistration>) Queryable.OrderBy<CoachesTrainingRegistration, int>((IQueryable<CoachesTrainingRegistration>) this.context.CoachesTrainingRegistrations, (Expression<Func<CoachesTrainingRegistration, int>>) (c => c.RegistrationID));
+        //         case "Judges":
+        //             tableContext = this.context.judges;
+        //             break;
 
+        //         case "TournamentRegistration":
+        //             tableContext = this.context.TournamentRegistrations;
+        //             break;
 
-        /// <summary>
-        /// Gets the registration system configuration.
-        /// </summary>
-        public Dictionary<string, string> Config
+        //         case "Volunteers":
+        //             tableContext = this.context.Volunteers;
+        //             break;
+
+        //         default:
+        //             tableContext = null;
+        //             break;
+        //     }
+
+        //     var columnNames = new List<string>();
+        //     QueryInfo qi = this.GetQueryInfo(tableContext);
+        //     if (qi.CsFieldMap.Count > 0)
+        //     {
+        //         foreach (var field in qi.CsFieldMap)
+        //         {
+        //             // Handle the case where a column name contains a '?'
+        //             columnNames.Add(field.Key.Replace("?", "_"));
+        //         }
+        //     }
+
+        //     return columnNames.ToArray();
+        // }
+
+        ///// <summary>
+        ///// Gets or sets the coaches training info.
+        ///// </summary>
+        // public Event CoachesTrainingInfo
+        // {
+        //   get
+        //   {
+        //     Event coachesTrainingInfo = this.coachesTrainingInfo;
+        //     if (coachesTrainingInfo == null)
+        //       coachesTrainingInfo = this.CoachesTrainingInfo = Queryable.Where<Event>((IQueryable<Event>) this.context.Events, (Expression<Func<Event, bool>>) (o => o.EventName.Contains("Coaches") && o.EventName.Contains("Training"))).First<Event>();
+        //     return coachesTrainingInfo;
+        //   }
+        //
+        //   set => this.coachesTrainingInfo = value;
+        // }
+
+        ///// <summary>
+        ///// Gets the coaches training registrations.
+        ///// </summary>
+        // public IEnumerable<CoachesTrainingRegistration> CoachesTrainingRegistrations =>
+        //     (IEnumerable<CoachesTrainingRegistration>)Queryable.OrderBy<CoachesTrainingRegistration, int>((IQueryable<CoachesTrainingRegistration>)this.context.CoachesTrainingRegistrations, (Expression<Func<CoachesTrainingRegistration, int>>)(c => c.RegistrationID));
+
+        public IEnumerable<Event>? Events
         {
             get
             {
-                // If config is null, run the LINQ query, assign the result to Config as a Dictionary, and return the result.
-                if (config == null)
-                {
-                    config = (from c in context.Configs
-                              select c).ToDictionary(d => d.Name, d => d.Value);
-
-                    config.Add("EndYear", (int.Parse(config["Year"]) + 1).ToString(CultureInfo.InvariantCulture));
-                }
-
-                return config;
-            }
-        }
-
-        public IEnumerable<Event> Events
-        {
-            get
-            {
-                events ??= [.. (from c in context.Events
+                _events ??= [.. (from c in _context.Events
                                 select c)];
-                return events;
+                return _events;
             }
-            private set => events = value;
+            private set => _events = value;
         }
 
         //public IEnumerable<CoachesTrainingDivision> Divisions
@@ -200,51 +250,51 @@ namespace OdysseyMvc2024.Models
         /// <summary>
         /// Gets the judges.
         /// </summary>
-        public IEnumerable<Judge> Judges
+        public IEnumerable<Judge>? Judges
         {
             get
             {
                 // If judges is null, run the LINQ query, assign the result to Judges, and return the result.
-                judges ??= [.. (from c in context.Judges
+                _judges ??= [.. (from c in _context.Judges
                                 select c)];
-                return judges;
+                return _judges;
             }
 
-            private set => this.judges = value;
+            private set => _judges = value;
         }
 
         /// <summary>
         /// Gets or sets the judges info.
         /// </summary>
-        public Event JudgesInfo
+        public Event? JudgesInfo
         {
             get
             {
-                Event judgesInfo = this.judgesInfo;
+                Event? judgesInfo = _judgesInfo;
                 if (judgesInfo == null)
-                    judgesInfo = this.JudgesInfo = Queryable.Where<Event>((IQueryable<Event>)this.context.Events, (Expression<Func<Event, bool>>)(o => o.EventName.Contains("Judges") && o.EventName.Contains("Training"))).First<Event>();
+                    judgesInfo = JudgesInfo = Queryable.Where<Event>((IQueryable<Event>)_context.Events, (Expression<Func<Event, bool>>)(o => o.EventName.Contains("Judges") && o.EventName.Contains("Training"))).First<Event>();
                 return judgesInfo;
             }
             // TODO: Make this private.
-            set => this.judgesInfo = value;
+            set => _judgesInfo = value;
         }
 
         /// <summary>
         /// Gets the primary problem.
         /// </summary>
-        public IQueryable<Problem> PrimaryProblem
+        public IQueryable<Problem>? PrimaryProblem
         {
             get
             {
                 // If primaryProblem is null, run the LINQ query, assign the result to PrimaryProblem, and return the result.
                 // - The Primary problem is ProblemID 6
-                IQueryable<Problem> primaryProblem = this.primaryProblem;
+                IQueryable<Problem>? primaryProblem = _primaryProblem;
                 if (primaryProblem == null)
-                    primaryProblem = this.PrimaryProblem = Queryable.Where<Problem>((IQueryable<Problem>)this.context.Problems, (Expression<Func<Problem, bool>>)(p => p.ProblemID == 6));
+                    primaryProblem = this.PrimaryProblem = Queryable.Where<Problem>((IQueryable<Problem>)_context.Problems, (Expression<Func<Problem, bool>>)(p => p.ProblemID == 6));
                 return primaryProblem;
             }
 
-            private set => this.primaryProblem = value;
+            private set => _primaryProblem = value;
         }
 
         /// <summary>
@@ -255,24 +305,24 @@ namespace OdysseyMvc2024.Models
             get
             {
                 // If problems is null, run the LINQ query, assign the result to Problems, and return the result
-                IOrderedQueryable<Problem> orderedQueryable = Queryable.OrderBy<Problem, int>((IQueryable<Problem>)this.context.Problems, (Expression<Func<Problem, int>>)(p => p.ProblemID));
+                IOrderedQueryable<Problem> orderedQueryable = Queryable.OrderBy<Problem, int>((IQueryable<Problem>)_context.Problems, (Expression<Func<Problem, int>>)(p => p.ProblemID));
                 Problem problem1 = Queryable.FirstOrDefault<Problem>((IQueryable<Problem>)orderedQueryable, (Expression<Func<Problem, bool>>)(problem => problem.ProblemID == 6));
                 if (problem1 != null)
                     problem1.ProblemName += " (The Primary Problem)";
-                return this.problemChoices ?? (this.ProblemChoices = (IEnumerable<Problem>)orderedQueryable);
+                return _problemChoices ?? (this.ProblemChoices = (IEnumerable<Problem>)orderedQueryable);
             }
-            private set => this.problemChoices = value;
+            private set => _problemChoices = value;
         }
 
         public IEnumerable<Problem> ProblemChoicesWithoutSpontaneous
         {
             get
             {
-                IQueryable<Problem> queryable = Queryable.Where<Problem>((IQueryable<Problem>)Queryable.OrderBy<Problem, int>((IQueryable<Problem>)this.context.Problems, (Expression<Func<Problem, int>>)(p => p.ProblemID)), (Expression<Func<Problem, bool>>)(p => p.ProblemName != "Spontaneous"));
+                IQueryable<Problem> queryable = Queryable.Where<Problem>((IQueryable<Problem>)Queryable.OrderBy<Problem, int>((IQueryable<Problem>)_context.Problems, (Expression<Func<Problem, int>>)(p => p.ProblemID)), (Expression<Func<Problem, bool>>)(p => p.ProblemName != "Spontaneous"));
                 Problem problem1 = Queryable.FirstOrDefault<Problem>(queryable, (Expression<Func<Problem, bool>>)(problem => problem.ProblemID == 6));
                 if (problem1 != null)
                     problem1.ProblemName += " (The Primary Problem)";
-                return this.problemChoicesWithoutSpontaneous ?? (this.ProblemChoices = (IEnumerable<Problem>)queryable);
+                return this._problemChoicesWithoutSpontaneous ?? (ProblemChoices = (IEnumerable<Problem>)queryable);
             }
         }
 
@@ -281,7 +331,7 @@ namespace OdysseyMvc2024.Models
             get
             {
                 // If problems is null, run the LINQ query, assign the result to Problems, and return the result.
-                IOrderedQueryable<Problem> orderedQueryable = Queryable.OrderBy<Problem, int>(Queryable.Where<Problem>((IQueryable<Problem>)this.context.Problems, (Expression<Func<Problem, bool>>)(p => p.ProblemID != 7)), (Expression<Func<Problem, int>>)(p => p.ProblemID));
+                IOrderedQueryable<Problem> orderedQueryable = Queryable.OrderBy<Problem, int>(Queryable.Where<Problem>((IQueryable<Problem>)_context.Problems, (Expression<Func<Problem, bool>>)(p => p.ProblemID != 7)), (Expression<Func<Problem, int>>)(p => p.ProblemID));
 
                 // TODO: When the following was uncommented, " (The Primary Problem)" showed up twice in the same dropdown entry.
                 // I have no idea why commenting this out solves the problem!  I need to revisit and fix this.
@@ -292,101 +342,172 @@ namespace OdysseyMvc2024.Models
                 ////primaryProblem.ProblemName += " (The Primary Problem)";
                 ////}
 
-                return this.problemConflicts ?? (this.ProblemConflicts = (IEnumerable<Problem>)orderedQueryable);
+                return this._problemConflicts ?? (ProblemConflicts = (IEnumerable<Problem>)orderedQueryable);
             }
 
-            private set => this.problemConflicts = value;
+            private set => _problemConflicts = value;
         }
 
-        public IEnumerable<Problem> Problems
+        public IEnumerable<Problem>? Problems
         {
             get
             {
                 // If problems is null, run the LINQ query, assign the result to Problems, and return the result.
                 // - Skip ProblemID 0, which is "Not Specified"
-                IEnumerable<Problem> problems = this.problems;
+                IEnumerable<Problem>? problems = _problems;
                 if (problems == null)
-                    problems = this.Problems = (IEnumerable<Problem>)Queryable.OrderBy<Problem, int>(Queryable.Where<Problem>((IQueryable<Problem>)this.context.Problems, (Expression<Func<Problem, bool>>)(p => p.ProblemCategory != (object)null)), (Expression<Func<Problem, int>>)(p => p.ProblemID));
+                    problems = Problems = _context.Problems.Where(p => p.ProblemCategory != (object)null).OrderBy<Problem, int>((Expression<Func<Problem, int>>)(p => p.ProblemID));
                 return problems;
             }
 
-            private set => this.problems = value;
+            private set => _problems = value;
         }
 
-        public IQueryable<Problem> ProblemsWithoutPrimaryOrSpontaneous
+        /// <summary>
+        /// Gets the list of problems excluding the primary and spontaneous problems.
+        /// </summary>
+        public IQueryable<Problem>? ProblemsWithoutPrimaryOrSpontaneous
         {
             get
             {
-                IQueryable<Problem> primaryOrSpontaneous = this.problemsWithoutPrimaryOrSpontaneous;
-                if (primaryOrSpontaneous == null)
-                    primaryOrSpontaneous = this.ProblemsWithoutPrimaryOrSpontaneous = (IQueryable<Problem>)Queryable.OrderBy<Problem, int>(Queryable.Where<Problem>((IQueryable<Problem>)this.context.Problems, (Expression<Func<Problem, bool>>)(p => p.ProblemID != 0 && p.ProblemID != 6 && p.ProblemID != 7)), (Expression<Func<Problem, int>>)(p => p.ProblemID));
+                // If problems is null, run the LINQ query, assign the result to Problems, and return the result.
+                // - Skip ProblemIDs 0 ("Not Specified"), 6 (Primary), and 7 (Spontaneous)
+                var primaryOrSpontaneous = _problemsWithoutPrimaryOrSpontaneous ?? (ProblemsWithoutPrimaryOrSpontaneous = _context.Problems
+                        .Where(p => p.ProblemID != 0 && p.ProblemID != 6 && p.ProblemID != 7)
+                        .OrderBy(p => p.ProblemID));
+
                 return primaryOrSpontaneous;
             }
-            private set => this.problemsWithoutPrimaryOrSpontaneous = value;
+
+            private set => _problemsWithoutPrimaryOrSpontaneous = value;
         }
 
-        public IQueryable<Problem> ProblemsWithoutSpontaneous
+        /// <summary>
+        /// Gets the list of problems excluding the spontaneous problem.
+        /// </summary>
+        public IQueryable<Problem>? ProblemsWithoutSpontaneous
         {
             get
             {
-                IQueryable<Problem> withoutSpontaneous = this.problemsWithoutSpontaneous;
-                if (withoutSpontaneous == null)
-                    withoutSpontaneous = this.ProblemsWithoutSpontaneous = (IQueryable<Problem>)Queryable.OrderBy<Problem, int>(Queryable.Where<Problem>((IQueryable<Problem>)this.context.Problems, (Expression<Func<Problem, bool>>)(p => p.ProblemID != 0 && p.ProblemID != 7)), (Expression<Func<Problem, int>>)(p => p.ProblemID));
-                return withoutSpontaneous;
+                // If problems is null, run the LINQ query, assign the result to Problems, and return the result.
+                // - Skip ProblemID 0, which is "Not Specified"
+                var problemsWithoutSpontaneous = _problemsWithoutSpontaneous ?? (ProblemsWithoutSpontaneous = _context.Problems
+                    .Where(p => p.ProblemID != 0 && p.ProblemID != 7)
+                    .OrderBy((Expression<Func<Problem, int>>)(p => p.ProblemID)));
+
+                return problemsWithoutSpontaneous;
+
+                // return _problemsWithoutSpontaneous ?? (ProblemsWithoutSpontaneous = from p in _context.Problems
+                //     where p.ProblemID != 0 && p.ProblemID != 7
+                //     orderby p.ProblemID
+                //     select p);
             }
-            private set => this.problemsWithoutSpontaneous = value;
+
+            private set => _problemsWithoutSpontaneous = value;
         }
 
+        /// <summary>
+        /// Gets the region name.
+        /// </summary>
         public string RegionName
         {
-            get => this.regionName ?? (this.RegionName = this.Config[nameof(RegionName)]);
-            private set => this.regionName = value;
+            // If _regionName is null, run the LINQ query, assign the result to RegionName, and return the result
+            get => _regionName ?? (RegionName = Config[nameof(RegionName)]);
+
+            private set => _regionName = value;
         }
 
+        /// <summary>
+        /// Gets the region number.
+        /// </summary>
         public string RegionNumber
         {
-            get => this.regionNumber ?? (this.RegionNumber = this.Config[nameof(RegionNumber)]);
-            private set => this.regionNumber = value;
+            // If _regionName is null, run the LINQ query, assign the result to RegionName, and return the result
+            get => _regionNumber ?? (RegionNumber = Config[nameof(RegionNumber)]);
+
+            private set => _regionNumber = value;
         }
 
-        //public IEnumerable<CoachesTrainingRegion> Regions
-        //{
-        //  get
-        //  {
-        //    IEnumerable<CoachesTrainingRegion> regions = this.regions;
-        //    if (regions == null)
-        //      regions = this.Regions = (IEnumerable<CoachesTrainingRegion>) Queryable.OrderBy<CoachesTrainingRegion, int>((IQueryable<CoachesTrainingRegion>) this.context.CoachesTrainingRegions, (Expression<Func<CoachesTrainingRegion, int>>) (r => r.ID));
-        //    return regions;
-        //  }
-        //  private set => this.regions = value;
-        //}
+        ///// <summary>
+        ///// Gets the regions.
+        ///// </summary>
+        // public IEnumerable<CoachesTrainingRegion> Regions
+        // {
+        //     get
+        //     {
+        //         // If _problems is null, run the LINQ query, assign the result to Problems, and return the result
+        //         // - Skip ProblemID 0, which is "Not Specified"
+        //         return this.regions ?? (this.Regions = from r in this.context.CoachesTrainingRegions
+        //             orderby r.ID
+        //             select r);
+        //     }
+        //
+        //     private set
+        //     {
+        //         this.regions = value;
+        //     }
+        // }
+        //
+        // public IEnumerable<CoachesTrainingRegion> Regions
+        // {
+        //   get
+        //   {
+        //     IEnumerable<CoachesTrainingRegion> regions = this.regions;
+        //     if (regions == null)
+        //       regions = this.Regions = (IEnumerable<CoachesTrainingRegion>) Queryable.OrderBy<CoachesTrainingRegion, int>((IQueryable<CoachesTrainingRegion>) this.context.CoachesTrainingRegions, (Expression<Func<CoachesTrainingRegion, int>>) (r => r.ID));
+        //     return regions;
+        //   }
+        //   private set => this.regions = value;
+        // }
 
+        ///// <summary>
+        ///// Gets the roles.
+        ///// </summary>
         //public IEnumerable<CoachesTrainingRole> Roles
-        //{
-        //  get
-        //  {
-        //    IEnumerable<CoachesTrainingRole> roles = this.roles;
-        //    if (roles == null)
-        //      roles = this.Roles = (IEnumerable<CoachesTrainingRole>) Queryable.OrderBy<CoachesTrainingRole, byte>((IQueryable<CoachesTrainingRole>) this.context.CoachesTrainingRoles, (Expression<Func<CoachesTrainingRole, byte>>) (r => r.ID));
-        //    return roles;
-        //  }
-        //  private set => this.roles = value;
-        //}
+        // {
+        //     get
+        //     {
+        //         // If _problems is null, run the LINQ query, assign the result to Problems, and return the result
+        //         // - Skip ProblemID 0, which is "Not Specified"
+        //         return this.roles ?? (this.Roles = from r in this.context.CoachesTrainingRoles
+        //             orderby r.ID
+        //             select r);
+        //     }
+           
+        //     private set
+        //     {
+        //         this.roles = value;
+        //     }
+        // }
+        //
+        // public IEnumerable<CoachesTrainingRole> Roles
+        // {
+        //   get
+        //   {
+        //     IEnumerable<CoachesTrainingRole> roles = this.roles;
+        //     if (roles == null)
+        //       roles = this.Roles = (IEnumerable<CoachesTrainingRole>) Queryable.OrderBy<CoachesTrainingRole, byte>((IQueryable<CoachesTrainingRole>) this.context.CoachesTrainingRoles, (Expression<Func<CoachesTrainingRole, byte>>) (r => r.ID));
+        //     return roles;
+        //   }
+        //   private set => this.roles = value;
+        // }
 
-        public IEnumerable Schools
+        public IEnumerable? Schools
         {
             get
             {
-                IEnumerable schools = this.schools;
-                if (schools == null)
-                    schools = this.Schools = (IEnumerable)Queryable.Select((IQueryable<School>)Queryable.OrderBy<School, string>(Queryable.Where<School>((IQueryable<School>)this.context.Schools, (Expression<Func<School, bool>>)(s => s.Membership_1seen == "yes")), (Expression<Func<School, string>>)(s => s.Name)), s => new
+                var schools = _schools ?? (Schools = _context.Schools
+                    .Where(s => s.Membership_1seen == "yes")
+                    .OrderBy<School, string>(s => s.Name ?? string.Empty)
+                    .Select(s => new
                     {
-                        ID = s.ID,
-                        Name = s.Name
-                    });
+                        s.ID, s.Name
+                    }));
+
                 return schools;
             }
-            private set => this.schools = value;
+
+            private set => _schools = value;
         }
 
         public Event TournamentInfo
@@ -397,55 +518,103 @@ namespace OdysseyMvc2024.Models
                 // TODO: Add logging for when "NoVA North Regional Tournament" cannot be found in the database and display the current value of any containing "Tournament".
                 // TODO: Figure out how to cache this value so we don't query for/set it every time a page is displayed.
                 // TODO: This is throwing an exception!
-                Event tournamentInfo = this.tournamentInfo ?? (TournamentInfo = Events.AsQueryable().Where(e => e.EventName.StartsWith(RegionName) && e.EventName.Contains("Tournament")).First());
+                Event tournamentInfo = _tournamentInfo ?? (TournamentInfo = Events.AsQueryable().Where(e => e.EventName.StartsWith(RegionName) && e.EventName.Contains("Tournament")).First());
                 //Event tournamentInfo = this.tournamentInfo ?? (TournamentInfo = Queryable.Where<Event>(context.Events, o => o.EventName.StartsWith(RegionName) && o.EventName.Contains("Tournament")).First<Event>());
 
                 return tournamentInfo;
             }
 
-            set => this.tournamentInfo = value;
+            set => _tournamentInfo = value;
         }
 
-        public IQueryable TournamentRegistration => (IQueryable)Queryable.Select<TournamentRegistration, TournamentRegistration>((IQueryable<TournamentRegistration>)this.context.TournamentRegistrations, (Expression<Func<TournamentRegistration, TournamentRegistration>>)(t => t)).AsQueryable<TournamentRegistration>();
+        public IQueryable TournamentRegistration => _context.TournamentRegistrations.Select<TournamentRegistration, TournamentRegistration>(t => t).AsQueryable();
 
-        public IEnumerable<TournamentRegistration> TournamentRegistrations => (IEnumerable<TournamentRegistration>)Queryable.OrderBy<TournamentRegistration, int>((IQueryable<TournamentRegistration>)this.context.TournamentRegistrations, (Expression<Func<TournamentRegistration, int>>)(t => t.Id));
+        public IEnumerable<TournamentRegistration> TournamentRegistrations => _context.TournamentRegistrations.OrderBy(t => t.Id);
 
-        public Event VolunteerInfo
-        {
-            get
-            {
-                Event volunteerInfo = this.volunteerInfo;
-                if (volunteerInfo == null)
-                    volunteerInfo = this.VolunteerInfo = Queryable.Where<Event>((IQueryable<Event>)this.context.Events, (Expression<Func<Event, bool>>)(o => o.EventName.Contains("Volunteer"))).First<Event>();
-                return volunteerInfo;
-            }
-            set => this.volunteerInfo = value;
-        }
+        ///// <summary>
+        ///// Gets or sets the volunteer info.
+        ///// TODO: Test that this works. I copied it from TournamentInfo - Rob, 12/12/2014.
+        ///// </summary>
+        // public Event? VolunteerInfo
+        // {
+        //     get
+        //     {
+        //         var volunteerInfo = this._volunteerInfo ?? (this.VolunteerInfo = this._context.Events.First(o => o.EventName.Contains("Volunteer")));
 
-        //public IQueryable Volunteers => (IQueryable) Queryable.Select<Volunteer, Volunteer>((IQueryable<Volunteer>) this.context.Volunteers, (Expression<Func<Volunteer, Volunteer>>) (v => v)).AsQueryable<Volunteer>();
+        //         return volunteerInfo;
 
-        //public int AddCoachesTrainingRegistration(CoachesTrainingRegistration newRegistration)
-        //{
-        //  if (newRegistration == null)
-        //    return 0;
-        //  this.context.CoachesTrainingRegistrations.Add(newRegistration);
-        //  return this.context.SaveChanges();
-        //}
+        //         // return this.volunteerInfo ?? (this.VolunteerInfo = (from o in this.context.Events
+        //         //     where o.EventName.Contains("Volunteer")
+        //         //     select o).First());
+
+        //         // TODO: Do we still need where o.EventName.StartsWith(this.RegionName)? I don't think so - Rob, 12/12/2014.
+        //         // return this.volunteerInfo ?? (this.VolunteerInfo = (from o in this.context.Events
+        //         //                                                     where o.EventName.StartsWith(this.RegionName) && o.EventName.Contains("Volunteer")
+        //         //                                                     select o).First());
+        //     }
+
+        //     private set => _volunteerInfo = value;
+        // }
+
+        ///// <summary>
+        ///// Gets the volunteers.
+        ///// </summary>
+        // public IQueryable Volunteers =>
+        //     (IQueryable)((IQueryable<Volunteer>)this.context.Volunteers).Select<Volunteer, Volunteer>((Expression<Func<Volunteer, Volunteer>>)(v => v)).AsQueryable<Volunteer>();
+        //
+        // public IQueryable Volunteers
+        // {
+        //     get
+        //     {
+        //         return (from v in this.context.Volunteers
+        //             select v).AsQueryable();
+        //     }
+        // }
+
+        ///// <summary>
+        ///// The add coaches training registration.
+        ///// </summary>
+        ///// <param name="newRegistration">
+        ///// The new registration.
+        ///// </param>
+        ///// <returns>
+        ///// The <see cref="int"/>.
+        ///// </returns>
+        // public int AddCoachesTrainingRegistration(CoachesTrainingRegistration newRegistration)
+        // {
+        //     if (newRegistration != null)
+        //     {
+        //         // SaveChanges returns the number of objects added to the database
+        //         this.context.CoachesTrainingRegistrations.Add(newRegistration);
+        //         return this.context.SaveChanges();
+        //     }
+
+        //     return 0;
+
+        //     // if (newRegistration == null)
+        //     //     return 0;
+        //     // this.context.CoachesTrainingRegistrations.Add(newRegistration);
+        //     // return this.context.SaveChanges();
+        // }
 
         public int AddJudge(Judge newJudge)
         {
-            if (newJudge == null)
-                return 0;
-            this.context.Judges.Add(newJudge);
-            return this.context.SaveChanges();
+            if (newJudge != null)
+            {
+                // SaveChanges returns the number of objects added to the database
+                _context.Judges.Add(newJudge);
+                return _context.SaveChanges();
+            }
+
+            return 0;
         }
 
         public int AddTournamentRegistration(TournamentRegistration newRegistration)
         {
             if (newRegistration == null)
                 return 0;
-            this.context.TournamentRegistrations.Add(newRegistration);
-            return context.SaveChanges();
+            _context.TournamentRegistrations.Add(newRegistration);
+            return _context.SaveChanges();
         }
 
         //public int AddVolunteer(Volunteer newVolunteer, int? tournamentRegistrationId = null)
@@ -475,7 +644,7 @@ namespace OdysseyMvc2024.Models
             string judgeLastName)
         {
             //Judge judge = Queryable.Where<Judge>((IQueryable<Judge>)this.context.Judges, (Expression<Func<Judge, bool>>)(j => j.JudgeID == judgeId)).FirstOrDefault<Judge>();
-            Judge judgeRecord = (from j in context.Judges
+            Judge judgeRecord = (from j in _context.Judges
                                  where j.JudgeID == judgeId
                                  select j).FirstOrDefault();
 
@@ -487,7 +656,7 @@ namespace OdysseyMvc2024.Models
             if (judgeRecord != null)
             {
                 judgeRecord.TeamID = null;
-                context.SaveChanges();
+                _context.SaveChanges();
             }
         }
 
@@ -555,7 +724,7 @@ namespace OdysseyMvc2024.Models
         //public IQueryable<Judge> GetJudgeById(int judgeId) => Queryable.Where<Judge>((IQueryable<Judge>)this.context.Judges, (Expression<Func<Judge, bool>>)(j => j.JudgeID == judgeId));
         public IQueryable<Judge> GetJudgeById(int judgeId)
         {
-            return from j in this.context.Judges
+            return from j in _context.Judges
                    where j.JudgeID == judgeId
                    select j;
         }
@@ -566,19 +735,19 @@ namespace OdysseyMvc2024.Models
             string judgeLastName)
         {
             //return Queryable.Where<Judge>((IQueryable<Judge>)this.context.Judges, (Expression<Func<Judge, bool>>)(j => j.JudgeID == judgeId && j.FirstName.ToLower() == judgeFirstName.ToLower() && j.LastName.ToLower() == judgeLastName.ToLower()));
-            return from j in this.context.Judges
+            return from j in _context.Judges
                    where (j.JudgeID == judgeId) && (j.FirstName.ToLower() == judgeFirstName.ToLower()) && (j.LastName.ToLower() == judgeLastName.ToLower())
                    select j;
         }
 
-        public short? GetJudgeIdFromTournamentRegistrationId(int tournamentRegistrationId) => (short?)Queryable.Where<TournamentRegistration>((IQueryable<TournamentRegistration>)this.context.TournamentRegistrations, (Expression<Func<TournamentRegistration, bool>>)(t => t.Id == tournamentRegistrationId)).FirstOrDefault<TournamentRegistration>()?.JudgeID;
+        public short? GetJudgeIdFromTournamentRegistrationId(int tournamentRegistrationId) => (short?)Queryable.Where<TournamentRegistration>((IQueryable<TournamentRegistration>)_context.TournamentRegistrations, (Expression<Func<TournamentRegistration, bool>>)(t => t.Id == tournamentRegistrationId)).FirstOrDefault<TournamentRegistration>()?.JudgeID;
 
         public void GetJudgeNameFromJudgeId(
           short? judgeId,
           out string judgeFirstName,
           out string judgeLastName)
         {
-            Judge judge = Queryable.Where<Judge>((IQueryable<Judge>)this.context.Judges, (Expression<Func<Judge, bool>>)(j => (int?)j.JudgeID == (int?)judgeId)).FirstOrDefault<Judge>();
+            Judge judge = Queryable.Where<Judge>((IQueryable<Judge>)_context.Judges, (Expression<Func<Judge, bool>>)(j => (int?)j.JudgeID == (int?)judgeId)).FirstOrDefault<Judge>();
             if (judge == null)
             {
                 judgeFirstName = (string)null;
@@ -593,7 +762,7 @@ namespace OdysseyMvc2024.Models
 
         public List<string> GetMemberGradesByRegistration(int id)
         {
-            TournamentRegistration tournamentRegistration = Queryable.Where<TournamentRegistration>((IQueryable<TournamentRegistration>)this.context.TournamentRegistrations, (Expression<Func<TournamentRegistration, bool>>)(t => t.Id == id)).FirstOrDefault<TournamentRegistration>();
+            TournamentRegistration tournamentRegistration = Queryable.Where<TournamentRegistration>((IQueryable<TournamentRegistration>)_context.TournamentRegistrations, (Expression<Func<TournamentRegistration, bool>>)(t => t.Id == id)).FirstOrDefault<TournamentRegistration>();
             if (tournamentRegistration == null)
                 return (List<string>)null;
             return new List<string>()
@@ -614,7 +783,7 @@ namespace OdysseyMvc2024.Models
             {
                 if (!problemId.HasValue)
                     return (string)null;
-                return Queryable.Where<Problem>((IQueryable<Problem>)this.context.Problems, (Expression<Func<Problem, bool>>)(p => (int?)p.ProblemID == problemId)).FirstOrDefault<Problem>()?.ProblemName;
+                return Queryable.Where<Problem>((IQueryable<Problem>)_context.Problems, (Expression<Func<Problem, bool>>)(p => (int?)p.ProblemID == problemId)).FirstOrDefault<Problem>()?.ProblemName;
             }
             catch (Exception ex)
             {
@@ -622,12 +791,12 @@ namespace OdysseyMvc2024.Models
             }
         }
 
-        public string GetSchoolNameFromSchoolId(int? schoolId) => Queryable.Where<School>((IQueryable<School>)this.context.Schools, (Expression<Func<School, bool>>)(s => (int?)s.ID == schoolId)).FirstOrDefault<School>()?.Name;
+        public string GetSchoolNameFromSchoolId(int? schoolId) => Queryable.Where<School>((IQueryable<School>)_context.Schools, (Expression<Func<School, bool>>)(s => (int?)s.ID == schoolId)).FirstOrDefault<School>()?.Name;
 
         public TournamentRegistration GetTournamentRegistrationById(
           int tournamentRegistrationId)
         {
-            return Queryable.Where<TournamentRegistration>((IQueryable<TournamentRegistration>)this.context.TournamentRegistrations, (Expression<Func<TournamentRegistration, bool>>)(t => t.Id == tournamentRegistrationId)).FirstOrDefault<TournamentRegistration>();
+            return Queryable.Where<TournamentRegistration>((IQueryable<TournamentRegistration>)_context.TournamentRegistrations, (Expression<Func<TournamentRegistration, bool>>)(t => t.Id == tournamentRegistrationId)).FirstOrDefault<TournamentRegistration>();
         }
 
         //public Volunteer GetVolunteerById(int? volunteerId) => Queryable.FirstOrDefault<Volunteer>((IQueryable<Volunteer>) this.context.Volunteers, (Expression<Func<Volunteer, bool>>) (v => (int?) v.VolunteerID == volunteerId));
@@ -640,11 +809,11 @@ namespace OdysseyMvc2024.Models
         //  return Queryable.FirstOrDefault<Volunteer>((IQueryable<Volunteer>) this.context.Volunteers, (Expression<Func<Volunteer, bool>>) (v => v.VolunteerID == volunteerId && string.Equals(v.FirstName, volunteerFirstName, StringComparison.CurrentCultureIgnoreCase) && string.Equals(v.LastName, volunteerLastName, StringComparison.CurrentCultureIgnoreCase)));
         //}
 
-        public int? GetVolunteerIdFromTournamentRegistrationId(int tournamentRegistrationId) => Queryable.First<TournamentRegistration>((IQueryable<TournamentRegistration>)this.context.TournamentRegistrations, (Expression<Func<TournamentRegistration, bool>>)(t => t.Id == tournamentRegistrationId)).VolunteerID;
+        public int? GetVolunteerIdFromTournamentRegistrationId(int tournamentRegistrationId) => Queryable.First<TournamentRegistration>((IQueryable<TournamentRegistration>)_context.TournamentRegistrations, (Expression<Func<TournamentRegistration, bool>>)(t => t.Id == tournamentRegistrationId)).VolunteerID;
 
         public int UpdateJudge(int judgeId, int pageNumber, Judge newRegistrationData)
         {
-            IQueryable<Judge> source = Queryable.Where<Judge>((IQueryable<Judge>)this.context.Judges, (Expression<Func<Judge, bool>>)(j => j.JudgeID == judgeId));
+            IQueryable<Judge> source = Queryable.Where<Judge>((IQueryable<Judge>)_context.Judges, (Expression<Func<Judge, bool>>)(j => j.JudgeID == judgeId));
             if (!source.Any<Judge>())
                 return 0;
             switch (pageNumber)
@@ -681,16 +850,16 @@ namespace OdysseyMvc2024.Models
                     source.First<Judge>().TimeRegistered = new DateTime?(DateTime.Now);
                     break;
             }
-            return this.context.SaveChanges();
+            return _context.SaveChanges();
         }
 
         public int UpdateJudgeEmail(int judgeId, string email)
         {
-            IQueryable<Judge> source = Queryable.Where<Judge>((IQueryable<Judge>)this.context.Judges, (Expression<Func<Judge, bool>>)(j => j.JudgeID == judgeId));
+            IQueryable<Judge> source = Queryable.Where<Judge>((IQueryable<Judge>)_context.Judges, (Expression<Func<Judge, bool>>)(j => j.JudgeID == judgeId));
             if (!source.Any<Judge>())
                 return 0;
             source.First<Judge>().EmailAddress = email;
-            return this.context.SaveChanges();
+            return _context.SaveChanges();
         }
 
         public int UpdateJudgeRecordWithTournamentRegistrationId(
@@ -702,7 +871,7 @@ namespace OdysseyMvc2024.Models
             short? nullable = judgeId;
             if (!(nullable.HasValue ? new int?((int)nullable.GetValueOrDefault()) : new int?()).HasValue)
                 return 0;
-            Judge judge = Queryable.Where<Judge>((IQueryable<Judge>)this.context.Judges, (Expression<Func<Judge, bool>>)(j => (int?)j.JudgeID == (int?)judgeId)).First<Judge>();
+            Judge judge = Queryable.Where<Judge>((IQueryable<Judge>)_context.Judges, (Expression<Func<Judge, bool>>)(j => (int?)j.JudgeID == (int?)judgeId)).First<Judge>();
             if (!string.IsNullOrWhiteSpace(judge.TeamID))
             {
                 int result;
@@ -712,7 +881,7 @@ namespace OdysseyMvc2024.Models
             }
             judge.TeamID = tournamentRegistrationId.ToString((IFormatProvider)CultureInfo.InvariantCulture);
             judge.TimeAssignedToTeam = new DateTime?(DateTime.Now);
-            return this.context.SaveChanges();
+            return _context.SaveChanges();
         }
 
         public int UpdateTournamentRegistration(
@@ -720,7 +889,7 @@ namespace OdysseyMvc2024.Models
           int pageNumber,
           TournamentRegistration newRegistrationData)
         {
-            IQueryable<TournamentRegistration> source = Queryable.Where<TournamentRegistration>((IQueryable<TournamentRegistration>)this.context.TournamentRegistrations, (Expression<Func<TournamentRegistration, bool>>)(r => r.Id == id));
+            IQueryable<TournamentRegistration> source = Queryable.Where<TournamentRegistration>((IQueryable<TournamentRegistration>)_context.TournamentRegistrations, (Expression<Func<TournamentRegistration, bool>>)(r => r.Id == id));
             if (!source.Any<TournamentRegistration>())
                 return 0;
             switch (pageNumber)
@@ -788,7 +957,7 @@ namespace OdysseyMvc2024.Models
                     source.First<TournamentRegistration>().TimeRegistered = newRegistrationData.TimeRegistered;
                     break;
             }
-            return this.context.SaveChanges();
+            return _context.SaveChanges();
         }
 
         //public int UpdateVolunteer(int volunteerId, int pageNumber, Volunteer newRegistrationData)

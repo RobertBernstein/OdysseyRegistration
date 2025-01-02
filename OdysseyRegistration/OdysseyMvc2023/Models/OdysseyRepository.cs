@@ -71,7 +71,7 @@ namespace OdysseyMvc2023.Models
         /// The problem choices without spontaneous.
         /// </summary>
         /// TODO: Is this still needed?  Can it be removed?  Why is it never initialized? - Rob, 12/17/2018.
-        private readonly IEnumerable<Problem> problemChoicesWithoutSpontaneous;
+        private IEnumerable<Problem> problemChoicesWithoutSpontaneous;
 
         /// <summary>
         /// The problem conflicts.
@@ -601,7 +601,7 @@ namespace OdysseyMvc2023.Models
                     return (string)null;
                 return Queryable.Where<Problem>((IQueryable<Problem>)this.context.Problems, (Expression<Func<Problem, bool>>)(p => (int?)p.ProblemID == problemId)).FirstOrDefault<Problem>()?.ProblemName;
             }
-            catch (Exception ex)
+            catch (Exception /*ex*/)
             {
                 return (string)null;
             }
