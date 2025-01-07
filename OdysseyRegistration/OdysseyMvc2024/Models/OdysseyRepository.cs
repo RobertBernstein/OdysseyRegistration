@@ -24,6 +24,8 @@ namespace OdysseyMvc2024.Models
     /// </summary>
     public class OdysseyRepository : IOdysseyRepository
     {
+        private const int ThePrimaryProblemNumber = 6;
+
         /// <summary>
         /// The database context.
         /// </summary>
@@ -39,11 +41,14 @@ namespace OdysseyMvc2024.Models
         /// * Constructor Initialization: The Lazy&lt;T&gt; instance _config is initialized in the constructor, capturing the context needed to query the database.
         /// * Direct Property Access: The Config property returns _config.Value, ensuring the dictionary is available without additional checks.
         /// </remarks>
+        // TODO: (Rob) Test that this works.
         private readonly Lazy<Dictionary<string, string>> _config;
 
         public OdysseyRepository(IOdysseyEntities context)
         {
             _context = (OdysseyEntities)context;
+
+            // TODO: (Rob) Test that this works.
             _config = new Lazy<Dictionary<string, string>>(() =>
             {
                 var config = _context.Configs.ToDictionary(d => d.Name, d => d.Value);
@@ -52,14 +57,10 @@ namespace OdysseyMvc2024.Models
             });
         }
 
-        /// <summary>
-        /// Gets the registration system configuration.
-        /// </summary>
-        public Dictionary<string, string> Config => _config.Value;
-
         ///// <summary>
         ///// The Coaches Training event information.
         ///// </summary>
+        // TODO: (Rob) Consider splitting the OdysseyRepository class into JudgesRegistrationRepository, TournamentRegistrationRepository, etc., each with a single responsibility.
         // private Event coachesTrainingInfo;
 
         ///// <summary>
@@ -68,17 +69,17 @@ namespace OdysseyMvc2024.Models
         // private IEnumerable<CoachesTrainingDivision> divisions;
 
         /// <summary>
-        /// The judges.
+        /// The information for all Odyssey events this season.
         /// </summary>
         private IEnumerable<Event>? _events;
 
         /// <summary>
-        /// The judges.
+        /// The list of judges registered for the tournament.
         /// </summary>
         private IEnumerable<Judge>? _judges;
 
         /// <summary>
-        /// The judges info.
+        /// The judges information.
         /// </summary>
         private Event? _judgesInfo;
 
@@ -140,19 +141,19 @@ namespace OdysseyMvc2024.Models
         // private IEnumerable<CoachesTrainingRole> roles;
 
         /// <summary>
-        /// The schools.
+        /// The list of schools participating in Odyssey this season.
         /// </summary>
         private IEnumerable? _schools;
 
         /// <summary>
-        /// The tournament info.
+        /// The Tournament event information.
         /// </summary>
         private Event? _tournamentInfo;
 
-        /// <summary>
-        /// The volunteer info.
-        /// </summary>
-        private Event? _volunteerInfo;
+        ///// <summary>
+        ///// The volunteer information.
+        ///// </summary>
+        // private Event? _volunteerInfo;
 
         ///// <summary>
         ///// Get the column names for the specified database table.
@@ -202,26 +203,75 @@ namespace OdysseyMvc2024.Models
         // }
 
         ///// <summary>
-        ///// Gets or sets the coaches training info.
+        ///// Gets or sets the Coaches Training event information.
         ///// </summary>
         // public Event CoachesTrainingInfo
         // {
-        //   get
-        //   {
-        //     Event coachesTrainingInfo = this.coachesTrainingInfo;
-        //     if (coachesTrainingInfo == null)
-        //       coachesTrainingInfo = this.CoachesTrainingInfo = Queryable.Where<Event>((IQueryable<Event>) this.context.Events, (Expression<Func<Event, bool>>) (o => o.EventName.Contains("Coaches") && o.EventName.Contains("Training"))).First<Event>();
-        //     return coachesTrainingInfo;
-        //   }
+        //     get
+        //     {
+        //         return this.coachesTrainingInfo ?? (this.CoachesTrainingInfo = (from o in this.context.Events
+        //             where o.EventName.Contains("Coaches") && o.EventName.Contains("Training")
+        //             select o).First());
+        //     }
+
+        //     set
+        //     {
+        //         this.coachesTrainingInfo = value;
+        //     }
+        // }
+        // public Event CoachesTrainingInfo
+        // {
+        //     get
+        //     {
+        //         var coachesTrainingInfo = this.coachesTrainingInfo ??
+        //                                   (CoachesTrainingInfo = ((IQueryable<Event>)this.context.Events).Where((Expression<Func<Event, bool>>)(o => o.EventName.Contains("Coaches") && o.EventName.Contains("Training"))).First());
+
+        //         return coachesTrainingInfo;
+        //     }
         //
-        //   set => this.coachesTrainingInfo = value;
+        //     set => this.coachesTrainingInfo = value;
         // }
 
         ///// <summary>
-        ///// Gets the coaches training registrations.
+        ///// Gets the list of coaches training registrations.
         ///// </summary>
+        // public IEnumerable<CoachesTrainingRegistration> CoachesTrainingRegistrations
+        // {
+        //     get
+        //     {
+        //         return from c in this.context.CoachesTrainingRegistrations
+        //             orderby c.RegistrationID
+        //             select c;
+        //     }
+        // }
         // public IEnumerable<CoachesTrainingRegistration> CoachesTrainingRegistrations =>
         //     (IEnumerable<CoachesTrainingRegistration>)Queryable.OrderBy<CoachesTrainingRegistration, int>((IQueryable<CoachesTrainingRegistration>)this.context.CoachesTrainingRegistrations, (Expression<Func<CoachesTrainingRegistration, int>>)(c => c.RegistrationID));
+
+        /// <summary>
+        /// Gets the registration system configuration.
+        /// </summary>
+        // TODO: (Rob) Test that this works.
+        public Dictionary<string, string> Config => _config.Value;
+        // public Dictionary<string, string> Config
+        // {
+        //     get
+        //     {
+        //         // If config is null, run the LINQ query, assign the result to Config as a Dictionary, and return the result.
+        //         if (this.config == null)
+        //         {
+        //             this.Config = (from c in this.context.Configs
+        //                 select c).ToDictionary(d => d.Name, d => d.Value);
+        //         }
+
+        //         return this.config;
+        //     }
+
+        //     private set
+        //     {
+        //         this.config = value;
+        //         this.config.Add("EndYear", (int.Parse(this.config["Year"]) + 1).ToString(CultureInfo.InvariantCulture));
+        //     }
+        // }
 
         public IEnumerable<Event>? Events
         {
@@ -234,21 +284,21 @@ namespace OdysseyMvc2024.Models
             private set => _events = value;
         }
 
-        //public IEnumerable<CoachesTrainingDivision> Divisions
-        //{
-        //  get
-        //  {
-        //    IEnumerable<CoachesTrainingDivision> divisions = this.divisions;
-        //    if (divisions == null)
-        //      divisions = this.Divisions = (IEnumerable<CoachesTrainingDivision>) Queryable.OrderBy<CoachesTrainingDivision, byte>((IQueryable<CoachesTrainingDivision>) this.context.CoachesTrainingDivisions, (Expression<Func<CoachesTrainingDivision, byte>>) (d => d.ID));
-        //    return divisions;
-        //  }
-        //  private set => this.divisions = value;
-        //}
-
+        // public IEnumerable<CoachesTrainingDivision> Divisions
+        // {
+        //   get
+        //   {
+        //     IEnumerable<CoachesTrainingDivision> divisions = this.divisions;
+        //     if (divisions == null)
+        //       divisions = this.Divisions = (IEnumerable<CoachesTrainingDivision>) Queryable.OrderBy<CoachesTrainingDivision, byte>((IQueryable<CoachesTrainingDivision>) this.context.CoachesTrainingDivisions, (Expression<Func<CoachesTrainingDivision, byte>>) (d => d.ID));
+        //     return divisions;
+        //   }
+        //
+        //   private set => this.divisions = value;
+        // }
 
         /// <summary>
-        /// Gets the judges.
+        /// Gets the list of judges that are registered.
         /// </summary>
         public IEnumerable<Judge>? Judges
         {
@@ -264,19 +314,30 @@ namespace OdysseyMvc2024.Models
         }
 
         /// <summary>
-        /// Gets or sets the judges info.
+        /// Gets or sets the judges information for the tournament.
         /// </summary>
         public Event? JudgesInfo
         {
             get
             {
-                Event? judgesInfo = _judgesInfo;
-                if (judgesInfo == null)
-                    judgesInfo = JudgesInfo = Queryable.Where<Event>((IQueryable<Event>)_context.Events, (Expression<Func<Event, bool>>)(o => o.EventName.Contains("Judges") && o.EventName.Contains("Training"))).First<Event>();
+                var judgesInfo = _judgesInfo ?? (JudgesInfo = _context.Events.First(o => o.EventName.Contains("Judges") && o.EventName.Contains("Training")));
                 return judgesInfo;
             }
+
             // TODO: Make this private.
             set => _judgesInfo = value;
+
+            // get
+            // {
+            //     return this.judgesInfo ?? (this.JudgesInfo = (from o in this.context.Events
+            //         where o.EventName.Contains("Judges") && o.EventName.Contains("Training")
+            //         select o).First());
+            // }
+               
+            // set
+            // {
+            //     this.judgesInfo = value;
+            // }
         }
 
         /// <summary>
@@ -288,64 +349,162 @@ namespace OdysseyMvc2024.Models
             {
                 // If primaryProblem is null, run the LINQ query, assign the result to PrimaryProblem, and return the result.
                 // - The Primary problem is ProblemID 6
-                IQueryable<Problem>? primaryProblem = _primaryProblem;
-                if (primaryProblem == null)
-                    primaryProblem = this.PrimaryProblem = Queryable.Where<Problem>((IQueryable<Problem>)_context.Problems, (Expression<Func<Problem, bool>>)(p => p.ProblemID == 6));
-                return primaryProblem;
+                var thePrimaryProblem = _primaryProblem ??
+                                        (PrimaryProblem = _context.Problems.Where(p => p.ProblemID == ThePrimaryProblemNumber));
+
+                return thePrimaryProblem;
             }
 
             private set => _primaryProblem = value;
+
+            // get
+            // {
+            //     // If primaryProblem is null, run the LINQ query, assign the result to PrimaryProblem, and return the result.
+            //     // - The Primary problem is ProblemID 6
+            //     return this.primaryProblem ?? (this.PrimaryProblem = from p in this.context.Problems
+            //         where p.ProblemID == 6
+            //         select p);
+            // }
+               
+            // private set
+            // {
+            //     this.primaryProblem = value;
+            // }
         }
 
         /// <summary>
-        /// Gets the problem choices.
+        /// Gets the problem choices for a web page drop-down list.
         /// </summary>
         public IEnumerable<Problem> ProblemChoices
         {
             get
             {
                 // If problems is null, run the LINQ query, assign the result to Problems, and return the result
-                IOrderedQueryable<Problem> orderedQueryable = Queryable.OrderBy<Problem, int>((IQueryable<Problem>)_context.Problems, (Expression<Func<Problem, int>>)(p => p.ProblemID));
-                Problem problem1 = Queryable.FirstOrDefault<Problem>((IQueryable<Problem>)orderedQueryable, (Expression<Func<Problem, bool>>)(problem => problem.ProblemID == 6));
-                if (problem1 != null)
-                    problem1.ProblemName += " (The Primary Problem)";
-                return _problemChoices ?? (this.ProblemChoices = (IEnumerable<Problem>)orderedQueryable);
+                var problems = _context.Problems.OrderBy(p => p.ProblemID);
+
+                // TODO: (Rob) Should we just call the PrimaryProblem property here? 01/06/2025.
+                if (problems.FirstOrDefault(problem => problem.ProblemID == ThePrimaryProblemNumber) is { } thePrimaryProblem)
+                {
+                    thePrimaryProblem.ProblemName += " (The Primary Problem)";
+                }
+
+                // TODO: (Rob) Test that the primary problem string gets added above.
+                return _problemChoices ?? (ProblemChoices = problems);
             }
+
             private set => _problemChoices = value;
+
+            // get
+            // {
+            //     // If problems is null, run the LINQ query, assign the result to Problems, and return the result
+            //     IOrderedQueryable<Problem> temp = from p in this.context.Problems
+            //         orderby p.ProblemID
+            //         select p;
+               
+            //     Problem thePrimaryProblem = temp.FirstOrDefault(problem => problem.ProblemID == 6);
+            //     if (thePrimaryProblem != null)
+            //     {
+            //         thePrimaryProblem.ProblemName += " (The Primary Problem)";
+            //     }
+               
+            //     return this.problemChoices ?? (this.ProblemChoices = temp);
+            // }
+               
+            // private set
+            // {
+            //     this.problemChoices = value;
+            // }
         }
 
+        /// <summary>
+        /// Gets the problem choices for a web page drop-down list, having excluded the spontaneous problem from the list.
+        /// </summary>
         public IEnumerable<Problem> ProblemChoicesWithoutSpontaneous
         {
             get
             {
-                IQueryable<Problem> queryable = Queryable.Where<Problem>((IQueryable<Problem>)Queryable.OrderBy<Problem, int>((IQueryable<Problem>)_context.Problems, (Expression<Func<Problem, int>>)(p => p.ProblemID)), (Expression<Func<Problem, bool>>)(p => p.ProblemName != "Spontaneous"));
-                Problem problem1 = Queryable.FirstOrDefault<Problem>(queryable, (Expression<Func<Problem, bool>>)(problem => problem.ProblemID == 6));
-                if (problem1 != null)
-                    problem1.ProblemName += " (The Primary Problem)";
-                return this._problemChoicesWithoutSpontaneous ?? (ProblemChoices = (IEnumerable<Problem>)queryable);
+                var problems = _context.Problems.Where(p => p.ProblemName != "Spontaneous").OrderBy(p => p.ProblemID);
+
+                // TODO: (Rob) Should we just call the PrimaryProblem property here? 01/06/2025.
+                if (problems.FirstOrDefault(problem => problem.ProblemID == ThePrimaryProblemNumber) is { } thePrimaryProblem)
+                {
+                    thePrimaryProblem.ProblemName += " (The Primary Problem)";
+                }
+
+                // TODO: (Rob) Look into what this does, 12/12/2014.
+                return _problemChoicesWithoutSpontaneous ?? (ProblemChoices = problems);
             }
+
+            // get
+            // {
+            //     // If problems is null, run the LINQ query, assign the result to Problems, and return the result
+            //     IQueryable<Problem> temp = from p in this.context.Problems
+            //         orderby p.ProblemID
+            //         where p.ProblemName != "Spontaneous"
+            //         select p;
+               
+            //     Problem thePrimaryProblem = temp.FirstOrDefault(problem => problem.ProblemID == 6);
+            //     if (thePrimaryProblem != null)
+            //     {
+            //         thePrimaryProblem.ProblemName += " (The Primary Problem)";
+            //     }
+               
+            //     // TODO: Look into what this does - Rob, 12/12/2014.
+            //     return this.problemChoicesWithoutSpontaneous ?? (this.ProblemChoices = temp);
+            // }
         }
 
+        /// <summary>
+        /// Gets the problem conflicts for a web page drop-down list.
+        /// TODO: (Rob) Is this used for a drop-down list? 01/06/2025.
+        /// TODO: (Rob) Is this code needed/used at all? 01/06/2025.
+        /// </summary>
         public IEnumerable<Problem> ProblemConflicts
         {
             get
             {
                 // If problems is null, run the LINQ query, assign the result to Problems, and return the result.
-                IOrderedQueryable<Problem> orderedQueryable = Queryable.OrderBy<Problem, int>(Queryable.Where<Problem>((IQueryable<Problem>)_context.Problems, (Expression<Func<Problem, bool>>)(p => p.ProblemID != 7)), (Expression<Func<Problem, int>>)(p => p.ProblemID));
+                // TODO: (Rob) Make ProblemID 7 a constant. 01/06/2025.
+                var problems = _context.Problems.Where(p => p.ProblemID != 7).OrderBy(p => p.ProblemID);
 
                 // TODO: When the following was uncommented, " (The Primary Problem)" showed up twice in the same dropdown entry.
                 // I have no idea why commenting this out solves the problem!  I need to revisit and fix this.
 
-                ////var primaryProblem = temp.Where(problem => problem.ProblemID == 6).FirstOrDefault();
-                ////if (primaryProblem != null)
-                ////{
-                ////primaryProblem.ProblemName += " (The Primary Problem)";
-                ////}
+                // var primaryProblem = temp.Where(problem => problem.ProblemID == 6).FirstOrDefault();
+                // if (primaryProblem != null)
+                // {
+                //     primaryProblem.ProblemName += " (The Primary Problem)";
+                // }
 
-                return this._problemConflicts ?? (ProblemConflicts = (IEnumerable<Problem>)orderedQueryable);
+                return _problemConflicts ?? (ProblemConflicts = problems);
             }
 
             private set => _problemConflicts = value;
+
+            // get
+            // {
+            //     // If problems is null, run the LINQ query, assign the result to Problems, and return the result.
+            //     IOrderedQueryable<Problem> temp = from p in this.context.Problems
+            //         where p.ProblemID != 7
+            //         orderby p.ProblemID
+            //         select p;
+               
+            //     // TODO: When the following was uncommented, " (The Primary Problem)" showed up twice in the same dropdown entry.
+            //     // I have no idea why commenting this out solves the problem!  I need to revisit and fix this.
+               
+            //     ////var primaryProblem = temp.Where(problem => problem.ProblemID == 6).FirstOrDefault();
+            //     ////if (primaryProblem != null)
+            //     ////{
+            //     ////primaryProblem.ProblemName += " (The Primary Problem)";
+            //     ////}
+               
+            //     return this.problemConflicts ?? (this.ProblemConflicts = temp);
+            // }
+               
+            // private set
+            // {
+            //     this.problemConflicts = value;
+            // }
         }
 
         public IEnumerable<Problem>? Problems
@@ -373,7 +532,7 @@ namespace OdysseyMvc2024.Models
                 // If problems is null, run the LINQ query, assign the result to Problems, and return the result.
                 // - Skip ProblemIDs 0 ("Not Specified"), 6 (Primary), and 7 (Spontaneous)
                 var primaryOrSpontaneous = _problemsWithoutPrimaryOrSpontaneous ?? (ProblemsWithoutPrimaryOrSpontaneous = _context.Problems
-                        .Where(p => p.ProblemID != 0 && p.ProblemID != 6 && p.ProblemID != 7)
+                        .Where(p => p.ProblemID != 0 && p.ProblemID != ThePrimaryProblemNumber && p.ProblemID != 7)
                         .OrderBy(p => p.ProblemID));
 
                 return primaryOrSpontaneous;
@@ -612,19 +771,22 @@ namespace OdysseyMvc2024.Models
         public int AddTournamentRegistration(TournamentRegistration newRegistration)
         {
             if (newRegistration == null)
+            {
                 return 0;
+            }
+
             _context.TournamentRegistrations.Add(newRegistration);
             return _context.SaveChanges();
         }
 
-        //public int AddVolunteer(Volunteer newVolunteer, int? tournamentRegistrationId = null)
-        //{
-        //  if (newVolunteer == null)
-        //    return 0;
-        //  newVolunteer.TeamID = tournamentRegistrationId;
-        //  this.context.Volunteers.Add(newVolunteer);
-        //  return this.context.SaveChanges();
-        //}
+        // public int AddVolunteer(Volunteer newVolunteer, int? tournamentRegistrationId = null)
+        // {
+        //   if (newVolunteer == null)
+        //     return 0;
+        //   newVolunteer.TeamID = tournamentRegistrationId;
+        //   this.context.Volunteers.Add(newVolunteer);
+        //   return this.context.SaveChanges();
+        // }
 
         /// <summary>
         /// Clear the team ID from a judge record in the database.
@@ -643,15 +805,15 @@ namespace OdysseyMvc2024.Models
             string judgeFirstName,
             string judgeLastName)
         {
-            //Judge judge = Queryable.Where<Judge>((IQueryable<Judge>)this.context.Judges, (Expression<Func<Judge, bool>>)(j => j.JudgeID == judgeId)).FirstOrDefault<Judge>();
+            // Judge judge = Queryable.Where<Judge>((IQueryable<Judge>)this.context.Judges, (Expression<Func<Judge, bool>>)(j => j.JudgeID == judgeId)).FirstOrDefault<Judge>();
             Judge judgeRecord = (from j in _context.Judges
                                  where j.JudgeID == judgeId
                                  select j).FirstOrDefault();
 
-            //if (judge == null)
-            //    return;
-            //judge.TeamID = (string)null;
-            //this.context.SaveChanges();
+            // if (judge == null)
+            //     return;
+            // judge.TeamID = (string)null;
+            // this.context.SaveChanges();
 
             if (judgeRecord != null)
             {
@@ -667,61 +829,61 @@ namespace OdysseyMvc2024.Models
         /// <returns>
         /// The <see cref="IQueryable"/>.
         /// </returns>
-        //public IQueryable<JudgesExport> ExportJudges() => Queryable.Select(Queryable.OrderBy(Queryable.SelectMany(Queryable.GroupJoin((IQueryable<Judge>)this.context.Judges, (IEnumerable<Problem>)this.context.Problems, (Expression<Func<Judge, string>>)(j => j.ProblemCOI1), (Expression<Func<Problem, string>>)(p => p.ProblemID.ToString(CultureInfo.InvariantCulture)), (j, jp) => new
-        //public IQueryable<JudgesExport> ExportJudges()
-        //{
-        //    //      j = j,
-        //    //      jp = jp
-        //    //  }), data => data.jp, (data, y) => new
-        //    //  {
-        //    //\u003C\u003Eh__TransparentIdentifier6 = data,
-        //    //      y = y
-        //    //  }), data => j.JudgeID), data => new JudgesExport()
+        // public IQueryable<JudgesExport> ExportJudges() => Queryable.Select(Queryable.OrderBy(Queryable.SelectMany(Queryable.GroupJoin((IQueryable<Judge>)this.context.Judges, (IEnumerable<Problem>)this.context.Problems, (Expression<Func<Judge, string>>)(j => j.ProblemCOI1), (Expression<Func<Problem, string>>)(p => p.ProblemID.ToString(CultureInfo.InvariantCulture)), (j, jp) => new
+        // public IQueryable<JudgesExport> ExportJudges()
+        // {
+        //     //      j = j,
+        //     //      jp = jp
+        //     //  }), data => data.jp, (data, y) => new
+        //     //  {
+        //     //\u003C\u003Eh__TransparentIdentifier6 = data,
+        //     //      y = y
+        //     //  }), data => j.JudgeID), data => new JudgesExport()
+           
+        //     // Solution for multiple joins came from https://stackoverflow.com/questions/267488/linq-to-sql-multiple-left-outer-joins
+        //     return from j in this.context.Judges
+        //            join p in this.context.Problems on j.ProblemCOI1 equals p.ProblemID.ToString(CultureInfo
+        //                .InvariantCulture) into jp
+        //            from y in jp
+        //            orderby j.JudgeID
+        //            select new JudgesExport
+        //            {
+        //                JudgeId = j.JudgeID,
+        //                TeamId = j.TeamID,
+        //                FirstName = j.FirstName,
+        //                LastName = j.LastName,
+        //                Address = j.Address,
+        //                Address2 = j.AddressLine2,
+        //                City = j.City,
+        //                StateOrProvince = j.State,
+        //                PostalCode = j.ZipCode,
+        //                DaytimePhone = j.DaytimePhone,
+        //                EveningPhone = j.EveningPhone,
+        //                Email = j.EmailAddress,
+        //                Notes = j.Notes,
+        //                ProblemConflictOfInterest1 = y.ProblemName,
+        //                ProblemConflictOfInterest2 = j.ProblemCOI2,
+        //                ProblemConflictOfInterest3 = j.ProblemCOI3,
+        //                ProblemChoice1 = j.ProblemChoice1,
+        //                ProblemChoice2 = j.ProblemChoice2,
+        //                ProblemChoice3 = j.ProblemChoice3,
+        //                TshirtSize = j.TshirtSize,
+        //                ContinuingEducationUnits = j.WantsCEUCredit,
+        //                YearsOfLongTermJudgingExperience = j.YearsOfLongTermJudgingExperience,
+        //                YearsOfSpontaneousJudgingExperience = j.YearsOfSpontaneousJudgingExperience,
+        //                TimeRegistered = j.TimeRegistered,
+        //                TimeAssignedToTeam = j.TimeAssignedToTeam,
+        //                TimeRegistrationStarted = j.TimeRegistrationStarted,
+        //                UserAgent = j.Headers["User-Agent"].ToString()
+        //                //});
+        //            };
+        // }
 
-        //    // Solution for multiple joins came from https://stackoverflow.com/questions/267488/linq-to-sql-multiple-left-outer-joins
-        //    return from j in this.context.Judges
-        //           join p in this.context.Problems on j.ProblemCOI1 equals p.ProblemID.ToString(CultureInfo
-        //               .InvariantCulture) into jp
-        //           from y in jp
-        //           orderby j.JudgeID
-        //           select new JudgesExport
-        //           {
-        //               JudgeId = j.JudgeID,
-        //               TeamId = j.TeamID,
-        //               FirstName = j.FirstName,
-        //               LastName = j.LastName,
-        //               Address = j.Address,
-        //               Address2 = j.AddressLine2,
-        //               City = j.City,
-        //               StateOrProvince = j.State,
-        //               PostalCode = j.ZipCode,
-        //               DaytimePhone = j.DaytimePhone,
-        //               EveningPhone = j.EveningPhone,
-        //               Email = j.EmailAddress,
-        //               Notes = j.Notes,
-        //               ProblemConflictOfInterest1 = y.ProblemName,
-        //               ProblemConflictOfInterest2 = j.ProblemCOI2,
-        //               ProblemConflictOfInterest3 = j.ProblemCOI3,
-        //               ProblemChoice1 = j.ProblemChoice1,
-        //               ProblemChoice2 = j.ProblemChoice2,
-        //               ProblemChoice3 = j.ProblemChoice3,
-        //               TshirtSize = j.TshirtSize,
-        //               ContinuingEducationUnits = j.WantsCEUCredit,
-        //               YearsOfLongTermJudgingExperience = j.YearsOfLongTermJudgingExperience,
-        //               YearsOfSpontaneousJudgingExperience = j.YearsOfSpontaneousJudgingExperience,
-        //               TimeRegistered = j.TimeRegistered,
-        //               TimeAssignedToTeam = j.TimeAssignedToTeam,
-        //               TimeRegistrationStarted = j.TimeRegistrationStarted,
-        //               UserAgent = j.Headers["User-Agent"].ToString()
-        //               //});
-        //           };
-        //}
+        // public IQueryable<CoachesTrainingRegistration> GetCoachById(int coachId) => Queryable.Where<CoachesTrainingRegistration>((IQueryable<CoachesTrainingRegistration>) this.context.CoachesTrainingRegistrations, (Expression<Func<CoachesTrainingRegistration, bool>>) (c => c.RegistrationID == coachId));
 
-        //public IQueryable<CoachesTrainingRegistration> GetCoachById(int coachId) => Queryable.Where<CoachesTrainingRegistration>((IQueryable<CoachesTrainingRegistration>) this.context.CoachesTrainingRegistrations, (Expression<Func<CoachesTrainingRegistration, bool>>) (c => c.RegistrationID == coachId));
+        // public IQueryable<CoachesTrainingRegistration> GetCoachesTrainingRegistrationById(int id) => Queryable.Where<CoachesTrainingRegistration>((IQueryable<CoachesTrainingRegistration>) this.context.CoachesTrainingRegistrations, (Expression<Func<CoachesTrainingRegistration, bool>>) (c => c.RegistrationID == id));
 
-        //public IQueryable<CoachesTrainingRegistration> GetCoachesTrainingRegistrationById(int id) => Queryable.Where<CoachesTrainingRegistration>((IQueryable<CoachesTrainingRegistration>) this.context.CoachesTrainingRegistrations, (Expression<Func<CoachesTrainingRegistration, bool>>) (c => c.RegistrationID == id));
-
-        //public IQueryable<Judge> GetJudgeById(int judgeId) => Queryable.Where<Judge>((IQueryable<Judge>)this.context.Judges, (Expression<Func<Judge, bool>>)(j => j.JudgeID == judgeId));
+        // public IQueryable<Judge> GetJudgeById(int judgeId) => Queryable.Where<Judge>((IQueryable<Judge>)this.context.Judges, (Expression<Func<Judge, bool>>)(j => j.JudgeID == judgeId));
         public IQueryable<Judge> GetJudgeById(int judgeId)
         {
             return from j in _context.Judges
@@ -734,7 +896,7 @@ namespace OdysseyMvc2024.Models
             string judgeFirstName,
             string judgeLastName)
         {
-            //return Queryable.Where<Judge>((IQueryable<Judge>)this.context.Judges, (Expression<Func<Judge, bool>>)(j => j.JudgeID == judgeId && j.FirstName.ToLower() == judgeFirstName.ToLower() && j.LastName.ToLower() == judgeLastName.ToLower()));
+            // return Queryable.Where<Judge>((IQueryable<Judge>)this.context.Judges, (Expression<Func<Judge, bool>>)(j => j.JudgeID == judgeId && j.FirstName.ToLower() == judgeFirstName.ToLower() && j.LastName.ToLower() == judgeLastName.ToLower()));
             return from j in _context.Judges
                    where (j.JudgeID == judgeId) && (j.FirstName.ToLower() == judgeFirstName.ToLower()) && (j.LastName.ToLower() == judgeLastName.ToLower())
                    select j;
@@ -799,15 +961,15 @@ namespace OdysseyMvc2024.Models
             return Queryable.Where<TournamentRegistration>((IQueryable<TournamentRegistration>)_context.TournamentRegistrations, (Expression<Func<TournamentRegistration, bool>>)(t => t.Id == tournamentRegistrationId)).FirstOrDefault<TournamentRegistration>();
         }
 
-        //public Volunteer GetVolunteerById(int? volunteerId) => Queryable.FirstOrDefault<Volunteer>((IQueryable<Volunteer>) this.context.Volunteers, (Expression<Func<Volunteer, bool>>) (v => (int?) v.VolunteerID == volunteerId));
+        // public Volunteer GetVolunteerById(int? volunteerId) => Queryable.FirstOrDefault<Volunteer>((IQueryable<Volunteer>) this.context.Volunteers, (Expression<Func<Volunteer, bool>>) (v => (int?) v.VolunteerID == volunteerId));
 
-        //public Volunteer GetVolunteerByIdAndName(
-        //  int volunteerId,
-        //  string volunteerFirstName,
-        //  string volunteerLastName)
-        //{
-        //  return Queryable.FirstOrDefault<Volunteer>((IQueryable<Volunteer>) this.context.Volunteers, (Expression<Func<Volunteer, bool>>) (v => v.VolunteerID == volunteerId && string.Equals(v.FirstName, volunteerFirstName, StringComparison.CurrentCultureIgnoreCase) && string.Equals(v.LastName, volunteerLastName, StringComparison.CurrentCultureIgnoreCase)));
-        //}
+        // public Volunteer GetVolunteerByIdAndName(
+        //   int volunteerId,
+        //   string volunteerFirstName,
+        //   string volunteerLastName)
+        // {
+        //   return Queryable.FirstOrDefault<Volunteer>((IQueryable<Volunteer>) this.context.Volunteers, (Expression<Func<Volunteer, bool>>) (v => v.VolunteerID == volunteerId && string.Equals(v.FirstName, volunteerFirstName, StringComparison.CurrentCultureIgnoreCase) && string.Equals(v.LastName, volunteerLastName, StringComparison.CurrentCultureIgnoreCase)));
+        // }
 
         public int? GetVolunteerIdFromTournamentRegistrationId(int tournamentRegistrationId) => Queryable.First<TournamentRegistration>((IQueryable<TournamentRegistration>)_context.TournamentRegistrations, (Expression<Func<TournamentRegistration, bool>>)(t => t.Id == tournamentRegistrationId)).VolunteerID;
 
@@ -921,7 +1083,7 @@ namespace OdysseyMvc2024.Models
                     source.First<TournamentRegistration>().AltCoachMobilePhone = newRegistrationData.AltCoachMobilePhone;
                     source.First<TournamentRegistration>().AltCoachEmailAddress = newRegistrationData.AltCoachEmailAddress;
                     break;
-                case 6:
+                case ThePrimaryProblemNumber:
                     source.First<TournamentRegistration>().MemberFirstName1 = newRegistrationData.MemberFirstName1;
                     source.First<TournamentRegistration>().MemberLastName1 = newRegistrationData.MemberLastName1;
                     source.First<TournamentRegistration>().MemberGrade1 = newRegistrationData.MemberGrade1;
@@ -960,55 +1122,55 @@ namespace OdysseyMvc2024.Models
             return _context.SaveChanges();
         }
 
-        //public int UpdateVolunteer(int volunteerId, int pageNumber, Volunteer newRegistrationData)
-        //{
-        //  Volunteer volunteer = Queryable.FirstOrDefault<Volunteer>((IQueryable<Volunteer>) this.context.Volunteers, (Expression<Func<Volunteer, bool>>) (v => v.VolunteerID == volunteerId));
-        //  if (volunteer == null)
-        //    return 0;
-        //  switch (pageNumber)
-        //  {
-        //    case 2:
-        //      volunteer.FirstName = newRegistrationData.FirstName;
-        //      volunteer.LastName = newRegistrationData.LastName;
-        //      volunteer.DaytimePhone = newRegistrationData.DaytimePhone;
-        //      volunteer.EveningPhone = newRegistrationData.EveningPhone;
-        //      volunteer.MobilePhone = newRegistrationData.MobilePhone;
-        //      volunteer.EmailAddress = newRegistrationData.EmailAddress;
-        //      volunteer.VolunteerWantsToSee = newRegistrationData.VolunteerWantsToSee;
-        //      volunteer.Notes = newRegistrationData.Notes;
-        //      break;
-        //    case 3:
-        //      volunteer.TimeRegistered = new DateTime?(DateTime.Now);
-        //      break;
-        //  }
-        //  return this.context.SaveChanges();
-        //}
+        // public int UpdateVolunteer(int volunteerId, int pageNumber, Volunteer newRegistrationData)
+        // {
+        //   Volunteer volunteer = Queryable.FirstOrDefault<Volunteer>((IQueryable<Volunteer>) this.context.Volunteers, (Expression<Func<Volunteer, bool>>) (v => v.VolunteerID == volunteerId));
+        //   if (volunteer == null)
+        //     return 0;
+        //   switch (pageNumber)
+        //   {
+        //     case 2:
+        //       volunteer.FirstName = newRegistrationData.FirstName;
+        //       volunteer.LastName = newRegistrationData.LastName;
+        //       volunteer.DaytimePhone = newRegistrationData.DaytimePhone;
+        //       volunteer.EveningPhone = newRegistrationData.EveningPhone;
+        //       volunteer.MobilePhone = newRegistrationData.MobilePhone;
+        //       volunteer.EmailAddress = newRegistrationData.EmailAddress;
+        //       volunteer.VolunteerWantsToSee = newRegistrationData.VolunteerWantsToSee;
+        //       volunteer.Notes = newRegistrationData.Notes;
+        //       break;
+        //     case 3:
+        //       volunteer.TimeRegistered = new DateTime?(DateTime.Now);
+        //       break;
+        //   }
+        //   return this.context.SaveChanges();
+        // }
 
-        //public int UpdateVolunteerEmail(int volunteerId, string email)
-        //{
-        //  Volunteer volunteer = Queryable.FirstOrDefault<Volunteer>((IQueryable<Volunteer>) this.context.Volunteers, (Expression<Func<Volunteer, bool>>) (v => v.VolunteerID == volunteerId));
-        //  if (volunteer == null)
-        //    return 0;
-        //  volunteer.EmailAddress = email;
-        //  return this.context.SaveChanges();
-        //}
+        // public int UpdateVolunteerEmail(int volunteerId, string email)
+        // {
+        //   Volunteer volunteer = Queryable.FirstOrDefault<Volunteer>((IQueryable<Volunteer>) this.context.Volunteers, (Expression<Func<Volunteer, bool>>) (v => v.VolunteerID == volunteerId));
+        //   if (volunteer == null)
+        //     return 0;
+        //   volunteer.EmailAddress = email;
+        //   return this.context.SaveChanges();
+        // }
 
-        //public int UpdateVolunteerRecordWithTournamentRegistrationId(
-        //  int volunteerId,
-        //  int tournamentRegistrationId,
-        //  out string errorMessage)
-        //{
-        //  errorMessage = string.Empty;
-        //  Volunteer volunteer = Queryable.Where<Volunteer>((IQueryable<Volunteer>) this.context.Volunteers, (Expression<Func<Volunteer, bool>>) (v => v.VolunteerID == volunteerId)).First<Volunteer>();
-        //  if (volunteer.TeamID.HasValue)
-        //  {
-        //    if (volunteer.TeamID.Value == tournamentRegistrationId)
-        //      return 0;
-        //    errorMessage = "The selected volunteer has already been assigned to another team. &nbsp;The webmaster has been notified and you will be contacted about how to complete your registration.";
-        //  }
-        //  volunteer.TeamID = new int?(tournamentRegistrationId);
-        //  volunteer.TimeAssignedToTeam = new DateTime?(DateTime.Now);
-        //  return this.context.SaveChanges();
-        //}
+        // public int UpdateVolunteerRecordWithTournamentRegistrationId(
+        //   int volunteerId,
+        //   int tournamentRegistrationId,
+        //   out string errorMessage)
+        // {
+        //   errorMessage = string.Empty;
+        //   Volunteer volunteer = Queryable.Where<Volunteer>((IQueryable<Volunteer>) this.context.Volunteers, (Expression<Func<Volunteer, bool>>) (v => v.VolunteerID == volunteerId)).First<Volunteer>();
+        //   if (volunteer.TeamID.HasValue)
+        //   {
+        //     if (volunteer.TeamID.Value == tournamentRegistrationId)
+        //       return 0;
+        //     errorMessage = "The selected volunteer has already been assigned to another team. &nbsp;The webmaster has been notified and you will be contacted about how to complete your registration.";
+        //   }
+        //   volunteer.TeamID = new int?(tournamentRegistrationId);
+        //   volunteer.TimeAssignedToTeam = new DateTime?(DateTime.Now);
+        //   return this.context.SaveChanges();
+        // }
     }
 }
