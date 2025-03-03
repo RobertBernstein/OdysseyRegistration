@@ -37,8 +37,24 @@ The OdysseyMvc4 (original) and OdysseyMvc2023 (current) projects are currently b
 8. [ ] Add logging to all projects!
 9. [ ] Make all "Return to the Home Page" buttons return to the home page at the current base URL, not hard-coded to a specific Odyssey Registration home page.
 10. [ ] Move docker-compose.dcproj and its associated files into its own subdirectory.
-11. [ ] Set up automated MySQL Backups for WordPress.
-12. [ ] Set up automated SQL Server Backups for Odyssey Registration.
+11. [ ] Set up automated SQL Server Backups for Odyssey Registration.
+
+## Get the local Odyssey SQL database and website running to debug it
+
+1. Start Docker Desktop for Windows.
+2. Set the `docker-compose` VS 2022 project as the start up project.
+3. Build the `docker-compose` project in the .sln. This builds two projects:
+   1. OdysseyRegistrationWebApi
+   2. docker-compose
+4. If this is not the first time you've built the project, it will kill and remove the existing containers.
+5. Right click the `docker-compose` project and select `Start Without Debugging` to start three containers:
+   1. odysseyregistrationwebapi
+   2. sqlserver.configurator
+   3. sqlserver
+6. This resulted in a `There were build errors. Would you like to continue and run the
+last successful build?` dialog box.
+   1. The `docker-compose` project build showed the following error in the Error List window in VS 2022:
+      1. `Volume sharing is not enabled. On the Settings screen in Docker Desktop, click Resources -> Shared Drives, and select the drive(s) or folder(s) containing your project files. For more information, please visit - https://aka.ms/DockerToolsTroubleshooting`
 
 ## Deploying to Production
 
@@ -304,3 +320,8 @@ Created a new project in the solution named `OdysseyRegistrationWebApi`
 ## 03/02/2025
 
 1. Trying to continue making progress, updated this readme file.
+1. Trying to remember how to get the website up and running.
+   1. I started Docker Desktop in Windows.
+   2. I set the `docker-compose` project as the start up project.
+   3. I hit F5 to run the `docker-compose` project.
+   4. 

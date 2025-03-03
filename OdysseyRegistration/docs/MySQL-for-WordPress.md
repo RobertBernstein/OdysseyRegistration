@@ -92,3 +92,7 @@ Usage:              36 MB
 > 4. The username changed from vaodyss to vaodyssey.
 
 I modified our `/wp/wp-config.php` file on the hosting company's site to point to the new MySQL 8.x database via SFTP.
+
+## To-Do
+
+1. [ ] Set up automated MySQL Backups for WordPress.
