@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="OdysseyRepository.cs" company="Tardis Technologies">
-//   Copyright 2014-2024 Tardis Technologies. All rights reserved.
+//   Copyright 2014-2025 Tardis Technologies. All rights reserved.
 // </copyright>
 // <summary>
 //   The Odyssey registration database repository.
@@ -24,7 +24,9 @@ namespace OdysseyMvc2024.Models
     /// </summary>
     public class OdysseyRepository : IOdysseyRepository
     {
+        private const int TheNotSpecifiedProblemNumber = 0;
         private const int ThePrimaryProblemNumber = 6;
+        private const int TheSpontaneousProblemNumber = 7;
 
         /// <summary>
         /// The database context.
@@ -60,7 +62,7 @@ namespace OdysseyMvc2024.Models
         ///// <summary>
         ///// The Coaches Training event information.
         ///// </summary>
-        // TODO: (Rob) Consider splitting the OdysseyRepository class into JudgesRegistrationRepository, TournamentRegistrationRepository, etc., each with a single responsibility.
+        // TODO: (Rob) Consider splitting the OdysseyRepository class (after everything is converted to .NET (Core)) into BaseRegistrationRepository, JudgesRegistrationRepository, TournamentRegistrationRepository, etc., each with a single responsibility.
         // private Event coachesTrainingInfo;
 
         ///// <summary>
@@ -464,8 +466,7 @@ namespace OdysseyMvc2024.Models
             get
             {
                 // If problems is null, run the LINQ query, assign the result to Problems, and return the result.
-                // TODO: (Rob) Make ProblemID 7 a constant. 01/06/2025.
-                var problems = _context.Problems.Where(p => p.ProblemID != 7).OrderBy(p => p.ProblemID);
+                var problems = _context.Problems.Where(p => p.ProblemID != TheSpontaneousProblemNumber).OrderBy(p => p.ProblemID);
 
                 // TODO: When the following was uncommented, " (The Primary Problem)" showed up twice in the same dropdown entry.
                 // I have no idea why commenting this out solves the problem!  I need to revisit and fix this.
@@ -513,13 +514,29 @@ namespace OdysseyMvc2024.Models
             {
                 // If problems is null, run the LINQ query, assign the result to Problems, and return the result.
                 // - Skip ProblemID 0, which is "Not Specified"
-                IEnumerable<Problem>? problems = _problems;
-                if (problems == null)
-                    problems = Problems = _context.Problems.Where(p => p.ProblemCategory != (object)null).OrderBy<Problem, int>((Expression<Func<Problem, int>>)(p => p.ProblemID));
+                // Note: p.ProblemCategory != null means that the ProblemCategory is not "No Preference" and is not "Spontaneous".
+                var problems = _problems ?? (Problems = _context.Problems.Where(p => p.ProblemCategory != null).OrderBy(p => p.ProblemID));
+
+                // TODO: (Rob) What happens when problems is null? 01/06/2025.
                 return problems;
             }
 
             private set => _problems = value;
+
+            // get
+            // {
+            //     // If problems is null, run the LINQ query, assign the result to Problems, and return the result.
+            //     // - Skip ProblemID 0, which is "Not Specified"
+            //     return this.problems ?? (this.Problems = from p in this.context.Problems
+            //         where p.ProblemCategory != null // not "No Preference" and not "Spontaneous"
+            //         orderby p.ProblemID
+            //         select p);
+            // }
+
+            // private set
+            // {
+            //     this.problems = value;
+            // }
         }
 
         /// <summary>
@@ -532,7 +549,7 @@ namespace OdysseyMvc2024.Models
                 // If problems is null, run the LINQ query, assign the result to Problems, and return the result.
                 // - Skip ProblemIDs 0 ("Not Specified"), 6 (Primary), and 7 (Spontaneous)
                 var primaryOrSpontaneous = _problemsWithoutPrimaryOrSpontaneous ?? (ProblemsWithoutPrimaryOrSpontaneous = _context.Problems
-                        .Where(p => p.ProblemID != 0 && p.ProblemID != ThePrimaryProblemNumber && p.ProblemID != 7)
+                        .Where(p => p.ProblemID != TheNotSpecifiedProblemNumber && p.ProblemID != ThePrimaryProblemNumber && p.ProblemID != TheSpontaneousProblemNumber)
                         .OrderBy(p => p.ProblemID));
 
                 return primaryOrSpontaneous;
@@ -551,8 +568,8 @@ namespace OdysseyMvc2024.Models
                 // If problems is null, run the LINQ query, assign the result to Problems, and return the result.
                 // - Skip ProblemID 0, which is "Not Specified"
                 var problemsWithoutSpontaneous = _problemsWithoutSpontaneous ?? (ProblemsWithoutSpontaneous = _context.Problems
-                    .Where(p => p.ProblemID != 0 && p.ProblemID != 7)
-                    .OrderBy((Expression<Func<Problem, int>>)(p => p.ProblemID)));
+                    .Where(p => p.ProblemID != TheNotSpecifiedProblemNumber && p.ProblemID != TheSpontaneousProblemNumber)
+                    .OrderBy(p => p.ProblemID));
 
                 return problemsWithoutSpontaneous;
 
@@ -939,27 +956,23 @@ namespace OdysseyMvc2024.Models
       };
         }
 
-        public string GetProblemNameFromProblemId(int? problemId)
+        public string? GetProblemNameFromProblemId(int? problemId)
         {
             try
             {
-                if (!problemId.HasValue)
-                    return (string)null;
-                return Queryable.Where<Problem>((IQueryable<Problem>)_context.Problems, (Expression<Func<Problem, bool>>)(p => (int?)p.ProblemID == problemId)).FirstOrDefault<Problem>()?.ProblemName;
+                return !problemId.HasValue ? null : _context.Problems.FirstOrDefault(p => p.ProblemID == problemId)?.ProblemName;
             }
             catch (Exception ex)
             {
-                return (string)null;
+                return null;
             }
         }
 
-        public string GetSchoolNameFromSchoolId(int? schoolId) => Queryable.Where<School>((IQueryable<School>)_context.Schools, (Expression<Func<School, bool>>)(s => (int?)s.ID == schoolId)).FirstOrDefault<School>()?.Name;
+        public string? GetSchoolNameFromSchoolId(int? schoolId) =>
+            _context.Schools.FirstOrDefault(s => (int?)s.ID == schoolId)?.Name;
 
-        public TournamentRegistration GetTournamentRegistrationById(
-          int tournamentRegistrationId)
-        {
-            return Queryable.Where<TournamentRegistration>((IQueryable<TournamentRegistration>)_context.TournamentRegistrations, (Expression<Func<TournamentRegistration, bool>>)(t => t.Id == tournamentRegistrationId)).FirstOrDefault<TournamentRegistration>();
-        }
+        public TournamentRegistration? GetTournamentRegistrationById(int tournamentRegistrationId) =>
+            _context.TournamentRegistrations.FirstOrDefault(t => t.Id == tournamentRegistrationId);
 
         // public Volunteer GetVolunteerById(int? volunteerId) => Queryable.FirstOrDefault<Volunteer>((IQueryable<Volunteer>) this.context.Volunteers, (Expression<Func<Volunteer, bool>>) (v => (int?) v.VolunteerID == volunteerId));
 
@@ -971,13 +984,18 @@ namespace OdysseyMvc2024.Models
         //   return Queryable.FirstOrDefault<Volunteer>((IQueryable<Volunteer>) this.context.Volunteers, (Expression<Func<Volunteer, bool>>) (v => v.VolunteerID == volunteerId && string.Equals(v.FirstName, volunteerFirstName, StringComparison.CurrentCultureIgnoreCase) && string.Equals(v.LastName, volunteerLastName, StringComparison.CurrentCultureIgnoreCase)));
         // }
 
-        public int? GetVolunteerIdFromTournamentRegistrationId(int tournamentRegistrationId) => Queryable.First<TournamentRegistration>((IQueryable<TournamentRegistration>)_context.TournamentRegistrations, (Expression<Func<TournamentRegistration, bool>>)(t => t.Id == tournamentRegistrationId)).VolunteerID;
+        // public int? GetVolunteerIdFromTournamentRegistrationId(int tournamentRegistrationId) =>
+        //     _context.TournamentRegistrations.First(t => t.Id == tournamentRegistrationId).VolunteerID;
 
         public int UpdateJudge(int judgeId, int pageNumber, Judge newRegistrationData)
         {
-            IQueryable<Judge> source = Queryable.Where<Judge>((IQueryable<Judge>)_context.Judges, (Expression<Func<Judge, bool>>)(j => j.JudgeID == judgeId));
-            if (!source.Any<Judge>())
+            var source = _context.Judges.Where(j => j.JudgeID == judgeId);
+
+            if (!source.Any())
+            {
                 return 0;
+            }
+
             switch (pageNumber)
             {
                 case 2:
@@ -1012,15 +1030,21 @@ namespace OdysseyMvc2024.Models
                     source.First<Judge>().TimeRegistered = new DateTime?(DateTime.Now);
                     break;
             }
+
             return _context.SaveChanges();
         }
 
         public int UpdateJudgeEmail(int judgeId, string email)
         {
-            IQueryable<Judge> source = Queryable.Where<Judge>((IQueryable<Judge>)_context.Judges, (Expression<Func<Judge, bool>>)(j => j.JudgeID == judgeId));
-            if (!source.Any<Judge>())
+            var judgesFound = _context.Judges.Where(j => j.JudgeID == judgeId);
+
+            if (!judgesFound.Any())
+            {
                 return 0;
-            source.First<Judge>().EmailAddress = email;
+            }
+
+            judgesFound.First().EmailAddress = email;
+
             return _context.SaveChanges();
         }
 
@@ -1030,7 +1054,7 @@ namespace OdysseyMvc2024.Models
           out string errorMessage)
         {
             errorMessage = string.Empty;
-            short? nullable = judgeId;
+            var nullable = judgeId;
             if (!(nullable.HasValue ? new int?((int)nullable.GetValueOrDefault()) : new int?()).HasValue)
                 return 0;
             Judge judge = Queryable.Where<Judge>((IQueryable<Judge>)_context.Judges, (Expression<Func<Judge, bool>>)(j => (int?)j.JudgeID == (int?)judgeId)).First<Judge>();
@@ -1049,76 +1073,94 @@ namespace OdysseyMvc2024.Models
         public int UpdateTournamentRegistration(
           int id,
           int pageNumber,
-          TournamentRegistration newRegistrationData)
+          TournamentRegistration? newRegistrationData)
         {
-            IQueryable<TournamentRegistration> source = Queryable.Where<TournamentRegistration>((IQueryable<TournamentRegistration>)_context.TournamentRegistrations, (Expression<Func<TournamentRegistration, bool>>)(r => r.Id == id));
-            if (!source.Any<TournamentRegistration>())
+            var tournamentRegistrations = _context.TournamentRegistrations.Where(r => r.Id == id);
+            
+            if (!tournamentRegistrations.Any())
+            {
                 return 0;
+            }
+
+            // TODO: (Rob) We should log when newRegistrationData is null here, possibly take other actions. 01/06/2025.
+            if (newRegistrationData is null)
+            {
+                return 0;
+            }
+
             switch (pageNumber)
             {
                 case 2:
-                    source.First<TournamentRegistration>().SchoolID = newRegistrationData.SchoolID;
+                    tournamentRegistrations.First().SchoolID = newRegistrationData.SchoolID;
                     break;
+
                 case 3:
-                    source.First<TournamentRegistration>().JudgeID = newRegistrationData.JudgeID;
+                    tournamentRegistrations.First().JudgeID = newRegistrationData.JudgeID;
                     break;
+
                 case 4:
-                    source.First<TournamentRegistration>().VolunteerID = newRegistrationData.VolunteerID;
+                    tournamentRegistrations.First().VolunteerID = newRegistrationData.VolunteerID;
                     break;
+
                 case 5:
-                    source.First<TournamentRegistration>().CoachFirstName = newRegistrationData.CoachFirstName;
-                    source.First<TournamentRegistration>().CoachLastName = newRegistrationData.CoachLastName;
-                    source.First<TournamentRegistration>().CoachAddress = newRegistrationData.CoachAddress;
-                    source.First<TournamentRegistration>().CoachCity = newRegistrationData.CoachCity;
-                    source.First<TournamentRegistration>().CoachState = newRegistrationData.CoachState;
-                    source.First<TournamentRegistration>().CoachZipCode = newRegistrationData.CoachZipCode;
-                    source.First<TournamentRegistration>().CoachEveningPhone = newRegistrationData.CoachEveningPhone;
-                    source.First<TournamentRegistration>().CoachDaytimePhone = newRegistrationData.CoachDaytimePhone;
-                    source.First<TournamentRegistration>().CoachMobilePhone = newRegistrationData.CoachMobilePhone;
-                    source.First<TournamentRegistration>().CoachEmailAddress = newRegistrationData.CoachEmailAddress;
-                    source.First<TournamentRegistration>().AltCoachFirstName = newRegistrationData.AltCoachFirstName;
-                    source.First<TournamentRegistration>().AltCoachLastName = newRegistrationData.AltCoachLastName;
-                    source.First<TournamentRegistration>().AltCoachEveningPhone = newRegistrationData.AltCoachEveningPhone;
-                    source.First<TournamentRegistration>().AltCoachDaytimePhone = newRegistrationData.AltCoachDaytimePhone;
-                    source.First<TournamentRegistration>().AltCoachMobilePhone = newRegistrationData.AltCoachMobilePhone;
-                    source.First<TournamentRegistration>().AltCoachEmailAddress = newRegistrationData.AltCoachEmailAddress;
+                    tournamentRegistrations.First().CoachFirstName = newRegistrationData.CoachFirstName;
+                    tournamentRegistrations.First().CoachLastName = newRegistrationData.CoachLastName;
+                    tournamentRegistrations.First().CoachAddress = newRegistrationData.CoachAddress;
+                    tournamentRegistrations.First().CoachCity = newRegistrationData.CoachCity;
+                    tournamentRegistrations.First().CoachState = newRegistrationData.CoachState;
+                    tournamentRegistrations.First().CoachZipCode = newRegistrationData.CoachZipCode;
+                    tournamentRegistrations.First().CoachEveningPhone = newRegistrationData.CoachEveningPhone;
+                    tournamentRegistrations.First().CoachDaytimePhone = newRegistrationData.CoachDaytimePhone;
+                    tournamentRegistrations.First().CoachMobilePhone = newRegistrationData.CoachMobilePhone;
+                    tournamentRegistrations.First().CoachEmailAddress = newRegistrationData.CoachEmailAddress;
+                    tournamentRegistrations.First().AltCoachFirstName = newRegistrationData.AltCoachFirstName;
+                    tournamentRegistrations.First().AltCoachLastName = newRegistrationData.AltCoachLastName;
+                    tournamentRegistrations.First().AltCoachEveningPhone = newRegistrationData.AltCoachEveningPhone;
+                    tournamentRegistrations.First().AltCoachDaytimePhone = newRegistrationData.AltCoachDaytimePhone;
+                    tournamentRegistrations.First().AltCoachMobilePhone = newRegistrationData.AltCoachMobilePhone;
+                    tournamentRegistrations.First().AltCoachEmailAddress = newRegistrationData.AltCoachEmailAddress;
                     break;
+
                 case ThePrimaryProblemNumber:
-                    source.First<TournamentRegistration>().MemberFirstName1 = newRegistrationData.MemberFirstName1;
-                    source.First<TournamentRegistration>().MemberLastName1 = newRegistrationData.MemberLastName1;
-                    source.First<TournamentRegistration>().MemberGrade1 = newRegistrationData.MemberGrade1;
-                    source.First<TournamentRegistration>().MemberFirstName2 = newRegistrationData.MemberFirstName2;
-                    source.First<TournamentRegistration>().MemberLastName2 = newRegistrationData.MemberLastName2;
-                    source.First<TournamentRegistration>().MemberGrade2 = newRegistrationData.MemberGrade2;
-                    source.First<TournamentRegistration>().MemberFirstName3 = newRegistrationData.MemberFirstName3;
-                    source.First<TournamentRegistration>().MemberLastName3 = newRegistrationData.MemberLastName3;
-                    source.First<TournamentRegistration>().MemberGrade3 = newRegistrationData.MemberGrade3;
-                    source.First<TournamentRegistration>().MemberFirstName4 = newRegistrationData.MemberFirstName4;
-                    source.First<TournamentRegistration>().MemberLastName4 = newRegistrationData.MemberLastName4;
-                    source.First<TournamentRegistration>().MemberGrade4 = newRegistrationData.MemberGrade4;
-                    source.First<TournamentRegistration>().MemberFirstName5 = newRegistrationData.MemberFirstName5;
-                    source.First<TournamentRegistration>().MemberLastName5 = newRegistrationData.MemberLastName5;
-                    source.First<TournamentRegistration>().MemberGrade5 = newRegistrationData.MemberGrade5;
-                    source.First<TournamentRegistration>().MemberFirstName6 = newRegistrationData.MemberFirstName6;
-                    source.First<TournamentRegistration>().MemberLastName6 = newRegistrationData.MemberLastName6;
-                    source.First<TournamentRegistration>().MemberGrade6 = newRegistrationData.MemberGrade6;
-                    source.First<TournamentRegistration>().MemberFirstName7 = newRegistrationData.MemberFirstName7;
-                    source.First<TournamentRegistration>().MemberLastName7 = newRegistrationData.MemberLastName7;
-                    source.First<TournamentRegistration>().MemberGrade7 = newRegistrationData.MemberGrade7;
+                    tournamentRegistrations.First().MemberFirstName1 = newRegistrationData.MemberFirstName1;
+                    tournamentRegistrations.First().MemberLastName1 = newRegistrationData.MemberLastName1;
+                    tournamentRegistrations.First().MemberGrade1 = newRegistrationData.MemberGrade1;
+                    tournamentRegistrations.First().MemberFirstName2 = newRegistrationData.MemberFirstName2;
+                    tournamentRegistrations.First().MemberLastName2 = newRegistrationData.MemberLastName2;
+                    tournamentRegistrations.First().MemberGrade2 = newRegistrationData.MemberGrade2;
+                    tournamentRegistrations.First().MemberFirstName3 = newRegistrationData.MemberFirstName3;
+                    tournamentRegistrations.First().MemberLastName3 = newRegistrationData.MemberLastName3;
+                    tournamentRegistrations.First().MemberGrade3 = newRegistrationData.MemberGrade3;
+                    tournamentRegistrations.First().MemberFirstName4 = newRegistrationData.MemberFirstName4;
+                    tournamentRegistrations.First().MemberLastName4 = newRegistrationData.MemberLastName4;
+                    tournamentRegistrations.First().MemberGrade4 = newRegistrationData.MemberGrade4;
+                    tournamentRegistrations.First().MemberFirstName5 = newRegistrationData.MemberFirstName5;
+                    tournamentRegistrations.First().MemberLastName5 = newRegistrationData.MemberLastName5;
+                    tournamentRegistrations.First().MemberGrade5 = newRegistrationData.MemberGrade5;
+                    tournamentRegistrations.First().MemberFirstName6 = newRegistrationData.MemberFirstName6;
+                    tournamentRegistrations.First().MemberLastName6 = newRegistrationData.MemberLastName6;
+                    tournamentRegistrations.First().MemberGrade6 = newRegistrationData.MemberGrade6;
+                    tournamentRegistrations.First().MemberFirstName7 = newRegistrationData.MemberFirstName7;
+                    tournamentRegistrations.First().MemberLastName7 = newRegistrationData.MemberLastName7;
+                    tournamentRegistrations.First().MemberGrade7 = newRegistrationData.MemberGrade7;
                     break;
-                case 7:
-                    source.First<TournamentRegistration>().ProblemID = newRegistrationData.ProblemID;
-                    source.First<TournamentRegistration>().Division = newRegistrationData.Division;
-                    source.First<TournamentRegistration>().Spontaneous = newRegistrationData.Spontaneous;
+
+                case TheSpontaneousProblemNumber:
+                    tournamentRegistrations.First().ProblemID = newRegistrationData.ProblemID;
+                    tournamentRegistrations.First().Division = newRegistrationData.Division;
+                    tournamentRegistrations.First().Spontaneous = newRegistrationData.Spontaneous;
                     break;
+
                 case 8:
-                    source.First<TournamentRegistration>().SchedulingIssues = newRegistrationData.SchedulingIssues;
-                    source.First<TournamentRegistration>().SpecialConsiderations = newRegistrationData.SpecialConsiderations;
+                    tournamentRegistrations.First().SchedulingIssues = newRegistrationData.SchedulingIssues;
+                    tournamentRegistrations.First().SpecialConsiderations = newRegistrationData.SpecialConsiderations;
                     break;
+
                 case 10:
-                    source.First<TournamentRegistration>().TimeRegistered = newRegistrationData.TimeRegistered;
+                    tournamentRegistrations.First().TimeRegistered = newRegistrationData.TimeRegistered;
                     break;
             }
+
             return _context.SaveChanges();
         }
 
@@ -1155,12 +1197,29 @@ namespace OdysseyMvc2024.Models
         //   return this.context.SaveChanges();
         // }
 
+        ///// <summary>
+        ///// The update volunteer record with tournament registration id.
+        ///// </summary>
+        ///// <param name="volunteerId">
+        ///// The volunteer id.
+        ///// </param>
+        ///// <param name="tournamentRegistrationId">
+        ///// The tournament registration id.
+        ///// </param>
+        ///// <param name="errorMessage">
+        ///// The error message.
+        ///// </param>
+        ///// <returns>
+        ///// The <see cref="int"/>.
+        ///// </returns>
         // public int UpdateVolunteerRecordWithTournamentRegistrationId(
         //   int volunteerId,
         //   int tournamentRegistrationId,
         //   out string errorMessage)
         // {
         //   errorMessage = string.Empty;
+        //
+        //   // TODO: Check the TeamID.  If it's the same as the currently registering team, just return.
         //   Volunteer volunteer = Queryable.Where<Volunteer>((IQueryable<Volunteer>) this.context.Volunteers, (Expression<Func<Volunteer, bool>>) (v => v.VolunteerID == volunteerId)).First<Volunteer>();
         //   if (volunteer.TeamID.HasValue)
         //   {
@@ -1171,6 +1230,104 @@ namespace OdysseyMvc2024.Models
         //   volunteer.TeamID = new int?(tournamentRegistrationId);
         //   volunteer.TimeAssignedToTeam = new DateTime?(DateTime.Now);
         //   return this.context.SaveChanges();
+        // }
+        // public int UpdateVolunteerRecordWithTournamentRegistrationId(int volunteerId, int tournamentRegistrationId, out string errorMessage)
+        // {
+        //     // TODO: Check the TeamID.  If it's the same as the currently registering team, just return.
+        //     errorMessage = string.Empty;
+           
+        //     Volunteer volunteerRecord = (from v in this.context.Volunteers
+        //         where v.VolunteerID == volunteerId
+        //         select v).First();
+           
+        //     // Has this volunteer already been assigned to a team?
+        //     if (volunteerRecord.TeamID != null)
+        //     {
+        //         // Is this just the Coach backing up in the registration, changing a few values, and trying to
+        //         // re-register the team with the same volunteer?  If so, that's ok.
+        //         int teamId = (int)volunteerRecord.TeamID;
+        //         if (teamId == tournamentRegistrationId)
+        //         {
+        //             return 0;
+        //         }
+           
+        //         // If this volunteer has already been assigned to another team, it
+        //         // must have happened after Page04 was filled in
+        //         errorMessage =
+        //             "The selected volunteer has already been assigned to another team. &nbsp;" +
+        //             "The webmaster has been notified and you will be contacted about how to complete your registration.";
+        //     }
+           
+        //     volunteerRecord.TeamID = tournamentRegistrationId;
+        //     volunteerRecord.TimeAssignedToTeam = DateTime.Now;
+           
+        //     // SaveChanges returns the number of objects added to the database
+        //     return this.context.SaveChanges();
+        // }
+
+
+        ///// <summary>
+        ///// The get query info.
+        ///// TODO: Uncomment all of this (9/19/2013)
+        ///// </summary>
+        ///// <param name="tableName">
+        ///// The table name.
+        ///// </param>
+        ///// <returns>
+        ///// The <see cref="QueryInfo"/>.
+        ///// </returns>
+        ///// <remarks>
+        ///// This QueryInfo code comes from http://blogs.msdn.com/alexj/archive/2008/02/11/rolling-your-own-sql-update-on-top-of-the-entity-framework-part-3.aspx
+        ///// </remarks>
+        // [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "Reviewed. Suppression is OK here.")]
+        // private QueryInfo GetQueryInfo(ObjectQuery tableName)
+        // {
+        //     var info = new QueryInfo
+        //                    {
+        //                        OriginalSql = tableName.ToTraceString()
+        //                    };
+
+        //     // Get the table name
+        //     info.TableName = info.OriginalSql.Between("FROM ", "AS [Extent1]")[0].Trim();
+
+        //     // Get the aliases so we can build the map
+        //     string[] bits = info.OriginalSql.Split(new[] { "FROM " }, StringSplitOptions.None);
+
+        //     ////Utilities.Assert(
+        //     ////    bits.Length == 2,
+        //     ////    () => new InvalidOperationException("Unexpectedly complex SQL tree with 2 or more FROM's encountered\n\r" + info.OriginalSQL)
+        //     ////);
+
+        //     string trunc = bits[0].Replace("SELECT ", "").Trim();
+        //     string[] aliases = trunc.Split(',');
+        //     aliases = aliases.Select(a => a.Trim()).ToArray();
+
+        //     // get an array of arrays in the form [DBfieldName][EntityPropertyName],...]
+        //     var keyvaluepairs =
+        //         aliases.Where(a => a.StartsWith("[Extent1].["))
+        //                .Select(a => a.Replace("[Extent1].[", ""))
+        //                .Select(a => a.Replace("] AS [", ","))
+        //                .Select(a => a.Replace("]", ""))
+        //                .Select(a => a.Split(','));
+
+        //     // Set up the map from array
+        //     foreach (var keyvaluepair in keyvaluepairs)
+        //     {
+        //         info.CsFieldMap[keyvaluepair[1]] = keyvaluepair[0];
+        //     }
+
+        //     ////Make sure the key is simple
+        //     ////Utilities.Assert(Context.Keys.Length == 1,
+        //     ////    () => new NotSupportedException("Only works for Entities with simple keys")
+        //     ////);
+
+        //     ////Construct an Alias for the SELECTOR
+        //     ////string keyAlias = _context.Keys.Select(key => string.Format("[Extent1].[{0}] AS [{1}]", info.CsFieldMap[key], key)).FirstOrDefault();
+
+        //     ////Store the filterSQL
+        //     ////info.RestrictingSQL = string.Format("SELECT {0} FROM {1}", keyAlias, bits[1]);
+
+        //     return info;
         // }
     }
 }

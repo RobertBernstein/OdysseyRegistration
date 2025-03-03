@@ -157,7 +157,7 @@ namespace OdysseyMvc2024.Controllers
 
             try
             {
-                TournamentRegistration newRegistrationData = new TournamentRegistration()
+                TournamentRegistration? newRegistrationData = new TournamentRegistration()
                 {
                     SchoolID = new int?(page02ViewData.SelectedSchool)
                 };
@@ -221,7 +221,7 @@ namespace OdysseyMvc2024.Controllers
                     return View(page03ViewData);
                 }
                 
-                TournamentRegistration newRegistrationData = new TournamentRegistration()
+                TournamentRegistration? newRegistrationData = new TournamentRegistration()
                 {
                     JudgeID = new short?(short.Parse(page03ViewData.JudgeId))
                 };
@@ -355,7 +355,7 @@ namespace OdysseyMvc2024.Controllers
                     return RedirectToAction("BadAltCoachEmail");
                 }
                 
-                TournamentRegistration newRegistrationData = new TournamentRegistration()
+                TournamentRegistration? newRegistrationData = new TournamentRegistration()
                 {
                     CoachFirstName = page05ViewData.CoachFirstName,
                     CoachLastName = page05ViewData.CoachLastName,
@@ -428,7 +428,7 @@ namespace OdysseyMvc2024.Controllers
             {
                 TryUpdateModelAsync<Page06ViewData>(page06ViewData);
 
-                TournamentRegistration newRegistrationData = new()
+                TournamentRegistration? newRegistrationData = new()
                 {
                     MemberFirstName1 = page06ViewData.MemberFirstName1,
                     MemberLastName1 = page06ViewData.MemberLastName1,
@@ -511,7 +511,7 @@ namespace OdysseyMvc2024.Controllers
 
             try
             {
-                TournamentRegistration newRegistrationData = new()
+                TournamentRegistration? newRegistrationData = new()
                 {
                     Division = page07ViewData.DivisionRadioGroup ?? page07ViewData.DivisionOfTeam.ToString(CultureInfo.InvariantCulture)
                 };
@@ -580,7 +580,7 @@ namespace OdysseyMvc2024.Controllers
 
             try
             {
-                TournamentRegistration newRegistrationData = new TournamentRegistration()
+                TournamentRegistration? newRegistrationData = new TournamentRegistration()
                 {
                     SchedulingIssues = page08ViewData.SchedulingIssues,
                     SpecialConsiderations = page08ViewData.SpecialConsiderations

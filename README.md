@@ -16,7 +16,7 @@ This repository contains the code for the Judge and Tournament Registration webs
 | /OdysseyRegistration/ | OdysseyCoreMvc                       | .NET 6.0           | Unused (I think): Core MVC framework  |
 | /OdysseyRegistration/ | OdysseyMvc4                          | .NET Framework 4.8 | MVC framework 4<br />**This is what is running in production today (01/01/2025).** |
 | /OdysseyRegistration/ | OdysseyMvc4.Tests                    | .NET Framework 4.8 | MVC framework 4 tests |
-| /OdysseyRegistration/ | OdysseyMvc2023                       | .NET Framework 4.8 | MVC framework 2023  |
+| /OdysseyRegistration/ | OdysseyMvc2023                       | **.NET Framework 4.8** | MVC framework 2023, ==I think unused since it's .NET Framework==  |
 | /OdysseyRegistration/ | OdysseyMvc2024                       | .NET 8.0           | ==Is this the current project or is it the 2023 project? I think it's this one.== |
 | /OdysseyRegistration/ | OdysseyRegistrationWebApi            | .NET 8.0           | Web API for registration |
 | /OdysseyRegistration/ | UpdateProblemSynopsesForRegistration | .NET Framework 4.8 | Update problem synopses |
@@ -44,7 +44,7 @@ The OdysseyMvc4 (original) and OdysseyMvc2023 (current) projects are currently b
 
 ### Files to Configure
 
-Make sure to copy the web.config file from **this directory**, i.e., the top-most/root directory, into the root directory of your website at the hosting company.
+Make sure to copy the web.config file from **the `OdysseyRegistration` directory**, i.e., the top-most/root directory, into the root directory of your website at the hosting company.
 
 > [!Note]
 > This should be placed in a higher directory than your `bin`, `Content`, `Views`, etc. directories.  The directory containing those subdirectories will likely have its own web.config file.
@@ -63,6 +63,7 @@ Make sure to copy the web.config file from **this directory**, i.e., the top-mos
 
 ### Manage the database in production
 
+[WinHost Control Panel](https://cp.winhost.com/login.aspx?ReturnUrl=%2fsites%2fmanage.aspx)
 Site: novanorth.org
 
 As of 09/29/2024, this is the configuration of the registration database.
@@ -109,10 +110,11 @@ This will create a [Mermaid](https://mermaid-js.github.io/mermaid/#/) database s
 
 1. You will find your file created as OdysseySchema.mmd in the directory where you ran the tool.
 
-> [!tip]
-> [ ] TODO: Read "Get started with Entity Framework Core and an existing database in minutes - Quick Start Guide":
-> https://x.com/ErikEJ/status/1740635086742069720, 2:25 AM · Dec 29, 2023.
-> This can produce Mermaid diagrams, as well.
+#### TODO
+
+1. [ ] Read "Get started with Entity Framework Core and an existing database in minutes - Quick Start Guide":
+   1. https://x.com/ErikEJ/status/1740635086742069720, 2:25 AM · Dec 29, 2023.
+   2. This can produce Mermaid diagrams, as well.
 
 ### Shutdown and clean up the Docker container
 
@@ -140,6 +142,7 @@ docker rm -f sql1
 ### Create new SQL Elmah database for the test website
 
 1. [ ] TODO: Add instructions.
+2. Note that there is an Elmah.xsd file in the root of `OdysseyMvc2023`.
 
 ### Add connection strings for new SQL registration and Elmah test databases for the test website
 
@@ -244,98 +247,9 @@ Created a new project in the solution named `OdysseyRegistrationWebApi`
     1. I commented these lines out and uncommented the lines that allow you to proceed to the registration pages.
 4. Now both the Judges and Tournament Registration pages are showing Closed.
 
-## Exporting a MySQL database from the Hosting Company's Server and importing it to a local Docker MySQL instance (also remotely manage remote MySQL database from the `mysql` command-line tool)
+## References
 
-> [!note]
-> We use MySQL for WordPress and SQL Server for registration data.
-
-1. Run MySQL in a Docker container locally:
-
-```powershell
-docker run --name mysql -e MYSQL_ROOT_PASSWORD=<any password to connect> -v C:\Users\Rob\Downloads:/downloads -d mysql:latest
-```
-
-2. Open a shell in the Docker container:
-
-```powershell
-docker exec -it mysql bash
-```
-
-3. Create a dump file of the MySQL database:
-
-```bash
-mysqldump -u vaodyss -p mysql_12824_wordpress -h my01.winhost.com > dump.sql
-```
-
-or
-
-3. Connect to the MySQL server:
-
-```bash
-mysql -u vaodyss -p mysql_12824_wordpress -h my01.winhost.com
-```
-
-4. Copy the dump file out of the Docker container:
-
-```powershell
-docker cp mysql:/dump.sql C:\Users\rob\Downloads\
-```
-
-5. Restore/Import the MySQL database on the new server:
-
-```bash
-mysql -u vaodyssey -p mysql_12824_wordpress24 -h my06.winhost.com < dump.sql
-```
-
-> [!tip]
-> See [Section 6.5.1 mysql — The MySQL Command-Line Client](https://dev.mysql.com/doc/refman/9.1/en/mysql.html) for command-line usage once connected to the remote MySQL server.
-> Also see [6.5.1.2 mysql Client Commands](https://dev.mysql.com/doc/refman/9.1/en/mysql-commands.html).
-
-### MySQL command-line tool examples
-
-```sql
-SHOW TABLES;
-```
-
-```sql
-SELECT * FROM wp_table;
-```
-
-## MySQL Database for WordPress data (vs. SQL Server for Odyssey Registration data)
-
-### 08/24/2024
-
-#### Original MySQL 5 Database
-
-```
-Database Name:      mysql_12824_wordpress
-Version:            MySQL 5
-Database Server:    my01.winhost.com
-Database User:      vaodyss
-Database Password:  *****
-Assigned Quota:     100 MB
-Usage:              37 MB
-```
-
-#### New MySQL 8 Database
-
-```
-Database Name:      mysql_12824_wordpress24
-Version:            MySQL 8
-Database Server:    my06.winhost.com
-Database User:      vaodyssey
-Database Password:  *****
-Assigned Quota:     100 MB
-Usage:              36 MB
-```
-
-> [!note]
-> 1. The database version increased from 5 to 8.
-> 2. The current database name ends in "24" for 2024.
-> 3. The server moved from my01 to my06.
-> 4. The username changed from vaodyss to vaodyssey.
-
-I modified our `/wp/wp-config.php` file on the hosting company's site to point to the new MySQL 8.x database via SFTP.
+1. [MySQL for WordPress docs](OdysseyRegistration/docs/MySQL-for-WordPress.md)
 
 ## 10/13/2024
 
@@ -366,6 +280,7 @@ I modified our `/wp/wp-config.php` file on the hosting company's site to point t
 ## 10/15/2024
 
 1. Don't forget that the Problem table Id had to start at 1 where it used to start at 0. So, the code needs to be updated to handle this.
+   1. ==Why is this starting at 1 now? I don't remember.== 😟
 
 ## 11/09/2024
 
@@ -382,5 +297,10 @@ I modified our `/wp/wp-config.php` file on the hosting company's site to point t
 1. Committed ALL of the modified files to the git repo after removing all passwords.
    1. Pushed to GitHub.
 2. [ ] Roll back anything in the .NET updates that are incompatible with the .NET Framework / ASP.NET v4 version of the website just to get onto .NET (Core) and be finished with .NET Framework once and for all.
+   1. [ ] This includes the changes I made to the Odyssey database schema.
 3. [ ] Once the .NET (not Framework) site is in production, then re-add updates/changes that were checked in today.
 4. [ ] Convert the [Run the SQL Server database in a Docker container (manually)](#run-the-sql-server-database-in-a-docker-container-manually) section into a Dockerfile that can be built instead of step-by-step PowerShell cmdlets.
+
+## 03/02/2025
+
+1. Trying to continue making progress, updated this readme file.

@@ -34,7 +34,7 @@ namespace OdysseyMvc2024.ViewData.TournamentRegistration
 
         public string? SchoolName { get; set; }
 
-        public required Models.TournamentRegistration TournamentRegistration { get; set; }
+        public Models.TournamentRegistration? TournamentRegistration { get; set; }
 
         public string? VolunteerFirstName { get; set; }
 

@@ -26,6 +26,6 @@ namespace OdysseyMvc2024.ViewData.TournamentRegistration
 
         public string? SpecialConsiderations { get; set; }
 
-        public required Models.TournamentRegistration TournamentRegistration { get; set; }
+        public required Models.TournamentRegistration? TournamentRegistration { get; set; }
     }
 }

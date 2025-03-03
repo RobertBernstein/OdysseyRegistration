@@ -39,13 +39,13 @@ namespace OdysseyMvc2024.Models
         short? GetJudgeIdFromTournamentRegistrationId(int tournamentRegistrationId);
         void GetJudgeNameFromJudgeId(short? judgeId, out string judgeFirstName, out string judgeLastName);
         List<string> GetMemberGradesByRegistration(int id);
-        string GetProblemNameFromProblemId(int? problemId);
-        string GetSchoolNameFromSchoolId(int? schoolId);
-        TournamentRegistration GetTournamentRegistrationById(int tournamentRegistrationId);
-        int? GetVolunteerIdFromTournamentRegistrationId(int tournamentRegistrationId);
+        string? GetProblemNameFromProblemId(int? problemId);
+        string? GetSchoolNameFromSchoolId(int? schoolId);
+        TournamentRegistration? GetTournamentRegistrationById(int tournamentRegistrationId);
+        // int? GetVolunteerIdFromTournamentRegistrationId(int tournamentRegistrationId);
         int UpdateJudge(int judgeId, int pageNumber, Judge newRegistrationData);
         int UpdateJudgeEmail(int judgeId, string email);
         int UpdateJudgeRecordWithTournamentRegistrationId(short? judgeId, int tournamentRegistrationId, out string errorMessage);
-        int UpdateTournamentRegistration(int id, int pageNumber, TournamentRegistration newRegistrationData);
+        int UpdateTournamentRegistration(int id, int pageNumber, TournamentRegistration? newRegistrationData);
     }
 }
