@@ -1,5 +1,7 @@
 # Odyssey of the Mind Registration
 
+> [!TODO] Read the "Database first approach with DotNet Core" article in Obsidian before continuing to work on this project.
+
 ## Overview
 
 This repository contains the code for the Judge and Tournament Registration websites for NoVA North Odyssey of the Mind.
