@@ -20,15 +20,16 @@ services:
     ports:
       - "1433:1433"
     volumes:
-#      - ./init:/docker-entrypoint-initdb.d
+      - ./init:/docker-entrypoint-initdb.d
       - sqlserver_odyssey:/var/opt/mssql
     restart: always
     healthcheck:
-      test: ["CMD-SHELL", "/opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P $$(cat /run/secrets/sa_password) -Q 'SELECT 1' || exit 1"]
-      interval: 10s
+      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P $$(cat /run/secrets/sa_password) -Q 'SELECT 1' || exit 1"]
+      interval: 5s
       retries: 10
       start_period: 10s
       timeout: 3s
+
   sqlserver.configurator:
     image: mcr.microsoft.com/mssql/server:2022-latest
     environment:
@@ -43,8 +44,8 @@ services:
         condition: service_healthy
     command: >
       bash -c '
-      /opt/mssql-tools/bin/sqlcmd -S sqlserver -U sa -P $$(cat /run/secrets/sa_password) -d master -v sa_password=$$(cat /run/secrets/sa_password) -i docker-entrypoint-initdb.d/init.sql;
-      /opt/mssql-tools/bin/sqlcmd -S sqlserver -U sa -P $$(cat /run/secrets/sa_password) -d master -i docker-entrypoint-initdb.d/novanorth-prod.sql;
+      /opt/mssql-tools18/bin/sqlcmd -S sqlserver -U sa -P $$(cat /run/secrets/sa_password) -C -d master -v sa_password=$$(cat /run/secrets/sa_password) -i docker-entrypoint-initdb.d/init.sql;
+      /opt/mssql-tools18/bin/sqlcmd -S sqlserver -U sa -P $$(cat /run/secrets/sa_password) -C -d master -i docker-entrypoint-initdb.d/novanorth-prod.sql;
       echo "All done!";
       '
 

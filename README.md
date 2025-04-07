@@ -27,9 +27,9 @@ This repository contains the code for the Judge and Tournament Registration webs
 
 The OdysseyMvc4 (original) and OdysseyMvc2023 (current) projects are currently built using ASP.NET MVC version 4 on .NET Framework 4.8.
 
-## To-Do
+## TODO
 
-1. [ ] Update (all) the projects to use ASP.NET (Core) 8.0 or later.
+1. [ ] Update (all) the projects to use ASP.NET (Core) 9.0 or later.
 2. [ ] Document how I added the SQL Project to Visual Studio and how to modify, use, and deploy it.
 3. [ ] Rolled back to EF 4.4 to make sure everything worked. See if the code works as-is with EF 6.x.
 4. [ ] Create Elmah test DB
@@ -40,6 +40,19 @@ The OdysseyMvc4 (original) and OdysseyMvc2023 (current) projects are currently b
 9. [ ] Make all "Return to the Home Page" buttons return to the home page at the current base URL, not hard-coded to a specific Odyssey Registration home page.
 10. [ ] Move docker-compose.dcproj and its associated files into its own subdirectory.
 11. [ ] Set up automated SQL Server Backups for Odyssey Registration.
+12. [ ] 09/29/2024: Read "Get started with Entity Framework Core and an existing database in minutes - Quick Start Guide":
+   1. https://x.com/ErikEJ/status/1740635086742069720, 2:25 AM · Dec 29, 2023.
+   2. This can produce Mermaid diagrams, as well.
+13. [ ] 11/09/2024: Add [sweetalert2](https://github.com/sweetalert2/sweetalert2) to replace alerts.
+   1. A beautiful, responsive, customizable, accessible (WAI-ARIA) replacement for JavaScript's popup boxes. Zero dependencies.
+14. [ ] 11/17/2024: Mandatory: Add the membership name and number to the tournament registration email sent to the coach.
+15. [ ] 11/17/2024: Preferable: Populate the membership name and number from the schools table into the tournament registration table at the time of registration.
+16. [ ] 01/01/2025: Roll back anything in the .NET updates that are incompatible with the .NET Framework / ASP.NET v4 version of the website just to get onto .NET (Core) and be finished with .NET Framework once and for all.
+   1. [ ] 01/01/2025: This includes the changes I made to the Odyssey database schema.
+17. [ ] 01/01/2025: Once the .NET (not Framework) site is in production, then re-add updates/changes that were checked in today.
+18. [ ] 01/01/2025: Convert the [Run the SQL Server database in a Docker container (manually)](#run-the-sql-server-database-in-a-docker-container-manually) section into a Dockerfile that can be built instead of step-by-step PowerShell cmdlets.
+19. [ ] 04/06/2025: Add [Humanizer: meets all your .NET needs for manipulating and displaying strings, enums, dates, times, timespans, numbers and quantities](https://github.com/Humanizr/Humanizer).
+20. [ ] 04/06/2025: Figure out why the `sqlserver.configurator` docker container doesn't run once the `sqlserver` container is healthy.
 
 ## Get the local Odyssey SQL database and website running to debug it
 
@@ -99,7 +112,15 @@ Usage:	         4 MB
 Connection String: "Data Source=tcp:s06.winhost.com;Initial Catalog=DB_12824_registration;User ID=DB_12824_registration_user;Password=******;Integrated Security=False;"
 ```
 
-### Run the SQL Server database in a Docker container (manually)
+### Run the SQL Server database in a Docker container
+
+#### Docker Compose
+
+1. See [docker-compose.yml](OdysseyRegistration/docker-compose.yml).
+2. Manually run the `sqlserver.configurator` docker container (from within the Docker Desktop UI) to create the Odyssey login and database.
+   1. It should run automaticaaly once the `sqlserver` container is healthy. I added to TODO to figure out why this isn't running.
+
+#### Manually (Don't need to use this any longer)
 
 Open a PowerShell prompt.
 
@@ -124,15 +145,13 @@ This will create a [Mermaid](https://mermaid-js.github.io/mermaid/#/) database s
 1. Make sure your SQL Server database is up, e.g., in Docker.
 1. Run the following command:
 
-    `Downloads\mermerd_0.4.1_windows_amd64.tar\mermerd -c "sqlserver://sa:********@localhost:1433?database=DB_12824_registration" -s dbo --useAllTables -o OdysseySchema.mmd`
+    ```powershell
+    Downloads\mermerd_0.4.1_windows_amd64.tar\mermerd -c "sqlserver://sa:********@localhost:1433?database=DB_12824_registration" -s dbo --useAllTables -o OdysseySchema.mmd
+    ```
 
 1. You will find your file created as OdysseySchema.mmd in the directory where you ran the tool.
 
 #### TODO
-
-1. [ ] Read "Get started with Entity Framework Core and an existing database in minutes - Quick Start Guide":
-   1. https://x.com/ErikEJ/status/1740635086742069720, 2:25 AM · Dec 29, 2023.
-   2. This can produce Mermaid diagrams, as well.
 
 ### Shutdown and clean up the Docker container
 
@@ -265,10 +284,6 @@ Created a new project in the solution named `OdysseyRegistrationWebApi`
     1. I commented these lines out and uncommented the lines that allow you to proceed to the registration pages.
 4. Now both the Judges and Tournament Registration pages are showing Closed.
 
-## References
-
-1. [MySQL for WordPress docs](OdysseyRegistration/docs/MySQL-for-WordPress.md)
-
 ## 10/13/2024
 
 1. Used [EF Core Power Tools](https://marketplace.visualstudio.com/items?itemName=ErikEJ.EFCorePowerTools) to reverse engineer the Odyssey Registration database.
@@ -300,24 +315,10 @@ Created a new project in the solution named `OdysseyRegistrationWebApi`
 1. Don't forget that the Problem table Id had to start at 1 where it used to start at 0. So, the code needs to be updated to handle this.
    1. ==Why is this starting at 1 now? I don't remember.== 😟
 
-## 11/09/2024
-
-1. Add [sweetalert2](https://github.com/sweetalert2/sweetalert2) to replace alerts.
-   1. A beautiful, responsive, customizable, accessible (WAI-ARIA) replacement for JavaScript's popup boxes. Zero dependencies.
-
-## 11/17/2024
-
-1. [ ] Mandatory: Add the membership name and number to the tournament registration email sent to the coach.
-2. [ ] Preferable: Populate the membership name and number from the schools table into the tournament registration table at the time of registration.
-
 ## 01/01/2025
 
 1. Committed ALL of the modified files to the git repo after removing all passwords.
    1. Pushed to GitHub.
-2. [ ] Roll back anything in the .NET updates that are incompatible with the .NET Framework / ASP.NET v4 version of the website just to get onto .NET (Core) and be finished with .NET Framework once and for all.
-   1. [ ] This includes the changes I made to the Odyssey database schema.
-3. [ ] Once the .NET (not Framework) site is in production, then re-add updates/changes that were checked in today.
-4. [ ] Convert the [Run the SQL Server database in a Docker container (manually)](#run-the-sql-server-database-in-a-docker-container-manually) section into a Dockerfile that can be built instead of step-by-step PowerShell cmdlets.
 
 ## 03/02/2025
 
@@ -326,4 +327,8 @@ Created a new project in the solution named `OdysseyRegistrationWebApi`
    1. I started Docker Desktop in Windows.
    2. I set the `docker-compose` project as the start up project.
    3. I hit F5 to run the `docker-compose` project.
-   4. 
+
+## References
+
+1. [MySQL 9.2 Reference Manual](https://dev.mysql.com/doc/refman/9.2/en/)
+1. [MySQL for WordPress docs](OdysseyRegistration/docs/MySQL-for-WordPress.md)
