@@ -29,8 +29,12 @@ namespace OdysseyMvc2024.Controllers
             FriendlyRegistrationName = GetFriendlyRegistrationName();
         }
 
+        // Returns a view when there is an issue with the alternate coach's email address
+        // This is typically called during registration validation
         public ActionResult BadAltCoachEmail() => (ActionResult)View();
 
+        // Returns a view when there is an issue with the primary coach's email address
+        // This is typically called during registration validation
         public ActionResult BadCoachEmail() => (ActionResult)View();
 
         public int DetermineDivisionOfTeam(List<string> gradesOfTeamMembers)
