@@ -20,21 +20,36 @@ using System;
 
 namespace OdysseyMvc2024.Controllers
 {
+    /// <summary>
+    /// Controller responsible for handling tournament registration process for Odyssey of the Mind competitions.
+    /// Manages a multi-step registration flow from initial signup through confirmation.
+    /// </summary>
     public class TournamentRegistrationController : BaseRegistrationController
     {
+        /// <summary>
+        /// Initializes a new instance of the TournamentRegistrationController.
+        /// </summary>
+        /// <param name="context">Database context for Odyssey entities</param>
         public TournamentRegistrationController(IOdysseyEntities context)
             : base(context)
         {
+            // Set the registration type to Tournament and initialize the friendly name
             CurrentRegistrationType = BaseRegistrationController.RegistrationType.Tournament;
             FriendlyRegistrationName = GetFriendlyRegistrationName();
         }
 
-        // Returns a view when there is an issue with the alternate coach's email address
-        // This is typically called during registration validation
+        /// <summary>
+        /// Returns an error view when the alternate coach's email address is invalid.
+        /// This action is called during the registration validation process.
+        /// </summary>
+        /// <returns>View for invalid alternate coach email</returns>
         public ActionResult BadAltCoachEmail() => (ActionResult)View();
 
-        // Returns a view when there is an issue with the primary coach's email address
-        // This is typically called during registration validation
+        /// <summary>
+        /// Returns an error view when the primary coach's email address is invalid.
+        /// This action is called during the registration validation process.
+        /// </summary>
+        /// <returns>View for invalid coach email</returns>
         public ActionResult BadCoachEmail() => (ActionResult)View();
 
         public int DetermineDivisionOfTeam(List<string> gradesOfTeamMembers)
