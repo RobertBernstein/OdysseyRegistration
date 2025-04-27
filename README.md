@@ -10,18 +10,18 @@ This repository contains the code for the Judge and Tournament Registration webs
 
 | Folder                | Project Name                         | .NET Version       | Purpose             |
 |-----------------------|--------------------------------------|--------------------|---------------------|
-| /                     | EFCoreToolReverseEngineeringTest     | .NET 8.0           | ==TBD==    |
-| /                     | JudgeRegistrationRazor               | .NET 8.0           | ==TBD==    |
+| /                     | EFCoreToolReverseEngineeringTest     | .NET 9.0           | ==TBD==    |
+| /                     | JudgeRegistrationRazor               | .NET 9.0           | ==TBD==    |
 | /OdysseyRegistration/ | docker-compose                       | N/A                | Docker Compose project (.dcproj)<br />* Also builds the OdysseyRegistrationWebApi project.|
 | /OdysseyRegistration/ | init                                 | N/A                | SQL Server initialization files for the Docker Compose project |
 | /OdysseyRegistration/ | Odyssey.Database                     | SQL Server 2019 (==how can you tell which version?==)   | Database management project (.sqlproj) |
-| /OdysseyRegistration/ | OdysseyCoreMvc                       | .NET 6.0           | Unused (I think): Core MVC framework  |
+| /OdysseyRegistration/ | OdysseyCoreMvc                       | .NET 9.0           | Unused (I think): Core MVC framework  |
 | /OdysseyRegistration/ | OdysseyMvc4                          | .NET Framework 4.8 | MVC framework 4<br />**This is what is running in production today (01/01/2025).** |
 | /OdysseyRegistration/ | OdysseyMvc4.Tests                    | .NET Framework 4.8 | MVC framework 4 tests |
 | /OdysseyRegistration/ | OdysseyMvc2023                       | **.NET Framework 4.8** | MVC framework 2023, ==I think unused since it's .NET Framework==  |
-| /OdysseyRegistration/ | OdysseyMvc2024                       | .NET 8.0           | ==Is this the current project or is it the 2023 project? I think it's this one.== |
-| /OdysseyRegistration/ | OdysseyRegistrationWebApi            | .NET 8.0           | Web API for registration |
-| /OdysseyRegistration/ | UpdateProblemSynopsesForRegistration | .NET Framework 4.8 | Update problem synopses |
+| /OdysseyRegistration/ | OdysseyMvc2024                       | .NET 9.0           | ==Is this the current project or is it the 2023 project? I think it's this one.== |
+| /OdysseyRegistration/ | OdysseyRegistrationWebApi            | .NET 9.0           | Web API for registration |
+| /OdysseyRegistration/ | UpdateProblemSynopsesForRegistration | .NET Framework 4.8 | Update problem synopses, ==Need to figure out what this does and if it's worth keeping== |
 
 ## Technologies
 
@@ -29,7 +29,7 @@ The OdysseyMvc4 (original) and OdysseyMvc2023 (current) projects are currently b
 
 ## TODO
 
-1. [ ] Update (all) the projects to use ASP.NET (Core) 9.0 or later.
+1. [x] Update (all) the projects to use ASP.NET (Core) 9.0 or later.
 2. [ ] Document how I added the SQL Project to Visual Studio and how to modify, use, and deploy it.
 3. [ ] Rolled back to EF 4.4 to make sure everything worked. See if the code works as-is with EF 6.x.
 4. [ ] Create Elmah test DB
