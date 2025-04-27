@@ -7,7 +7,7 @@
 
 This repository contains the code for the Judge and Tournament Registration websites for NoVA North Odyssey of the Mind.
 
-## Projects in this Solution (.sln)
+## Projects in this Solution (.slnx)
 
 | Folder                | Project Name                         | .NET Version       | Purpose             |
 |-----------------------|--------------------------------------|--------------------|---------------------|
@@ -59,7 +59,7 @@ The OdysseyMvc4 (original) and OdysseyMvc2023 (current) projects are currently b
 
 1. Start Docker Desktop for Windows.
 2. Set the `docker-compose` VS 2022 project as the start up project.
-3. Build the `docker-compose` project in the .sln. This builds two projects:
+3. Build the `docker-compose` project in the .slnx. This builds two projects:
    1. OdysseyRegistrationWebApi
    2. docker-compose
 4. If this is not the first time you've built the project, it will kill and remove the existing containers.
@@ -259,9 +259,9 @@ Created a new project in the solution named `OdysseyRegistrationWebApi`
 
 ## 10/01/2024
 
-1. I'm figuring out where I left off and what everything does in the .sln.
+1. I'm figuring out where I left off and what everything does in the .slnx.
 1. I believe the OdysseyMvc2023 project is the main project that runs on my desktop against a SQL Server database running in a local Docker container.
-1. When I built the docker-compose project in the .sln, it built two projects:
+1. When I built the docker-compose project in the .slnx, it built two projects:
     1. OdysseyRegistrationWebApi
     1. docker-compose
 1. Then I right-click on the docker-compose project and select "Compose Up".
