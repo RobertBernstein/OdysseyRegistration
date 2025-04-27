@@ -81,7 +81,7 @@ Make sure to copy the web.config file from **the `OdysseyRegistration` directory
 > [!Note]
 > This should be placed in a higher directory than your `bin`, `Content`, `Views`, etc. directories.  The directory containing those subdirectories will likely have its own web.config file.
 
-### Hosting Company Configuration
+### Winhost (our Hosting Company) Configuration
 
 1. Make sure that the ASP.NET MVC website directory is set as an application starting point.
     1. Log into the [Winhost Control Panel](https://cp.winhost.com).
@@ -91,7 +91,9 @@ Make sure to copy the web.config file from **the `OdysseyRegistration` directory
 
 ## SQL Server Database: Odyssey Registration Data (vs. WordPress data in MySQL)
 
-1. Make sure to back up the database after every season (or before the next one).
+### Back up the SQL Server Registration database after every season (or before the next one)
+
+1. TODO: Document this procedure.
 
 ### Manage the database in production
 
@@ -117,9 +119,11 @@ Connection String: "Data Source=tcp:s06.winhost.com;Initial Catalog=DB_12824_reg
 
 #### Docker Compose
 
+==How did I create this VS project in the first place?==
+
 1. See [docker-compose.yml](OdysseyRegistration/docker-compose.yml).
 2. Manually run the `sqlserver.configurator` docker container (from within the Docker Desktop UI) to create the Odyssey login and database.
-   1. It should run automaticaaly once the `sqlserver` container is healthy. I added to TODO to figure out why this isn't running.
+   1. It should run automatically once the `sqlserver` container is healthy. I added to TODO to figure out why this isn't running.
 
 #### Manually (Don't need to use this any longer)
 
@@ -288,7 +292,7 @@ Created a new project in the solution named `OdysseyRegistrationWebApi`
 ## 10/13/2024
 
 1. Used [EF Core Power Tools](https://marketplace.visualstudio.com/items?itemName=ErikEJ.EFCorePowerTools) to reverse engineer the Odyssey Registration database.
-2. To export data from the current SQL database as JSON, run a query like the following in SSMS:
+2. To export data from the current SQL Server database as JSON, run a query like the following in SSMS:
 
     ```sql
     SELECT * FROM Schools FOR JSON AUTO
