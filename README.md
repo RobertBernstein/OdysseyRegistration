@@ -1,6 +1,7 @@
 # Odyssey of the Mind Registration
 
-> [!TODO] Read the "Database first approach with DotNet Core" article in Obsidian before continuing to work on this project.
+> [!TODO]
+> Read the "Database first approach with DotNet Core" article in Obsidian before continuing to work on this project.
 
 ## Overview
 
