@@ -1,0 +1,28 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="../README.md" />
+  </Folder>
+  <Project Path="../EFCoreToolReverseEngineeringTest/EFCoreToolReverseEngineeringTest.csproj" />
+  <Project Path="../JudgeRegistrationRazor/JudgeRegistrationRazor.csproj" />
+  <Project Path="docker-compose.dcproj">
+    <Build />
+  </Project>
+  <Project Path="Odyssey.Database/Odyssey.Database.sqlproj">
+    <Deploy />
+  </Project>
+  <Project Path="OdysseyCoreMvc/OdysseyCoreMvc.csproj">
+    <Build Solution="Debug|*" Project="false" />
+  </Project>
+  <Project Path="OdysseyMvc2023/OdysseyMvc2023.csproj" Id="61f704b8-472e-44c2-950b-76ac84104e24" />
+  <Project Path="OdysseyMvc2024/OdysseyMvc2024.csproj" />
+  <Project Path="OdysseyMvc4.Tests/OdysseyMvc4.Tests.csproj" Id="89c73e79-fe54-46fb-912e-556d0b044291">
+    <Build Project="false" />
+  </Project>
+  <Project Path="OdysseyMvc4/OdysseyMvc4.csproj" Id="bd2044b5-a24b-4992-960f-5af07941ab2b">
+    <Build Project="false" />
+  </Project>
+  <Project Path="OdysseyRegistrationWebApi/OdysseyRegistrationWebApi.csproj" />
+  <Project Path="UpdateProblemSynopsesForRegistration/UpdateProblemSynopsesForRegistration.csproj" Id="8c5afcc9-71d8-4aa5-8fa0-ac2fc8b3c30c">
+    <Build Project="false" />
+  </Project>
+</Solution>
