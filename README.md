@@ -71,14 +71,21 @@ The OdysseyMvc4 (original) and OdysseyMvc2023 (current? I think it's really Odys
 last successful build?` dialog box.
    1. The `docker-compose` project build showed the following error in the Error List window in VS 2022:
       1. `Volume sharing is not enabled. On the Settings screen in Docker Desktop, click Resources -> Shared Drives, and select the drive(s) or folder(s) containing your project files. For more information, please visit - https://aka.ms/DockerToolsTroubleshooting`
+1. You may now connect to the running SQL Server instance using VS 2022, etc., with the following settings:
+   1. Server Name: localhost
+   2. Authentication: SQL Server Authentication
+   3. User name: sa
+   4. Password: \<whatever is defined in the `docker-compose\sa_password.txt` file\>
+   5. Encrypt: Optional (False)
+   6. Connect to database: OdysseyEntities
 
 ## Deploying to Production
 
 ### Files to Configure
 
-Make sure to copy the web.config file from **the `OdysseyRegistration` directory**, i.e., the top-most/root directory, into the root directory of your website at the hosting company.
+Make sure to copy the web.config file from **the `OdysseyRegistration` directory**, i.e., the top-most/root directory, into the root directory of your website at WinHost (the hosting company).
 
-> [!Note]
+> [!note]
 > This should be placed in a higher directory than your `bin`, `Content`, `Views`, etc. directories.  The directory containing those subdirectories will likely have its own web.config file.
 
 ### Winhost (our Hosting Company) Configuration
