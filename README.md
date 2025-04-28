@@ -26,7 +26,7 @@ This repository contains the code for the Judge and Tournament Registration webs
 
 ## Technologies
 
-The OdysseyMvc4 (original) and OdysseyMvc2023 (current) projects are currently built using ASP.NET MVC version 4 on .NET Framework 4.8.
+The OdysseyMvc4 (original) and OdysseyMvc2023 (current? I think it's really OdysseyMvc2024 build on .NET) projects are currently built using ASP.NET MVC version 4 on .NET Framework 4.8.
 
 ## TODO
 
