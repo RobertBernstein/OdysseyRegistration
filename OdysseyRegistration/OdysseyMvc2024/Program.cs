@@ -1,4 +1,3 @@
-
 using Microsoft.EntityFrameworkCore;
 using OdysseyMvc2024.Models;
 
