@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="BaseRegistrationController.cs" company="Tardis Technologies">
-//   Copyright 2014 Tardis Technologies. All rights reserved.
+//   Copyright 2025 Tardis Technologies. All rights reserved.
 // </copyright>
 // <summary>
 //   The base registration controller.
@@ -13,7 +13,6 @@
 // MVID: 7B658547-521F-44CB-80FA-52857CB94B72
 // Assembly location: C:\Users\rob\OneDrive\Odyssey\OdysseyProd\registration\bin\OdysseyMvc4.dll
 
-using System;
 using System.Net;
 using System.Net.Mail;
 using ElmahCore;
@@ -43,10 +42,15 @@ namespace OdysseyMvc2024.Controllers
             };
 
             SetBaseViewData(baseViewData);
-            return View();
+
+            // TODO: (Rob, 05/25/2025) This is a temporary fix to get the BadEmail page working.  We should
+            // probably create a BadEmailViewData class that inherits from BaseViewData and use that
+            // instead of BaseViewData.
+            // TOD: (Rob, 05/25/2025) Why did I return View() here? That doesn't return the BadEmail view!
+            //return View();
 
             // TODO: Test that this is the correct path to the BadEmail page, Rob - 01/18/2015.
-            // return this.View("~/Views/Shared/BadEmail.cshtml");
+            return this.View("~/Views/Shared/BadEmail.cshtml");
         }
 
         /// <summary>
@@ -101,6 +105,8 @@ namespace OdysseyMvc2024.Controllers
                 }
                 catch (FormatException ex)
                 {
+                    // Log the exception using Elmah
+                    ElmahExtensions.RaiseError(ex);
                     return null;
                 }
             }
@@ -142,17 +148,40 @@ namespace OdysseyMvc2024.Controllers
             return View((object)baseViewData);
         }
 
+        /// <summary>
+        /// Determines the appropriate CSS file to use based on the current page URL.
+        /// </summary>
+        /// <remarks>
+        /// This method checks the page link in the <see cref="Url"/> property to determine which
+        /// CSS file to apply. Ensure that the <see cref="Url"/> property is not null and provides a valid page link 
+        /// for this method to function correctly.
+        /// </remarks>
+        /// <returns>
+        /// A string representing the relative path to the CSS file. Returns "~/Content/NovaSouth.css"  if the page URL
+        /// contains "novasouth" (case-insensitive); otherwise, returns "~/Content/NovaNorth.css".
+        /// </returns>
         private string DetermineSiteCssFile() =>
-            !string.IsNullOrEmpty(Url.PageLink()) &&
-            Url.PageLink().Contains("novasouth", StringComparison.InvariantCultureIgnoreCase)
+            !string.IsNullOrEmpty(Url?.PageLink()) && // Added null conditional operator to handle potential null reference
+            Url.PageLink()!.Contains("novasouth", StringComparison.InvariantCultureIgnoreCase) // Added null-forgiving operator
                 ? Url.Content("~/Content/NovaSouth.css")
-                : Url.Content("~/Content/NovaNorth.css");
+                : Url.Content("~/Content/NovaNorth.css"); // TODO: (Rob, 05/25/2015) Handle the case where Url is null.
 
+        /// <summary>
+        /// Determines the site name based on the current HTTP request's host.
+        /// </summary>
+        /// <remarks>
+        /// The method retrieves the host from the current HTTP context and processes it to
+        /// derive the site name. The result is always in lowercase.
+        /// </remarks>
+        /// <returns>
+        /// A string representing the site name. If the host starts with "www.", the "www." prefix is removed. If the
+        /// page link is unavailable, the default site name "novanorth.org" is returned.
+        /// </returns>
         private string DetermineSiteName()
         {
             string hostname = HttpContext.Request.Host.Host;
 
-            string siteName = Url.PageLink() != null
+            string siteName = !string.IsNullOrEmpty(Url.PageLink()) 
                 ? hostname.ToLowerInvariant()
                 : "novanorth.org";
 
@@ -204,18 +233,36 @@ namespace OdysseyMvc2024.Controllers
             return View((object)baseViewData);
         }
 
+        /// <summary>
+        /// Generates a user-friendly name for the current registration type, , e.g. Judges, Tournament.
+        /// </summary>
+        /// <remarks>This method returns a descriptive string based on the value of the <see
+        /// cref="CurrentRegistrationType"/> property. If the registration type is <see
+        /// cref="BaseRegistrationController.RegistrationType.None"/>, an empty string is returned. For the <see
+        /// cref="BaseRegistrationController.RegistrationType.CoachesTraining"/> type, a specific name is returned. For
+        /// all other registration types, the name is derived from the type's string representation, followed by "
+        /// Registration".</remarks>
+        /// <returns>
+        /// A user-friendly string representing the current registration type, or an empty string if the registration
+        /// type is <see cref="BaseRegistrationController.RegistrationType.None"/>.
+        /// </returns>
+        /// <remarks>
+        /// TODO: Write tests for this.
+        /// </remarks>
         public string GetFriendlyRegistrationName()
         {
             // Make sure that CurrentRegistrationType has been set before calling this method.
             // TODO: we should probably assert here if CurrentRegistrationType has not been set.
-            if (this.CurrentRegistrationType == BaseRegistrationController.RegistrationType.None)
+            // TODO: we should definitely log an error here if CurrentRegistrationType has not been set.
+            if (this.CurrentRegistrationType == RegistrationType.None)
             {
+                // If the registration type is None, return an empty string.
                 return string.Empty;
             }
 
-            return this.CurrentRegistrationType == BaseRegistrationController.RegistrationType.CoachesTraining
+            return this.CurrentRegistrationType == RegistrationType.CoachesTraining
                 ? "Coaches Training Registration"
-                : this.CurrentRegistrationType.ToString() + " Registration";
+                : $"{this.CurrentRegistrationType} Registration";
         }
 
         /// <summary>
@@ -228,8 +275,7 @@ namespace OdysseyMvc2024.Controllers
         /// <returns>
         /// true if registration is closed, false otherwise.
         /// </returns>
-        public bool IsRegistrationClosed(
-          BaseRegistrationController.RegistrationType registrationType)
+        public bool IsRegistrationClosed(RegistrationType registrationType)
         {
             BaseViewData baseViewData = new(Repository)
             {
@@ -250,11 +296,21 @@ namespace OdysseyMvc2024.Controllers
             {
                 // TODO: Log the exception.
                 // If we cannot even read the closing time from the database, close down registration!
+                // Log the exception.
+                ElmahExtensions.RaiseError(ex);
                 return true;
             }
 
-            // TODO: Adjust for Eastern Time if not in Eastern Time, e.g. Pacific Time
-            DateTime currentEasternTime = DateTime.Now; ////.AddHours(3);
+            // TODO: Add app setting to decide what timezone to consider local.
+            // Adjust for the configured local timezone
+            // TODO: (Rob, 05/25/2025) This is hard coded to Eastern Time. We should probably make this configurable.
+            // TODO: (Rob, 05/25/2025) Test this!
+            TimeZoneInfo localTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time"); // Example for Eastern Time
+            DateTime currentEasternTime = TimeZoneInfo.ConvertTime(DateTime.Now, localTimeZone);
+
+            // Compare the registration close date and time with the current time in the local timezone.
+            // When the comparison is less than 0, it means the registration close date and time is in
+            // the past, hence registration is closed.
             return DateTime.Compare(registrationCloseDateTime, currentEasternTime) < 0;
         }
 
@@ -268,8 +324,7 @@ namespace OdysseyMvc2024.Controllers
         /// <returns>
         /// true if registration is coming soon, false otherwise.
         /// </returns>
-        public bool IsRegistrationComingSoon(
-          BaseRegistrationController.RegistrationType registrationType)
+        public bool IsRegistrationComingSoon(RegistrationType registrationType)
         {
             BaseViewData baseViewData = new(Repository)
             {
@@ -288,12 +343,13 @@ namespace OdysseyMvc2024.Controllers
             {
                 // TODO: Log the exception.
                 // If we cannot even read the opening time from the database, assume we've passed the opening date.
+                ElmahExtensions.RaiseError(ex);
                 return false;
             }
 
             // TODO: Adjust for Eastern Time if not in Eastern Time, e.g. Pacific Time
-            // DateTime currentEasternTime = DateTime.Now; ////.AddHours(3);
-            return DateTime.Compare(DateTime.Now, registrationOpenDate) < 0;
+            DateTime currentEasternTime = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time")); // Adjusted for Eastern Time
+            return DateTime.Compare(currentEasternTime, registrationOpenDate) < 0;
         }
 
         /// <summary>
@@ -305,8 +361,7 @@ namespace OdysseyMvc2024.Controllers
         /// <returns>
         /// true if the registration is administratively down, false otherwise.
         /// </returns>
-        public bool IsRegistrationDown(
-          BaseRegistrationController.RegistrationType registrationType)
+        public bool IsRegistrationDown(RegistrationType registrationType)
         {
             BaseViewData baseViewData = new(Repository)
             {
@@ -316,8 +371,13 @@ namespace OdysseyMvc2024.Controllers
 
             SetBaseViewData(baseViewData);
 
-            bool registrationIsDown;
-            bool.TryParse(baseViewData.Config["Is" + registrationType + "RegistrationDown"], out registrationIsDown);
+            if (!bool.TryParse(baseViewData.Config[$"Is{registrationType}RegistrationDown"], out bool registrationIsDown))
+            {
+                // If parsing fails, log the issue and assume registration is not down.
+                ElmahExtensions.RaiseError(new FormatException($"Failed to parse Is{registrationType}RegistrationDown as a boolean."));
+                registrationIsDown = false;
+            }
+
             return registrationIsDown;
         }
 
@@ -335,10 +395,13 @@ namespace OdysseyMvc2024.Controllers
         /// </returns>
         public string? SendMessage(BaseViewData viewData, MailMessage mailMessage)
         {
-            SmtpClient smtpClient = new SmtpClient()
+            SmtpClient smtpClient = new()
             {
-                Host = viewData.Config["EmailServer"],
-                Credentials = new NetworkCredential(viewData.Config["WebmasterEmail"], viewData.Config["WebmasterEmailPassword"])
+                // Fix for CS8602: Dereference of a possibly null reference.
+                Host = viewData.Config?["EmailServer"] ?? throw new InvalidOperationException("EmailServer configuration is missing."),
+                Credentials = new NetworkCredential(
+                    viewData.Config?["WebmasterEmail"] ?? throw new InvalidOperationException("WebmasterEmail configuration is missing."),
+                    viewData.Config?["WebmasterEmailPassword"] ?? throw new InvalidOperationException("WebmasterEmailPassword configuration is missing."))
             };
 
             // Send the mail message
@@ -348,25 +411,34 @@ namespace OdysseyMvc2024.Controllers
             }
             catch (SmtpFailedRecipientsException exception)
             {
+                // TODO: (Rob, 05/25/2025) I had removed this from the ASP.NET MVC 4 code. Should we use this instead or as well?
+                //ErrorSignal.FromCurrentContext().Raise(exception);
+
+                // Log the exception using Elmah
                 ElmahExtensions.RaiseError(exception);
 
-                // TODO: Should we rename innerException to smtpFailedRecipientException?
-                foreach (SmtpFailedRecipientException innerException in exception.InnerExceptions)
+                foreach (SmtpFailedRecipientException smtpFailedRecipientException in exception.InnerExceptions)
                 {
-                    switch (innerException.StatusCode)
+                    switch (smtpFailedRecipientException.StatusCode)
                     {
                         case SmtpStatusCode.MailboxBusy:
                         case SmtpStatusCode.MailboxUnavailable:
                             Thread.Sleep(5000);
                             smtpClient.Send(mailMessage);
+                            // TODO: (Rob, 05/25/2025) Log the retry attempt. Or, should this be a break?
+                            ElmahExtensions.RaiseError(new Exception("Retrying to send email after mailbox unavailable."));
                             continue;
                         default:
-                            return string.Format("Failed to deliver message to {0}", innerException.FailedRecipient);
+                            return string.Format("Failed to deliver message to {0}", smtpFailedRecipientException.FailedRecipient);
                     }
                 }
             }
             catch (SmtpException smtpException)
             {
+                // TODO: (Rob, 05/25/2025) I had removed this from the ASP.NET MVC 4 code. Should we use this instead or as well?
+                //ErrorSignal.FromCurrentContext().Raise(smtpException);
+
+                // Log the exception using Elmah
                 ElmahExtensions.RaiseError(smtpException);
                 return smtpException.StatusCode.ToString();
             }
@@ -382,11 +454,11 @@ namespace OdysseyMvc2024.Controllers
         /// </param>
         protected void SetBaseViewData(BaseViewData viewData)
         {
-            viewData.Config = this.Repository.Config;
-            viewData.RegionName = this.Repository.RegionName;
-            viewData.RegionNumber = this.Repository.RegionNumber;
-            viewData.TournamentInfo = this.Repository.TournamentInfo;
-            viewData.FriendlyRegistrationName = this.FriendlyRegistrationName;
+            viewData.Config = Repository.Config;
+            viewData.RegionName = Repository.RegionName;
+            viewData.RegionNumber = Repository.RegionNumber;
+            viewData.TournamentInfo = Repository.TournamentInfo;
+            viewData.FriendlyRegistrationName = FriendlyRegistrationName;
             viewData.SiteName = DetermineSiteName();
             viewData.PathToSiteCssFile = DetermineSiteCssFile();
         }
@@ -434,28 +506,28 @@ namespace OdysseyMvc2024.Controllers
                 SetBaseViewData(baseViewData);
 
                 // Is it too early to register?
-                if (IsRegistrationComingSoon(this.CurrentRegistrationType))
+                if (IsRegistrationComingSoon(CurrentRegistrationType))
                 {
-                    return BaseRegistrationController.RegistrationState.Soon;
+                    return RegistrationState.Soon;
                 }
 
                 // Is registration temporarily disabled?
-                if (IsRegistrationDown(this.CurrentRegistrationType))
+                if (IsRegistrationDown(CurrentRegistrationType))
                 {
-                    return BaseRegistrationController.RegistrationState.Down;
+                    return RegistrationState.Down;
                 }
 
                 // Is it too late to register?
-                return IsRegistrationClosed(this.CurrentRegistrationType)
-                    ? BaseRegistrationController.RegistrationState.Closed
-                    : BaseRegistrationController.RegistrationState.Available;
+                return IsRegistrationClosed(CurrentRegistrationType)
+                    ? RegistrationState.Closed
+                    : RegistrationState.Available;
             }
         }
 
         /// <summary>
         /// Gets or sets the current registration type.
         /// </summary>
-        public BaseRegistrationController.RegistrationType CurrentRegistrationType { get; set; }
+        public RegistrationType CurrentRegistrationType { get; set; }
 
         /// <summary>
         /// Gets or sets the friendly, i.e. displayable, registration name.
