@@ -28,6 +28,15 @@ This repository contains the code for the Judge and Tournament Registration webs
 
 The OdysseyMvc4 (original) and OdysseyMvc2023 (current? I think it's really OdysseyMvc2024 build on .NET) projects are currently built using ASP.NET MVC version 4 on .NET Framework 4.8.
 
+## Conversion Progress
+
+### Copying OdysseyMvc4 (.NET Framework) to OdysseyMvc2024 (.NET)
+
+1. ✅ BaseRegistrationController - Complete
+2. ❓HomeController - To be reviewed
+3. ❓JudgesRegistrationController - To be reviewed
+4. ❓TournamentRegistrationController - To be reviewed
+
 ## TODO
 
 1. [x] Update (all) the projects to use ASP.NET (Core) 9.0 or later.
