@@ -1,4 +1,14 @@
-﻿// Decompiled with JetBrains decompiler
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="TournamentRegistrationController.cs" company="Tardis Technologies">
+//   Copyright 2025 Tardis Technologies. All rights reserved.
+// </copyright>
+// <summary>
+//   Controller responsible for handling tournament registration process for Odyssey of the Mind competitions.
+//   Manages a multi-step registration flow from initial sign up through confirmation.
+// </summary>
+// --------------------------------------------------------------------------------------------------------------------
+
+// Decompiled with JetBrains decompiler
 // Type: OdysseyMvc4.Controllers.TournamentRegistrationController
 // Assembly: OdysseyMvc4, Version=1.0.5460.36587, Culture=neutral, PublicKeyToken=null
 // MVID: 7B658547-521F-44CB-80FA-52857CB94B72
@@ -16,7 +26,6 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewEngines;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using ElmahCore;
-using System;
 
 namespace OdysseyMvc2024.Controllers
 {

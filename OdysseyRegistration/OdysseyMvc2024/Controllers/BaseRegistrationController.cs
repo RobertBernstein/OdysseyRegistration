@@ -3,7 +3,7 @@
 //   Copyright 2025 Tardis Technologies. All rights reserved.
 // </copyright>
 // <summary>
-//   The base registration controller.
+//   The base controller for all registration controllers in the Odyssey of the Mind registration system.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -455,6 +455,7 @@ namespace OdysseyMvc2024.Controllers
         protected void SetBaseViewData(BaseViewData viewData)
         {
             viewData.Config = Repository.Config;
+            viewData.Config = this.Repository.Config;
             viewData.RegionName = Repository.RegionName;
             viewData.RegionNumber = Repository.RegionNumber;
             viewData.TournamentInfo = Repository.TournamentInfo;

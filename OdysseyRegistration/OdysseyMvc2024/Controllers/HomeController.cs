@@ -1,9 +1,9 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="HomeController.cs" company="Tardis Technologies">
-//   Copyright 2014 Tardis Technologies. All rights reserved.
+//   Copyright 2025 Tardis Technologies. All rights reserved.
 // </copyright>
 // <summary>
-//   The home controller.
+//   The home controller for the Odyssey of the Mind registration system.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -23,19 +23,8 @@ namespace OdysseyMvc2024.Controllers
     /// <summary>
     /// The home controller.
     /// </summary>
-    public class HomeController : BaseRegistrationController
+    public class HomeController(IOdysseyEntities context) : BaseRegistrationController(context)
     {
-        /// <summary>
-        /// Provides database access.
-        /// </summary>
-        private readonly OdysseyRepository repository;
-
-        public HomeController(IOdysseyEntities context)
-            :base(context)
-        {
-            repository = new OdysseyRepository(context);
-        }
-
         /// <summary>
         /// The view for the Index page.
         /// GET: /Home/
@@ -55,10 +44,9 @@ namespace OdysseyMvc2024.Controllers
             SetBaseViewData(baseViewData);
 
             ViewData["Message"] =
-                (object)("Welcome to the " + repository.Config["RegionName"] + " Odyssey of the Mind Region " +
-                repository.Config["RegionNumber"] + " Registration web pages.");
+                $"Welcome to the {Repository.RegionName ?? "Unknown"} Odyssey of the Mind Region {Repository.RegionNumber ?? "?"} Registration web pages.";
 
-            return View((object)baseViewData);
+            return View(baseViewData);
         }
     }
 }
