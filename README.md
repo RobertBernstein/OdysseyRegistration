@@ -101,6 +101,67 @@ Make sure to copy the web.config file from **the `OdysseyRegistration` directory
 ### Back up the SQL Server Registration database after every season (or before the next one)
 
 1. TODO: Document this procedure.
+1. Run this from the command prompt or PowerShell
+
+```sh
+docker container exec sql1 /opt/mssql-tools/bin/sqlcmd -S ServerName -U username -P password -Q "BACKUP DATABASE [DatabaseName] TO DISK='/Backups/DatabaseName.bak'"
+```
+
+```
+docker container exec -it sqlserver /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P <password> -No
+```
+
+### Connect to the Odyssey database via a local SQL Server container
+```
+docker container exec -it sqlserver /opt/mssql-tools18/bin/sqlcmd -S s06.winhost.com -U DB_12824_registration_user -P <password> -No
+
+use DB_12824_registration
+go
+
+select * from config
+go
+
+quit
+
+docker container exec -it sqlserver /opt/mssql-tools18/bin/sqlcmd -S s06.winhost.com -U DB_12824_registration_user -P <password> -No
+
+BACKUP DATABASE [DB_12824_registration] TO DISK='/var/opt/mssql/backups/odyssey.bak'
+go
+
+Msg 3201, Level 16, State 1, Server S06, Line 1
+Cannot open backup device 'D:\DbBackup\/var/opt/mssql/backups/odyssey.bak'. Operating system error 3(The system cannot find the path specified.).
+Msg 3013, Level 16, State 1, Server S06, Line 1
+BACKUP DATABASE is terminating abnormally.
+
+1> BACKUP DATABASE [DB_12824_registration] TO DISK='odyssey.bak'
+2> go
+Processed 448 pages for database 'DB_12824_registration', file 'DB_12824_registration_data' on file 1.
+Processed 2 pages for database 'DB_12824_registration', file 'DB_12824_registration_log' on file 1.
+BACKUP DATABASE successfully processed 450 pages in 0.110 seconds (31.924 MB/sec).
+```
+Did this get written to the Winhost server in D:\DbBackup?
+How do I get at that???
+How do I delete it???
+**5/10/2025: Left off here**
+
+    Key parameters:
+    
+        -S: Server name
+        -E: Use Windows Authentication
+        -U and -P: For SQL Authentication (username/password)
+        -Q: Query to execute
+    
+    Tips:
+    
+        Make sure the backup directory exists
+        Ensure your account has sufficient permissions
+        Replace ServerName and DatabaseName with your values
+
+### Connect to a shell in the local SQL Server container
+
+```
+docker container exec -it sqlserver bash
+```
 
 ### Manage the database in production
 
