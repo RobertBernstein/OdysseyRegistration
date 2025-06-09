@@ -44,15 +44,15 @@
         </p>
         <ul>
             @*<li>@Html.ActionLink("Coaches Training Registration", "Page01", "CoachesTrainingRegistration")</li>*@
-            @*            <li>@Html.ActionLink("Judges Registration", "Page01", "JudgesRegistration")</li>*@
-            <li>Judges Registration (Coming Soon!)</li>
+            <li>@Html.ActionLink("Judges Registration", "Page01", "JudgesRegistration")</li>
+            @*<li>Judges Registration (Coming Soon!)</li>*@
             @if (Model.Config["WillHaveVolunteerRegistration"] == "True")
             {
                 @*<li>@Html.ActionLink("Volunteer Registration", "Page01", "VolunteerRegistration")</li>*@
                 <li>Volunteer Registration (Coming Soon!)</li>
             }
-            @*<li>@Html.ActionLink("Tournament Registration", "Page01", "TournamentRegistration")</li>*@
-            <li>Tournament Registration (Coming Soon!)</li>
+            <li>@Html.ActionLink("Tournament Registration", "Page01", "TournamentRegistration")</li>
+            @*<li>Tournament Registration (Coming Soon!)</li>*@
         </ul>
         <p style="text-align: center">
             <button type="button" id="homePageButton">Return to the Home Page</button>

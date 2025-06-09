@@ -219,29 +219,6 @@
     </p>
     <hr />
     <p>
-        <b>
-            Please enter your First, Second, and Third choices for the problem you'd like to
-            judge.
-        </b>
-    </p>
-    <p>
-        @Html.LabelFor(x => x.ProblemChoice1)
-        @Html.DropDownListFor(x => x.ProblemChoice1, Model.ProblemChoices)
-        &nbsp; <a href="@Model.Config["LinkToSynopses"]" target="_blank">
-            Click here for
-            a description of the problems
-        </a>
-    </p>
-    <p>
-        @Html.LabelFor(x => x.ProblemChoice2)
-        @Html.DropDownListFor(x => x.ProblemChoice2, Model.ProblemChoices)
-    </p>
-    <p>
-        @Html.LabelFor(x => x.ProblemChoice3)
-        @Html.DropDownListFor(x => x.ProblemChoice3, Model.ProblemChoices)
-    </p>
-    <hr />
-    <p>
         <img alt="Required" src="@Url.Content("~/Content/Images/bullet.gif")" width="15" />&nbsp;
         Do you have any children competing in Odyssey of the Mind?
         @Html.RadioButtonFor(x => x.HasChildrenCompeting, "Yes") Yes

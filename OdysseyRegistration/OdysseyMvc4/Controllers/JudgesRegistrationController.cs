@@ -307,6 +307,7 @@ namespace OdysseyMvc4.Controllers
             {
                 return this.RedirectToAction(this.CurrentRegistrationState.ToString());
             }
+
             try
             {
                 // TODO: What should we do here if the ModelState isn't valid? - Rob, 09/30/2014

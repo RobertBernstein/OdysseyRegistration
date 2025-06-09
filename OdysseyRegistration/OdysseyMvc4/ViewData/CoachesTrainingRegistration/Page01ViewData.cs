@@ -11,7 +11,7 @@ namespace OdysseyMvc4.ViewData.CoachesTrainingRegistration
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-
+    using System.Web.Mvc;
     using OdysseyMvc4.Models;
 
     /// <summary>
@@ -95,7 +95,7 @@ namespace OdysseyMvc4.ViewData.CoachesTrainingRegistration
         /// </summary>
         [Required]
         [Display(Name = "Confirm E-mail Address")]
-        [Compare("EmailAddress", ErrorMessage = "Your e-mail addresses do not match")]
+        [System.ComponentModel.DataAnnotations.Compare("EmailAddress", ErrorMessage = "Your e-mail addresses do not match")]
         public string EmailConfirmation { get; set; }
 
         /// <summary>

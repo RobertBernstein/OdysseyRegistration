@@ -15,7 +15,7 @@ namespace OdysseyMvc4.ViewData.JudgesRegistration
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.Diagnostics.CodeAnalysis;
-
+    using System.Web.Mvc;
     using OdysseyMvc4.ViewData;
 
     /// <summary>
@@ -126,7 +126,7 @@ namespace OdysseyMvc4.ViewData.JudgesRegistration
         /// Gets or sets the confirmation e-mail address.
         /// </summary>
         [Required]
-        [Compare("EmailAddress", ErrorMessage = "Your e-mail addresses do not match")]
+        [System.ComponentModel.DataAnnotations.Compare("EmailAddress", ErrorMessage = "Your e-mail addresses do not match")]
         [Display(Name = "Confirm E-mail Address")]
         public string EmailConfirmation { get; set; }
 
