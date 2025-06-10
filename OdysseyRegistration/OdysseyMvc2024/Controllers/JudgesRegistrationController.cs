@@ -31,23 +31,92 @@ namespace OdysseyMvc2024.Controllers
         public JudgesRegistrationController(IOdysseyEntities context)
             : base(context)
         {
-            CurrentRegistrationType = BaseRegistrationController.RegistrationType.Judges;
+            CurrentRegistrationType = RegistrationType.Judges;
             FriendlyRegistrationName = GetFriendlyRegistrationName();
         }
 
         public string BuildMailRegionalDirectorHyperLink(Page01ViewData viewData)
         {
-            StringBuilder stringBuilder = new StringBuilder();
+            if (viewData == null)
+            {
+                throw new ArgumentNullException(nameof(viewData), "viewData is null.");
+            }
+
+            if (viewData.Config == null)
+            {
+                throw new ArgumentNullException(nameof(viewData), "Config dictionary is null.");
+            }
+
+            if (!viewData.Config.TryGetValue("RegionalDirectorEmail", out var regionalDirectorEmail))
+            {
+                throw new ArgumentException("RegionalDirectorEmail key is missing in the Config dictionary.", nameof(viewData));
+            }
+
+            var stringBuilder = new StringBuilder();
             stringBuilder.Append("mailto:");
-            stringBuilder.Append(viewData.Config["RegionalDirectorEmail"]);
-            string str = ("?subject=I would like to help at the Region " + viewData.RegionNumber + " Tournament&body=I cannot be a judge this year, but would like to help in some other way.%0A%0AMy name is ______________________.%0A%0AMy phone number is ______________________.%0A%0A").Replace(" ", "%20");
-            stringBuilder.Append(str);
+            stringBuilder.Append(regionalDirectorEmail);
+            string subject = $"?subject=I would like to help at the Region {viewData.RegionNumber} Tournament";
+            string body = "&body=I cannot be a judge this year, but would like to help in some other way.%0A%0AMy name is ______________________.%0A%0AMy phone number is ______________________.%0A%0A";
+
+            // TODO: (05/26/2025) Test that this works correctly with the new URL encoding.
+            stringBuilder.Append(subject.Replace(" ", "%20"));
+
+            stringBuilder.Append(body);
             return stringBuilder.ToString();
         }
 
+        // TODO: (05/26/2025) Test that this works correctly. You may want to revert to the previous code if it does not.
+        // Fix for SYSLIB1045: Use 'GeneratedRegexAttribute' to generate the regular expression implementation at compile-time.
+        // Replace all instances of Regex.Replace with precompiled regex using the GeneratedRegexAttribute.
+        [GeneratedRegex("<span>JudgeID</span>")]
+        private static partial Regex JudgeIdRegex();
+
+        [GeneratedRegex("<span>FirstName</span>")]
+        private static partial Regex FirstNameRegex();
+
+        [GeneratedRegex("<span>LastName</span>")]
+        private static partial Regex LastNameRegex();
+
+        [GeneratedRegex("<span>Region</span>")]
+        private static partial Regex RegionRegex();
+
+        [GeneratedRegex("<span>JudgesTrainingLocation</span>")]
+        private static partial Regex JudgesTrainingLocationRegex();
+
+        [GeneratedRegex("<span>JudgesTrainingDate</span>")]
+        private static partial Regex JudgesTrainingDateRegex();
+
+        [GeneratedRegex("<span>JudgesTrainingTime</span>")]
+        private static partial Regex JudgesTrainingTimeRegex();
+
+        [GeneratedRegex("<span>TournamentLocation</span>")]
+        private static partial Regex TournamentLocationRegex();
+
+        [GeneratedRegex("<span>TournamentDate</span>")]
+        private static partial Regex TournamentDateRegex();
+
+        [GeneratedRegex("<span>TournamentTime</span>")]
+        private static partial Regex TournamentTimeRegex();
+
+        [GeneratedRegex("<span>ContactUsURL</span>")]
+        private static partial Regex ContactUsUrlRegex();
+
         protected string GenerateEmailBody(Page03ViewData page03ViewData)
         {
-            string input1 = Regex.Replace(Regex.Replace(Regex.Replace(Regex.Replace(page03ViewData.JudgesInfo.EventMailBody, "<span>JudgeID</span>", page03ViewData.Judge.JudgeID.ToString(CultureInfo.InvariantCulture)), "<span>FirstName</span>", page03ViewData.Judge.FirstName), "<span>LastName</span>", page03ViewData.Judge.LastName), "<span>Region</span>", "Region " + page03ViewData.Config["RegionNumber"]);
+            string input1 = JudgeIdRegex().Replace(
+                FirstNameRegex().Replace(
+                    LastNameRegex().Replace(
+                        RegionRegex().Replace(
+                            page03ViewData.JudgesInfo.EventMailBody,
+                            page03ViewData.Judge.JudgeID.ToString(CultureInfo.InvariantCulture)
+                        ),
+                        page03ViewData.Judge.FirstName
+                    ),
+                    page03ViewData.Judge.LastName
+                ),
+                "Region " + page03ViewData.Config["RegionNumber"]
+            );
+
             StringBuilder stringBuilder = new StringBuilder();
             if (!string.IsNullOrWhiteSpace(page03ViewData.JudgesInfo.LocationURL))
                 stringBuilder.Append("<a href=\"" + page03ViewData.JudgesInfo.LocationURL + "\" target=\"_blank\">");
@@ -60,19 +129,19 @@ namespace OdysseyMvc2024.Controllers
                 stringBuilder.Append(", " + page03ViewData.JudgesInfo.LocationState);
             if (!string.IsNullOrWhiteSpace(page03ViewData.JudgesInfo.LocationURL))
                 stringBuilder.Append("</a>");
-            string input2 = Regex.Replace(input1, "<span>JudgesTrainingLocation</span>", stringBuilder.ToString());
-            DateTime? startDate;
-            string replacement1;
-            if (!page03ViewData.JudgesInfo.StartDate.HasValue)
-            {
-                replacement1 = "TBA";
-            }
-            else
-            {
-                startDate = page03ViewData.JudgesInfo.StartDate;
-                replacement1 = startDate.Value.ToLongDateString();
-            }
-            string input3 = Regex.Replace(Regex.Replace(input2, "<span>JudgesTrainingDate</span>", replacement1), "<span>JudgesTrainingTime</span>", !string.IsNullOrWhiteSpace(page03ViewData.JudgesInfo.Time) ? page03ViewData.JudgesInfo.Time : "TBA");
+
+            // TODO: (05/26/2025) Test that this works correctly. You may want to revert to the previous code if it does not.
+            string input2 = JudgesTrainingLocationRegex().Replace(input1, stringBuilder.ToString());
+
+            string replacement1 = page03ViewData.JudgesInfo.StartDate.HasValue
+                ? page03ViewData.JudgesInfo.StartDate.Value.ToLongDateString()
+                : "TBA";
+
+            string input3 = JudgesTrainingDateRegex().Replace(
+                JudgesTrainingTimeRegex().Replace(input2, !string.IsNullOrWhiteSpace(page03ViewData.JudgesInfo.Time) ? page03ViewData.JudgesInfo.Time : "TBA"),
+                replacement1
+            );
+
             stringBuilder.Clear();
             if (!string.IsNullOrWhiteSpace(page03ViewData.TournamentInfo.LocationURL))
                 stringBuilder.Append("<a href=\"" + page03ViewData.TournamentInfo.LocationURL + "\" target=\"_blank\">");
