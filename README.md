@@ -67,16 +67,16 @@ The OdysseyMvc4 (original) and OdysseyMvc2023 (current? I think it's really Odys
 ## Get the local Odyssey SQL database and website running to debug it
 
 1. Start Docker Desktop for Windows.
-2. Set the `docker-compose` VS 2022 project as the start up project.
-3. Build the `docker-compose` project in the .slnx. This builds two projects:
+1. Set the `docker-compose` VS 2022 project as the start up project.
+1. Build the `docker-compose` project in the .slnx. This builds two projects:
    1. OdysseyRegistrationWebApi
    2. docker-compose
-4. If this is not the first time you've built the project, it will kill and remove the existing containers.
-5. Right click the `docker-compose` project and select `Start Without Debugging` to start three containers:
+1. If this is not the first time you've built the project, it will kill and remove the existing containers.
+1. Right click the `docker-compose` project and select `Start Without Debugging` to start three containers:
    1. odysseyregistrationwebapi
    2. sqlserver.configurator
    3. sqlserver
-6. This resulted in a `There were build errors. Would you like to continue and run the
+1. This resulted in a `There were build errors. Would you like to continue and run the
 last successful build?` dialog box.
    1. The `docker-compose` project build showed the following error in the Error List window in VS 2022:
       1. `Volume sharing is not enabled. On the Settings screen in Docker Desktop, click Resources -> Shared Drives, and select the drive(s) or folder(s) containing your project files. For more information, please visit - https://aka.ms/DockerToolsTroubleshooting`
@@ -87,6 +87,12 @@ last successful build?` dialog box.
    4. Password: \<whatever is defined in the `docker-compose\sa_password.txt` file\>
    5. Encrypt: Optional (False)
    6. Connect to database: OdysseyEntities
+
+> [!warning]
+> The files used to populate the SQL Server database are in the `init` directory of the `docker-compose` project.
+> - The same files in the root directory of the `OdysseyRegistration` project don't seem to do anything.
+> - For now, make changes to both files until I figure out how to just have one set of files or understand what the difference is between the two.
+> - The difference may be between dev and prod?
 
 ## Deploying to Production
 
@@ -112,16 +118,17 @@ Make sure to copy the web.config file from **the `OdysseyRegistration` directory
 1. TODO: Document this procedure.
 1. Run this from the command prompt or PowerShell
 
-```sh
-docker container exec sql1 /opt/mssql-tools/bin/sqlcmd -S ServerName -U username -P password -Q "BACKUP DATABASE [DatabaseName] TO DISK='/Backups/DatabaseName.bak'"
+```bash
+docker container exec sqlserver /opt/mssql-tools18/bin/sqlcmd -S ServerName -U username -P password -Q "BACKUP DATABASE [DatabaseName] TO DISK='/Backups/DatabaseName.bak'"
 ```
 
-```
+```bash
 docker container exec -it sqlserver /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P <password> -No
 ```
 
-### Connect to the Odyssey database via a local SQL Server container
-```
+### Connect to the hosting company's instance of the Odyssey database via a local SQL Server container
+
+```sql
 docker container exec -it sqlserver /opt/mssql-tools18/bin/sqlcmd -S s06.winhost.com -U DB_12824_registration_user -P <password> -No
 
 use DB_12824_registration
@@ -148,6 +155,7 @@ Processed 448 pages for database 'DB_12824_registration', file 'DB_12824_registr
 Processed 2 pages for database 'DB_12824_registration', file 'DB_12824_registration_log' on file 1.
 BACKUP DATABASE successfully processed 450 pages in 0.110 seconds (31.924 MB/sec).
 ```
+
 Did this get written to the Winhost server in D:\DbBackup?
 How do I get at that???
 How do I delete it???
@@ -168,7 +176,7 @@ How do I delete it???
 
 ### Connect to a shell in the local SQL Server container
 
-```
+```bash
 docker container exec -it sqlserver bash
 ```
 
@@ -210,12 +218,12 @@ Open a PowerShell prompt.
 docker pull mcr.microsoft.com/mssql/server:2022-latest
 docker volume create sql-volume
 $mssql_sa_password = "" # set this to a strong password
-docker run -e 'ACCEPT_EULA=Y' -e "MSSQL_SA_PASSWORD=$mssql_sa_password" -p 1433:1433 --name sql1 --hostname sql1 --mount "source=sql-volume,target=/sqldata" -d mcr.microsoft.com/mssql/server:2022-latest
-docker exec -it -u 0 sql1 "bash"   # -u 0 lets us log in as root.
+docker run -e 'ACCEPT_EULA=Y' -e "MSSQL_SA_PASSWORD=$mssql_sa_password" -p 1433:1433 --name sqlserver --hostname sqlserver --mount "source=sql-volume,target=/sqldata" -d mcr.microsoft.com/mssql/server:2022-latest
+docker exec -it -u 0 sqlserver "bash"   # -u 0 lets us log in as root.
 chmod 777 /sqldata
-docker container exec sql1 /opt/mssql-tools/bin/sqlcmd -U sa -P "$mssql_sa_password" -Q "CREATE DATABASE [DB_12824_registration] ON  PRIMARY ( NAME = N'DB_12824_registration_data', FILENAME = N'/sqldata/DB_12824_registration_data.mdf' , SIZE = 4160KB , MAXSIZE = 25600KB , FILEGROWTH = 1024KB ) LOG ON ( NAME = N'DB_12824_registration_log', FILENAME = N'/sqldata/DB_12824_registration_log.ldf' , SIZE = 1024KB , MAXSIZE = 1024000KB , FILEGROWTH = 65536KB );"`
-docker cp "2022-08-06 - NoVA North Production Database Export Script.sql" sql1:/sqldata
-docker container exec sql1 /opt/mssql-tools/bin/sqlcmd -U sa -P "$mssql_sa_password" -i "/sqldata/2022-08-06 - NoVA North Production Database Export Script.sql"
+docker container exec sqlserver /opt/mssql-tools18/bin/sqlcmd -U sa -P "$mssql_sa_password" -Q "CREATE DATABASE [DB_12824_registration] ON  PRIMARY ( NAME = N'DB_12824_registration_data', FILENAME = N'/sqldata/DB_12824_registration_data.mdf' , SIZE = 4160KB , MAXSIZE = 25600KB , FILEGROWTH = 1024KB ) LOG ON ( NAME = N'DB_12824_registration_log', FILENAME = N'/sqldata/DB_12824_registration_log.ldf' , SIZE = 1024KB , MAXSIZE = 1024000KB , FILEGROWTH = 65536KB );"`
+docker cp "2022-08-06 - NoVA North Production Database Export Script.sql" sqlserver:/sqldata
+docker container exec sqlserver /opt/mssql-tools18/bin/sqlcmd -U sa -P "$mssql_sa_password" -i "/sqldata/2022-08-06 - NoVA North Production Database Export Script.sql"
 ```
 
 ### Generate the Odyssey database schema with `mermerd`
@@ -238,7 +246,7 @@ This will create a [Mermaid](https://mermaid-js.github.io/mermaid/#/) database s
 ### Shutdown and clean up the Docker container
 
 ```powershell
-docker rm -f sql1
+docker rm -f sqlserver
 ```
 
 > [!note]
@@ -331,7 +339,7 @@ Created a new project in the solution named `OdysseyRegistrationWebApi`
 1. I added a new command to the `docker-compose.yml` file to create and initialize the Odyssey Registration database:
 
    ```bash
-   /opt/mssql-tools/bin/sqlcmd -S sqlserver -U sa -P ${Sa_Password:-********} -d master -i docker-entrypoint-initdb.d/novanorth-prod.sql;
+   /opt/mssql-tools18/bin/sqlcmd -S sqlserver -U sa -P ${Sa_Password:-********} -d master -i docker-entrypoint-initdb.d/novanorth-prod.sql;
     ```
 
 1. Replaced passwords in docker-compose.yml file: <https://docs.docker.com/compose/use-secrets/>
