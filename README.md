@@ -33,8 +33,8 @@ The OdysseyMvc4 (original) and OdysseyMvc2023 (current? I think it's really Odys
 ### Copying OdysseyMvc4 (.NET Framework) to OdysseyMvc2024 (.NET)
 
 1. ✅ BaseRegistrationController - Complete
-2. ❓HomeController - To be reviewed
-3. ❓JudgesRegistrationController - To be reviewed
+2. ✅ HomeController - Complete
+3. ✅ JudgesRegistrationController - Complete
 4. ❓TournamentRegistrationController - To be reviewed
 
 ## TODO
