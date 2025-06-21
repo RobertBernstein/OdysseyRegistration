@@ -35,7 +35,7 @@ The OdysseyMvc4 (original) and OdysseyMvc2023 (current? I think it's really Odys
 1. ✅ BaseRegistrationController - Complete
 2. ✅ HomeController - Complete
 3. ✅ JudgesRegistrationController - Complete
-4. ❓TournamentRegistrationController - To be reviewed
+4. ❓TournamentRegistrationController - Stopped reviewing on line 144.
 
 ## TODO
 

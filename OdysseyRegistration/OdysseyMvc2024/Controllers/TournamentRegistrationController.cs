@@ -31,14 +31,16 @@ namespace OdysseyMvc2024.Controllers
 {
     /// <summary>
     /// Controller responsible for handling tournament registration process for Odyssey of the Mind competitions.
-    /// Manages a multi-step registration flow from initial signup through confirmation.
+    /// Manages a multi-step registration flow from initial sign up through confirmation.
     /// </summary>
     public class TournamentRegistrationController : BaseRegistrationController
     {
         /// <summary>
         /// Initializes a new instance of the TournamentRegistrationController.
         /// </summary>
-        /// <param name="context">Database context for Odyssey entities</param>
+        /// <param name="context">
+        /// Database context for Odyssey entities
+        /// </param>
         public TournamentRegistrationController(IOdysseyEntities context)
             : base(context)
         {
@@ -56,42 +58,86 @@ namespace OdysseyMvc2024.Controllers
 
         /// <summary>
         /// Returns an error view when the primary coach's email address is invalid.
-        /// This action is called during the registration validation process.
         /// </summary>
-        /// <returns>View for invalid coach email</returns>
+        /// <returns>
+        /// View for invalid primary coach email.
+        /// </returns>
         public ActionResult BadCoachEmail() => (ActionResult)View();
 
+        /// <summary>
+        /// Determines the division of the team based on the grades of its members.
+        /// </summary>
+        /// <param name="gradesOfTeamMembers">
+        /// List of grades for each team member, where each grade is a string.
+        /// </param>
+        /// <returns>
+        /// The highest division number found among team members.
+        /// </returns>
         public int DetermineDivisionOfTeam(List<string> gradesOfTeamMembers)
         {
             int divisionOfTeam = -1;
-            foreach (string gradesOfTeamMember in gradesOfTeamMembers)
+            foreach (string gradeOfTeamMember in gradesOfTeamMembers)
             {
-                if (!string.IsNullOrEmpty(gradesOfTeamMember))
+                if (!string.IsNullOrEmpty(gradeOfTeamMember))
                 {
-                    int divisionOfTeamMember = GetDivisionOfTeamMember(gradesOfTeamMember);
+                    int divisionOfTeamMember = GetDivisionOfTeamMember(gradeOfTeamMember);
                     if (divisionOfTeamMember > divisionOfTeam)
+                    {
                         divisionOfTeam = divisionOfTeamMember;
+                    }
                 }
             }
             return divisionOfTeam;
         }
 
+        /// <summary>
+        /// Gets the division of a team member based on their grade.
+        /// </summary>
+        /// <param name="memberGrade">
+        /// The grade of the team member.
+        /// </param>
+        /// <returns>
+        /// The division number for the team member.
+        /// </returns>
         public int GetDivisionOfTeamMember(string memberGrade)
         {
-            int num = memberGrade == "Kindergarten" ? 0 : int.Parse(memberGrade);
-            return num < 0 || num > 2 ? (num <= 5 ? 1 : (num <= 8 ? 2 : 3)) : 0;
+            // Determine member's grade in school; Kindergarten is grade 0.
+            int division = memberGrade == "Kindergarten" ? 0 : int.Parse(memberGrade);
+
+            // Return division based on the grade, with special handling for grades 0-2, i.e., Primary.
+            // divisionOfTeamMember = 0 when the team member is Primary, divisionOfTeamMember = 1, 2, or 3 when the
+            // team member is Division 1, 2, or 3.
+            return division < 0 || division > 2 ? (division <= 5 ? 1 : (division <= 8 ? 2 : 3)) : 0;
         }
 
+        /// <summary>
+        /// Generates an HTML list of the Odyssey problems for the tournament registration.
+        /// </summary>
+        /// <param name="thisTeamIsPrimary">
+        /// Indicates if the current team is the primary team.
+        /// </param>
+        /// <returns>
+        /// Formatted HTML list of problems.
+        /// </returns>
         public string GetProblemsAsHtmlList(bool thisTeamIsPrimary)
         {
-            IQueryable<Problem>? primaryOrSpontaneous = Repository.ProblemsWithoutPrimaryOrSpontaneous;
-            StringBuilder stringBuilder = new StringBuilder();
+            IQueryable<Problem>? problemsWithoutPrimaryOrSpontaneous = Repository.ProblemsWithoutPrimaryOrSpontaneous;
+            StringBuilder stringBuilder = new();
+
             stringBuilder.Append("<ol>\n");
+
             if (thisTeamIsPrimary)
+            {
                 stringBuilder.Append("<li>" + Repository.PrimaryProblem.First<Problem>().ProblemName + " (The Primary Problem)</li>\n");
-            foreach (Problem problem in (IEnumerable<Problem>)primaryOrSpontaneous)
+            }
+
+            foreach (Problem problem in (IEnumerable<Problem>)problemsWithoutPrimaryOrSpontaneous)
+            {
                 stringBuilder.Append("<li>" + problem.ProblemName + "</li>\n");
+            }
+
             stringBuilder.Append("</ol>\n");
+
             return stringBuilder.ToString();
         }
 
