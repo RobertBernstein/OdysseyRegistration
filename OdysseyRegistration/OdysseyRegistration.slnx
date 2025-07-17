@@ -7,7 +7,7 @@
   <Project Path="docker-compose.dcproj">
     <Build />
   </Project>
-  <Project Path="Odyssey.Database/Odyssey.Database.sqlproj">
+  <Project Path="Odyssey.Database/Odyssey.Database.sqlproj" Id="b5879c91-62c4-434d-89b7-0f4d671db48a">
     <Deploy />
   </Project>
   <Project Path="OdysseyCoreMvc/OdysseyCoreMvc.csproj">
