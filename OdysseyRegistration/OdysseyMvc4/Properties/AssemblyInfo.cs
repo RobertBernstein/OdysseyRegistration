@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="AssemblyInfo.cs" company="Tardis Technologies">
-//   Copyright 2021 Tardis Technologies. All rights reserved.
+//   Copyright 2025 Tardis Technologies. All rights reserved.
 // </copyright>
 // <summary>
 //   AssemblyInfo.cs
@@ -16,9 +16,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("OdysseyMvc4")]
 [assembly: AssemblyDescription("Odyssey of the Mind Registration System using ASP.NET MVC 4")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("Tardis Technologies")]
 [assembly: AssemblyProduct("OdysseyMvc4")]
-[assembly: AssemblyCopyright("Copyright ©  2021")]
+[assembly: AssemblyCopyright("Copyright ©  2025")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
