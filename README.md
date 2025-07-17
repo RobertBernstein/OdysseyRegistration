@@ -64,23 +64,61 @@ The OdysseyMvc4 (original) and OdysseyMvc2023 (current? I think it's really Odys
 19. [ ] 04/06/2025: Add [Humanizer: meets all your .NET needs for manipulating and displaying strings, enums, dates, times, timespans, numbers and quantities](https://github.com/Humanizr/Humanizer).
 20. [ ] 04/06/2025: Figure out why the `sqlserver.configurator` docker container doesn't run once the `sqlserver` container is healthy.
 
+## Update secrets in OdysseyMvc4 and other projects
+
+1. Make sure that the file `sa_password.txt` exists in the `OdysseyRegistration\OdysseyRegistration` directory.
+   1. Also make sure that it is not a directory.
+   2. It should only contain the sa account's password in plain text.
+2. You should **NOT** need to modify the following files to set the SQL Server sa account password:
+   1. `OdysseyRegistration\init.sql`
+   2. `OdysseyRegistration\init\init.sql`
+   3. The password should automatically be read from `OdysseyRegistration\sa_password.txt`.
+   4. See the first numbered item in this list, above.
+3. Update `WebmasterEmailPassword` with the correct value in the following files:
+      1. `OdysseyRegistration\novanorth-prod.sql`
+      2. `OdysseyRegistration\init\novanorth-prod.sql`
+   1. This value can be found in the Config table of the Production Odyssey SQL Server database hosted on WinHost's server.
+      1. Steps (or link to steps): TBD
+
+## Safe storage of app secrets in development in ASP.NET Core
+
+1. Following <https://learn.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-9.0&tabs=windows>.
+   1. This article explains how to manage sensitive data for an ASP.NET Core app on a development machine. Never store passwords or other sensitive data in source code or configuration files. Production secrets shouldn't be used for development or test. Secrets shouldn't be deployed with the app. Production secrets should be accessed through a controlled means like Azure Key Vault. Azure test and production secrets can be stored and protected with the [Azure Key Vault configuration provider](https://learn.microsoft.com/aspnet/core/security/key-vault-configuration?view=aspnetcore-9.0).
+2. Use Visual Studio
+   1. In Visual Studio, right-click the project in Solution Explorer, and select **Manage User Secrets** from the context menu. This gesture adds a UserSecretsId element, populated with a GUID, to the project file.
+   2. If `GenerateAssemblyInfo` is false/disabled, manually add the UserSecretsIdAttribute in AssemblyInfo.cs. For example:
+      1. `[assembly: UserSecretsId("your_user_secrets_id")]`
+      2. When manually adding the UserSecretsId attribute to AssemblyInfo.cs, the UserSecretsId value must match the value in the project file.
+      3. **HOWEVER**, The GenerateAssemblyInfo property controls AssemblyInfo attribute generation for the project. The default value is true.
+         1. See <https://learn.microsoft.com/dotnet/core/project-sdk/msbuild-props#generateassemblyinfo>
+   3. Visual Studio's Manage User Secrets gesture opens a `secrets.json` file in the text editor. Replace the contents of secrets.json with the key-value pairs to be stored.
+      1. **NOTE**: I got a `secrets.xml` file for OdysseyMvc4, which is a .NET Framework 4.8 file and not .NET. Maybe that's why there was a difference.
+   4. **I need to come back to this. It's taking too long!**
+
 ## Get the local Odyssey SQL database and website running to debug it
 
 1. Start Docker Desktop for Windows.
-1. Set the `docker-compose` VS 2022 project as the start up project.
-1. Build the `docker-compose` project in the .slnx. This builds two projects:
+   1. You may need to delete any previous container named `sqlserver`.
+      1. Otherwise, you may get an error at build time for the `docker-compose` project in VS 2022.
+2. Open VS 2022.
+3. Set the `docker-compose` VS 2022 project as the start up project.
+4. Build the `docker-compose` project in the .slnx. This builds two projects:
    1. OdysseyRegistrationWebApi
    2. docker-compose
-1. If this is not the first time you've built the project, it will kill and remove the existing containers.
-1. Right click the `docker-compose` project and select `Start Without Debugging` to start three containers:
+5. If this is not the first time you've built the project, it should kill and remove the existing containers.
+6. Right click the `docker-compose` project and select `Start Without Debugging` to start three containers:
    1. odysseyregistrationwebapi
    2. sqlserver.configurator
    3. sqlserver
-1. This resulted in a `There were build errors. Would you like to continue and run the
+7. This resulted in a `There were build errors. Would you like to continue and run the
 last successful build?` dialog box.
+   1. Click No.
    1. The `docker-compose` project build showed the following error in the Error List window in VS 2022:
-      1. `Volume sharing is not enabled. On the Settings screen in Docker Desktop, click Resources -> Shared Drives, and select the drive(s) or folder(s) containing your project files. For more information, please visit - https://aka.ms/DockerToolsTroubleshooting`
-1. You may now connect to the running SQL Server instance using VS 2022, etc., with the following settings:
+      1. `Volume sharing is not enabled. On the Settings screen in Docker Desktop, click Resources -> Shared Drives, and select the drive(s) or folder(s) containing your project files. For more information, please visit - https://aka.ms/DockerToolsTroubleshooting`.
+1. Now start the `sqlserver.configurator` container and the SQL data will be populated in the database.
+   1. It will run for a few seconds and exit.
+   2. This is expected.
+2. You may now connect to the running SQL Server instance using VS 2022, etc., with the following settings:
    1. Server Name: localhost
    2. Authentication: SQL Server Authentication
    3. User name: sa
@@ -118,11 +156,11 @@ Make sure to copy the web.config file from **the `OdysseyRegistration` directory
 1. TODO: Document this procedure.
 1. Run this from the command prompt or PowerShell
 
-```bash
-docker container exec sqlserver /opt/mssql-tools18/bin/sqlcmd -S ServerName -U username -P password -Q "BACKUP DATABASE [DatabaseName] TO DISK='/Backups/DatabaseName.bak'"
+```sh
+docker container exec sqlserver /opt/mssql-tools18/bin/sqlcmd -S ServerName -U username -P <password> -Q "BACKUP DATABASE [DatabaseName] TO DISK='/Backups/DatabaseName.bak'"
 ```
 
-```bash
+```sh
 docker container exec -it sqlserver /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P <password> -No
 ```
 
@@ -176,7 +214,7 @@ How do I delete it???
 
 ### Connect to a shell in the local SQL Server container
 
-```bash
+```sh
 docker container exec -it sqlserver bash
 ```
 
@@ -338,7 +376,7 @@ Created a new project in the solution named `OdysseyRegistrationWebApi`
 1. I copied `OdysseyRegistration\Odyssey.Database\Scripts\2023-12-02 - NoVA North Registration Prod Backup.sql` to `OdysseyRegistration\init\novanorth-prod.sql`.
 1. I added a new command to the `docker-compose.yml` file to create and initialize the Odyssey Registration database:
 
-   ```bash
+   ```sh
    /opt/mssql-tools18/bin/sqlcmd -S sqlserver -U sa -P ${Sa_Password:-********} -d master -i docker-entrypoint-initdb.d/novanorth-prod.sql;
     ```
 
