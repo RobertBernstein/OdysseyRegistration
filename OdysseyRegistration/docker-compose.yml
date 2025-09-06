@@ -26,34 +26,35 @@ services:
     ports:
       - "1433:1433"
     volumes:
-      - ./init:/init              # keep your .sql files here
+      - ./init:/init
       - sqlserver_odyssey:/var/opt/mssql
       - sqlserver_backup:/var/opt/mssql/backup
     restart: always
+    # Key fix: add -C (trust cert) and give more time during heavy initialization
     healthcheck:
-      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P $(cat /run/secrets/sa_password) -Q 'SELECT 1' || exit 1"]
-      interval: 5s
-      retries: 10
-      start_period: 15s
-      timeout: 3s
+      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P $(cat /run/secrets/sa_password) -Q 'SELECT 1' >/dev/null 2>&1 || exit 1"]
+      interval: 15s
+      retries: 6
+      start_period: 90s
+      timeout: 10s
     command: >
       bash -c "
         /opt/mssql/bin/sqlservr &
-
         pid=$!
+
         echo 'Waiting for SQL Server startup...'
         for i in {1..60}; do
-          /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P $(cat /run/secrets/sa_password) -Q 'SELECT 1' >/dev/null 2>&1 && break
+          /opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P $(cat /run/secrets/sa_password) -Q 'SELECT 1' >/dev/null 2>&1 && break
           sleep 2
         done
 
         if [ ! -f /var/opt/mssql/.db-initialized ]; then
           echo 'Initializing database from SQL scripts...'
           if [ -f /init/init.sql ]; then
-            /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P $(cat /run/secrets/sa_password) -C -d master -i /init/init.sql || echo 'init.sql failed or not needed'
+            /opt/mssql-tools18/bin/sqlcmd -b -C -S localhost -U sa -P $(cat /run/secrets/sa_password) -d master -i /init/init.sql || { echo 'init.sql failed'; exit 1; }
           fi
           if [ -f /init/novanorth-prod.sql ]; then
-            /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P $(cat /run/secrets/sa_password) -C -d master -i /init/novanorth-prod.sql
+            /opt/mssql-tools18/bin/sqlcmd -b -C -S localhost -U sa -P $(cat /run/secrets/sa_password) -d master -i /init/novanorth-prod.sql || { echo 'novanorth-prod.sql failed'; exit 1; }
           else
             echo 'ERROR: /init/novanorth-prod.sql not found'
             exit 1
