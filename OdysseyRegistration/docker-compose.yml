@@ -9,50 +9,63 @@ services:
     build:
       context: .
       dockerfile: OdysseyRegistrationWebApi/Dockerfile
+    depends_on:
+      sqlserver:
+        condition: service_healthy
 
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: sqlserver
     environment:
-      MSSQL_SA_PASSWORD_FILE: /run/secrets/sa_password
       ACCEPT_EULA: "Y"
       MSSQL_PID: Developer
       CONFIG_EDGE_BUILD: 0
+      MSSQL_SA_PASSWORD_FILE: /run/secrets/sa_password
     secrets:
       - sa_password
     ports:
       - "1433:1433"
     volumes:
-      - ./init:/docker-entrypoint-initdb.d
+      - ./init:/init              # keep your .sql files here
       - sqlserver_odyssey:/var/opt/mssql
       - sqlserver_backup:/var/opt/mssql/backup
     restart: always
     healthcheck:
-      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P $$(cat /run/secrets/sa_password) -Q 'SELECT 1' || exit 1"]
+      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P $(cat /run/secrets/sa_password) -Q 'SELECT 1' || exit 1"]
       interval: 5s
       retries: 10
-      start_period: 10s
+      start_period: 15s
       timeout: 3s
-
-  sqlserver.configurator:
-    image: mcr.microsoft.com/mssql/server:2022-latest
-    container_name: sqlserver.configurator
-    environment:
-      CONFIG_EDGE_BUILD: 0
-      MSSQL_SA_PASSWORD_FILE: /run/secrets/sa_password
-    secrets:
-      - sa_password
-    volumes:
-      - ./init:/docker-entrypoint-initdb.d
-    depends_on:
-      sqlserver:
-        condition: service_healthy
     command: >
-      bash -c '
-      /opt/mssql-tools18/bin/sqlcmd -S sqlserver -U sa -P $$(cat /run/secrets/sa_password) -C -d master -v sa_password=$$(cat /run/secrets/sa_password) -i docker-entrypoint-initdb.d/init.sql;
-      /opt/mssql-tools18/bin/sqlcmd -S sqlserver -U sa -P $$(cat /run/secrets/sa_password) -C -d master -i docker-entrypoint-initdb.d/novanorth-prod.sql;
-      echo "All done!";
-      '
+      bash -c "
+        /opt/mssql/bin/sqlservr &
+
+        pid=$!
+        echo 'Waiting for SQL Server startup...'
+        for i in {1..60}; do
+          /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P $(cat /run/secrets/sa_password) -Q 'SELECT 1' >/dev/null 2>&1 && break
+          sleep 2
+        done
+
+        if [ ! -f /var/opt/mssql/.db-initialized ]; then
+          echo 'Initializing database from SQL scripts...'
+          if [ -f /init/init.sql ]; then
+            /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P $(cat /run/secrets/sa_password) -C -d master -i /init/init.sql || echo 'init.sql failed or not needed'
+          fi
+          if [ -f /init/novanorth-prod.sql ]; then
+            /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P $(cat /run/secrets/sa_password) -C -d master -i /init/novanorth-prod.sql
+          else
+            echo 'ERROR: /init/novanorth-prod.sql not found'
+            exit 1
+          fi
+          touch /var/opt/mssql/.db-initialized
+          echo 'Database initialization complete.'
+        else
+          echo 'Database already initialized; skipping script execution.'
+        fi
+
+        wait $pid
+      "
 
 secrets:
   sa_password:

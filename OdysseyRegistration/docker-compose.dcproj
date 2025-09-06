@@ -15,8 +15,8 @@
     </None>
     <None Include="docker-compose.yml" />
     <None Include=".dockerignore" />
-    <None Include="init.sql" />
-    <None Include="novanorth-prod.sql" />
+    <None Include="init\init.sql" />
+    <None Include="init\novanorth-prod.sql" />
     <None Include="sa_password.txt" />
   </ItemGroup>
 </Project>
