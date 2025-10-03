@@ -21,7 +21,7 @@ namespace OdysseyMvc2024.Controllers
 {
 
     /// <summary>
-    /// The home controller.
+    /// The home controller, i.e., the root of the website,  for the Odyssey Registration website.
     /// </summary>
     public class HomeController(IOdysseyEntities context) : BaseRegistrationController(context)
     {
