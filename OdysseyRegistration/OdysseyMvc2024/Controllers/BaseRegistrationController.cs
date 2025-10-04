@@ -161,10 +161,10 @@ namespace OdysseyMvc2024.Controllers
         /// contains "novasouth" (case-insensitive); otherwise, returns "~/Content/NovaNorth.css".
         /// </returns>
         private string DetermineSiteCssFile() =>
-            !string.IsNullOrEmpty(Url?.PageLink()) && // Added null conditional operator to handle potential null reference
+            !string.IsNullOrEmpty(Url.PageLink()) &&
             Url.PageLink()!.Contains("novasouth", StringComparison.InvariantCultureIgnoreCase) // Added null-forgiving operator
-                ? Url.Content("~/Content/NovaSouth.css")
-                : Url.Content("~/Content/NovaNorth.css"); // TODO: (Rob, 05/25/2015) Handle the case where Url is null.
+                ? Url.Content("~/css/NovaSouth.css")  // from wwwroot
+                : Url.Content("~/css/NovaNorth.css"); // from wwwroot, TODO: (Rob, 05/25/2015) Handle the case where Url is null.
 
         /// <summary>
         /// Determines the site name based on the current HTTP request's host.

@@ -22,7 +22,7 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseStaticFiles();
+app.UseStaticFiles(); // serves from wwwroot
 
 app.UseRouting();
 app.UseAuthorization();
