@@ -26,7 +26,7 @@ using ElmahCore;
 
 namespace OdysseyMvc2024.Controllers
 {
-    public class JudgesRegistrationController : BaseRegistrationController
+    public partial class JudgesRegistrationController : BaseRegistrationController
     {
         public JudgesRegistrationController(IOdysseyEntities context)
             : base(context)

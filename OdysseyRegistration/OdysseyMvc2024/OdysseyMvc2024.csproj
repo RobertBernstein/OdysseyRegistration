@@ -9,6 +9,40 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Include="Scripts\jquery-3.7.1.js" />
+    <Content Include="Scripts\jquery-3.7.1.min.js" />
+    <Content Include="Scripts\jquery-3.7.1.min.map" />
+    <Content Include="Scripts\jquery-3.7.1.slim.js" />
+    <Content Include="Scripts\jquery-3.7.1.slim.min.js" />
+    <Content Include="Scripts\jquery-3.7.1.slim.min.map" />
+    <Content Include="Scripts\jquery-ui-1.13.2.js" />
+    <Content Include="Scripts\jquery-ui-1.13.2.min.js" />
+    <Content Include="Scripts\jquery.inputmask\jquery.inputmask-2.4.1.js" />
+    <Content Include="Scripts\jquery.inputmask\jquery.inputmask-2.4.1.min.js" />
+    <Content Include="Scripts\jquery.inputmask\jquery.inputmask.date.extensions-2.4.1.js" />
+    <Content Include="Scripts\jquery.inputmask\jquery.inputmask.date.extensions-2.4.1.min.js" />
+    <Content Include="Scripts\jquery.inputmask\jquery.inputmask.extensions-2.4.1.js" />
+    <Content Include="Scripts\jquery.inputmask\jquery.inputmask.extensions-2.4.1.min.js" />
+    <Content Include="Scripts\jquery.inputmask\jquery.inputmask.numeric.extensions-2.4.1.js" />
+    <Content Include="Scripts\jquery.inputmask\jquery.inputmask.numeric.extensions-2.4.1.min.js" />
+    <Content Include="Scripts\jquery.inputmask\jquery.inputmask.phone.extensions-2.4.1.js" />
+    <Content Include="Scripts\jquery.inputmask\jquery.inputmask.phone.extensions-2.4.1.min.js" />
+    <Content Include="Scripts\jquery.inputmask\jquery.inputmask.regex.extensions-2.4.1.js" />
+    <Content Include="Scripts\jquery.inputmask\jquery.inputmask.regex.extensions-2.4.1.min.js" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
+    <Content Include="Scripts\jquery.validate.js" />
+    <Content Include="Scripts\jquery.validate.min.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\knockout-2.3.0.debug.js" />
+    <Content Include="Scripts\knockout-2.3.0.js" />
+    <Content Include="Scripts\modernizr-2.6.2.js" />
+    <Content Include="Scripts\PrintThisPage.js" />
+    <Content Include="Scripts\_references.js" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="ElmahCore" Version="2.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.SystemWebAdapters.CoreServices" Version="1.4.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.8" />
@@ -17,7 +51,6 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Yarp.ReverseProxy" Version="2.2.0" />
   </ItemGroup>
 
 </Project>
