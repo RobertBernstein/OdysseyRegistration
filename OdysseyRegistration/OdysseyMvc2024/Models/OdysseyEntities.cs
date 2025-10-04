@@ -45,10 +45,21 @@ namespace OdysseyMvc2024.Models
             modelBuilder.Entity<ContactUsRecipient>().ToTable("ContactUsRecipient");
             modelBuilder.Entity<ContactUsSenderRole>().ToTable("ContactUsSenderRole");
             modelBuilder.Entity<Event>().ToTable("Events");
-            modelBuilder.Entity<Judge>().ToTable("Judge");
+            modelBuilder.Entity<Judge>().ToTable("Judges");
             modelBuilder.Entity<Problem>().ToTable("Problem");
             modelBuilder.Entity<School>().ToTable("School");
             modelBuilder.Entity<TournamentRegistration>().ToTable("TournamentRegistration");
+
+            // Configure Judge key/identity and map legacy column names
+            modelBuilder.Entity<Judge>(entity =>
+            {
+                entity.HasKey(j => j.JudgeID);
+                entity.Property(j => j.JudgeID).ValueGeneratedOnAdd();
+
+                // Legacy DB had '?' in column names; map underscore-suffixed properties to those columns
+                entity.Property(j => j.InformationMailed_).HasColumnName("InformationMailed?");
+                entity.Property(j => j.AttendedJT_).HasColumnName("AttendedJT?");
+            });
 
             // Other configurations...
         }

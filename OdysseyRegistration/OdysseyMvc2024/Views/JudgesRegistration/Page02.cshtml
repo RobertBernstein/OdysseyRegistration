@@ -134,22 +134,22 @@
     </div>
     <div class="required" style="text-align: right; font-weight: bold">
         <span style="text-decoration: underline">Note:</span> Fields marked with
-        <img alt="Required" src="@Url.Content("~/Content/Images/bullet.gif")" width="15" /> are required.
+        <img alt="Required" src="@Url.Content("~/images/bullet.gif")" width="15" /> are required.
     </div>
     <p>
-        <img src="@Url.Content("~/Content/Images/bullet.gif")" alt="Required" width="15" />
+        <img src="@Url.Content("~/images/bullet.gif")" alt="Required" width="15" />
         @Html.LabelFor(x => x.FirstName)
         @Html.TextBoxFor(x => x.FirstName, null, new { width = "25", maxlength = "50", style = "width:200px" })
         @Html.ValidationMessageFor(x => x.FirstName)
     </p>
     <p>
-        <img src="@Url.Content("~/Content/Images/bullet.gif")" alt="Required" width="15" />
+        <img src="@Url.Content("~/images/bullet.gif")" alt="Required" width="15" />
         @Html.LabelFor(x => x.LastName)
         @Html.TextBoxFor(x => x.LastName, null, new { width = "25", maxlength = "100", style = "width:200px" })
         @Html.ValidationMessageFor(x => x.LastName)
     </p>
     <p>
-        <img src="@Url.Content("~/Content/Images/bullet.gif")" alt="Required" width="15" />
+        <img src="@Url.Content("~/images/bullet.gif")" alt="Required" width="15" />
         @Html.LabelFor(x => x.Address)
         @Html.TextBoxFor(x => x.Address, null, new { width = "35", maxlength = "35", style = "width:300px" })
         @Html.ValidationMessageFor(x => x.Address)
@@ -159,32 +159,32 @@
         @Html.TextBoxFor(x => x.AddressLine2, null, new { width = "35", maxlength = "35", style = "width:300px" })
     </p>
     <p>
-        <img src="@Url.Content("~/Content/Images/bullet.gif")" alt="Required" width="15" />
+        <img src="@Url.Content("~/images/bullet.gif")" alt="Required" width="15" />
         @Html.LabelFor(x => x.City)
         @Html.TextBoxFor(x => x.City, null, new { width = "35", maxlength = "35", style = "width:300px" })
         @Html.ValidationMessageFor(x => x.City)
     </p>
     <p>
-        <img src="@Url.Content("~/Content/Images/bullet.gif")" alt="Required" width="15" />
+        <img src="@Url.Content("~/images/bullet.gif")" alt="Required" width="15" />
         @Html.LabelFor(x => x.State)
         @Html.TextBoxFor(x => x.State, "VA", new { width = "10", maxlength = "10", style = "width:60px" })
         @Html.ValidationMessageFor(x => x.State)
     </p>
     <p>
-        <img src="@Url.Content("~/Content/Images/bullet.gif")" alt="Required" width="15" />
+        <img src="@Url.Content("~/images/bullet.gif")" alt="Required" width="15" />
         @Html.LabelFor(x => x.ZipCode)
         @Html.TextBoxFor(x => x.ZipCode, null, new { width = "5", maxlength = "5", style = "width:60px" })
         @Html.ValidationMessageFor(x => x.ZipCode)
         (5 digits)
     </p>
     <p>
-        <img src="@Url.Content("~/Content/Images/bullet.gif")" alt="Required" width="15" />
+        <img src="@Url.Content("~/images/bullet.gif")" alt="Required" width="15" />
         @Html.LabelFor(x => x.EveningPhone)
         @Html.TextBoxFor(x => x.EveningPhone)
         @Html.ValidationMessageFor(x => x.EveningPhone)
     </p>
     <p>
-        <img src="@Url.Content("~/Content/Images/bullet.gif")" alt="Required" width="15" />
+        <img src="@Url.Content("~/images/bullet.gif")" alt="Required" width="15" />
         @Html.LabelFor(x => x.DaytimePhone)
         @Html.TextBoxFor(x => x.DaytimePhone)
         @Html.ValidationMessageFor(x => x.DaytimePhone)
@@ -195,7 +195,7 @@
         will not be shared with anyone outside our region.
     </p>
     <p>
-        <img src="@Url.Content("~/Content/Images/bullet.gif")" alt="Required" width="15" />
+        <img src="@Url.Content("~/images/bullet.gif")" alt="Required" width="15" />
         @Html.LabelFor(x => x.MobilePhone)
         @Html.TextBoxFor(x => x.MobilePhone)
         @Html.ValidationMessageFor(x => x.MobilePhone)
@@ -207,20 +207,20 @@
         Odyssey of the Mind.
     </p>
     <p>
-        <img src="@Url.Content("~/Content/Images/bullet.gif")" alt="Required" width="15" />
+        <img src="@Url.Content("~/images/bullet.gif")" alt="Required" width="15" />
         @Html.LabelFor(x => x.EmailAddress)
         @Html.TextBoxFor(x => x.EmailAddress, null, new { width = "50", maxlength = "50", style = "width:300px" })
         @Html.ValidationMessageFor(x => x.EmailAddress)
     </p>
     <p>
-        <img src="@Url.Content("~/Content/Images/bullet.gif")" alt="Required" width="15" />
+        <img src="@Url.Content("~/images/bullet.gif")" alt="Required" width="15" />
         @Html.LabelFor(x => x.EmailConfirmation)
         @Html.TextBoxFor(x => x.EmailConfirmation, null, new { width = "50", maxlength = "50", style = "width:300px" })
         @Html.ValidationMessageFor(x => x.EmailConfirmation)
     </p>
     <hr />
     <p>
-        <img alt="Required" src="@Url.Content("~/Content/Images/bullet.gif")" width="15" />&nbsp;
+        <img alt="Required" src="@Url.Content("~/images/bullet.gif")" width="15" />&nbsp;
         Do you have any children competing in Odyssey of the Mind?
         @Html.RadioButtonFor(x => x.HasChildrenCompeting, "Yes") Yes
         @Html.RadioButtonFor(x => x.HasChildrenCompeting, "No") No
@@ -272,13 +272,13 @@
     </p>
     <hr />
     <p>
-        <img alt="Required" src="@Url.Content("~/Content/Images/bullet.gif")" width="15" />&nbsp;
+        <img alt="Required" src="@Url.Content("~/images/bullet.gif")" width="15" />&nbsp;
         How many years of judging experience do you have as an Odyssey of the Mind <span style="">Long-Term</span> judge?
         @Html.TextBoxFor(x => x.YearsOfLongTermJudgingExperience, new { width = "5", maxlength = "5", style = "width:200px" })
         @Html.ValidationMessageFor(x => x.YearsOfLongTermJudgingExperience)
     </p>
     <p>
-        <img alt="Required" src="@Url.Content("~/Content/Images/bullet.gif")" width="15" />&nbsp;
+        <img alt="Required" src="@Url.Content("~/images/bullet.gif")" width="15" />&nbsp;
         How many years of judging experience do you have as an Odyssey of the Mind <span style="">Spontaneous</span> judge?
         @Html.TextBoxFor(x => x.YearsOfSpontaneousJudgingExperience, new { width = "5", maxlength = "5", style = "width:200px" })
         @Html.ValidationMessageFor(x => x.YearsOfSpontaneousJudgingExperience)
@@ -305,7 +305,7 @@
         </span>
     </p>
     <p>
-        <img alt="Required" src="@Url.Content("~/Content/Images/bullet.gif")" width="15" />&nbsp;
+        <img alt="Required" src="@Url.Content("~/images/bullet.gif")" width="15" />&nbsp;
         Are you interested in serving as Scorechecker for one of the Long-Term problems? &nbsp;
         @Html.RadioButtonFor(x => x.WillingToBeScorechecker, "Yes") Yes
         @Html.RadioButtonFor(x => x.WillingToBeScorechecker, "No") No
@@ -313,7 +313,7 @@
     </p>
     <hr />
     <p>
-        <img alt="Required" src="@Url.Content("~/Content/Images/bullet.gif")" width="15" />&nbsp;
+        <img alt="Required" src="@Url.Content("~/images/bullet.gif")" width="15" />&nbsp;
         What is your <a id="tshirtLink" href="javascript:void(0)">t-shirt size</a>?&nbsp;
         @Html.DropDownListFor(x => x.TshirtSize, Model.TshirtSizes, "Select a Size")
         @Html.ValidationMessageFor(x => x.TshirtSize)
@@ -321,7 +321,7 @@
     <p>Note that our t-shirts are standard unisex shirts. &nbsp;There are not separate styles for men and women.</p>
     <hr />
     <p>
-        <img alt="Required" src="@Url.Content("~/Content/Images/bullet.gif")" width="15" />&nbsp;
+        <img alt="Required" src="@Url.Content("~/images/bullet.gif")" width="15" />&nbsp;
         Would you like <a id="ceuCreditLink" href="javascript:void(0)">CEU credit</a>?&nbsp;
         @Html.RadioButtonFor(x => x.WantsCeuCredit, "Yes") Yes
         @Html.RadioButtonFor(x => x.WantsCeuCredit, "No") No

@@ -196,26 +196,26 @@
     </p>
     <div class="required" style="text-align: right; font-weight: bold">
         <span style="text-decoration: underline">Note:</span> Fields marked with
-        <img alt="Required" src="@Url.Content("~/Content/Images/bullet.gif")" width="15" /> are required for each
+        <img alt="Required" src="@Url.Content("~/images/bullet.gif")" width="15" /> are required for each
         <span class="required_and_emphatic">included</span> team member.
     </div>
     <p>
         First Team Member:
     </p>
     <p>
-        <img src="@Url.Content("~/Content/Images/bullet.gif")" alt="Required" width="15" />
+        <img src="@Url.Content("~/images/bullet.gif")" alt="Required" width="15" />
         @Html.LabelFor(x => x.MemberFirstName1)
         @Html.TextBoxFor(x => x.MemberFirstName1, null, new { style = "width:200px" })
         @Html.ValidationMessageFor(x => x.MemberFirstName1)
     </p>
     <p>
-        <img src="@Url.Content("~/Content/Images/bullet.gif")" alt="Required" width="15" />
+        <img src="@Url.Content("~/images/bullet.gif")" alt="Required" width="15" />
         @Html.LabelFor(x => x.MemberLastName1)
         @Html.TextBoxFor(x => x.MemberLastName1, null, new { style = "width:200px" })
         @Html.ValidationMessageFor(x => x.MemberLastName1)
     </p>
     <p>
-        <img src="@Url.Content("~/Content/Images/bullet.gif")" alt="Required" width="15" />
+        <img src="@Url.Content("~/images/bullet.gif")" alt="Required" width="15" />
         @Html.LabelFor(x => x.MemberGrade1)
         @Html.DropDownListFor(x => x.MemberGrade1, Model.GradeChoices, "Select a Grade")
         @Html.ValidationMessageFor(x => x.MemberGrade1)

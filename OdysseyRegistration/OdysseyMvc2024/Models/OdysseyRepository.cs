@@ -962,7 +962,7 @@ namespace OdysseyMvc2024.Models
             {
                 return !problemId.HasValue ? null : _context.Problems.FirstOrDefault(p => p.ProblemID == problemId)?.ProblemName;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return null;
             }
@@ -996,38 +996,40 @@ namespace OdysseyMvc2024.Models
                 return 0;
             }
 
+            var judge = source.First();
+
             switch (pageNumber)
             {
                 case 2:
-                    source.First<Judge>().FirstName = newRegistrationData.FirstName;
-                    source.First<Judge>().LastName = newRegistrationData.LastName;
-                    source.First<Judge>().Address = newRegistrationData.Address;
-                    source.First<Judge>().AddressLine2 = newRegistrationData.AddressLine2;
-                    source.First<Judge>().City = newRegistrationData.City;
-                    source.First<Judge>().State = newRegistrationData.State;
-                    source.First<Judge>().ZipCode = newRegistrationData.ZipCode;
-                    source.First<Judge>().EveningPhone = newRegistrationData.EveningPhone;
-                    source.First<Judge>().DaytimePhone = newRegistrationData.DaytimePhone;
-                    source.First<Judge>().MobilePhone = newRegistrationData.MobilePhone;
-                    source.First<Judge>().EmailAddress = newRegistrationData.EmailAddress;
-                    source.First<Judge>().ProblemChoice1 = newRegistrationData.ProblemChoice1;
-                    source.First<Judge>().ProblemChoice2 = newRegistrationData.ProblemChoice2;
-                    source.First<Judge>().ProblemChoice3 = newRegistrationData.ProblemChoice3;
-                    source.First<Judge>().HasChildrenCompeting = newRegistrationData.HasChildrenCompeting;
-                    source.First<Judge>().ProblemCOI1 = newRegistrationData.ProblemCOI1;
-                    source.First<Judge>().ProblemCOI2 = newRegistrationData.ProblemCOI2;
-                    source.First<Judge>().ProblemCOI3 = newRegistrationData.ProblemCOI3;
-                    source.First<Judge>().YearsOfLongTermJudgingExperience = newRegistrationData.YearsOfLongTermJudgingExperience;
-                    source.First<Judge>().YearsOfSpontaneousJudgingExperience = newRegistrationData.YearsOfSpontaneousJudgingExperience;
-                    source.First<Judge>().PreviousPositions = newRegistrationData.PreviousPositions;
-                    source.First<Judge>().WillingToBeScorechecker = newRegistrationData.WillingToBeScorechecker;
-                    source.First<Judge>().TshirtSize = newRegistrationData.TshirtSize;
-                    source.First<Judge>().WantsCEUCredit = newRegistrationData.WantsCEUCredit;
-                    source.First<Judge>().Notes = newRegistrationData.Notes;
-                    source.First<Judge>().PreviousPositions = newRegistrationData.PreviousPositions;
+                    judge.FirstName = newRegistrationData.FirstName;
+                    judge.LastName = newRegistrationData.LastName;
+                    judge.Address = newRegistrationData.Address;
+                    judge.AddressLine2 = newRegistrationData.AddressLine2;
+                    judge.City = newRegistrationData.City;
+                    judge.State = newRegistrationData.State;
+                    judge.ZipCode = newRegistrationData.ZipCode;
+                    judge.EveningPhone = newRegistrationData.EveningPhone;
+                    judge.DaytimePhone = newRegistrationData.DaytimePhone;
+                    judge.MobilePhone = newRegistrationData.MobilePhone;
+                    judge.EmailAddress = newRegistrationData.EmailAddress;
+                    judge.ProblemChoice1 = newRegistrationData.ProblemChoice1;
+                    judge.ProblemChoice2 = newRegistrationData.ProblemChoice2;
+                    judge.ProblemChoice3 = newRegistrationData.ProblemChoice3;
+                    judge.HasChildrenCompeting = newRegistrationData.HasChildrenCompeting;
+                    judge.ProblemCOI1 = newRegistrationData.ProblemCOI1;
+                    judge.ProblemCOI2 = newRegistrationData.ProblemCOI2;
+                    judge.ProblemCOI3 = newRegistrationData.ProblemCOI3;
+                    judge.YearsOfLongTermJudgingExperience = newRegistrationData.YearsOfLongTermJudgingExperience;
+                    judge.YearsOfSpontaneousJudgingExperience = newRegistrationData.YearsOfSpontaneousJudgingExperience;
+                    judge.PreviousPositions = newRegistrationData.PreviousPositions;
+                    judge.WillingToBeScorechecker = newRegistrationData.WillingToBeScorechecker;
+                    judge.TshirtSize = newRegistrationData.TshirtSize;
+                    judge.WantsCEUCredit = newRegistrationData.WantsCEUCredit;
+                    judge.Notes = newRegistrationData.Notes;
+                    judge.PreviousPositions = newRegistrationData.PreviousPositions;
                     break;
                 case 3:
-                    source.First<Judge>().TimeRegistered = new DateTime?(DateTime.Now);
+                    judge.TimeRegistered = new DateTime?(DateTime.Now);
                     break;
             }
 

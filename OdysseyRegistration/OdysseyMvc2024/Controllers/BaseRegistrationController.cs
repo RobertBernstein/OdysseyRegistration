@@ -455,7 +455,6 @@ namespace OdysseyMvc2024.Controllers
         protected void SetBaseViewData(BaseViewData viewData)
         {
             viewData.Config = Repository.Config;
-            viewData.Config = this.Repository.Config;
             viewData.RegionName = Repository.RegionName;
             viewData.RegionNumber = Repository.RegionNumber;
             viewData.TournamentInfo = Repository.TournamentInfo;
