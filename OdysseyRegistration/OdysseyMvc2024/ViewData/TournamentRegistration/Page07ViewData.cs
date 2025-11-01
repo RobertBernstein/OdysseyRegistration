@@ -22,7 +22,7 @@ namespace OdysseyMvc2024.ViewData.TournamentRegistration
     /// <summary>
     /// Backing data for Page 07 of the Tournament Registration wizard.
     /// </summary>
-    public class Page07ViewData(IOdysseyRepository repository) : BaseViewData(repository)
+    public class Page07ViewData : BaseViewData
     {
         /// <summary>
         /// Gets or sets the division 123 and primary list of problems as html list.

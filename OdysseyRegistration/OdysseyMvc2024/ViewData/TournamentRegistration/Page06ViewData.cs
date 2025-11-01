@@ -23,7 +23,7 @@ namespace OdysseyMvc2024.ViewData.TournamentRegistration
     /// <summary>
     /// Backing data for Page 06 of the Tournament Registration wizard.
     /// </summary>
-    public class Page06ViewData(IOdysseyRepository repository) : BaseViewData(repository)
+    public class Page06ViewData : BaseViewData
     {
         /// <summary>
         /// Gets or sets the grade choices.

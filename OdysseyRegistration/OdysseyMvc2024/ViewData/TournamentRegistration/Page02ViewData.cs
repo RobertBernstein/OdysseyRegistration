@@ -23,7 +23,7 @@ namespace OdysseyMvc2024.ViewData.TournamentRegistration
     /// <summary>
     /// The backing data for Page 02 of the Tournament Registration wizard.
     /// </summary>
-    public class Page02ViewData(IOdysseyRepository repository) : BaseViewData(repository)
+    public class Page02ViewData : BaseViewData
     {
         /// <summary>
         /// Gets or sets the list of schools eligible to compete in the tournament.

@@ -22,7 +22,7 @@ namespace OdysseyMvc2024.ViewData.TournamentRegistration
     /// The backing data for Page 04 of the Tournament Registration wizard.
     /// Since this page is for adding a volunteer and we no longer track that, this class is not used.
     /// </summary>
-    public class Page04ViewData(IOdysseyRepository repository) : BaseViewData(repository)
+    public class Page04ViewData : BaseViewData
     {
         public bool NoVolunteersFound { get; set; }
 

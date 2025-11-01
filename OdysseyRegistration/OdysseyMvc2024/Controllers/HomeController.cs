@@ -23,8 +23,13 @@ namespace OdysseyMvc2024.Controllers
     /// <summary>
     /// The home controller, i.e., the root of the website,  for the Odyssey Registration website.
     /// </summary>
-    public class HomeController(IOdysseyEntities context) : BaseRegistrationController(context)
+    public class HomeController : BaseRegistrationController
     {
+        public HomeController(IOdysseyRepository repository)
+            : base(repository)
+        {
+        }
+
         /// <summary>
         /// The view for the Index page.
         /// GET: /Home/
@@ -35,7 +40,7 @@ namespace OdysseyMvc2024.Controllers
         [HttpGet]
         public ActionResult Index()
         {
-            BaseViewData baseViewData = new(Repository)
+            BaseViewData baseViewData = new()
             {
                 Config = Repository.Config,
                 TournamentInfo = Repository.TournamentInfo

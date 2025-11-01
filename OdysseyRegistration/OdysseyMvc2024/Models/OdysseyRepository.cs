@@ -34,29 +34,18 @@ namespace OdysseyMvc2024.Models
         private readonly OdysseyEntities _context;
 
         /// <summary>
-        /// The registration system configuration.
+        /// Initializes a new instance of the <see cref="OdysseyRepository"/> class.
         /// </summary>
-        /// <remarks>
-        /// Benefits of Lazy Initialization:
-        /// * Lazy Initialization: By using Lazy&lt;Dictionary&lt;string, string&gt;&gt;, the Config dictionary is initialized only once, the first time it's accessed.
-        /// * Thread Safety: Lazy&lt;T&gt; is thread-safe by default, preventing multiple threads from causing multiple database queries.
-        /// * Constructor Initialization: The Lazy&lt;T&gt; instance _config is initialized in the constructor, capturing the context needed to query the database.
-        /// * Direct Property Access: The Config property returns _config.Value, ensuring the dictionary is available without additional checks.
-        /// </remarks>
-        // TODO: (Rob) Test that this works.
-        private readonly Lazy<Dictionary<string, string>> _config;
-
-        public OdysseyRepository(IOdysseyEntities context)
+        /// <param name="context">The database context to use for data access.</param>
+        public OdysseyRepository(OdysseyEntities context)
         {
-            _context = (OdysseyEntities)context;
+            _context = context ?? throw new ArgumentNullException(nameof(context));
 
-            // TODO: (Rob) Test that this works.
-            _config = new Lazy<Dictionary<string, string>>(() =>
-            {
-                var config = _context.Configs.ToDictionary(d => d.Name, d => d.Value);
-                config.Add("EndYear", (int.Parse(config["Year"]) + 1).ToString(CultureInfo.InvariantCulture));
-                return config;
-            });
+            // If config is null, run the LINQ query, assign the result to Config as a Dictionary, and return the result.
+            Config ??= (from c in _context.Configs
+                         select c).ToDictionary(d => d.Name, d => d.Value);
+
+            Config.Add("EndYear", (int.Parse(Config["Year"]) + 1).ToString(CultureInfo.InvariantCulture));
         }
 
         ///// <summary>
@@ -253,27 +242,7 @@ namespace OdysseyMvc2024.Models
         /// Gets the registration system configuration.
         /// </summary>
         // TODO: (Rob) Test that this works.
-        public Dictionary<string, string> Config => _config.Value;
-        // public Dictionary<string, string> Config
-        // {
-        //     get
-        //     {
-        //         // If config is null, run the LINQ query, assign the result to Config as a Dictionary, and return the result.
-        //         if (this.config == null)
-        //         {
-        //             this.Config = (from c in this.context.Configs
-        //                 select c).ToDictionary(d => d.Name, d => d.Value);
-        //         }
-
-        //         return this.config;
-        //     }
-
-        //     private set
-        //     {
-        //         this.config = value;
-        //         this.config.Add("EndYear", (int.Parse(this.config["Year"]) + 1).ToString(CultureInfo.InvariantCulture));
-        //     }
-        // }
+        public Dictionary<string, string> Config { get; }
 
         public IEnumerable<Event>? Events
         {

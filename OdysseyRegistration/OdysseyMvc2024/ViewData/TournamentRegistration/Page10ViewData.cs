@@ -13,22 +13,19 @@
 // MVID: 7B658547-521F-44CB-80FA-52857CB94B72
 // Assembly location: C:\Users\rob\OneDrive\Odyssey\OdysseyProd\registration\bin\OdysseyMvc4.dll
 
-using OdysseyMvc2024.Models;
-using System;
-
 namespace OdysseyMvc2024.ViewData.TournamentRegistration
 {
     /// <summary>
     /// Backing data for Page 10 of the Tournament Registration wizard.
     /// </summary>
-    public class Page10ViewData(IOdysseyRepository repository) : BaseViewData(repository)
+    public class Page10ViewData : BaseViewData
     {
         public bool AcceptingPayPal
         {
             get
             {
                 bool flag;
-                bool.TryParse(this.Config[nameof(AcceptingPayPal)], out flag);
+                bool.TryParse(Config[nameof(AcceptingPayPal)], out flag);
                 return flag;
             }
         }
@@ -49,7 +46,7 @@ namespace OdysseyMvc2024.ViewData.TournamentRegistration
         {
             get
             {
-                DateTime? paymentDueDate = this.TournamentInfo.PaymentDueDate;
+                DateTime? paymentDueDate = TournamentInfo.PaymentDueDate;
                 return paymentDueDate.HasValue ? paymentDueDate.Value.ToLongDateString() : "TBA";
             }
         }

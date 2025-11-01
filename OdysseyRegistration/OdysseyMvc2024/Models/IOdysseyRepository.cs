@@ -11,6 +11,11 @@ using System.Collections;
 
 namespace OdysseyMvc2024.Models
 {
+    /// <summary>
+    /// Repository pattern interface for all database operations.
+    /// All controllers should use this interface instead of direct DbContext access.
+    /// Supports unit testing and separation of concerns.
+    /// </summary>
     public interface IOdysseyRepository
     {
         Dictionary<string, string>? Config { get; }

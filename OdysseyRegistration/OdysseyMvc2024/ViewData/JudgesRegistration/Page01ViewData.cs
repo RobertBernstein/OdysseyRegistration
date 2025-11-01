@@ -26,7 +26,7 @@ namespace OdysseyMvc2024.ViewData.JudgesRegistration
     /// <summary>
     /// The page 01 view data.
     /// </summary>
-    public class Page01ViewData(IOdysseyRepository repository) : BaseViewData(repository)
+    public class Page01ViewData : BaseViewData
     {
 
         /// <summary>

@@ -17,13 +17,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace OdysseyMvc2024.Models
 {
-    public class OdysseyEntities : DbContext, IOdysseyEntities
+    public class OdysseyEntities : DbContext
     {
-        public OdysseyEntities(DbContextOptions<OdysseyEntities> options)
-            //: base("name=OdysseyEntities")
-            : base(options)
-        {
-        }
+        public OdysseyEntities(DbContextOptions<OdysseyEntities> options) : base(options) { }
 
         //public DbSet<CoachesTrainingDivision> CoachesTrainingDivisions { get; set; }
         //public DbSet<CoachesTrainingRegion> CoachesTrainingRegions { get; set; }
@@ -38,6 +34,41 @@ namespace OdysseyMvc2024.Models
         public DbSet<School> Schools { get; set; }
         public DbSet<TournamentRegistration> TournamentRegistrations { get; set; }
         //public DbSet<Volunteer> Volunteers { get; set; }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            // Prefer DI configuration (AddDbContext in Program.cs). Only configure here if not already set.
+            if (!optionsBuilder.IsConfigured)
+            {
+                var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production";
+
+                var configuration = new ConfigurationBuilder()
+                    .SetBasePath(AppContext.BaseDirectory)
+                    .AddJsonFile("appsettings.json", optional: true, reloadOnChange: false)
+                    .AddJsonFile($"appsettings.{environment}.json", optional: true, reloadOnChange: false)
+                    .AddEnvironmentVariables()
+                    .Build();
+
+                var connectionString = configuration.GetConnectionString("OdysseyConnection");
+        
+                if (string.IsNullOrWhiteSpace(connectionString))
+                {
+                    // Fallback useful for local development if no DI or connection string is provided.
+                    connectionString = "Server=localhost;Database=DB_12824_registration;Trusted_Connection=True;TrustServerCertificate=True;";
+                }
+
+                optionsBuilder.UseSqlServer(connectionString, sql =>
+                {
+                    sql.EnableRetryOnFailure(maxRetryCount: 5, maxRetryDelay: TimeSpan.FromSeconds(10), errorNumbersToAdd: null);
+                    sql.CommandTimeout(60);
+                    sql.MigrationsAssembly(typeof(OdysseyEntities).Assembly.FullName);
+                });
+            }
+#if DEBUG
+            optionsBuilder.EnableDetailedErrors();
+            optionsBuilder.EnableSensitiveDataLogging();
+#endif
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

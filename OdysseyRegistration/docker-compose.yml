@@ -40,7 +40,7 @@ services:
     command: >
       bash -c "
         /opt/mssql/bin/sqlservr &
-        pid=$!
+        pid=$$!
 
         echo 'Waiting for SQL Server startup...'
         for i in {1..60}; do
@@ -65,7 +65,7 @@ services:
           echo 'Database already initialized; skipping script execution.'
         fi
 
-        wait $pid
+        wait $$pid
       "
 
 secrets:

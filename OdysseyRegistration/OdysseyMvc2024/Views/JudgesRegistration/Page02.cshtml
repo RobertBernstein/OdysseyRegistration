@@ -75,16 +75,15 @@
         var form = $("#mainForm");
         //form.validate();
 
-        if (form.valid()) {
-            var result;
-            if ($("#ProblemChoice1").val() == "0") {
-                result = confirm("Click OK to continue without selecting a specific problem for your \"First Problem Choice\".");
+        if (!form.valid()) {
+            return false;
+        }
 
-                // result = true if "OK" is clicked, result = false if "Cancel" is clicked.
-                if (result == false) {
-                    $("#ProblemChoice1").focus();
-                    return result;
-                }
+        if ($("#ProblemChoice1").val() == "0") {
+            var ok = confirm("Click OK to continue without selecting a specific problem for your \"First Problem Choice\".");
+            if (!ok) {
+                $("#ProblemChoice1").focus();
+                return false;
             }
         }
 
@@ -126,9 +125,9 @@
     on tournament day. &nbsp;Please make sure that it is the name by which you wish to be identified for the entire day.
 </p>
 <hr />
-@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "mainForm", onsubmit = "return FormValidator();" }))
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "mainForm", onsubmit = "return FormValidator();", novalidate = "novalidate" }))
 {
-    @Html.ValidationSummary(true)
+    @Html.ValidationSummary(false)
     <div style="text-align: left; font-weight: bold">
         Please provide the following <a id="contactLink" href="javascript:void(0)">contact information</a>:
     </div>
@@ -207,15 +206,15 @@
         Odyssey of the Mind.
     </p>
     <p>
-        <img src="@Url.Content("~/images/bullet.gif")" alt="Required" width="15" />
-        @Html.LabelFor(x => x.EmailAddress)
-        @Html.TextBoxFor(x => x.EmailAddress, null, new { width = "50", maxlength = "50", style = "width:300px" })
-        @Html.ValidationMessageFor(x => x.EmailAddress)
+	    <img src="@Url.Content("~/images/bullet.gif")" alt="Required" width="15" />
+	    @Html.LabelFor(x => x.EmailAddress)
+        @Html.TextBoxFor(x => x.EmailAddress, null, new { type = "email", width = "50", maxlength = "50", style = "width:300px" })
+	    @Html.ValidationMessageFor(x => x.EmailAddress)
     </p>
     <p>
         <img src="@Url.Content("~/images/bullet.gif")" alt="Required" width="15" />
         @Html.LabelFor(x => x.EmailConfirmation)
-        @Html.TextBoxFor(x => x.EmailConfirmation, null, new { width = "50", maxlength = "50", style = "width:300px" })
+        @Html.TextBoxFor(x => x.EmailConfirmation, null, new { type = "email", width = "50", maxlength = "50", style = "width:300px" })
         @Html.ValidationMessageFor(x => x.EmailConfirmation)
     </p>
     <hr />
@@ -315,8 +314,8 @@
     <p>
         <img alt="Required" src="@Url.Content("~/images/bullet.gif")" width="15" />&nbsp;
         What is your <a id="tshirtLink" href="javascript:void(0)">t-shirt size</a>?&nbsp;
-        @Html.DropDownListFor(x => x.TshirtSize, Model.TshirtSizes, "Select a Size")
-        @Html.ValidationMessageFor(x => x.TshirtSize)
+        @Html.DropDownListFor(x => x.SelectedTshirtSize, Model.TshirtSizes, "Select a Size")
+        @Html.ValidationMessageFor(x => x.SelectedTshirtSize)
     </p>
     <p>Note that our t-shirts are standard unisex shirts. &nbsp;There are not separate styles for men and women.</p>
     <hr />
@@ -333,7 +332,7 @@
         Please provide us with any other information you would like to share as part of
         your registration.&nbsp; For example, this is a good place to let us know about
         any issues related to your participation or about any concerns you may have.&nbsp;
-        Please keep your comments to 500 characters or less:
+        Please keep your comments to 500 characters or fewer:
     </p>
     <p>
         @Html.TextAreaFor(x => x.Notes, 6, 100, null)

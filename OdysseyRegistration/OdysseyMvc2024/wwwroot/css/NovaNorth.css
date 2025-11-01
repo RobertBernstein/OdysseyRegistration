@@ -52,27 +52,32 @@ textarea {
 /* Styles for validation helpers
 -----------------------------------------------------------*/
 .field-validation-error {
-    color: #f00;
+    color: red;
 }
 
-.field-validation-valid {
+/*.field-validation-valid {
     display: none;
 }
-
+*/
 .input-validation-error {
-    border: 1px solid #f00;
-    background-color: #fee;
+    border-color: red;
+    /*border: 1px solid red;*/
+/*    background-color: #fee;*/
 }
 
 .validation-summary-errors {
-    font-weight: bold;
-    color: #f00;
+    /*font-weight: bold;*/
+    color: red;
 }
 
-.validation-summary-valid {
+.validation-summary-errors ul li {
+    color: red;
+}
+
+/*.validation-summary-valid {
     display: none;
 }
-
+*/
 /*-------------------------------------------------------------------------------------------------------------------*/
 /* Copied over from ASP.NET MVC 2 Web Site - Rob */
 /*-------------------------------------------------------------------------------------------------------------------*/

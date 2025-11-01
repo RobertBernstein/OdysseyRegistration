@@ -41,8 +41,8 @@ namespace OdysseyMvc2024.Controllers
         /// <param name="context">
         /// Database context for Odyssey entities
         /// </param>
-        public TournamentRegistrationController(IOdysseyEntities context)
-            : base(context)
+        public TournamentRegistrationController(IOdysseyRepository repository)
+            : base(repository)
         {
             // Set the registration type to Tournament and initialize the friendly name
             CurrentRegistrationType = BaseRegistrationController.RegistrationType.Tournament;
@@ -152,7 +152,7 @@ namespace OdysseyMvc2024.Controllers
                 return RedirectToAction(CurrentRegistrationState.ToString());
             }
 
-            Page01ViewData page01ViewData = new Page01ViewData(Repository)
+            Page01ViewData page01ViewData = new()
             {
                 Config = Repository.Config,
                 TournamentInfo = Repository.TournamentInfo
@@ -171,7 +171,7 @@ namespace OdysseyMvc2024.Controllers
                 return RedirectToAction(CurrentRegistrationState.ToString());
             }
 
-            Page01ViewData viewData = new(Repository)
+            Page01ViewData viewData = new()
             {
                 Config = Repository.Config,
                 TournamentInfo = Repository.TournamentInfo
@@ -209,8 +209,8 @@ namespace OdysseyMvc2024.Controllers
             {
                 return (ActionResult)RedirectToAction(CurrentRegistrationState.ToString());
             }
-            
-            Page02ViewData page02ViewData = new Page02ViewData(Repository)
+
+            Page02ViewData page02ViewData = new()
             {
                 Config = Repository.Config,
                 TournamentInfo = Repository.TournamentInfo,
@@ -256,7 +256,7 @@ namespace OdysseyMvc2024.Controllers
                 return RedirectToAction(CurrentRegistrationState.ToString());
             }
 
-            Page03ViewData page03ViewData = new(Repository)
+            Page03ViewData page03ViewData = new()
             {
                 Config = Repository.Config,
                 TournamentInfo = Repository.TournamentInfo,
@@ -327,7 +327,7 @@ namespace OdysseyMvc2024.Controllers
                 return RedirectToAction(CurrentRegistrationState.ToString());
             }
 
-            Page04ViewData page04ViewData = new(Repository)
+            Page04ViewData page04ViewData = new()
             {
                 Config = Repository.Config,
                 TournamentInfo = Repository.TournamentInfo
@@ -395,7 +395,7 @@ namespace OdysseyMvc2024.Controllers
                 return RedirectToAction(CurrentRegistrationState.ToString());
             }
 
-            Page05ViewData page05ViewData = new(Repository)
+            Page05ViewData page05ViewData = new()
             {
                 Config = Repository.Config,
                 TournamentInfo = Repository.TournamentInfo
@@ -478,7 +478,7 @@ namespace OdysseyMvc2024.Controllers
                 items.Add(index.ToString((IFormatProvider)CultureInfo.InvariantCulture));
             }
 
-            Page06ViewData page06ViewData = new(Repository)
+            Page06ViewData page06ViewData = new()
             {
                 Config = Repository.Config,
                 TournamentInfo = Repository.TournamentInfo,
@@ -551,7 +551,7 @@ namespace OdysseyMvc2024.Controllers
 
             List<string> gradesByRegistration = Repository.GetMemberGradesByRegistration(id);
 
-            Page07ViewData page07ViewData = new(Repository)
+            Page07ViewData page07ViewData = new()
             {
                 Config = Repository.Config,
                 TournamentInfo = Repository.TournamentInfo,
@@ -632,7 +632,7 @@ namespace OdysseyMvc2024.Controllers
                 return RedirectToAction(CurrentRegistrationState.ToString());
             }
 
-            Page08ViewData page08ViewData = new(Repository)
+            Page08ViewData page08ViewData = new()
             {
                 Config = Repository.Config,
                 TournamentInfo = Repository.TournamentInfo,
@@ -680,38 +680,38 @@ namespace OdysseyMvc2024.Controllers
                 return (ActionResult)RedirectToAction(CurrentRegistrationState.ToString());
             }
 
-            Page09ViewData page09ViewData1 = new(Repository)
+            Page09ViewData page09ViewData = new()
             {
                 Config = Repository.Config,
                 TournamentInfo = Repository.TournamentInfo,
                 TournamentRegistration = Repository.GetTournamentRegistrationById(id)
             };
 
-            SetBaseViewData(page09ViewData1);
-            page09ViewData1.SchoolName = Repository.GetSchoolNameFromSchoolId(page09ViewData1.TournamentRegistration.SchoolID);
+            SetBaseViewData(page09ViewData);
+            page09ViewData.SchoolName = Repository.GetSchoolNameFromSchoolId(page09ViewData.TournamentRegistration.SchoolID);
             string judgeFirstName;
             string judgeLastName;
-            Repository.GetJudgeNameFromJudgeId(page09ViewData1.TournamentRegistration.JudgeID, out judgeFirstName, out judgeLastName);
-            page09ViewData1.JudgeFirstName = judgeFirstName;
-            page09ViewData1.JudgeLastName = judgeLastName;
-            page09ViewData1.Division = page09ViewData1.TournamentRegistration.Division == "0" ? "Primary" : page09ViewData1.TournamentRegistration.Division;
-            page09ViewData1.ProblemName = Repository.GetProblemNameFromProblemId(page09ViewData1.TournamentRegistration.ProblemID);
+            Repository.GetJudgeNameFromJudgeId(page09ViewData.TournamentRegistration.JudgeID, out judgeFirstName, out judgeLastName);
+            page09ViewData.JudgeFirstName = judgeFirstName;
+            page09ViewData.JudgeLastName = judgeLastName;
+            page09ViewData.Division = page09ViewData.TournamentRegistration.Division == "0" ? "Primary" : page09ViewData.TournamentRegistration.Division;
+            page09ViewData.ProblemName = Repository.GetProblemNameFromProblemId(page09ViewData.TournamentRegistration.ProblemID);
             
-            bool? spontaneous = page09ViewData1.TournamentRegistration.Spontaneous;
+            bool? spontaneous = page09ViewData.TournamentRegistration.Spontaneous;
             if (spontaneous.HasValue)
             {
-                Page09ViewData page09ViewData2 = page09ViewData1;
-                spontaneous = page09ViewData1.TournamentRegistration.Spontaneous;
+                Page09ViewData page09ViewData2 = page09ViewData;
+                spontaneous = page09ViewData.TournamentRegistration.Spontaneous;
                 string str = spontaneous.Value ? "Yes" : "No";
                 page09ViewData2.IsDoingSpontaneous = str;
             }
 
-            if (string.IsNullOrEmpty(page09ViewData1.ProblemName))
+            if (string.IsNullOrEmpty(page09ViewData.ProblemName))
             {
-                page09ViewData1.ProblemName = "(Could not obtain problem name)";
+                page09ViewData.ProblemName = "(Could not obtain problem name)";
             }
 
-            return View(page09ViewData1);
+            return View(page09ViewData);
         }
 
         [HttpPost]
@@ -745,7 +745,7 @@ namespace OdysseyMvc2024.Controllers
                 
                 if (!string.IsNullOrEmpty(errorMessage))
                 {
-                    Page10ViewData page10ViewData = new Page10ViewData(Repository)
+                    Page10ViewData page10ViewData = new()
                     {
                         Config = Repository.Config,
                         TournamentInfo = Repository.TournamentInfo,
@@ -779,16 +779,16 @@ namespace OdysseyMvc2024.Controllers
             //    }
             //}
 
-            Page10ViewData page10ViewData1 = new(Repository)
+            Page10ViewData page10ViewData = new()
             {
                 Config = Repository.Config,
                 TournamentInfo = Repository.TournamentInfo,
                 TournamentRegistration = Repository.GetTournamentRegistrationById(id)
             };
 
-            page10ViewData1.TournamentInfo = Repository.TournamentInfo;
-            page10ViewData1.TournamentRegistration = Repository.GetTournamentRegistrationById(id);
-            Page10ViewData page10ViewData2 = page10ViewData1;
+            page10ViewData.TournamentInfo = Repository.TournamentInfo;
+            page10ViewData.TournamentRegistration = Repository.GetTournamentRegistrationById(id);
+            Page10ViewData page10ViewData2 = page10ViewData;
             page10ViewData2.TournamentRegistration.TimeRegistered = new DateTime?(DateTime.Now);
             Repository.UpdateTournamentRegistration(id, 10, page10ViewData2.TournamentRegistration);
             SetBaseViewData((BaseViewData)page10ViewData2);
@@ -810,7 +810,7 @@ namespace OdysseyMvc2024.Controllers
         [HttpGet]
         public ActionResult ResendEmail()
         {
-            ResendEmailViewData resendEmailViewData = new(Repository)
+            ResendEmailViewData resendEmailViewData = new()
             {
                 Config = Repository.Config,
                 TournamentInfo = Repository.TournamentInfo
@@ -824,7 +824,7 @@ namespace OdysseyMvc2024.Controllers
         [HttpPost]
         public ActionResult ResendEmail(FormCollection collection)
         {
-            ResendEmailViewData resendEmailViewData = new(Repository)
+            ResendEmailViewData resendEmailViewData = new()
             {
                 Config = Repository.Config,
                 TournamentInfo = Repository.TournamentInfo
@@ -832,7 +832,7 @@ namespace OdysseyMvc2024.Controllers
 
             TryUpdateModelAsync<ResendEmailViewData>(resendEmailViewData);
 
-            Page10ViewData page10ViewData1 = new(Repository)
+            Page10ViewData page10ViewData = new()
             {
                 Config = Repository.Config,
                 TournamentInfo = Repository.TournamentInfo,
@@ -841,10 +841,10 @@ namespace OdysseyMvc2024.Controllers
                 TournamentRegistration = Repository.GetTournamentRegistrationById(resendEmailViewData.TeamNumber)
             };
 
-            page10ViewData1.TournamentInfo = Repository.TournamentInfo;
-            page10ViewData1.TournamentRegistration = Repository.GetTournamentRegistrationById(resendEmailViewData.TeamNumber);
+            page10ViewData.TournamentInfo = Repository.TournamentInfo;
+            page10ViewData.TournamentRegistration = Repository.GetTournamentRegistrationById(resendEmailViewData.TeamNumber);
             
-            Page10ViewData page10ViewData2 = page10ViewData1;
+            Page10ViewData page10ViewData2 = page10ViewData;
             SetBaseViewData(page10ViewData2);
             
             if (resendEmailViewData.CoachCheckbox == "false" && resendEmailViewData.AltCoachCheckbox == "false")

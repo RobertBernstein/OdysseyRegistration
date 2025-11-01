@@ -28,8 +28,8 @@ namespace OdysseyMvc2024.Controllers
 {
     public partial class JudgesRegistrationController : BaseRegistrationController
     {
-        public JudgesRegistrationController(IOdysseyEntities context)
-            : base(context)
+        public JudgesRegistrationController(IOdysseyRepository repository)
+            : base(repository)
         {
             CurrentRegistrationType = RegistrationType.Judges;
             FriendlyRegistrationName = GetFriendlyRegistrationName();
@@ -277,14 +277,38 @@ namespace OdysseyMvc2024.Controllers
         /// <returns>
         /// A <see cref="RedirectToActionResult"/> that redirects the user to the "Page01" action.
         /// </returns>
+        /// <remarks>
+        /// If you don't pass the selected value into SelectList(...), the prior selection won't show when re-rendering.
+        /// </remarks>
         [HttpGet]
         public ActionResult Index() => RedirectToAction("Page01");
 
-        private void InitializePage02ViewData(Page02ViewData page02ViewData)
+        /// <summary>
+        /// Populates the dropdown lists for the Page02 view with available options and preserves the selected values.
+        /// </summary>
+        /// <remarks>
+        /// This method populates the <see cref="Page02ViewData.TshirtSizes"/> and <see
+        /// cref="Page02ViewData.ProblemChoices"/> properties with <see cref="SelectList"/> objects based on predefined
+        /// choices and repository data. The selected values in the view data are preserved in the generated
+        /// lists.
+        /// </remarks>
+        /// <param name="page02ViewData">
+        /// The view data object for Page02, which contains the selected values and will be updated with the populated
+        /// dropdown lists.
+        /// </param>
+        private void PopulatePage02ViewData(Page02ViewData page02ViewData)
         {
-            page02ViewData.TshirtSizes = new SelectList(new[] { "S", "M", "L", "XL", "XXL", "XXXL" });
-            page02ViewData.ProblemChoices = new SelectList(Repository.ProblemChoices, "ProblemID", "ProblemName");
             SetBaseViewData(page02ViewData);
+
+            page02ViewData.TshirtSizes = new SelectList(TshirtSizeChoices, page02ViewData.SelectedTshirtSize);
+            
+            // Preserve selected values for each dropdown
+            page02ViewData.ProblemChoices = new SelectList(
+                Repository.ProblemChoices,
+                "ProblemID",
+                "ProblemName",
+                page02ViewData.ProblemChoice1 // the selected value for the main dropdown; others can reuse the same list
+            );
         }
 
         /// <summary>
@@ -302,7 +326,7 @@ namespace OdysseyMvc2024.Controllers
                 return RedirectToAction(CurrentRegistrationState.ToString());
             }
 
-            var page01ViewData = new Page01ViewData(Repository)
+            var page01ViewData = new Page01ViewData()
             {
                 Config = Repository.Config,
                 TournamentInfo = Repository.TournamentInfo,
@@ -381,15 +405,30 @@ namespace OdysseyMvc2024.Controllers
                 return RedirectToAction(CurrentRegistrationState.ToString());
             }
 
-            Page02ViewData page02ViewData = new Page02ViewData(Repository)
+            // Validate that tournament info is available
+            var tournamentInfo = Repository.TournamentInfo;
+            if (tournamentInfo == null)
+            {
+                // Log the error and redirect to an error page
+                var exception = new InvalidOperationException("Tournament information is not available. Please ensure the database contains tournament data for the current region.");
+                ElmahExtensions.RaiseError(exception);
+                return RedirectToAction("Index", "Home");
+            }
+
+            var page02ViewData = new Page02ViewData
             {
                 Config = Repository.Config,
-                TournamentInfo = Repository.TournamentInfo,
-                TshirtSizes = new List<SelectListItem>(),
-                ProblemChoices = new List<SelectListItem>()
+                TournamentInfo = tournamentInfo,
+                TshirtSizes = new SelectList(TshirtSizeChoices, TshirtSizeChoices.First()),
+                ProblemChoices = new SelectList(
+                    Repository.ProblemChoices,
+                    "ProblemID",
+                    "ProblemName"
+                )
             };
 
-            InitializePage02ViewData(page02ViewData);
+            // Set base view data including CSS file path
+            PopulatePage02ViewData(page02ViewData);
             return View(page02ViewData);
         }
 
@@ -405,6 +444,9 @@ namespace OdysseyMvc2024.Controllers
         /// <returns>
         /// A redirect to the next action if successful; otherwise, returns the view with validation errors.
         /// </returns>
+        /// <remarks>
+        /// Html.DropDownListFor uses the items you pass but picks the selected value from ModelState; always repopulate items on a POST redisplay.
+        /// </remarks>
         [HttpPost]
         public ActionResult Page02(int id, Page02ViewData page02ViewData)
         {
@@ -416,64 +458,67 @@ namespace OdysseyMvc2024.Controllers
 
             try
             {
-                // TODO: What should we do here if the ModelState isn't valid? - Rob, 09/30/2014
-                if (ModelState.IsValid)
+                // TODO: Is this what we should do here if the ModelState isn't valid? - Rob, 09/30/2014
+                if (!ModelState.IsValid)
                 {
-                    Judge newJudgeData = new()
-                    {
-                        FirstName = page02ViewData.FirstName,
-                        LastName = page02ViewData.LastName,
-                        Address = page02ViewData.Address,
-                        AddressLine2 = page02ViewData.AddressLine2,
-                        City = page02ViewData.City,
-                        State = page02ViewData.State,
-                        ZipCode = page02ViewData.ZipCode,
-                        EveningPhone = page02ViewData.EveningPhone,
-                        DaytimePhone = page02ViewData.DaytimePhone,
-                        MobilePhone = page02ViewData.MobilePhone,
-                        EmailAddress = page02ViewData.EmailAddress,
-                        ProblemChoice1 = page02ViewData.ProblemChoice1,
-                        ProblemChoice2 = page02ViewData.ProblemChoice2,
-                        ProblemChoice3 = page02ViewData.ProblemChoice3,
-                        HasChildrenCompeting = page02ViewData.HasChildrenCompeting,
-                        ProblemCOI1 = page02ViewData.ProblemConflict1,
-                        ProblemCOI2 = page02ViewData.ProblemConflict2,
-                        ProblemCOI3 = page02ViewData.ProblemConflict3,
-                        YearsOfLongTermJudgingExperience = page02ViewData.YearsOfLongTermJudgingExperience,
-                        YearsOfSpontaneousJudgingExperience = page02ViewData.YearsOfSpontaneousJudgingExperience,
-                        PreviousPositions = JudgesRegistrationController.GetPreviousPositions(page02ViewData),
-                        WillingToBeScorechecker = page02ViewData.WillingToBeScorechecker,
-                        TshirtSize = page02ViewData.TshirtSize,
-                        WantsCEUCredit = page02ViewData.WantsCeuCredit,
-                        Notes = page02ViewData.Notes
-                    };
-
-                    // If the judge did not provide an e-mail address, make sure "None" is written to the database
-                    if (string.IsNullOrWhiteSpace(newJudgeData.EmailAddress))
-                    {
-                        newJudgeData.EmailAddress = "None";
-                    }
-
-                    // TODO: if case: Send an e-mail reporting database failure; could not find the record already added to the database
-                    Repository.UpdateJudge(id, 2, newJudgeData);
-
-                    // Display debugging information.
-                    ////Response.Write("<p>Head Judge: " + collection["PreviouslyHeadJudge"] + "</p>");
-                    ////Response.Write("<p>Problem Judge: " + collection["PreviouslyProblemJudge"] + "</p>");
-                    ////Response.Write("<p>Style Judge: " + collection["PreviouslyStyleJudge"] + "</p>");
-                    ////Response.Write("<p>Staging Judge: " + collection["PreviouslyStagingJudge"] + "</p>");
-                    ////Response.Write("<p>Timekeeper: " + collection["PreviouslyTimekeeper"] + "</p>");
-                    ////Response.Write("<p>Scorechecker: " + collection["PreviouslyScorechecker"] + "</p>");
-                    ////Response.Write("<p>WeighIn Judge: " + collection["PreviouslyWeighInJudge"] + "</p>");
-                    ////Response.Write("Previous Positions: " + viewData.Judge.PreviousPositions);
-                    ////return null;
-
-                    return RedirectToAction("Page03", (object)new { id = id });
+                    // Rebuild lists before re-rendering the view so razor helpers have items
+                    PopulatePage02ViewData(page02ViewData);
+                    return View(page02ViewData);
                 }
 
-                InitializePage02ViewData(page02ViewData);
+                Judge newJudgeData = new()
+                {
+                    FirstName = page02ViewData.FirstName,
+                    LastName = page02ViewData.LastName,
+                    Address = page02ViewData.Address,
+                    AddressLine2 = page02ViewData.AddressLine2,
+                    City = page02ViewData.City,
+                    State = page02ViewData.State,
+                    ZipCode = page02ViewData.ZipCode,
+                    EveningPhone = page02ViewData.EveningPhone,
+                    DaytimePhone = page02ViewData.DaytimePhone,
+                    MobilePhone = page02ViewData.MobilePhone,
+                    EmailAddress = page02ViewData.EmailAddress,
+                    ProblemChoice1 = page02ViewData.ProblemChoice1,
+                    ProblemChoice2 = page02ViewData.ProblemChoice2,
+                    ProblemChoice3 = page02ViewData.ProblemChoice3,
+                    HasChildrenCompeting = page02ViewData.HasChildrenCompeting,
+                    ProblemCOI1 = page02ViewData.ProblemConflict1,
+                    ProblemCOI2 = page02ViewData.ProblemConflict2,
+                    ProblemCOI3 = page02ViewData.ProblemConflict3,
+                    YearsOfLongTermJudgingExperience = page02ViewData.YearsOfLongTermJudgingExperience,
+                    YearsOfSpontaneousJudgingExperience = page02ViewData.YearsOfSpontaneousJudgingExperience,
+                    PreviousPositions = JudgesRegistrationController.GetPreviousPositions(page02ViewData),
+                    WillingToBeScorechecker = page02ViewData.WillingToBeScorechecker,
 
-                return View(page02ViewData);
+                    // TODO: Is `as string` correct here? (10/05/2025)
+                    TshirtSize = page02ViewData.SelectedTshirtSize as string,
+                    WantsCEUCredit = page02ViewData.WantsCeuCredit,
+                    Notes = page02ViewData.Notes
+                };
+
+                // If the judge did not provide an e-mail address, make sure "None" is written to the database
+                if (string.IsNullOrWhiteSpace(newJudgeData.EmailAddress))
+                {
+                    newJudgeData.EmailAddress = "None";
+                }
+
+                // TODO: if case: Send an e-mail reporting database failure; could not find the record already added to the database
+                Repository.UpdateJudge(id, 2, newJudgeData);
+
+                // Display debugging information.
+                ////Response.Write("<p>Head Judge: " + collection["PreviouslyHeadJudge"] + "</p>");
+                ////Response.Write("<p>Problem Judge: " + collection["PreviouslyProblemJudge"] + "</p>");
+                ////Response.Write("<p>Style Judge: " + collection["PreviouslyStyleJudge"] + "</p>");
+                ////Response.Write("<p>Staging Judge: " + collection["PreviouslyStagingJudge"] + "</p>");
+                ////Response.Write("<p>Timekeeper: " + collection["PreviouslyTimekeeper"] + "</p>");
+                ////Response.Write("<p>Scorechecker: " + collection["PreviouslyScorechecker"] + "</p>");
+                ////Response.Write("<p>WeighIn Judge: " + collection["PreviouslyWeighInJudge"] + "</p>");
+                ////Response.Write("Previous Positions: " + viewData.Judge.PreviousPositions);
+                ////return null;
+
+                // ... save and redirect
+                return RedirectToAction("Page03", new { id });
             }
             catch (Exception exception)
             {
@@ -512,7 +557,7 @@ namespace OdysseyMvc2024.Controllers
                 return RedirectToAction(CurrentRegistrationState.ToString());
             }
 
-            Page03ViewData page03ViewData = new(Repository)
+            Page03ViewData page03ViewData = new()
             {
                 Config = Repository.Config,
                 TournamentInfo = Repository.TournamentInfo,
@@ -539,7 +584,9 @@ namespace OdysseyMvc2024.Controllers
             if (!string.IsNullOrWhiteSpace(page03ViewData.Judge.EmailAddress) && page03ViewData.Judge.EmailAddress != "None")
             {
                 page03ViewData.EmailAddressWasSpecified = true;
-                
+
+                // TODO: Check for an empty WebmasterEmailPassword here. - 10/30/2025.
+                // TODO: Log if pw is empty.
                 var mailMessage = BuildMessage(page03ViewData.Config["WebmasterEmail"], page03ViewData.RegionName + " Odyssey Region " + page03ViewData.RegionNumber + " " + page03ViewData.FriendlyRegistrationName, page03ViewData.MailBody, page03ViewData.Judge.EmailAddress, (string)null, (string)null);
                 
                 if (mailMessage == null)
@@ -610,7 +657,7 @@ namespace OdysseyMvc2024.Controllers
                 return Page03(id);
             }
 
-            BaseViewData baseViewData = new(Repository)
+            BaseViewData baseViewData = new()
             {
                 Config = Repository.Config,
                 TournamentInfo = Repository.TournamentInfo

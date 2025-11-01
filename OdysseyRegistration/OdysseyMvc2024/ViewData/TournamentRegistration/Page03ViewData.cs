@@ -22,7 +22,7 @@ namespace OdysseyMvc2024.ViewData.TournamentRegistration
     /// <summary>
     /// The backing data for Page 03 of the Tournament Registration wizard.
     /// </summary>
-    public class Page03ViewData(IOdysseyRepository repository) : BaseViewData(repository)
+    public class Page03ViewData : BaseViewData
     {
         /// <summary>
         /// Gets or sets a value indicating whether the judge has already been assigned to a team.

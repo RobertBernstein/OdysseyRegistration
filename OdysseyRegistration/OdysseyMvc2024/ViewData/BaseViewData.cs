@@ -19,13 +19,13 @@ namespace OdysseyMvc2024.ViewData
     /// <summary>
     /// The base ViewData class for all other ViewData classes.
     /// </summary>
-    public class BaseViewData(IOdysseyRepository repository)
+    public class BaseViewData
     {
 
         /// <summary>
         /// Gets or sets the general configuration data for all registration types.
         /// </summary>
-        public required Dictionary<string, string>? Config { get; set; } = repository.Config;
+        public Dictionary<string, string>? Config { get; set; }
 
         /// <summary>
         /// Gets or sets the displayable registration name, e.g., "Tournament Registration" or "Judges Registration".
@@ -33,7 +33,7 @@ namespace OdysseyMvc2024.ViewData
         public string? FriendlyRegistrationName { get; set; }
 
         /// <summary>
-        /// Gets or sets the path to the web site's CSS file based on which server this is hosted on, NoVA North or
+        /// Gets or sets the path to the website's CSS file based on which server this is hosted on, NoVA North or
         /// NoVA South.
         /// </summary>
         public string? PathToSiteCssFile { get; set; }
@@ -50,18 +50,16 @@ namespace OdysseyMvc2024.ViewData
 
         public string? SiteName { get; set; }
 
-        public string? TournamentDate => this.TournamentInfo.StartDate.HasValue
-            ? this.TournamentInfo.StartDate.Value.ToLongDateString()
+        public string TournamentDate => TournamentInfo?.StartDate?.ToLongDateString() ?? "TBA";
+
+        public Event? TournamentInfo { get; set; }
+
+        public string? TournamentLocation => !string.IsNullOrWhiteSpace(TournamentInfo?.Location)
+            ? TournamentInfo.Location
             : "TBA";
 
-        public required Event TournamentInfo { get; set; } = repository.TournamentInfo;
-
-        public string? TournamentLocation => !string.IsNullOrWhiteSpace(this.TournamentInfo.Location)
-            ? this.TournamentInfo.Location
-            : "TBA";
-
-        public string? TournamentTime => !string.IsNullOrWhiteSpace(this.TournamentInfo.Time)
-            ? this.TournamentInfo.Time
+        public string? TournamentTime => !string.IsNullOrWhiteSpace(TournamentInfo?.Time)
+            ? TournamentInfo.Time
             : "TBA";
     }
 }

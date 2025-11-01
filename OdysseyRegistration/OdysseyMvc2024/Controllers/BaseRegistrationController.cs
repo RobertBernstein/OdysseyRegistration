@@ -23,19 +23,28 @@ using OdysseyMvc2024.ViewData;
 namespace OdysseyMvc2024.Controllers
 {
     /// <summary>
-    /// The base registration controller.
+    /// Base controller for all registration workflows in the Odyssey system.
+    /// Provides common functionality for multi-page registration processes.
+    /// All registration controllers should inherit from this class.
     /// </summary>
-    public class BaseRegistrationController(IOdysseyEntities context) : Controller
+    public abstract class BaseRegistrationController : Controller
     {
         /// <summary>
         /// The object that provides access to the database.
         /// </summary>
-        protected readonly OdysseyRepository Repository = new(context);
+        protected readonly IOdysseyRepository Repository;
+
+        protected BaseRegistrationController(IOdysseyRepository repository)
+        {
+            Repository = repository ?? throw new ArgumentNullException(nameof(repository));
+        }
+
+        protected static readonly string[] TshirtSizeChoices = ["S", "M", "L", "XL", "XXL", "XXXL"];
 
         [HttpGet]
         public ActionResult BadEmail()
         {
-            BaseViewData baseViewData = new(Repository)
+            BaseViewData baseViewData = new()
             {
                 Config = Repository.Config,
                 TournamentInfo = Repository.TournamentInfo
@@ -138,7 +147,7 @@ namespace OdysseyMvc2024.Controllers
         [HttpGet]
         public ActionResult Closed()
         {
-            BaseViewData baseViewData = new(Repository)
+            BaseViewData baseViewData = new()
             {
                 Config = Repository.Config,
                 TournamentInfo = Repository.TournamentInfo
@@ -203,7 +212,7 @@ namespace OdysseyMvc2024.Controllers
         [HttpGet]
         public ActionResult Down()
         {
-            BaseViewData baseViewData = new(Repository)
+            BaseViewData baseViewData = new()
             {
                 Config = Repository.Config,
                 TournamentInfo = Repository.TournamentInfo
@@ -223,7 +232,7 @@ namespace OdysseyMvc2024.Controllers
         [HttpGet]
         public ActionResult Error()
         {
-            BaseViewData baseViewData = new(Repository)
+            BaseViewData baseViewData = new()
             {
                 Config = Repository.Config,
                 TournamentInfo = Repository.TournamentInfo
@@ -277,7 +286,7 @@ namespace OdysseyMvc2024.Controllers
         /// </returns>
         public bool IsRegistrationClosed(RegistrationType registrationType)
         {
-            BaseViewData baseViewData = new(Repository)
+            BaseViewData baseViewData = new()
             {
                 Config = Repository.Config,
                 TournamentInfo = Repository.TournamentInfo
@@ -326,7 +335,7 @@ namespace OdysseyMvc2024.Controllers
         /// </returns>
         public bool IsRegistrationComingSoon(RegistrationType registrationType)
         {
-            BaseViewData baseViewData = new(Repository)
+            BaseViewData baseViewData = new()
             {
                 Config = Repository.Config,
                 TournamentInfo = Repository.TournamentInfo
@@ -363,7 +372,7 @@ namespace OdysseyMvc2024.Controllers
         /// </returns>
         public bool IsRegistrationDown(RegistrationType registrationType)
         {
-            BaseViewData baseViewData = new(Repository)
+            BaseViewData baseViewData = new()
             {
                 Config = Repository.Config,
                 TournamentInfo = Repository.TournamentInfo
@@ -395,6 +404,8 @@ namespace OdysseyMvc2024.Controllers
         /// </returns>
         public string? SendMessage(BaseViewData viewData, MailMessage mailMessage)
         {
+            // TODO: Check for an empty WebmasterEmailPassword here. - 10/30/2025.
+            // TODO: Log if pw is empty.
             SmtpClient smtpClient = new()
             {
                 // Fix for CS8602: Dereference of a possibly null reference.
@@ -454,6 +465,18 @@ namespace OdysseyMvc2024.Controllers
         /// </param>
         protected void SetBaseViewData(BaseViewData viewData)
         {
+            // Validate config info before assignment
+            if (Repository.Config == null)
+            {
+                throw new InvalidOperationException("Configuration information is not available in the repository. Please ensure the database contains configuration data for the current region.");
+            }
+
+            // Validate tournament info before assignment
+            if (Repository.TournamentInfo == null)
+            {
+                throw new InvalidOperationException("Tournament information is not available in the repository. Please ensure the database contains tournament data for the current region.");
+            }
+
             viewData.Config = Repository.Config;
             viewData.RegionName = Repository.RegionName;
             viewData.RegionNumber = Repository.RegionNumber;
@@ -473,7 +496,7 @@ namespace OdysseyMvc2024.Controllers
         [HttpGet]
         public ActionResult Soon()
         {
-            BaseViewData baseViewData = new(Repository)
+            BaseViewData baseViewData = new()
             {
                 Config = Repository.Config,
                 TournamentInfo = Repository.TournamentInfo
@@ -497,7 +520,7 @@ namespace OdysseyMvc2024.Controllers
                 ////    return RegistrationState.Available;
                 ////}
 
-                BaseViewData baseViewData = new(Repository)
+                BaseViewData baseViewData = new()
                 {
                     Config = Repository.Config,
                     TournamentInfo = Repository.TournamentInfo

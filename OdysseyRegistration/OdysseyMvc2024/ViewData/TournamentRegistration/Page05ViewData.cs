@@ -21,7 +21,7 @@ namespace OdysseyMvc2024.ViewData.TournamentRegistration
     /// <summary>
     /// The backing data for Page 05 of the Tournament Registration wizard.
     /// </summary>
-    public class Page05ViewData(IOdysseyRepository repository) : BaseViewData(repository)
+    public class Page05ViewData : BaseViewData
     {
         [Required]
         [Display(Name = "Alternate Coach's Daytime Phone")]

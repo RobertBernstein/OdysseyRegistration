@@ -20,7 +20,7 @@ namespace OdysseyMvc2024.ViewData.TournamentRegistration
     /// <summary>
     /// Backing data for Page 08 of the Tournament Registration wizard.
     /// </summary>
-    public class Page08ViewData(IOdysseyRepository repository) : BaseViewData(repository)
+    public class Page08ViewData : BaseViewData
     {
         public string? SchedulingIssues { get; set; }
 

@@ -21,14 +21,14 @@ namespace OdysseyMvc2024.ViewData.TournamentRegistration
     /// <summary>
     /// The backing data for Page 01 of the Tournament Registration wizard.
     /// </summary>
-    public class Page01ViewData(IOdysseyRepository repository) : BaseViewData(repository)
+    public class Page01ViewData : BaseViewData
     {
         public bool AcceptingPayPal
         {
             get
             {
                 bool flag;
-                bool.TryParse(this.Config[nameof(AcceptingPayPal)], out flag);
+                bool.TryParse(Config[nameof(AcceptingPayPal)], out flag);
                 return flag;
             }
         }

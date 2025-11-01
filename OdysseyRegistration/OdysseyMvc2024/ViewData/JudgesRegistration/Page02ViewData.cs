@@ -16,16 +16,17 @@
 // MVID: 7B658547-521F-44CB-80FA-52857CB94B72
 // Assembly location: C:\Users\rob\OneDrive\Odyssey\OdysseyProd\registration\bin\OdysseyMvc4.dll
 
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using OdysseyMvc2024.Models;
 using System.ComponentModel.DataAnnotations;
+using System.Numerics;
 
 namespace OdysseyMvc2024.ViewData.JudgesRegistration
 {
     /// <summary>
     /// The page 02 view data.
     /// </summary>
-    public class Page02ViewData(IOdysseyRepository repository) : BaseViewData(repository)
+    public class Page02ViewData : BaseViewData
     {
         /// <summary>
         /// Gets or sets the Judge's first name.
@@ -114,10 +115,11 @@ namespace OdysseyMvc2024.ViewData.JudgesRegistration
         public string? MobilePhone { get; set; }
 
         /// <summary>
-        /// Gets or sets the Judge's e-mail address.
+        /// Gets or sets the Judge's email address.
         /// </summary>
         [Required]
-        [Display(Name = "E-mail Address")]
+        [EmailAddress]
+        [Display(Name = "Email Address")]
         public string? EmailAddress { get; set; }
 
         /// <summary>
@@ -213,31 +215,32 @@ namespace OdysseyMvc2024.ViewData.JudgesRegistration
         /// <summary>
         /// Gets or sets the Judge's t-shirt size.
         /// </summary>
+        /// <remarks>
+        /// The [BindNever] attribute marks this property so the ASP.NET Core model binder will ignore it when binding
+        /// data from the request (form, query, route, body, etc.). The attribute is applied to server-side helpers
+        /// like TshirtSizes / ProblemChoices (the select-list objects). Those are view-model data the server populates
+        /// to render dropdowns; they must not be populated or overridden from user-supplied form values. It prevents
+        /// over-posting/tampering(mass-assignment) where a malicious client could try to set complex server-side
+        /// objects. By using [BindNever], we ensure these properties are only set server-side,
+        /// </remarks>
         [Required]
         [Display(Name = "T-Shirt Size")]
-        public string? TshirtSize { get; set; }
-
-        public required IEnumerable<SelectListItem> TshirtSizes { get; set; }
+        [BindNever]
+        public required IEnumerable<SelectListItem> TshirtSizes { get; set; } = Array.Empty<SelectListItem>();
 
         /// <summary>
         /// Gets or sets the Judge's problem choices.
         /// </summary>
-        public required IEnumerable<SelectListItem> ProblemChoices { get; set; }
-
-        /// <summary>
-        /// Gets the problem conflict list for the first child.
-        /// </summary>
-        public IEnumerable<SelectListItem> ProblemConflictList1 => this.ProblemConflictListCommon;
-
-        /// <summary>
-        /// Gets the problem conflict list for the second child.
-        /// </summary>
-        public IEnumerable<SelectListItem> ProblemConflictList2 => this.ProblemConflictListCommon;
-
-        /// <summary>
-        /// Gets the problem conflict list for the third child.
-        /// </summary>
-        public IEnumerable<SelectListItem> ProblemConflictList3 => this.ProblemConflictListCommon;
+        /// <remarks>
+        /// The [BindNever] attribute marks this property so the ASP.NET Core model binder will ignore it when binding
+        /// data from the request (form, query, route, body, etc.). The attribute is applied to server-side helpers
+        /// like TshirtSizes / ProblemChoices (the select-list objects). Those are view-model data the server populates
+        /// to render dropdowns; they must not be populated or overridden from user-supplied form values. It prevents
+        /// over-posting/tampering(mass-assignment) where a malicious client could try to set complex server-side
+        /// objects. By using [BindNever], we ensure these properties are only set server-side,
+        /// </remarks>
+        [BindNever]
+        public required IEnumerable<SelectListItem> ProblemChoices { get; set; } = Array.Empty<SelectListItem>();
 
         /// <summary>
         /// Gets the problem conflicts.
@@ -246,21 +249,45 @@ namespace OdysseyMvc2024.ViewData.JudgesRegistration
         {
             get
             {
-                List<SelectListItem> problemConflicts = new List<SelectListItem>(this.ProblemChoices);
-                SelectListItem foundItem = problemConflicts.Find((Predicate<SelectListItem>)(sli => sli.Text == "No Preference"));
+                var source = ProblemChoices ?? Enumerable.Empty<SelectListItem>();
+                
+                var problemConflicts = new List<SelectListItem>(source);
+                
+                var foundItem = problemConflicts.Find(sli => sli.Text == "No Preference");
+                
                 if (foundItem != null)
                 {
                     foundItem.Text = "I Don't Know";
                 }
 
-                return (IEnumerable<SelectListItem>)problemConflicts;
+                return problemConflicts;
             }
         }
+
+        /// <summary>
+        /// Gets the problem conflict list for the first child.
+        /// </summary>
+        public IEnumerable<SelectListItem> ProblemConflictList1 => ProblemConflictListCommon;
+
+        /// <summary>
+        /// Gets the problem conflict list for the second child.
+        /// </summary>
+        public IEnumerable<SelectListItem> ProblemConflictList2 => ProblemConflictListCommon;
+
+        /// <summary>
+        /// Gets the problem conflict list for the third child.
+        /// </summary>
+        public IEnumerable<SelectListItem> ProblemConflictList3 => ProblemConflictListCommon;
 
         [Required(ErrorMessage = "You must choose whether or not you want CEU credit.")]
         public string? WantsCeuCredit { get; set; }
 
         [Required(ErrorMessage = "You must choose whether or not you are willing to be a scorechecker.")]
         public string? WillingToBeScorechecker { get; set; }
+
+        /// <summary>
+        /// Gets or sets the selected t-shirt size.
+        /// </summary>
+        public object? SelectedTshirtSize { get; internal set; }
     }
 }

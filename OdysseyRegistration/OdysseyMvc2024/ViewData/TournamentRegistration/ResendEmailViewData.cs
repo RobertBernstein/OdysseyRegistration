@@ -20,7 +20,7 @@ namespace OdysseyMvc2024.ViewData.TournamentRegistration
     /// <summary>
     /// Backing data for the email that gets resent to the requester.
     /// </summary>
-    public class ResendEmailViewData(IOdysseyRepository repository) : BaseViewData(repository)
+    public class ResendEmailViewData : BaseViewData
     {
         public string? AltCoachCheckbox { get; set; }
 
