@@ -226,6 +226,7 @@ Site: novanorth.org
 As of 09/29/2024, this is the configuration of the registration database.
 
 ```makefile
+Server Name:     s06.winhost.com
 Database Name:   DB_12824_registration
 Version:         MS SQL 2008 R2
 Database Server: s06.winhost.com
