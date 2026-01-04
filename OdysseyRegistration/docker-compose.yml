@@ -51,10 +51,10 @@ services:
         if [ ! -f /var/opt/mssql/.db-initialized ]; then
           echo 'Initializing database from SQL scripts...'
           if [ -f /init/init.sql ]; then
-            /opt/mssql-tools18/bin/sqlcmd -b -C -S localhost -U sa -P $(cat /run/secrets/sa_password) -d master -i /init/init.sql || { echo 'init.sql failed'; exit 1; }
+            /opt/mssql-tools18/bin/sqlcmd -b -C -S localhost -U sa -P $(cat /run/secrets/sa_password) -d master -v sa_password=$(cat /run/secrets/sa_password) -i /init/init.sql || { echo 'init.sql failed'; exit 1; }
           fi
           if [ -f /init/novanorth-prod.sql ]; then
-            /opt/mssql-tools18/bin/sqlcmd -b -C -S localhost -U sa -P $(cat /run/secrets/sa_password) -d master -i /init/novanorth-prod.sql || { echo 'novanorth-prod.sql failed'; exit 1; }
+            /opt/mssql-tools18/bin/sqlcmd -b -C -S localhost -U sa -P $(cat /run/secrets/sa_password) -d master -v sa_password=$(cat /run/secrets/sa_password) -i /init/novanorth-prod.sql || { echo 'novanorth-prod.sql failed'; exit 1; }
           else
             echo 'ERROR: /init/novanorth-prod.sql not found'
             exit 1
