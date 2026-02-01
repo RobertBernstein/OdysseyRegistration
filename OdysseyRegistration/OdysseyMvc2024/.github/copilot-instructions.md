@@ -174,3 +174,42 @@ wwwroot/
 - Email sending includes retry logic for transient failures
 - All exceptions should be logged with ElmahCore
 - Multi-page workflows require session state testing
+
+## Docker & Development Environment
+
+### Docker Compose Integration
+OdysseyMvc2024 depends on a SQL Server database running in Docker. The solution is configured to start Docker containers automatically when debugging.
+
+### Key Files for Docker Startup
+- **`OdysseyRegistration/docker-compose.dcproj`**: Docker Compose project that orchestrates containers
+- **`OdysseyRegistration/docker-compose.yml`**: Defines SQL Server and WebAPI services
+- **`OdysseyRegistration/docker-compose.override.yml`**: Development environment overrides
+- **`OdysseyRegistration/launchSettings.json`**: Solution-level launch profiles for Docker + projects
+- **`OdysseyRegistration/OdysseyRegistration.slnlaunch`**: Multiple startup project configurations
+
+### Launch Profiles Available
+1. **Docker Compose**: Starts only the WebAPI service with debugging
+2. **Docker Compose + OdysseyMvc2024**: Starts WebAPI + SQL Server + OdysseyMvc2024 with debugging
+3. **SQL Server + OdysseyMvc2024**: Starts only SQL Server, waits for health check, then starts OdysseyMvc2024
+
+### Starting Development Environment
+1. Open `OdysseyRegistration.slnx` in Visual Studio 2022+
+2. Select **"SQL Server + OdysseyMvc2024"** from the Debug dropdown or startup configuration
+3. Press F5 to start debugging - Docker containers will start first, then OdysseyMvc2024
+
+### SQL Server Container Details
+- **Image**: `mcr.microsoft.com/mssql/server:2022-latest`
+- **Port**: 1433 (exposed to localhost)
+- **Health Check**: 90-second start period with 15-second intervals
+- **Data Persistence**: Named volumes `sqlserver_odyssey` and `sqlserver_backup`
+- **Initialization**: Scripts in `/init` folder run on first startup
+
+### Connection String
+The application connects to Docker SQL Server via the connection string in `appsettings.json`:
+- **Server**: `localhost` (port 1433)
+- **Database**: `DB_12824_registration`
+- **Authentication**: SQL Server authentication (credentials from Docker secrets in `sa_password.txt`)
+- **TrustServerCertificate**: `True` (for development)
+
+### Documentation
+Full Docker setup documentation: `OdysseyMvc2024/Documentation/Docker Compose.md`

@@ -6,6 +6,37 @@
       "serviceActions": {
         "odysseyregistrationwebapi": "StartDebugging"
       }
+    },
+    "Docker Compose + OdysseyMvc2024": {
+      "commandName": "DockerCompose",
+      "commandVersion": "1.0",
+      "serviceActions": {
+        "odysseyregistrationwebapi": "StartWithoutDebugging"
+      },
+      "composerUp": {
+        "services": ["sqlserver"]
+      },
+      "otherProjects": [
+        {
+          "projectPath": "OdysseyMvc2024\\OdysseyMvc2024.csproj",
+          "action": "StartDebugging",
+          "waitForHealthCheck": false
+        }
+      ]
+    },
+    "SQL Server + OdysseyMvc2024": {
+      "commandName": "DockerCompose",
+      "commandVersion": "1.0",
+      "composerUp": {
+        "services": ["sqlserver"]
+      },
+      "otherProjects": [
+        {
+          "projectPath": "OdysseyMvc2024\\OdysseyMvc2024.csproj",
+          "action": "StartDebugging",
+          "waitForHealthCheck": true
+        }
+      ]
     }
   }
 }

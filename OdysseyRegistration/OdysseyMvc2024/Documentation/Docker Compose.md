@@ -1,5 +1,145 @@
 ﻿# Docker Documentation
 
+## Startup Configuration: Running OdysseyMvc2024 with Docker Containers
+
+The OdysseyMvc2024 project can be configured to start up dependent on Docker containers (specifically SQL Server) defined in the `docker-compose.dcproj` project.
+
+### Configuration Files
+
+#### 1. Solution Launch Settings (`OdysseyRegistration/launchSettings.json`)
+
+This file defines launch profiles for the Docker Compose orchestration:
+
+```json
+{
+  "profiles": {
+    "Docker Compose": {
+      "commandName": "DockerCompose",
+      "commandVersion": "1.0",
+      "serviceActions": {
+        "odysseyregistrationwebapi": "StartDebugging"
+      }
+    },
+    "Docker Compose + OdysseyMvc2024": {
+      "commandName": "DockerCompose",
+      "commandVersion": "1.0",
+      "serviceActions": {
+        "odysseyregistrationwebapi": "StartWithoutDebugging"
+      },
+      "composerUp": {
+        "services": ["sqlserver"]
+      },
+      "otherProjects": [
+        {
+          "projectPath": "OdysseyMvc2024\\OdysseyMvc2024.csproj",
+          "action": "StartDebugging",
+          "waitForHealthCheck": false
+        }
+      ]
+    },
+    "SQL Server + OdysseyMvc2024": {
+      "commandName": "DockerCompose",
+      "commandVersion": "1.0",
+      "composerUp": {
+        "services": ["sqlserver"]
+      },
+      "otherProjects": [
+        {
+          "projectPath": "OdysseyMvc2024\\OdysseyMvc2024.csproj",
+          "action": "StartDebugging",
+          "waitForHealthCheck": true
+        }
+      ]
+    }
+  }
+}
+```
+
+**Available Profiles:**
+- **Docker Compose**: Starts only the WebAPI service with debugging
+- **Docker Compose + OdysseyMvc2024**: Starts WebAPI without debugging + SQL Server + OdysseyMvc2024 with debugging
+- **SQL Server + OdysseyMvc2024**: Starts only SQL Server container, waits for health check, then starts OdysseyMvc2024 with debugging
+
+#### 2. Solution Launch Configuration (`OdysseyRegistration/OdysseyRegistration.slnlaunch`)
+
+This file defines multiple startup project configurations for the `.slnx` solution format:
+
+```json
+[
+  {
+    "Name": "SQL Server + OdysseyMvc2024",
+    "Projects": [
+      {
+        "Path": "docker-compose.dcproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "OdysseyMvc2024\\OdysseyMvc2024.csproj",
+        "Action": "Start"
+      }
+    ]
+  },
+  {
+    "Name": "Docker Compose Only",
+    "Projects": [
+      {
+        "Path": "docker-compose.dcproj",
+        "Action": "Start"
+      }
+    ]
+  },
+  {
+    "Name": "OdysseyMvc2024 Only",
+    "Projects": [
+      {
+        "Path": "OdysseyMvc2024\\OdysseyMvc2024.csproj",
+        "Action": "Start"
+      }
+    ]
+  }
+]
+```
+
+### How to Use in Visual Studio
+
+1. **Open the solution** (`OdysseyRegistration.slnx`) in Visual Studio 2022+
+2. **Select startup configuration** using one of these methods:
+   - **Debug dropdown**: Select a profile from the Debug toolbar dropdown (profiles from `launchSettings.json`)
+   - **Solution Properties**: Right-click solution → "Configure Startup Projects..." → select "Multiple startup projects"
+   - **Startup dropdown**: Use the startup project dropdown which shows configurations from `.slnlaunch`
+3. **Recommended profile**: Use **"SQL Server + OdysseyMvc2024"** for development
+
+### SQL Server Health Check
+
+The `docker-compose.yml` includes a health check for SQL Server:
+
+```yaml
+healthcheck:
+  test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P $(cat /run/secrets/sa_password) -Q 'SELECT 1' >/dev/null 2>&1 || exit 1"]
+  interval: 15s
+  retries: 6
+  start_period: 90s
+  timeout: 10s
+```
+
+This ensures:
+- SQL Server has 90 seconds to initialize on first startup
+- Health checks run every 15 seconds
+- Up to 6 retries before marking unhealthy
+- OdysseyMvc2024 waits for the health check to pass when `waitForHealthCheck: true`
+
+### Connection String
+
+OdysseyMvc2024 connects to the Docker SQL Server using the connection string configured in `appsettings.json`. The connection uses:
+- **Server**: `localhost` (port 1433)
+- **Database**: `DB_12824_registration`
+- **Authentication**: SQL Server authentication (credentials from Docker secrets)
+- **TrustServerCertificate**: `True` (for development)
+
+The SQL Server container exposes port 1433 to localhost, making it accessible to the local OdysseyMvc2024 application. Credentials are managed via Docker secrets (`sa_password.txt`).
+
+---
+
 ## Question: Do I need to set pid or gid in this Docker Compose file for SQL Server, ?
 
 Short answer: you don’t need to set pid or gid in this compose file.

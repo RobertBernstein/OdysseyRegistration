@@ -1,6 +1,7 @@
 <Solution>
   <Folder Name="/Solution Items/">
     <File Path="../README.md" />
+    <File Path="OdysseyRegistration.slnlaunch" />
   </Folder>
   <Project Path="../EFCoreToolReverseEngineeringTest/EFCoreToolReverseEngineeringTest.csproj" />
   <Project Path="../JudgeRegistrationRazor/JudgeRegistrationRazor.csproj" />

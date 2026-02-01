@@ -1,0 +1,33 @@
+[
+  {
+    "Name": "SQL Server + OdysseyMvc2024",
+    "Projects": [
+      {
+        "Path": "docker-compose.dcproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "OdysseyMvc2024\\OdysseyMvc2024.csproj",
+        "Action": "Start"
+      }
+    ]
+  },
+  {
+    "Name": "Docker Compose Only",
+    "Projects": [
+      {
+        "Path": "docker-compose.dcproj",
+        "Action": "Start"
+      }
+    ]
+  },
+  {
+    "Name": "OdysseyMvc2024 Only",
+    "Projects": [
+      {
+        "Path": "OdysseyMvc2024\\OdysseyMvc2024.csproj",
+        "Action": "Start"
+      }
+    ]
+  }
+]
