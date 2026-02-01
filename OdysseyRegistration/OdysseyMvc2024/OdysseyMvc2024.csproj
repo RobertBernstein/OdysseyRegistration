@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
@@ -6,6 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <AssemblyDescription>Odyssey of the Mind Registration System using ASP.NET 10</AssemblyDescription>
     <AssemblyCopyright>Copyright © 2014-2026</AssemblyCopyright>
+    <UserSecretsId>4fc61b4d-cbaa-46ed-b907-349d6beff28e</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>

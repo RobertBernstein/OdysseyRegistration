@@ -128,8 +128,94 @@ All configuration stored in Config table as key-value pairs:
 - **Testing**: `TestGuid` for bypassing state checks
 
 ### App Settings
-- `appsettings.json`: Production configuration
+- `appsettings.json`: Base configuration (no secrets)
 - `appsettings.Development.json`: Development overrides
+- **User Secrets**: Connection strings and sensitive data for development
+
+### User Secrets (Development)
+The project uses ASP.NET Core User Secrets to store sensitive configuration like connection strings outside the project:
+
+```bash
+# Navigate to the project directory
+cd OdysseyRegistration\OdysseyMvc2024
+
+# Initialize User Secrets (already done - UserSecretsId in csproj)
+dotnet user-secrets init
+
+# Set the connection string
+dotnet user-secrets set "ConnectionStrings:OdysseyConnection" "Server=localhost;Database=DB_12824_registration;User Id=sa;Password=YOUR_PASSWORD;TrustServerCertificate=True;"
+
+# View stored secrets
+dotnet user-secrets list
+
+# Clear all secrets
+dotnet user-secrets clear
+```
+
+User Secrets are stored at: `%APPDATA%\Microsoft\UserSecrets\{UserSecretsId}\secrets.json`
+
+**Note**: The password must match the one in `OdysseyRegistration/sa_password.txt` used by Docker.
+
+### Production Secrets Management
+
+User Secrets are **only for development**. For production environments, use one of these approaches:
+
+#### Option 1: Environment Variables (Recommended for WinHost)
+Set environment variables on the hosting server. ASP.NET Core automatically reads them:
+
+```bash
+# Windows (PowerShell) - Set at system level
+[Environment]::SetEnvironmentVariable("ConnectionStrings__OdysseyConnection", "Server=s06.winhost.com;Database=DB_12824_registration;User Id=DB_12824_registration_user;Password=YOUR_PASSWORD;TrustServerCertificate=True;", "Machine")
+```
+
+In WinHost Control Panel:
+1. Navigate to **Site Manager** → **IIS Settings** → **Application Settings**
+2. Add a new setting with:
+   - Name: `ConnectionStrings:OdysseyConnection` (or `ConnectionStrings__OdysseyConnection`)
+   - Value: Your full connection string with password
+
+#### Option 2: Azure Key Vault (For Azure Hosting)
+For Azure App Service deployments:
+
+1. Create an Azure Key Vault
+2. Store the connection string as a secret
+3. Configure managed identity for the App Service
+4. Add the Key Vault configuration provider:
+
+```csharp
+// In Program.cs
+builder.Configuration.AddAzureKeyVault(
+    new Uri($"https://{keyVaultName}.vault.azure.net/"),
+    new DefaultAzureCredential());
+```
+
+#### Option 3: Web.config Transforms (Traditional IIS)
+Use Web.config transformation for different environments:
+
+1. Create `Web.Release.config` with connection string transform
+2. The password is replaced during publish/deploy
+
+```xml
+<connectionStrings>
+  <add name="OdysseyConnection" 
+       connectionString="Server=production;Database=DB;User Id=user;Password=PROD_PASSWORD;"
+       xdt:Transform="SetAttributes" xdt:Locator="Match(name)"/>
+</connectionStrings>
+```
+
+#### Option 4: Separate appsettings.Production.json
+Create a production-specific config file (keep it out of source control):
+
+1. Create `appsettings.Production.json` on the server
+2. Add it to `.gitignore`
+3. Contains the production connection string
+
+**Security Best Practices:**
+- Never commit passwords to source control
+- Use different passwords for development and production
+- Rotate passwords periodically
+- Use least-privilege database accounts in production
+- Enable TLS/SSL for database connections
 
 ## Development Guidelines
 

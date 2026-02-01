@@ -82,6 +82,102 @@ The OdysseyMvc4 (original) and OdysseyMvc2023 (current? I think it's really Odys
 
 ## Safe storage of app secrets in development in ASP.NET Core
 
+### OdysseyMvc2024 User Secrets (Configured)
+
+The OdysseyMvc2024 project uses ASP.NET Core User Secrets to store the database connection string securely:
+
+**Setup (already completed):**
+```bash
+# Navigate to the project directory
+cd OdysseyRegistration\OdysseyMvc2024
+
+# Initialize User Secrets (adds UserSecretsId to csproj)
+dotnet user-secrets init
+
+# Set the connection string (password must match sa_password.txt)
+dotnet user-secrets set "ConnectionStrings:OdysseyConnection" "Server=localhost;Database=DB_12824_registration;User Id=sa;Password=YOUR_PASSWORD;TrustServerCertificate=True;"
+
+# View stored secrets
+dotnet user-secrets list
+
+# Clear all secrets
+dotnet user-secrets clear
+```
+
+**How it works:**
+- User Secrets are stored at `%APPDATA%\Microsoft\UserSecrets\{UserSecretsId}\secrets.json`
+- They are automatically loaded in the Development environment
+- They override values in `appsettings.json`
+- They are never committed to source control
+
+**Important**: The password in User Secrets must match the password in `OdysseyRegistration/sa_password.txt` (used by Docker for SQL Server).
+
+### Production Secrets Management
+
+User Secrets are **only for development**. For production environments (WinHost), use one of these approaches:
+
+#### Option 1: Environment Variables via WinHost Control Panel (Recommended)
+
+ASP.NET Core automatically reads environment variables. In WinHost:
+
+1. Log into [WinHost Control Panel](https://cp.winhost.com)
+2. Navigate to **Site Manager** → **IIS Settings** → **Application Settings**
+3. Add a new application setting:
+   - **Name**: `ConnectionStrings:OdysseyConnection` (or `ConnectionStrings__OdysseyConnection`)
+   - **Value**: `Server=s06.winhost.com;Database=DB_12824_registration;User Id=DB_12824_registration_user;Password=YOUR_PROD_PASSWORD;TrustServerCertificate=True;`
+
+This approach:
+- Keeps secrets out of source control
+- Can be changed without redeploying
+- Is the recommended approach for shared hosting
+
+#### Option 2: appsettings.Production.json on Server
+
+1. Create `appsettings.Production.json` directly on the WinHost server (via FTP)
+2. Include the connection string with production password
+3. Ensure this file is NOT in source control (add to `.gitignore`)
+
+```json
+{
+  "ConnectionStrings": {
+    "OdysseyConnection": "Server=s06.winhost.com;Database=DB_12824_registration;User Id=DB_12824_registration_user;Password=YOUR_PROD_PASSWORD;TrustServerCertificate=True;"
+  }
+}
+```
+
+#### Option 3: Web.config connectionStrings (Traditional .NET)
+
+For the legacy OdysseyMvc4 project using .NET Framework:
+
+1. Use Web.config transforms (`Web.Release.config`)
+2. Or manually edit `Web.config` on server after deployment
+
+```xml
+<connectionStrings>
+  <add name="OdysseyConnection" 
+       connectionString="Data Source=tcp:s06.winhost.com;Initial Catalog=DB_12824_registration;User ID=DB_12824_registration_user;Password=YOUR_PROD_PASSWORD;Integrated Security=False;"
+       providerName="System.Data.SqlClient" />
+</connectionStrings>
+```
+
+#### Option 4: Azure Key Vault (For Future Azure Migration)
+
+If migrating to Azure App Service:
+
+1. Create an Azure Key Vault
+2. Store secrets in Key Vault
+3. Use managed identity for secure access
+4. Add the Azure Key Vault configuration provider in `Program.cs`
+
+**Security Best Practices:**
+- Never commit passwords to source control
+- Use different passwords for development, test, and production
+- Rotate passwords periodically
+- Use least-privilege database accounts
+- Enable TLS/SSL for all database connections
+
+### Reference Documentation
+
 1. Following <https://learn.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-10.0&tabs=windows>.
    1. This article explains how to manage sensitive data for an ASP.NET Core app on a development machine. Never store passwords or other sensitive data in source code or configuration files. Production secrets shouldn't be used for development or test. Secrets shouldn't be deployed with the app. Production secrets should be accessed through a controlled means like Azure Key Vault. Azure test and production secrets can be stored and protected with the [Azure Key Vault configuration provider](https://learn.microsoft.com/aspnet/core/security/key-vault-configuration?view=aspnetcore-10.0).
 2. Use Visual Studio
@@ -93,7 +189,6 @@ The OdysseyMvc4 (original) and OdysseyMvc2023 (current? I think it's really Odys
          1. See <https://learn.microsoft.com/dotnet/core/project-sdk/msbuild-props#generateassemblyinfo>
    3. Visual Studio's Manage User Secrets gesture opens a `secrets.json` file in the text editor. Replace the contents of secrets.json with the key-value pairs to be stored.
       1. **NOTE**: I got a `secrets.xml` file for OdysseyMvc4, which is a .NET Framework 4.8 file and not .NET. Maybe that's why there was a difference.
-   4. **I need to come back to this. It's taking too long!**
 
 ## Get the local Odyssey SQL database and website running to debug it
 

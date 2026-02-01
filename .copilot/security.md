@@ -2,10 +2,39 @@
 
 ## Secrets management
 - NEVER commit secrets, passwords, or connection strings to git
-- Use User Secrets (secrets.json) for local development
-- Store production secrets in hosting control panel
-- Use sa_password.txt for local Docker SQL password (but don't commit it)
 - Ensure .gitignore includes secrets files
+
+### Development (User Secrets)
+OdysseyMvc2024 uses ASP.NET Core User Secrets for the connection string:
+```bash
+cd OdysseyRegistration\OdysseyMvc2024
+dotnet user-secrets set "ConnectionStrings:OdysseyConnection" "Server=localhost;Database=DB_12824_registration;User Id=sa;Password=YOUR_PASSWORD;TrustServerCertificate=True;"
+dotnet user-secrets list  # View stored secrets
+```
+- Stored at: `%APPDATA%\Microsoft\UserSecrets\{UserSecretsId}\secrets.json`
+- Password must match `OdysseyRegistration/sa_password.txt` (for Docker)
+
+### Docker (SQL Server)
+- Use `sa_password.txt` for local Docker SQL password (don't commit it)
+- Docker Secrets mount this as `/run/secrets/sa_password`
+
+### Production (WinHost)
+Choose one of these approaches:
+
+**Option 1: Environment Variables (Recommended)**
+- WinHost Control Panel → Site Manager → IIS Settings → Application Settings
+- Name: `ConnectionStrings:OdysseyConnection`
+- Value: Full connection string with production password
+
+**Option 2: appsettings.Production.json**
+- Create directly on server via FTP
+- Keep out of source control
+
+**Option 3: Web.config (Legacy .NET Framework)**
+- Use Web.config transforms or edit on server after deployment
+
+**Option 4: Azure Key Vault (Future)**
+- For Azure App Service migration
 
 ## Authentication & Authorization
 - All protected endpoints must have [Authorize] attribute

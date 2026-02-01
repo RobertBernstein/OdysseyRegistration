@@ -204,12 +204,38 @@ OdysseyMvc2024 depends on a SQL Server database running in Docker. The solution 
 - **Data Persistence**: Named volumes `sqlserver_odyssey` and `sqlserver_backup`
 - **Initialization**: Scripts in `/init` folder run on first startup
 
-### Connection String
-The application connects to Docker SQL Server via the connection string in `appsettings.json`:
-- **Server**: `localhost` (port 1433)
-- **Database**: `DB_12824_registration`
-- **Authentication**: SQL Server authentication (credentials from Docker secrets in `sa_password.txt`)
-- **TrustServerCertificate**: `True` (for development)
+### Connection String Configuration
+
+The application uses different connection string sources depending on the environment:
+
+#### Development (Local Debugging)
+**ASP.NET Core User Secrets** provides the connection string with the password:
+- User Secrets are stored outside the project at `%APPDATA%\Microsoft\UserSecrets\{UserSecretsId}\secrets.json`
+- Never committed to source control
+- Automatically loaded in Development environment
+
+**Managing User Secrets:**
+```bash
+# Navigate to the project directory
+cd OdysseyRegistration\OdysseyMvc2024
+
+# View all secrets
+dotnet user-secrets list
+
+# Set the connection string (with password)
+dotnet user-secrets set "ConnectionStrings:OdysseyConnection" "Server=localhost;Database=DB_12824_registration;User Id=sa;Password=YOUR_PASSWORD;TrustServerCertificate=True;"
+
+# Remove all secrets
+dotnet user-secrets clear
+```
+
+#### Docker Environment
+The SQL Server container uses **Docker Secrets** for the SA password:
+- Password stored in `OdysseyRegistration/sa_password.txt`
+- Mounted as `/run/secrets/sa_password` in the container
+- Used by SQL Server via `MSSQL_SA_PASSWORD_FILE` environment variable
+
+**Note**: When setting up a new development environment, ensure the User Secrets connection string password matches the password in `sa_password.txt`.
 
 ### Documentation
 Full Docker setup documentation: `OdysseyMvc2024/Documentation/Docker Compose.md`

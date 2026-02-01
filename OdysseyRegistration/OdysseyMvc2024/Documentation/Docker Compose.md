@@ -128,15 +128,47 @@ This ensures:
 - Up to 6 retries before marking unhealthy
 - OdysseyMvc2024 waits for the health check to pass when `waitForHealthCheck: true`
 
-### Connection String
+### Connection String Configuration
 
-OdysseyMvc2024 connects to the Docker SQL Server using the connection string configured in `appsettings.json`. The connection uses:
+OdysseyMvc2024 uses **ASP.NET Core User Secrets** for the connection string in development:
+
+#### User Secrets (Development)
+The connection string with password is stored in User Secrets, which:
+- Are stored outside the project at `%APPDATA%\Microsoft\UserSecrets\{UserSecretsId}\secrets.json`
+- Are never committed to source control
+- Are automatically loaded in the Development environment
+- Override any values in `appsettings.json`
+
+**Setting up User Secrets:**
+```bash
+# Navigate to the project directory
+cd OdysseyRegistration\OdysseyMvc2024
+
+# Initialize User Secrets (if not already done)
+dotnet user-secrets init
+
+# Set the connection string
+dotnet user-secrets set "ConnectionStrings:OdysseyConnection" "Server=localhost;Database=DB_12824_registration;User Id=sa;Password=YOUR_PASSWORD;TrustServerCertificate=True;"
+
+# View stored secrets
+dotnet user-secrets list
+```
+
+#### Docker Secrets (SQL Server Container)
+The SQL Server container uses Docker Secrets for the SA password:
+- Password stored in `OdysseyRegistration/sa_password.txt`
+- Mounted as `/run/secrets/sa_password` in the container
+- Referenced via `MSSQL_SA_PASSWORD_FILE` environment variable
+
+**Important**: The password in your User Secrets must match the password in `sa_password.txt` to connect successfully.
+
+#### Connection Details
 - **Server**: `localhost` (port 1433)
 - **Database**: `DB_12824_registration`
-- **Authentication**: SQL Server authentication (credentials from Docker secrets)
+- **Authentication**: SQL Server authentication
 - **TrustServerCertificate**: `True` (for development)
 
-The SQL Server container exposes port 1433 to localhost, making it accessible to the local OdysseyMvc2024 application. Credentials are managed via Docker secrets (`sa_password.txt`).
+The SQL Server container exposes port 1433 to localhost, making it accessible to the local OdysseyMvc2024 application.
 
 ---
 

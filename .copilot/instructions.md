@@ -55,11 +55,32 @@
 - Database schema managed via Odyssey.Database project
 
 ## Security & Secrets
-- Use User Secrets for development (right-click project → Manage User Secrets)
-- Production secrets go in hosting control panel, not code
+- NEVER commit secrets, passwords, or connection strings to git
 - WebmasterEmailPassword comes from Config table in production DB
 - Never store passwords in init.sql or novanorth-prod.sql directly
-- Use sa_password.txt for local Docker SQL Server password
+
+### Development: User Secrets (OdysseyMvc2024)
+User Secrets is configured for OdysseyMvc2024. To set up on a new machine:
+```bash
+cd OdysseyRegistration\OdysseyMvc2024
+dotnet user-secrets set "ConnectionStrings:OdysseyConnection" "Server=localhost;Database=DB_12824_registration;User Id=sa;Password=YOUR_PASSWORD;TrustServerCertificate=True;"
+```
+- Stored at: `%APPDATA%\Microsoft\UserSecrets\{UserSecretsId}\secrets.json`
+- Password must match `OdysseyRegistration/sa_password.txt` (for Docker)
+- View secrets: `dotnet user-secrets list`
+
+### Docker: sa_password.txt
+- Use `OdysseyRegistration/sa_password.txt` for local Docker SQL Server password
+- Docker Secrets mount this as `/run/secrets/sa_password`
+- Do NOT commit this file to git
+
+### Production: WinHost Options
+1. **Environment Variables (Recommended)**: WinHost Control Panel → Site Manager → IIS Settings → Application Settings
+2. **appsettings.Production.json**: Create on server via FTP (not in source control)
+3. **Web.config** (Legacy .NET Framework): Use transforms or edit on server
+4. **Azure Key Vault** (Future): For Azure App Service migration
+
+See `.copilot/security.md` for detailed configuration instructions.
 
 ## Default workflow
 1. Ask for missing requirements before changing code
