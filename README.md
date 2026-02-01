@@ -11,17 +11,17 @@ This repository contains the code for the Judge and Tournament Registration webs
 
 | Folder                | Project Name                         | .NET Version       | Purpose             |
 |-----------------------|--------------------------------------|--------------------|---------------------|
-| /                     | EFCoreToolReverseEngineeringTest     | .NET 9.0           | ==TBD==    |
-| /                     | JudgeRegistrationRazor               | .NET 9.0           | ==TBD==    |
+| /                     | EFCoreToolReverseEngineeringTest     | .NET 10.0          | ==TBD==    |
+| /                     | JudgeRegistrationRazor               | .NET 10.0          | ==TBD==    |
 | /OdysseyRegistration/ | docker-compose                       | N/A                | Docker Compose project (.dcproj)<br />* Also builds the OdysseyRegistrationWebApi project.|
 | /OdysseyRegistration/ | init                                 | N/A                | SQL Server initialization files for the Docker Compose project |
 | /OdysseyRegistration/ | Odyssey.Database                     | SQL Server 2019 (==how can you tell which version?==)   | Database management project (.sqlproj) |
-| /OdysseyRegistration/ | OdysseyCoreMvc                       | .NET 9.0           | Unused (I think): Core MVC framework  |
+| /OdysseyRegistration/ | OdysseyCoreMvc                       | .NET 10.0          | Unused (I think): Core MVC framework  |
 | /OdysseyRegistration/ | OdysseyMvc4                          | .NET Framework 4.8 | MVC framework 4<br />**This is what is running in production today (01/01/2025).** |
 | /OdysseyRegistration/ | OdysseyMvc4.Tests                    | .NET Framework 4.8 | MVC framework 4 tests |
 | /OdysseyRegistration/ | OdysseyMvc2023                       | **.NET Framework 4.8** | MVC framework 2023, ==I think unused since it's .NET Framework==  |
-| /OdysseyRegistration/ | OdysseyMvc2024                       | .NET 9.0           | ==Is this the current project or is it the 2023 project? I think it's this one.== |
-| /OdysseyRegistration/ | OdysseyRegistrationWebApi            | .NET 9.0           | Web API for registration |
+| /OdysseyRegistration/ | OdysseyMvc2024                       | .NET 10.0          | ==Is this the current project or is it the 2023 project? I think it's this one.== |
+| /OdysseyRegistration/ | OdysseyRegistrationWebApi            | .NET 10.0          | Web API for registration |
 | /OdysseyRegistration/ | UpdateProblemSynopsesForRegistration | .NET Framework 4.8 | Update problem synopses, ==Need to figure out what this does and if it's worth keeping== |
 
 ## Technologies
@@ -39,7 +39,7 @@ The OdysseyMvc4 (original) and OdysseyMvc2023 (current? I think it's really Odys
 
 ## TODO
 
-1. [x] Update (all) the projects to use ASP.NET (Core) 9.0 or later.
+1. [x] Update (all) the projects to use ASP.NET (Core) 10.0 or later.
 2. [ ] Document how I added the SQL Project to Visual Studio and how to modify, use, and deploy it.
 3. [ ] Rolled back to EF 4.4 to make sure everything worked. See if the code works as-is with EF 6.x.
 4. [ ] Create Elmah test DB
@@ -82,8 +82,8 @@ The OdysseyMvc4 (original) and OdysseyMvc2023 (current? I think it's really Odys
 
 ## Safe storage of app secrets in development in ASP.NET Core
 
-1. Following <https://learn.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-9.0&tabs=windows>.
-   1. This article explains how to manage sensitive data for an ASP.NET Core app on a development machine. Never store passwords or other sensitive data in source code or configuration files. Production secrets shouldn't be used for development or test. Secrets shouldn't be deployed with the app. Production secrets should be accessed through a controlled means like Azure Key Vault. Azure test and production secrets can be stored and protected with the [Azure Key Vault configuration provider](https://learn.microsoft.com/aspnet/core/security/key-vault-configuration?view=aspnetcore-9.0).
+1. Following <https://learn.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-10.0&tabs=windows>.
+   1. This article explains how to manage sensitive data for an ASP.NET Core app on a development machine. Never store passwords or other sensitive data in source code or configuration files. Production secrets shouldn't be used for development or test. Secrets shouldn't be deployed with the app. Production secrets should be accessed through a controlled means like Azure Key Vault. Azure test and production secrets can be stored and protected with the [Azure Key Vault configuration provider](https://learn.microsoft.com/aspnet/core/security/key-vault-configuration?view=aspnetcore-10.0).
 2. Use Visual Studio
    1. In Visual Studio, right-click the project in Solution Explorer, and select **Manage User Secrets** from the context menu. This gesture adds a UserSecretsId element, populated with a GUID, to the project file.
    2. If `GenerateAssemblyInfo` is false/disabled, manually add the UserSecretsIdAttribute in AssemblyInfo.cs. For example:

@@ -1,6 +1,6 @@
 # Odyssey Registration System
 
-An ASP.NET Core 9.0 MVC application for managing Odyssey of the Mind tournament and judges registrations for regional tournaments.
+An ASP.NET Core 10.0 MVC application for managing Odyssey of the Mind tournament and judges registrations for regional tournaments.
 
 ## Overview
 
@@ -102,7 +102,7 @@ Email functionality includes:
 ## Technologies
 
 ### Backend
-- **.NET 9.0**: Latest .NET framework
+- **.NET 10.0**: Latest .NET framework
 - **ASP.NET Core MVC**: Web framework
 - **Entity Framework Core 8.0.8**: ORM for SQL Server
 - **ElmahCore 2.1.2**: Error logging and management
@@ -189,7 +189,7 @@ catch (Exception ex)
 
 ### Prerequisites
 - Visual Studio 2022 or later
-- .NET 9.0 SDK
+- .NET 10.0 SDK
 - SQL Server (Express or higher)
 
 ### Build
@@ -258,4 +258,4 @@ For issues or questions:
 
 ## Copyright
 
-Copyright © 2014-2025 Tardis Technologies. All rights reserved.
+Copyright © 2014-2026 Tardis Technologies. All rights reserved.

@@ -2,13 +2,13 @@
 
 ## What this repo is
 - ASP.NET registration system for NoVA North Odyssey of the Mind
-- Multiple projects in different stages of migration from .NET Framework to .NET 9.0
+- Multiple projects in different stages of migration from .NET Framework to .NET 10.0
 - Primary production site: OdysseyMvc4 (.NET Framework 4.8)
-- Target migration project: OdysseyMvc2024 (.NET 9.0)
-- Supporting WebAPI: OdysseyRegistrationWebApi (.NET 9.0)
+- Target migration project: OdysseyMvc2024 (.NET 10.0)
+- Supporting WebAPI: OdysseyRegistrationWebApi (.NET 10.0)
 
 ## Tech stack
-- .NET 9.0 (new projects) / .NET Framework 4.8 (legacy)
+- .NET 10.0 (new projects) / .NET Framework 4.8 (legacy)
 - ASP.NET MVC (controllers, not Minimal APIs)
 - Entity Framework Core (new) / Entity Framework 6.x (legacy)
 - SQL Server (running in Docker for local dev)
@@ -18,19 +18,19 @@
 ## Repo map
 ```
 /                                    → Solution root
-├── EFCoreToolReverseEngineeringTest → .NET 9.0 test project
-├── JudgeRegistrationRazor          → .NET 9.0 Razor Pages project
+├── EFCoreToolReverseEngineeringTest → .NET 10.0 test project
+├── JudgeRegistrationRazor          → .NET 10.0 Razor Pages project
 ├── OdysseyRegistration/            → Main project folder
 │   ├── docker-compose              → Docker Compose orchestration (.dcproj)
 │   ├── init/                       → SQL Server initialization scripts
 │   ├── Odyssey.Database/           → SQL Server database project (.sqlproj)
-│   ├── OdysseyCoreMvc/             → .NET 9.0 (unused?)
+│   ├── OdysseyCoreMvc/             → .NET 10.0 (unused?)
 │   ├── OdysseyMvc4/                → .NET Framework 4.8 (PRODUCTION)
 │   ├── OdysseyMvc4.Tests/          → .NET Framework 4.8 tests
 │   ├── OdysseyMvc2023/             → .NET Framework 4.8 (migration attempt)
-│   ├── OdysseyMvc2024/             → .NET 9.0 (current migration target)
-│   ├── OdysseyMvc2025/             → .NET 9.0 (future?)
-│   ├── OdysseyRegistrationWebApi/  → .NET 9.0 Web API
+│   ├── OdysseyMvc2024/             → .NET 10.0 (current migration target)
+│   ├── OdysseyMvc2025/             → .NET 10.0 (future?)
+│   ├── OdysseyRegistrationWebApi/  → .NET 10.0 Web API
 │   └── UpdateProblemSynopsesForRegistration/ → .NET Framework 4.8 utility
 ```
 
@@ -38,7 +38,7 @@
 - NEVER break OdysseyMvc4 (.NET Framework) - it's running in production
 - NEVER commit passwords, connection strings, or secrets to git
 - The sa_password.txt file must exist in OdysseyRegistration/OdysseyRegistration/ but NEVER commit it
-- Always pass CancellationToken through all async calls in .NET 9.0 projects
+- Always pass CancellationToken through all async calls in .NET 10.0 projects
 - No sync-over-async (no .Result/.Wait)
 - Problem table IDs start at 1 (not 0) - code must handle this
 - EventName must match region name or code will fail (needs better error handling)
@@ -95,7 +95,7 @@
 - Problem IDs changed from 0-based to 1-based (needs code updates)
 
 ## Migration status
-Copying OdysseyMvc4 (.NET Framework) to OdysseyMvc2024 (.NET 9.0):
+Copying OdysseyMvc4 (.NET Framework) to OdysseyMvc2024 (.NET 10.0):
 - ✅ BaseRegistrationController - Complete
 - ✅ HomeController - Complete
 - ✅ JudgesRegistrationController - Complete

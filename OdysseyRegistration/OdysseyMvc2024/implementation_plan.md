@@ -3,7 +3,7 @@
 [Overview]
 Fix Tournament Registration in OdysseyMvc2024 to make it fully functional by creating the missing EmailPartial view and ensuring the registration workflow works end-to-end.
 
-The OdysseyMvc2024 project is an ASP.NET Core 9.0 port of the original OdysseyMvc4 ASP.NET MVC 4 application. The Tournament Registration feature is a 10-page workflow that allows teams to register for Odyssey of the Mind tournaments. The primary issue is a missing email template view (`EmailPartial.cshtml`) that prevents the final registration page from displaying and sending confirmation emails.
+The OdysseyMvc2024 project is an ASP.NET Core 10.0 port of the original OdysseyMvc4 ASP.NET MVC 4 application. The Tournament Registration feature is a 10-page workflow that allows teams to register for Odyssey of the Mind tournaments. The primary issue is a missing email template view (`EmailPartial.cshtml`) that prevents the final registration page from displaying and sending confirmation emails.
 
 The original OdysseyMvc4 implementation works correctly and serves as the reference for this fix. Volunteer-related functionality has been intentionally disabled in both versions and will remain commented out per the user's request.
 

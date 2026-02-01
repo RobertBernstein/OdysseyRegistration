@@ -1,11 +1,11 @@
 # GitHub Copilot Instructions for Odyssey Registration System
 
 ## Project Overview
-This is an ASP.NET Core 9.0 MVC application for managing Odyssey of the Mind tournament and judges registrations. The system handles multi-page registration workflows for tournaments and judges, with email verification and database-driven configuration.
+This is an ASP.NET Core 10.0 MVC application for managing Odyssey of the Mind tournament and judges registrations. The system handles multi-page registration workflows for tournaments and judges, with email verification and database-driven configuration.
 
 ## Architecture
-- **Framework**: ASP.NET Core 9.0 MVC
-- **Database**: Entity Framework Core 8.0.8 with SQL Server
+- **Framework**: ASP.NET Core 10.0 MVC
+- **Database**: Entity Framework Core 10.0 with SQL Server
 - **Pattern**: Repository Pattern (`IOdysseyRepository` interface)
 - **Structure**: Traditional MVC with separate ViewData classes for strongly-typed views
 - **Error Logging**: ElmahCore 2.1.2
@@ -94,11 +94,11 @@ Every ViewData class should:
 5. Be strongly typed when passed to views
 
 ## Dependencies & Versions
-- **.NET**: 9.0
-- **Entity Framework Core**: 8.0.8
-- **Entity Framework Core SQL Server**: 8.0.8
+- **.NET**: 10.0
+- **Entity Framework Core**: 10.0.2
+- **Entity Framework Core SQL Server**: 10.0.2
 - **ElmahCore**: 2.1.2 (error logging)
-- **Microsoft.AspNetCore.SystemWebAdapters.CoreServices**: 1.4.0
+- **Microsoft.AspNetCore.SystemWebAdapters.CoreServices**: 2.2.1
 - **jQuery**: 3.7.1
 - **jQuery UI**: 1.13.2
 
