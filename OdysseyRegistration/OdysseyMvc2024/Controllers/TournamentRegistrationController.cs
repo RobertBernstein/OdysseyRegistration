@@ -737,23 +737,25 @@ namespace OdysseyMvc2024.Controllers
 
             short? tournamentRegistrationId1 = Repository.GetJudgeIdFromTournamentRegistrationId(id);
             short? nullable = tournamentRegistrationId1;
-            string errorMessage;
-            
+
+            Page10ViewData page10ViewData = new()
+            {
+                // TODO: (Rob) Is it okay to comment the following two lines out since they will be populated by SetBaseViewData, below?
+                // Config = Repository.Config,
+                // TournamentInfo = Repository.TournamentInfo,
+                TournamentRegistration = Repository.GetTournamentRegistrationById(id)
+            };
+
+            SetBaseViewData(page10ViewData);
+
             if ((nullable.HasValue ? new int?(nullable.GetValueOrDefault()) : new int?()).HasValue)
             {
-                Repository.UpdateJudgeRecordWithTournamentRegistrationId(tournamentRegistrationId1, id, out errorMessage);
+                Repository.UpdateJudgeRecordWithTournamentRegistrationId(tournamentRegistrationId1, id, out string errorMessage);
                 
                 if (!string.IsNullOrEmpty(errorMessage))
                 {
-                    Page10ViewData page10ViewData = new()
-                    {
-                        Config = Repository.Config,
-                        TournamentInfo = Repository.TournamentInfo,
-                        TournamentRegistration = Repository.GetTournamentRegistrationById(id),
-                        JudgeErrorMessage = errorMessage
-                    };
+                    page10ViewData.JudgeErrorMessage = errorMessage;
 
-                    SetBaseViewData(page10ViewData);
                     MailMessage mailMessage = BuildMessage(page10ViewData.Config["WebmasterEmail"], "Error: " + page10ViewData.RegionName + " Odyssey Region " + page10ViewData.RegionNumber + " Tournament Registration", "<p>Team with ID # " + (object)id + " attempted to re-register after its judge was assigned to the team.</p><p>" + errorMessage + "</p>", page10ViewData.Config["WebmasterEmail"], (string)null, (string)null);
                     page10ViewData.MailErrorMessage = SendMessage((BaseViewData)page10ViewData, mailMessage);
                     
@@ -779,32 +781,26 @@ namespace OdysseyMvc2024.Controllers
             //    }
             //}
 
-            Page10ViewData page10ViewData = new()
-            {
-                Config = Repository.Config,
-                TournamentInfo = Repository.TournamentInfo,
-                TournamentRegistration = Repository.GetTournamentRegistrationById(id)
-            };
+            // TODO: (Rob) Do we still need this?
+            //Page10ViewData page10ViewData2 = page10ViewData;
 
-            page10ViewData.TournamentInfo = Repository.TournamentInfo;
-            page10ViewData.TournamentRegistration = Repository.GetTournamentRegistrationById(id);
-            Page10ViewData page10ViewData2 = page10ViewData;
-            page10ViewData2.TournamentRegistration.TimeRegistered = new DateTime?(DateTime.Now);
-            Repository.UpdateTournamentRegistration(id, 10, page10ViewData2.TournamentRegistration);
-            SetBaseViewData((BaseViewData)page10ViewData2);
-            string judgeFirstName;
-            string judgeLastName;
-            Repository.GetJudgeNameFromJudgeId(tournamentRegistrationId1, out judgeFirstName, out judgeLastName);
-            page10ViewData2.JudgeFirstName = judgeFirstName;
-            page10ViewData2.JudgeLastName = judgeLastName;
-            page10ViewData2.SchoolName = Repository.GetSchoolNameFromSchoolId(page10ViewData2.TournamentRegistration.SchoolID);
-            page10ViewData2.ProblemName = Repository.GetProblemNameFromProblemId(page10ViewData2.TournamentRegistration.ProblemID);
-            page10ViewData2.Division = page10ViewData2.TournamentRegistration.Division == "0" ? "Primary" : page10ViewData2.TournamentRegistration.Division;
-            page10ViewData2.MailBody = GenerateEmailBody(page10ViewData2);
-            MailMessage mailMessage1 = BuildMessage(page10ViewData2.Config["WebmasterEmail"], page10ViewData2.RegionName + " Odyssey Region " + page10ViewData2.RegionNumber + " Tournament Registration", page10ViewData2.MailBody, page10ViewData2.TournamentRegistration.CoachEmailAddress, (string)null, (string)null);
-            page10ViewData2.MailErrorMessage = SendMessage((BaseViewData)page10ViewData2, mailMessage1);
+            page10ViewData.TournamentRegistration.TimeRegistered = new DateTime?(DateTime.Now);
+            Repository.UpdateTournamentRegistration(id, 10, page10ViewData.TournamentRegistration);
+
+            // TODO: (Rob) Do we still need this?
+            // SetBaseViewData((BaseViewData)page10ViewData);
+
+            Repository.GetJudgeNameFromJudgeId(tournamentRegistrationId1, out string judgeFirstName, out string judgeLastName);
+            page10ViewData.JudgeFirstName = judgeFirstName;
+            page10ViewData.JudgeLastName = judgeLastName;
+            page10ViewData.SchoolName = Repository.GetSchoolNameFromSchoolId(page10ViewData.TournamentRegistration.SchoolID);
+            page10ViewData.ProblemName = Repository.GetProblemNameFromProblemId(page10ViewData.TournamentRegistration.ProblemID);
+            page10ViewData.Division = page10ViewData.TournamentRegistration.Division == "0" ? "Primary" : page10ViewData.TournamentRegistration.Division;
+            page10ViewData.MailBody = GenerateEmailBody(page10ViewData);
+            MailMessage mailMessage1 = BuildMessage(page10ViewData.Config["WebmasterEmail"], page10ViewData.RegionName + " Odyssey Region " + page10ViewData.RegionNumber + " Tournament Registration", page10ViewData.MailBody, page10ViewData.TournamentRegistration.CoachEmailAddress, (string)null, (string)null);
+            page10ViewData.MailErrorMessage = SendMessage((BaseViewData)page10ViewData, mailMessage1);
             
-            return View(page10ViewData2);
+            return View(page10ViewData);
         }
 
         [HttpGet]
