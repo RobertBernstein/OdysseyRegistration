@@ -36,6 +36,7 @@
 
 ## Detailed Project Documentation
 - See `.copilot/odysseymvc4-architecture.md` for the **complete OdysseyMvc4 architecture reference** including: project structure, controller hierarchy, entity models, database schema, registration wizard flows, ViewData classes, multi-region support, email system, routing, client-side architecture, configuration, deployment profiles, business rules, and known issues.
+- See `.copilot/odysseymvc2024-architecture.md` for the **complete OdysseyMvc2024 architecture reference** including: project structure, DI-based controller hierarchy, EF Core Code First models, repository interface, NuGet dependencies, ViewData classes, migration status vs OdysseyMvc4, known issues, and decompilation artifacts.
 
 ## Hard rules (do not violate)
 - NEVER break OdysseyMvc4 (.NET Framework) - it's running in production

@@ -6,6 +6,7 @@ This directory contains project-specific instructions for GitHub Copilot CLI.
 
 - **instructions.md** - Main project instructions including repo structure, tech stack, workflows, and commands
 - **odysseymvc4-architecture.md** - **Comprehensive architecture reference for the OdysseyMvc4 production project** (ASP.NET MVC 5 / .NET Framework 4.8): full project structure, controller hierarchy, entity models, database schema, registration flow patterns, ViewData classes, multi-region support, email system, configuration, deployment, business rules, and known issues
+- **odysseymvc2024-architecture.md** - **Comprehensive architecture reference for the OdysseyMvc2024 migration target** (ASP.NET Core MVC / .NET 10.0): project structure, DI-based controller hierarchy, EF Core Code First models, repository interface, ViewData classes, migration status, key differences from OdysseyMvc4, known issues, and decompilation artifacts
 - **api-conventions.md** - API and controller patterns specific to this ASP.NET MVC project
 - **performance-reliability.md** - Database, EF, HTTP, caching, and logging best practices
 - **security.md** - Security rules for secrets management, authentication, and data protection
