@@ -16,6 +16,7 @@
   </Project>
   <Project Path="OdysseyMvc2023/OdysseyMvc2023.csproj" Id="61f704b8-472e-44c2-950b-76ac84104e24" />
   <Project Path="OdysseyMvc2024/OdysseyMvc2024.csproj" />
+  <Project Path="OdysseyMvc4.Tests.Unit/OdysseyMvc4.Tests.Unit.csproj" />
   <Project Path="OdysseyMvc4.Tests/OdysseyMvc4.Tests.csproj" Id="89c73e79-fe54-46fb-912e-556d0b044291">
     <Build Project="false" />
   </Project>

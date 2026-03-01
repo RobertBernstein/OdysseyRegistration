@@ -14,6 +14,7 @@
 // Assembly location: C:\Users\rob\OneDrive\Odyssey\OdysseyProd\registration\bin\OdysseyMvc4.dll
 
 using OdysseyMvc2024.ViewData;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -28,6 +29,12 @@ namespace OdysseyMvc2024.Controllers
 {
     public partial class JudgesRegistrationController : BaseRegistrationController
     {
+        // [SetsRequiredMembers] tells the compiler that this constructor initializes all 'required' members
+        // (specifically FriendlyRegistrationName from BaseRegistrationController). Without this attribute,
+        // external assemblies (such as the unit test project) cannot instantiate this class because the
+        // compiler enforces that callers set 'required' properties — even though this constructor already
+        // does so internally.
+        [SetsRequiredMembers]
         public JudgesRegistrationController(IOdysseyRepository repository)
             : base(repository)
         {

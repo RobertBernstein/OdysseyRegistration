@@ -15,6 +15,7 @@
 // Assembly location: C:\Users\rob\OneDrive\Odyssey\OdysseyProd\registration\bin\OdysseyMvc4.dll
 
 using System.Collections;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Net.Mail;
 using System.Text;
@@ -41,6 +42,12 @@ namespace OdysseyMvc2024.Controllers
         /// <param name="context">
         /// Database context for Odyssey entities
         /// </param>
+        // [SetsRequiredMembers] tells the compiler that this constructor initializes all 'required' members
+        // (specifically FriendlyRegistrationName from BaseRegistrationController). Without this attribute,
+        // external assemblies (such as the unit test project) cannot instantiate this class because the
+        // compiler enforces that callers set 'required' properties — even though this constructor already
+        // does so internally.
+        [SetsRequiredMembers]
         public TournamentRegistrationController(IOdysseyRepository repository)
             : base(repository)
         {
