@@ -34,6 +34,9 @@
 │   └── UpdateProblemSynopsesForRegistration/ → .NET Framework 4.8 utility
 ```
 
+## Detailed Project Documentation
+- See `.copilot/odysseymvc4-architecture.md` for the **complete OdysseyMvc4 architecture reference** including: project structure, controller hierarchy, entity models, database schema, registration wizard flows, ViewData classes, multi-region support, email system, routing, client-side architecture, configuration, deployment profiles, business rules, and known issues.
+
 ## Hard rules (do not violate)
 - NEVER break OdysseyMvc4 (.NET Framework) - it's running in production
 - NEVER commit passwords, connection strings, or secrets to git
