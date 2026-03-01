@@ -1,14 +1,30 @@
 # GitHub Copilot Instructions for Odyssey Registration System
 
 ## Project Overview
-This is an ASP.NET Core 10.0 MVC application for managing Odyssey of the Mind tournament and judges registrations. The system handles multi-page registration workflows for tournaments and judges, with email verification and database-driven configuration.
+This is an ASP.NET Core MVC application targeting **.NET 10.0** for managing Odyssey of the Mind tournament and judges registrations for Northern Virginia (NoVA North / NoVA South). The system handles multi-page registration workflows for tournaments and judges, with email verification and database-driven configuration.
+
+This project is a **migration target** — controllers and models were initially decompiled from the production OdysseyMvc4 .NET Framework 4.8 DLL using JetBrains decompiler, then manually cleaned up and modernized for ASP.NET Core.
+
+> **Comprehensive architecture reference**: See `../../.copilot/odysseymvc2024-architecture.md` for the full 40KB architecture document covering all entity models, controller details, ViewData classes, database schema, and known issues.
 
 ## Architecture
-- **Framework**: ASP.NET Core 10.0 MVC
-- **Database**: Entity Framework Core 10.0 with SQL Server
-- **Pattern**: Repository Pattern (`IOdysseyRepository` interface)
+- **Framework**: ASP.NET Core MVC (.NET 10.0 / `net10.0`)
+- **Database**: Entity Framework Core 10.0.2 with SQL Server provider (Code First with Migrations)
+- **Pattern**: Repository Pattern (`IOdysseyRepository` interface) with constructor-injected DI
 - **Structure**: Traditional MVC with separate ViewData classes for strongly-typed views
 - **Error Logging**: ElmahCore 2.1.2
+- **Migration Compatibility**: `Microsoft.AspNetCore.SystemWebAdapters` 1.7.0 for bridging legacy patterns
+- **User Secrets ID**: `4fc61b4d-cbaa-46ed-b907-349d6beff28e`
+
+## Migration Status
+| Controller | Status | Notes |
+|---|---|---|
+| BaseRegistrationController | ✅ Complete | Abstract base, constructor injection, `required` properties |
+| HomeController | ✅ Complete | Simple landing page |
+| JudgesRegistrationController | ✅ Complete | Full 3-page wizard with `GeneratedRegex` |
+| TournamentRegistrationController | ✅ Complete (code present) | Full 10-page wizard in code |
+| VolunteerRegistrationController | ❌ Not started | References commented out in repository |
+| CoachesTrainingRegistrationController | ❌ Not started | References commented out in repository |
 
 ## Coding Standards
 
@@ -20,36 +36,42 @@ This is an ASP.NET Core 10.0 MVC application for managing Odyssey of the Mind to
 - **Repository**: `OdysseyRepository` implementing `IOdysseyRepository`
 
 ### Controller Guidelines
-- **Inheritance**: All registration controllers inherit from `BaseRegistrationController`
-- **Dependency**: Use `OdysseyRepository` (protected field in base controller) for all database access
+- **Inheritance**: All registration controllers inherit from `BaseRegistrationController` (which is `abstract`)
+- **Dependency Injection**: `IOdysseyRepository` is constructor-injected (registered as Scoped in Program.cs)
+- **Repository Access**: Use `Repository` (protected field in base controller) for all database access — **never use OdysseyEntities DbContext directly**
 - **Registration Types**: Set `CurrentRegistrationType` enum (Tournament, Judges, CoachesTraining, Volunteer)
-- **Page Flow**: Follow sequential page-based pattern (Page01, Page02, ..., Page10)
+- **`required` Property**: `FriendlyRegistrationName` uses C# 11's `required` modifier — must be set in constructor
+- **Page Flow**: Follow sequential page-based pattern (Page01, Page02, ..., Page10); team `id` is passed via route parameter between pages (not session/TempData)
 - **State Management**: Check `CurrentRegistrationState` (Available, Closed, Down, Soon) before allowing registration
-- **Session Data**: Store intermediate registration data in session/TempData between pages
 - **Email Handling**: Use `BuildMessage()` and `SendMessage()` methods from base controller
-- **Error Handling**: Use ElmahCore for logging exceptions
+- **Error Handling**: Use `ElmahExtensions.RaiseError(exception)` for exception logging (not `ErrorSignal.FromCurrentContext().Raise()` — that's the old OdysseyMvc4 pattern)
 
 ### Registration State Logic
-The base controller provides methods to determine registration availability:
-- `IsRegistrationClosed()`: Checks against configured close date/time
-- `IsRegistrationComingSoon()`: Checks against configured open date/time
-- `IsRegistrationDown()`: Checks administrative down flag
-- All date/time comparisons use Eastern Standard Time zone
+The base controller implements a state machine that controls registration availability:
+- **States**: `RegistrationState.Soon`, `Down`, `Closed`, `Available`
+- **Config keys**: `{Type}RegistrationIsAvailable` and `{Type}RegistrationIsDown` (True/False strings)
+- **Priority**: Down > Closed > Soon > Available
+- All date/time comparisons use `TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time")`
+- Every page action checks state and redirects to the corresponding shared view (Soon.cshtml, Down.cshtml, Closed.cshtml)
 
 ### View Guidelines
 - **Strongly-typed views**: Always use ViewData classes that inherit from `BaseViewData`
-- **CSS files**: Three available - `Site.css` (base), `NovaNorth.css`, `NovaSouth.css`
-- **Site detection**: System automatically determines site (NovaNorth vs NovaSouth) from URL
-- **JavaScript**: jQuery 3.7.1 and jQuery UI 1.13.2 available globally
+- **CSS files**: Two region-specific stylesheets — `NovaNorth.css` and `NovaSouth.css` in `wwwroot/css/`
+- **Region detection**: Determined by `Config["RegionName"]` from Config table (not URL-based like OdysseyMvc4)
+- **CSS path**: Use `~/css/NovaNorth.css` (not `~/Content/` — that was the OdysseyMvc4 pattern)
+- **JavaScript**: jQuery 3.7.1, jQuery Validate 1.21.0, jQuery UI 1.14.1, InputMask 5.0.9 (all via CDN)
 - **Shared views**: Error and status pages in `Views/Shared/` (Error.cshtml, BadEmail.cshtml, Closed.cshtml, Down.cshtml, Soon.cshtml)
-- **Layout**: Use `_Layout.cshtml` in Shared folder
+- **Layout**: `_Layout.cshtml` in Shared folder, uses `@Model.PathToSiteCssFile` for region CSS and `@Model.Config["HomePage"]` for home link
 
 ### Database Access Pattern
-- **Never use `OdysseyEntities` directly** in controllers
-- **Always use `IOdysseyRepository` interface** through the `Repository` property
-- **Async/await**: Use async methods for all database operations when possible
-- **Entity models**: Located in `Models/` folder
-- **Migrations**: Entity Framework Core migrations in `Migrations/` folder
+- **Never use `OdysseyEntities` directly** in controllers — always use `IOdysseyRepository`
+- **DI Registration**: `OdysseyEntities` registered via `AddDbContext<>`, `IOdysseyRepository` registered as `Scoped` in Program.cs
+- **Note**: `IOdysseyEntities` registration is **commented out** in Program.cs — the DbContext is injected directly into `OdysseyRepository`
+- **Routing**: `MapDefaultControllerRoute()` → `{controller=Home}/{action=Index}/{id?}`
+- **Async Note**: Repository methods are currently synchronous (using `SaveChanges()` not `SaveChangesAsync()`) — this is a known technical debt
+- **Entity models**: Located in `Models/` folder, decompiled from OdysseyMvc4 with nullable reference types added
+- **Migrations**: Single `InitialCreate` migration (2024-10-05) in `Migrations/` folder
+- **SQL Server Resilience**: `EnableRetryOnFailure(maxRetryCount: 5, maxRetryDelay: 10s)` and `CommandTimeout(60)`
 
 ### Repository Interface Methods
 Key methods available in `IOdysseyRepository`:
@@ -61,29 +83,60 @@ Key methods available in `IOdysseyRepository`:
 
 ## Project-Specific Patterns
 
+### Critical Constants and Business Rules
+- **Problem ID 0** = "Not Specified"
+- **Problem ID 6** = Primary (hardcoded as `ThePrimaryProblemNumber`)
+- **Problem ID 7** = Spontaneous (hardcoded as `TheSpontaneousProblemNumber`)
+- **Config table** uses `Name` (string) as primary key — it's a key-value store, not auto-increment
+- **TournamentRegistration.Id** is mapped to the `TeamID` column via `[Column("TeamID")]`
+- **Judge column mapping**: `InformationMailed_` → `"InformationMailed?"` and `AttendedJT_` → `"AttendedJT?"` (legacy DB has `?` in column names)
+- **Schools filter**: Only schools with `Membership_1seen == "yes"` appear in dropdowns
+- **Division calculation**: K-2 → Primary (0), 3-5 → Div 1, 6-8 → Div 2, 9-12 → Div 3; team division = highest member division
+- **EventName must match RegionName**: `TournamentInfo` query does `EventName.StartsWith(RegionName) && EventName.Contains("Tournament")` — throws if no match
+- **Volunteer functionality is disabled**: Page04 passes through without doing anything (code commented out)
+
 ### Multi-Page Registration Flow
 1. Each registration type (Tournament/Judges) has multiple pages (Page01, Page02, etc.)
 2. Each page has corresponding ViewData class in `ViewData/{RegistrationType}/` folder
 3. ViewData classes inherit from `BaseViewData` for common properties
-4. Page number passed to repository Update methods to handle page-specific validation
-5. Sequential progression through pages with data validation at each step
-6. Email verification required before completion
+4. Page number passed to repository Update methods to handle page-specific field mapping
+5. Sequential progression through pages with data validation at each step; `id` (TeamID/JudgeID) passed via route parameter
+6. Email verification/sending on final confirmation page
+7. Each page action checks `CurrentRegistrationState` before proceeding
+
+### Tournament Registration Pages (10 Pages)
+| Page | Purpose | Data |
+|---|---|---|
+| Page01 | Welcome + fees | Creates record (TimeRegistrationStarted, TeamRegistrationFee, UserAgent) |
+| Page02 | School selection | SchoolID |
+| Page03 | Judge assignment | JudgeID (lookup by ID + name) |
+| Page04 | Volunteer (disabled) | Passes through — volunteer logic commented out |
+| Page05 | Coach info | Coach + alt coach (name, address, phones, email) |
+| Page06 | Team members | Up to 7 members (first name, last name, grade K-12) |
+| Page07 | Problem/division | ProblemID, Division (auto-calc), Spontaneous flag |
+| Page08 | Special considerations | SchedulingIssues, SpecialConsiderations |
+| Page09 | Review summary | Read-only display of all data |
+| Page10 | Confirmation | Assigns judge→team, sets TimeRegistered, sends email |
 
 ### Email System
-- **Email configuration**: Stored in Config dictionary (EmailServer, WebmasterEmail, WebmasterEmailPassword)
-- **SMTP handling**: Built-in retry logic for mailbox busy/unavailable
+- **Email configuration**: Stored in Config dictionary (`SmtpHost`, `WebmasterEmail`, `WebmasterEmailPassword`)
+- **SMTP handling**: Uses `System.Net.Mail.SmtpClient` (not yet migrated to MailKit — known tech debt)
+- **Email body generation**: `GenerateEmailBody()` renders `TournamentRegistration/EmailPartial` view via `ICompositeViewEngine`
+- **⚠️ Sync-over-async**: `partialView.View.RenderAsync(viewContext).Wait()` — violates no sync-over-async rule, needs fix
+- **Email validation**: `BuildMessage()` returns `null` on invalid email — controller redirects to `BadCoachEmail`/`BadAltCoachEmail`
 - **Error views**: Separate views for different email errors
-  - `BadEmail.cshtml`: Generic bad email
+  - `BadEmail.cshtml`: Generic bad email (shared)
   - `BadCoachEmail.cshtml`: Invalid coach email in tournament registration
   - `BadAltCoachEmail.cshtml`: Invalid alternate coach email
 - **Email methods**: `BuildMessage()` constructs MailMessage, `SendMessage()` handles sending with error handling
 
 ### Configuration System
-- **Database-driven**: All configuration in Config dictionary from database
-- **Region settings**: `RegionName` and `RegionNumber` from repository
-- **Event information**: `TournamentInfo` and `JudgesInfo` properties
-- **Date/time settings**: Registration open/close times per registration type
-- **Feature flags**: "Is{RegistrationType}RegistrationDown" administrative toggles
+- **Database-driven**: All configuration in `Config` dictionary loaded from Config table (string key-value pairs)
+- **Loaded in constructor**: `OdysseyRepository` constructor loads all Config rows into a `Dictionary<string, string>` and adds computed `EndYear` key
+- **Region settings**: `RegionName` and `RegionNumber` from Config dictionary
+- **Event information**: `TournamentInfo` and `JudgesInfo` — lazily loaded from Events table
+- **Critical Config keys**: `RegionName`, `RegionNumber`, `Year`, `HomePage`, `WebmasterEmail`, `WebmasterEmailPassword`, `SmtpHost`, `AcceptingPayPal`, `WillHaveVolunteerRegistration`, `TournamentRegistrationIsAvailable`, `JudgesRegistrationIsAvailable`, `TournamentRegistrationIsDown`, `JudgesRegistrationIsDown`, `TournamentRegistrationCloseDateTime`
+- **Feature flags**: `{Type}RegistrationIsDown` and `{Type}RegistrationIsAvailable` (True/False strings)
 
 ### ViewData Pattern
 Every ViewData class should:
@@ -98,9 +151,12 @@ Every ViewData class should:
 - **Entity Framework Core**: 10.0.2
 - **Entity Framework Core SQL Server**: 10.0.2
 - **ElmahCore**: 2.1.2 (error logging)
-- **Microsoft.AspNetCore.SystemWebAdapters.CoreServices**: 2.2.1
+- **Microsoft.AspNetCore.SystemWebAdapters.CoreServices**: 1.7.0
+- **Azure.Identity**: 1.14.2
 - **jQuery**: 3.7.1
-- **jQuery UI**: 1.13.2
+- **jQuery Validate**: 1.21.0
+- **jQuery UI**: 1.14.1
+- **InputMask**: 5.0.9
 
 ## When Generating Code
 
@@ -140,8 +196,7 @@ Views/
   JudgesRegistration/      - Page01 through Page03
 Migrations/          - EF Core migrations
 wwwroot/
-  css/               - Site.css, NovaNorth.css, NovaSouth.css
-  Scripts/           - jQuery and jQuery UI
+  css/               - NovaNorth.css, NovaSouth.css (region-specific stylesheets)
 ```
 
 ## Common Tasks
@@ -152,7 +207,7 @@ wwwroot/
 3. Create corresponding view in `Views/{RegistrationType}/Page{N}.cshtml`
 4. Add controller action methods (GET and POST) to handle the page
 5. Update repository `Update{RegistrationType}` method to handle new page number
-6. Store intermediate data in TempData/Session for next page
+6. Pass the record `id` via route parameter between pages (not TempData/Session)
 
 ### Adding a New Field to Registration
 1. Update entity model in `Models/`
@@ -173,7 +228,7 @@ wwwroot/
 - Date/time parsing should use TryParse to handle invalid dates
 - Email sending includes retry logic for transient failures
 - All exceptions should be logged with ElmahCore
-- Multi-page workflows require session state testing
+- Multi-page workflows pass `id` via route parameter — test page transitions with valid IDs
 
 ## Docker & Development Environment
 
