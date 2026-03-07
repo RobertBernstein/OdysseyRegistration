@@ -68,3 +68,10 @@ Choose one of these approaches:
 - Review security warnings in build output
 - Address vulnerability scan findings promptly
 - Test security changes in dev environment first
+
+## Red zones (require human review before merging)
+Changes touching any of the following areas must include tests, a written risk assessment, and a rollback note:
+- Authentication / authorization
+- Billing / payments
+- Database migrations
+- Security configuration

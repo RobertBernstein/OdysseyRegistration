@@ -28,3 +28,14 @@
 - Use [Authorize] attribute to protect endpoints
 - Never expose sensitive data in responses or logs
 - Validate and sanitize all user inputs
+
+## Public endpoint checklist
+Any public endpoint change must include:
+- Auth decision (who can call it?)
+- Validation behavior documented
+- Error contract using ProblemDetails
+
+## Code style
+- Nullable stays enabled — do not disable nullable warnings.
+- No new NuGet dependencies without justification.
+- Prefer explicit error handling over happy-path-only code.

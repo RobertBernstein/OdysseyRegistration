@@ -95,10 +95,13 @@ See `.copilot/security.md` for detailed configuration instructions.
 6. Verify OdysseyMvc4 still works if touched
 
 ## Commands
-### Build & Run
+### Build & Test (mandatory)
 - Build solution: `dotnet build OdysseyRegistration.slnx`
-- Run WebAPI: `dotnet run --project OdysseyRegistration\OdysseyRegistrationWebApi`
 - Run tests: `dotnet test OdysseyRegistration\OdysseyMvc4.Tests`
+- If tests fail: fix until green before summarizing.
+
+### Run
+- Run WebAPI: `dotnet run --project OdysseyRegistration\OdysseyRegistrationWebApi`
 
 ### Docker
 - Start environment: Set docker-compose as startup project, F5 in VS 2022
