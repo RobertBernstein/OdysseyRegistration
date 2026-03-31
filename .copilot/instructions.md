@@ -135,3 +135,55 @@ Copying OdysseyMvc4 (.NET Framework) to OdysseyMvc2024 (.NET 10.0):
 - For .NET Framework changes, note potential compatibility issues
 - When touching database, mention both init/ and root copies
 - Provide Docker and connection string changes separately
+
+## Commit messages
+Use **Conventional Commits** format for all commit messages.
+
+### First line (subject)
+```
+type(scope): short imperative description
+```
+- Max 72 characters
+- Lowercase, no trailing period
+- Use imperative mood ("add", "fix", "update" — not "added" or "adds")
+
+### Types
+| Type | When to use |
+|---|---|
+| `feat` | New feature or behavior |
+| `fix` | Bug fix |
+| `docs` | Documentation / instruction file changes only |
+| `refactor` | Code restructuring with no behavior change |
+| `test` | Adding or updating tests |
+| `chore` | Build, tooling, dependency updates |
+| `style` | Formatting, naming (no logic change) |
+| `perf` | Performance improvement |
+
+### Scopes (project-specific)
+| Scope | Area |
+|---|---|
+| `mvc4` | OdysseyMvc4 (production) |
+| `mvc2024` | OdysseyMvc2024 (migration target) |
+| `webapi` | OdysseyRegistrationWebApi |
+| `db` | Database schema / migrations / init scripts |
+| `docker` | Docker Compose / container configuration |
+| `docs` | `.copilot/` instruction files |
+| `deps` | NuGet / package updates |
+
+### Body
+- Blank line between subject and body
+- Bullet points for each logical change
+- Explain *what* changed and *why* (not how)
+- Finish with one sentence on the impact or purpose
+
+### Example
+```
+feat(mvc2024): add Page05 coach info to tournament registration
+
+- Added Page05ViewData with coach name, address, phone, and email fields
+- Added GET/POST actions to TournamentRegistrationController
+- POST validates email format and redirects to BadCoachEmail on failure
+- Added Page05.cshtml view with InputMask for phone number fields
+
+Completes the coach information step in the 10-page tournament wizard.
+```
