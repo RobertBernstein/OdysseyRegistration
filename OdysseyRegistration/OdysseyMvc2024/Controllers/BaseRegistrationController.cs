@@ -158,6 +158,29 @@ namespace OdysseyMvc2024.Controllers
         }
 
         /// <summary>
+        /// Handle HTTP POST requests for the Closed page.
+        /// </summary>
+        /// <returns>
+        /// An ActionResult that sends the caller back to the home page.
+        /// </returns>
+        /// <remarks>
+        /// The ActionName attribute specifies the name of the function for which the MVC routing will search.
+        /// </remarks>
+        [ActionName("Closed")]
+        [HttpPost]
+        public ActionResult ClosedPost()
+        {
+            BaseViewData baseViewData = new()
+            {
+                Config = Repository.Config,
+                TournamentInfo = Repository.TournamentInfo
+            };
+
+            SetBaseViewData(baseViewData);
+            return Redirect(baseViewData.Config["HomePage"]);
+        }
+
+        /// <summary>
         /// Determines the appropriate CSS file to use based on the current page URL.
         /// </summary>
         /// <remarks>
@@ -223,6 +246,29 @@ namespace OdysseyMvc2024.Controllers
         }
 
         /// <summary>
+        /// Handle HTTP POST requests for the Down page.
+        /// </summary>
+        /// <returns>
+        /// A RedirectResult that sends the user back to the home page.
+        /// </returns>
+        /// <remarks>
+        /// The ActionName attribute specifies the name of the function for which the MVC routing will search.
+        /// </remarks>
+        [ActionName("Down")]
+        [HttpPost]
+        public ActionResult DownPost()
+        {
+            BaseViewData baseViewData = new()
+            {
+                Config = Repository.Config,
+                TournamentInfo = Repository.TournamentInfo
+            };
+
+            SetBaseViewData(baseViewData);
+            return Redirect(baseViewData.Config["HomePage"]);
+        }
+
+        /// <summary>
         /// Handle HTTP GET requests for the Error page.
         /// </summary>
         /// <returns>
@@ -273,6 +319,20 @@ namespace OdysseyMvc2024.Controllers
                 ? "Coaches Training Registration"
                 : $"{this.CurrentRegistrationType} Registration";
         }
+
+        /// <summary>
+        /// Gets the registration type name that is displayed to the user when they browse to the web page, e.g.
+        /// Judges, Tournament.
+        /// </summary>
+        /// <returns>
+        /// The <see cref="string"/> displayed to the user for the current registration type when they browse to the
+        /// web page.
+        /// </returns>
+        /// <remarks>
+        /// This method is an alias for <see cref="GetFriendlyRegistrationName"/> to maintain backward compatibility
+        /// with OdysseyMvc4.
+        /// </remarks>
+        public string GetDisplayableRegistrationName() => GetFriendlyRegistrationName();
 
         /// <summary>
         /// Determine whether the specified registration is closed based on the Config

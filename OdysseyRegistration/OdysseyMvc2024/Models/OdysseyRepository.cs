@@ -124,12 +124,12 @@ namespace OdysseyMvc2024.Models
         ///// <summary>
         ///// The list of Coaches Training regions.
         ///// </summary>
-        // private IEnumerable<CoachesTrainingRegion> regions;
+        //private IEnumerable<CoachesTrainingRegion>? _regions;
 
         ///// <summary>
         ///// The list of Coaches Training roles.
         ///// </summary>
-        // private IEnumerable<CoachesTrainingRole> roles;
+        //private IEnumerable<CoachesTrainingRole>? _roles;
 
         /// <summary>
         /// The list of schools participating in Odyssey this season.
@@ -576,34 +576,28 @@ namespace OdysseyMvc2024.Models
         ///// <summary>
         ///// Gets the regions.
         ///// </summary>
-        // public IEnumerable<CoachesTrainingRegion> Regions
-        // {
-        //     get
-        //     {
-        //         // If _problems is null, run the LINQ query, assign the result to Problems, and return the result
-        //         // - Skip ProblemID 0, which is "Not Specified"
-        //         return this.regions ?? (this.Regions = from r in this.context.CoachesTrainingRegions
-        //             orderby r.ID
-        //             select r);
-        //     }
-        //
-        //     private set
-        //     {
-        //         this.regions = value;
-        //     }
-        // }
-        //
-        // public IEnumerable<CoachesTrainingRegion> Regions
-        // {
-        //   get
-        //   {
-        //     IEnumerable<CoachesTrainingRegion> regions = this.regions;
-        //     if (regions == null)
-        //       regions = this.Regions = (IEnumerable<CoachesTrainingRegion>) Queryable.OrderBy<CoachesTrainingRegion, int>((IQueryable<CoachesTrainingRegion>) this.context.CoachesTrainingRegions, (Expression<Func<CoachesTrainingRegion, int>>) (r => r.ID));
-        //     return regions;
-        //   }
-        //   private set => this.regions = value;
-        // }
+        //public IEnumerable<CoachesTrainingRegion>? Regions
+        //{
+        //    get
+        //    {
+        //        // If _problems is null, run the LINQ query, assign the result to Problems, and return the result
+        //        // - Skip ProblemID 0, which is "Not Specified"
+        //        return _regions ?? (Regions = from r in _context.CoachesTrainingRegions
+        //            orderby r.ID
+        //            select r);
+        //    }
+
+        //    private set
+        //    {
+        //        _regions = value;
+        //    }
+        //}
+
+        //public IEnumerable<CoachesTrainingRole>? Roles
+        //{
+        //    get => _roles ?? (Roles = _context.CoachesTrainingRoles.OrderBy(r => r.ID));
+        //    private set => _roles = value;
+        //}
 
         ///// <summary>
         ///// Gets the roles.
