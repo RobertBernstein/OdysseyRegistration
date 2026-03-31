@@ -1,4 +1,5 @@
 using FluentAssertions;
+using Microsoft.AspNetCore.Mvc;
 using Moq;
 using OdysseyMvc2024.Controllers;
 using OdysseyMvc2024.Models;
@@ -423,6 +424,782 @@ public class JudgesRegistrationControllerTests
 
     #endregion
 
+    #region Index Tests
+
+    [Fact]
+    public void Index_ReturnsRedirectToAction()
+    {
+        var result = _controller.Index();
+
+        result.Should().BeOfType<RedirectToActionResult>();
+    }
+
+    [Fact]
+    public void Index_RedirectsToPage01()
+    {
+        var result = _controller.Index() as RedirectToActionResult;
+
+        result!.ActionName.Should().Be("Page01");
+    }
+
+    #endregion
+
+    #region Page01 Tests
+
+    [Fact]
+    public void Page01_WhenRegistrationAvailable_ReturnsViewResult()
+    {
+        var result = _controller.Page01();
+
+        result.Should().BeOfType<ViewResult>();
+    }
+
+    [Fact]
+    public void Page01_WhenRegistrationAvailable_ReturnsPage01ViewData()
+    {
+        var result = _controller.Page01() as ViewResult;
+
+        result!.Model.Should().BeOfType<Page01ViewData>();
+    }
+
+    [Fact]
+    public void Page01_WhenRegistrationAvailable_SetsMailRegionalDirectorHyperLink()
+    {
+        var result = _controller.Page01() as ViewResult;
+        var viewData = result!.Model as Page01ViewData;
+
+        viewData!.MailRegionalDirectorHyperLink.Should().NotBeNullOrEmpty();
+        viewData.MailRegionalDirectorHyperLink.Should().StartWith("mailto:");
+    }
+
+    [Fact]
+    public void Page01_WhenRegistrationAvailable_SetsMailRegionalDirectorHyperLinkText()
+    {
+        var result = _controller.Page01() as ViewResult;
+        var viewData = result!.Model as Page01ViewData;
+
+        viewData!.MailRegionalDirectorHyperLinkText.Should().NotBeNullOrEmpty();
+        viewData.MailRegionalDirectorHyperLinkText.Should().Contain("send an e-mail to");
+    }
+
+    [Fact]
+    public void Page01_WhenRegistrationAvailable_RetrievesJudgesInfoFromRepository()
+    {
+        _controller.Page01();
+
+        _mockRepo.Verify(r => r.JudgesInfo, Times.AtLeastOnce);
+    }
+
+    [Fact]
+    public void Page01_WhenRegistrationAvailable_CallsSetBaseViewData()
+    {
+        _controller.Page01();
+
+        _mockRepo.Verify(r => r.Config, Times.AtLeastOnce);
+        _mockRepo.Verify(r => r.TournamentInfo, Times.AtLeastOnce);
+    }
+
+    [Fact]
+    public void Page01_WhenRegistrationClosed_RedirectsToClosedPage()
+    {
+        _mockRepo.Setup(r => r.Config).Returns(CreateConfigWithClosedRegistration());
+
+        var result = _controller.Page01();
+
+        result.Should().BeOfType<RedirectToActionResult>();
+        var redirectResult = result as RedirectToActionResult;
+        redirectResult!.ActionName.Should().Be("Closed");
+    }
+
+    [Fact]
+    public void Page01_WhenRegistrationDown_RedirectsToDownPage()
+    {
+        _mockRepo.Setup(r => r.Config).Returns(CreateConfigWithDownRegistration());
+
+        var result = _controller.Page01();
+
+        result.Should().BeOfType<RedirectToActionResult>();
+        var redirectResult = result as RedirectToActionResult;
+        redirectResult!.ActionName.Should().Be("Down");
+    }
+
+    [Fact]
+    public void Page01_WhenRegistrationComingSoon_RedirectsToSoonPage()
+    {
+        _mockRepo.Setup(r => r.Config).Returns(CreateConfigWithComingSoonRegistration());
+
+        var result = _controller.Page01();
+
+        result.Should().BeOfType<RedirectToActionResult>();
+        var redirectResult = result as RedirectToActionResult;
+        redirectResult!.ActionName.Should().Be("Soon");
+    }
+
+    #endregion
+
+    #region Page01Post Tests
+
+    [Fact]
+    public void Page01Post_WhenRegistrationAvailable_CreatesNewJudge()
+    {
+        var result = _controller.Page01Post();
+
+        _mockRepo.Verify(r => r.AddJudge(It.IsAny<Judge>()), Times.Once);
+    }
+
+    [Fact]
+    public void Page01Post_WhenRegistrationAvailable_RedirectsToPage02()
+    {
+        var result = _controller.Page01Post();
+
+        result.Should().BeOfType<RedirectToActionResult>();
+        var redirectResult = result as RedirectToActionResult;
+        redirectResult!.ActionName.Should().Be("Page02");
+    }
+
+    [Fact]
+    public void Page01Post_WhenRegistrationAvailable_PassesJudgeIdToPage02()
+    {
+        var newJudge = new Judge { JudgeID = 123 };
+        _mockRepo.Setup(r => r.AddJudge(It.IsAny<Judge>()))
+            .Callback<Judge>(j => j.JudgeID = newJudge.JudgeID);
+
+        var result = _controller.Page01Post() as RedirectToActionResult;
+
+        result!.RouteValues.Should().ContainKey("id");
+        result.RouteValues!["id"].Should().Be(123);
+    }
+
+    [Fact]
+    public void Page01Post_WhenRegistrationAvailable_SetsTimeRegistrationStarted()
+    {
+        Judge? capturedJudge = null;
+        _mockRepo.Setup(r => r.AddJudge(It.IsAny<Judge>()))
+            .Callback<Judge>(j => capturedJudge = j);
+
+        _controller.Page01Post();
+
+        capturedJudge.Should().NotBeNull();
+        capturedJudge!.TimeRegistrationStarted.Should().BeCloseTo(DateTime.Now, TimeSpan.FromSeconds(5));
+    }
+
+    [Fact]
+    public void Page01Post_WhenRegistrationAvailable_SetsUserAgent()
+    {
+        Judge? capturedJudge = null;
+        _mockRepo.Setup(r => r.AddJudge(It.IsAny<Judge>()))
+            .Callback<Judge>(j => capturedJudge = j);
+
+        _controller.Page01Post();
+
+        capturedJudge.Should().NotBeNull();
+        capturedJudge!.UserAgent.Should().NotBeNull();
+    }
+
+    [Fact]
+    public void Page01Post_WhenRegistrationClosed_RedirectsToClosedPage()
+    {
+        _mockRepo.Setup(r => r.Config).Returns(CreateConfigWithClosedRegistration());
+
+        var result = _controller.Page01Post();
+
+        result.Should().BeOfType<RedirectToActionResult>();
+        var redirectResult = result as RedirectToActionResult;
+        redirectResult!.ActionName.Should().Be("Closed");
+    }
+
+    [Fact]
+    public void Page01Post_WhenRegistrationClosed_DoesNotCreateJudge()
+    {
+        _mockRepo.Setup(r => r.Config).Returns(CreateConfigWithClosedRegistration());
+
+        _controller.Page01Post();
+
+        _mockRepo.Verify(r => r.AddJudge(It.IsAny<Judge>()), Times.Never);
+    }
+
+    [Fact]
+    public void Page01Post_WhenRegistrationDown_RedirectsToDownPage()
+    {
+        _mockRepo.Setup(r => r.Config).Returns(CreateConfigWithDownRegistration());
+
+        var result = _controller.Page01Post();
+
+        result.Should().BeOfType<RedirectToActionResult>();
+        var redirectResult = result as RedirectToActionResult;
+        redirectResult!.ActionName.Should().Be("Down");
+    }
+
+    [Fact]
+    public void Page01Post_WhenRegistrationComingSoon_RedirectsToSoonPage()
+    {
+        _mockRepo.Setup(r => r.Config).Returns(CreateConfigWithComingSoonRegistration());
+
+        var result = _controller.Page01Post();
+
+        result.Should().BeOfType<RedirectToActionResult>();
+        var redirectResult = result as RedirectToActionResult;
+        redirectResult!.ActionName.Should().Be("Soon");
+    }
+
+    [Fact]
+    public void Page01Post_WhenAddJudgeThrowsException_RedirectsToHomeIndex()
+    {
+        _mockRepo.Setup(r => r.AddJudge(It.IsAny<Judge>()))
+            .Throws(new InvalidOperationException("Database error"));
+
+        var result = _controller.Page01Post();
+
+        result.Should().BeOfType<RedirectToActionResult>();
+        var redirectResult = result as RedirectToActionResult;
+        redirectResult!.ActionName.Should().Be("Index");
+        redirectResult.ControllerName.Should().Be("Home");
+    }
+
+    #endregion
+
+    #region Page02 GET Tests
+
+    [Fact]
+    public void Page02Get_WhenRegistrationAvailable_ReturnsViewResult()
+    {
+        var result = _controller.Page02(1);
+
+        result.Should().BeOfType<ViewResult>();
+    }
+
+    [Fact]
+    public void Page02Get_WhenRegistrationAvailable_ReturnsPage02ViewData()
+    {
+        var result = _controller.Page02(1) as ViewResult;
+
+        result!.Model.Should().BeOfType<Page02ViewData>();
+    }
+
+    [Fact]
+    public void Page02Get_WhenRegistrationAvailable_PopulatesTshirtSizes()
+    {
+        var result = _controller.Page02(1) as ViewResult;
+        var viewData = result!.Model as Page02ViewData;
+
+        viewData!.TshirtSizes.Should().NotBeNull();
+    }
+
+    [Fact]
+    public void Page02Get_WhenRegistrationAvailable_PopulatesProblemChoices()
+    {
+        var result = _controller.Page02(1) as ViewResult;
+        var viewData = result!.Model as Page02ViewData;
+
+        viewData!.ProblemChoices.Should().NotBeNull();
+    }
+
+    [Fact]
+    public void Page02Get_WhenRegistrationAvailable_CallsSetBaseViewData()
+    {
+        _controller.Page02(1);
+
+        _mockRepo.Verify(r => r.Config, Times.AtLeastOnce);
+        _mockRepo.Verify(r => r.TournamentInfo, Times.AtLeastOnce);
+    }
+
+    [Fact]
+    public void Page02Get_WhenRegistrationClosed_RedirectsToClosedPage()
+    {
+        _mockRepo.Setup(r => r.Config).Returns(CreateConfigWithClosedRegistration());
+
+        var result = _controller.Page02(1);
+
+        result.Should().BeOfType<RedirectToActionResult>();
+        var redirectResult = result as RedirectToActionResult;
+        redirectResult!.ActionName.Should().Be("Closed");
+    }
+
+    [Fact]
+    public void Page02Get_WhenRegistrationDown_RedirectsToDownPage()
+    {
+        _mockRepo.Setup(r => r.Config).Returns(CreateConfigWithDownRegistration());
+
+        var result = _controller.Page02(1);
+
+        result.Should().BeOfType<RedirectToActionResult>();
+        var redirectResult = result as RedirectToActionResult;
+        redirectResult!.ActionName.Should().Be("Down");
+    }
+
+    [Fact]
+    public void Page02Get_WhenRegistrationComingSoon_RedirectsToSoonPage()
+    {
+        _mockRepo.Setup(r => r.Config).Returns(CreateConfigWithComingSoonRegistration());
+
+        var result = _controller.Page02(1);
+
+        result.Should().BeOfType<RedirectToActionResult>();
+        var redirectResult = result as RedirectToActionResult;
+        redirectResult!.ActionName.Should().Be("Soon");
+    }
+
+    #endregion
+
+    #region Page02 POST Tests
+
+    [Fact]
+    public void Page02Post_WhenRegistrationAvailable_AndModelStateValid_UpdatesJudge()
+    {
+        var viewData = CreateValidPage02ViewData();
+
+        _controller.Page02(1, viewData);
+
+        _mockRepo.Verify(r => r.UpdateJudge(1, 2, It.IsAny<Judge>()), Times.Once);
+    }
+
+    [Fact]
+    public void Page02Post_WhenRegistrationAvailable_AndModelStateValid_RedirectsToPage03()
+    {
+        var viewData = CreateValidPage02ViewData();
+
+        var result = _controller.Page02(1, viewData);
+
+        result.Should().BeOfType<RedirectToActionResult>();
+        var redirectResult = result as RedirectToActionResult;
+        redirectResult!.ActionName.Should().Be("Page03");
+        redirectResult.RouteValues.Should().ContainKey("id");
+        redirectResult.RouteValues!["id"].Should().Be(1);
+    }
+
+    [Fact]
+    public void Page02Post_WhenRegistrationAvailable_AndModelStateValid_MapsAllFields()
+    {
+        var viewData = CreateValidPage02ViewData();
+        Judge? capturedJudge = null;
+        _mockRepo.Setup(r => r.UpdateJudge(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<Judge>()))
+            .Callback<int, int, Judge>((id, page, j) => capturedJudge = j);
+
+        _controller.Page02(1, viewData);
+
+        capturedJudge.Should().NotBeNull();
+        capturedJudge!.FirstName.Should().Be(viewData.FirstName);
+        capturedJudge.LastName.Should().Be(viewData.LastName);
+        capturedJudge.Address.Should().Be(viewData.Address);
+        capturedJudge.AddressLine2.Should().Be(viewData.AddressLine2);
+        capturedJudge.City.Should().Be(viewData.City);
+        capturedJudge.State.Should().Be(viewData.State);
+        capturedJudge.ZipCode.Should().Be(viewData.ZipCode);
+        capturedJudge.EveningPhone.Should().Be(viewData.EveningPhone);
+        capturedJudge.DaytimePhone.Should().Be(viewData.DaytimePhone);
+        capturedJudge.MobilePhone.Should().Be(viewData.MobilePhone);
+        capturedJudge.EmailAddress.Should().Be(viewData.EmailAddress);
+    }
+
+    [Fact]
+    public void Page02Post_WhenEmailIsEmpty_SetsEmailToNone()
+    {
+        var viewData = CreateValidPage02ViewData();
+        viewData.EmailAddress = "";
+        Judge? capturedJudge = null;
+        _mockRepo.Setup(r => r.UpdateJudge(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<Judge>()))
+            .Callback<int, int, Judge>((id, page, j) => capturedJudge = j);
+
+        _controller.Page02(1, viewData);
+
+        capturedJudge!.EmailAddress.Should().Be("None");
+    }
+
+    [Fact]
+    public void Page02Post_WhenEmailIsWhitespace_SetsEmailToNone()
+    {
+        var viewData = CreateValidPage02ViewData();
+        viewData.EmailAddress = "   ";
+        Judge? capturedJudge = null;
+        _mockRepo.Setup(r => r.UpdateJudge(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<Judge>()))
+            .Callback<int, int, Judge>((id, page, j) => capturedJudge = j);
+
+        _controller.Page02(1, viewData);
+
+        capturedJudge!.EmailAddress.Should().Be("None");
+    }
+
+    [Fact]
+    public void Page02Post_WhenEmailIsNull_SetsEmailToNone()
+    {
+        var viewData = CreateValidPage02ViewData();
+        viewData.EmailAddress = null;
+        Judge? capturedJudge = null;
+        _mockRepo.Setup(r => r.UpdateJudge(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<Judge>()))
+            .Callback<int, int, Judge>((id, page, j) => capturedJudge = j);
+
+        _controller.Page02(1, viewData);
+
+        capturedJudge!.EmailAddress.Should().Be("None");
+    }
+
+    [Fact]
+    public void Page02Post_WhenModelStateInvalid_ReturnsViewWithSameData()
+    {
+        var viewData = CreateValidPage02ViewData();
+        _controller.ModelState.AddModelError("FirstName", "Required");
+
+        var result = _controller.Page02(1, viewData) as ViewResult;
+
+        result.Should().NotBeNull();
+        result!.Model.Should().Be(viewData);
+    }
+
+    [Fact]
+    public void Page02Post_WhenModelStateInvalid_DoesNotUpdateJudge()
+    {
+        var viewData = CreateValidPage02ViewData();
+        _controller.ModelState.AddModelError("FirstName", "Required");
+
+        _controller.Page02(1, viewData);
+
+        _mockRepo.Verify(r => r.UpdateJudge(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<Judge>()), Times.Never);
+    }
+
+    [Fact]
+    public void Page02Post_WhenModelStateInvalid_RepopulatesTshirtSizes()
+    {
+        var viewData = CreateValidPage02ViewData();
+        _controller.ModelState.AddModelError("FirstName", "Required");
+
+        var result = _controller.Page02(1, viewData) as ViewResult;
+        var returnedData = result!.Model as Page02ViewData;
+
+        returnedData!.TshirtSizes.Should().NotBeNull();
+    }
+
+    [Fact]
+    public void Page02Post_WhenModelStateInvalid_RepopulatesProblemChoices()
+    {
+        var viewData = CreateValidPage02ViewData();
+        _controller.ModelState.AddModelError("FirstName", "Required");
+
+        var result = _controller.Page02(1, viewData) as ViewResult;
+        var returnedData = result!.Model as Page02ViewData;
+
+        returnedData!.ProblemChoices.Should().NotBeNull();
+    }
+
+    [Fact]
+    public void Page02Post_WhenRegistrationClosed_RedirectsToClosedPage()
+    {
+        _mockRepo.Setup(r => r.Config).Returns(CreateConfigWithClosedRegistration());
+        var viewData = CreateValidPage02ViewData();
+
+        var result = _controller.Page02(1, viewData);
+
+        result.Should().BeOfType<RedirectToActionResult>();
+        var redirectResult = result as RedirectToActionResult;
+        redirectResult!.ActionName.Should().Be("Closed");
+    }
+
+    [Fact]
+    public void Page02Post_WhenRegistrationDown_RedirectsToDownPage()
+    {
+        _mockRepo.Setup(r => r.Config).Returns(CreateConfigWithDownRegistration());
+        var viewData = CreateValidPage02ViewData();
+
+        var result = _controller.Page02(1, viewData);
+
+        result.Should().BeOfType<RedirectToActionResult>();
+        var redirectResult = result as RedirectToActionResult;
+        redirectResult!.ActionName.Should().Be("Down");
+    }
+
+    [Fact]
+    public void Page02Post_WhenRegistrationComingSoon_RedirectsToSoonPage()
+    {
+        _mockRepo.Setup(r => r.Config).Returns(CreateConfigWithComingSoonRegistration());
+        var viewData = CreateValidPage02ViewData();
+
+        var result = _controller.Page02(1, viewData);
+
+        result.Should().BeOfType<RedirectToActionResult>();
+        var redirectResult = result as RedirectToActionResult;
+        redirectResult!.ActionName.Should().Be("Soon");
+    }
+
+    [Fact]
+    public void Page02Post_WhenUpdateJudgeThrowsException_RedirectsToHomeIndex()
+    {
+        var viewData = CreateValidPage02ViewData();
+        _mockRepo.Setup(r => r.UpdateJudge(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<Judge>()))
+            .Throws(new InvalidOperationException("Database error"));
+
+        var result = _controller.Page02(1, viewData);
+
+        result.Should().BeOfType<RedirectToActionResult>();
+        var redirectResult = result as RedirectToActionResult;
+        redirectResult!.ActionName.Should().Be("Index");
+        redirectResult.ControllerName.Should().Be("Home");
+    }
+
+    #endregion
+
+    #region Page03 GET Tests
+
+    [Fact]
+    public void Page03Get_WhenRegistrationAvailable_ReturnsViewResult()
+    {
+        SetupValidJudge(1);
+
+        var result = _controller.Page03(1);
+
+        result.Should().BeOfType<ViewResult>();
+    }
+
+    [Fact]
+    public void Page03Get_WhenRegistrationAvailable_ReturnsPage03ViewData()
+    {
+        SetupValidJudge(1);
+
+        var result = _controller.Page03(1) as ViewResult;
+
+        result!.Model.Should().BeOfType<Page03ViewData>();
+    }
+
+    [Fact]
+    public void Page03Get_WhenRegistrationAvailable_LoadsJudgeById()
+    {
+        SetupValidJudge(1);
+
+        _controller.Page03(1);
+
+        _mockRepo.Verify(r => r.GetJudgeById(1), Times.Once);
+    }
+
+    [Fact]
+    public void Page03Get_WhenRegistrationAvailable_UpdatesJudgePage()
+    {
+        SetupValidJudge(1);
+
+        _controller.Page03(1);
+
+        _mockRepo.Verify(r => r.UpdateJudge(1, 3, It.IsAny<Judge>()), Times.Once);
+    }
+
+    [Fact]
+    public void Page03Get_WhenRegistrationAvailable_CallsSetBaseViewData()
+    {
+        SetupValidJudge(1);
+
+        _controller.Page03(1);
+
+        _mockRepo.Verify(r => r.Config, Times.AtLeastOnce);
+        _mockRepo.Verify(r => r.TournamentInfo, Times.AtLeastOnce);
+    }
+
+    [Fact]
+    public void Page03Get_WhenJudgeNotFound_ReturnsViewWithError()
+    {
+        _mockRepo.Setup(r => r.GetJudgeById(It.IsAny<int>()))
+            .Returns(new List<Judge>().AsQueryable());
+
+        var result = _controller.Page03(999) as ViewResult;
+        var viewData = result!.Model as Page03ViewData;
+
+        viewData!.ErrorMessage.Should().Contain("registration failed");
+    }
+
+    [Fact]
+    public void Page03Get_WhenJudgeNotFound_DoesNotUpdateJudge()
+    {
+        _mockRepo.Setup(r => r.GetJudgeById(It.IsAny<int>()))
+            .Returns(new List<Judge>().AsQueryable());
+
+        _controller.Page03(999);
+
+        _mockRepo.Verify(r => r.UpdateJudge(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<Judge>()), Times.Never);
+    }
+
+    [Fact]
+    public void Page03Get_WhenEmailProvided_SetsEmailAddressWasSpecifiedTrue()
+    {
+        SetupValidJudge(1, "test@example.com");
+
+        var result = _controller.Page03(1) as ViewResult;
+        var viewData = result!.Model as Page03ViewData;
+
+        viewData!.EmailAddressWasSpecified.Should().BeTrue();
+    }
+
+    [Fact]
+    public void Page03Get_WhenEmailIsNone_SetsEmailAddressWasSpecifiedFalse()
+    {
+        SetupValidJudge(1, "None");
+
+        var result = _controller.Page03(1) as ViewResult;
+        var viewData = result!.Model as Page03ViewData;
+
+        viewData!.EmailAddressWasSpecified.Should().BeFalse();
+    }
+
+    [Fact]
+    public void Page03Get_WhenEmailIsEmpty_SetsEmailAddressWasSpecifiedFalse()
+    {
+        SetupValidJudge(1, "");
+
+        var result = _controller.Page03(1) as ViewResult;
+        var viewData = result!.Model as Page03ViewData;
+
+        viewData!.EmailAddressWasSpecified.Should().BeFalse();
+    }
+
+    [Fact]
+    public void Page03Get_WhenEmailIsWhitespace_SetsEmailAddressWasSpecifiedFalse()
+    {
+        SetupValidJudge(1, "   ");
+
+        var result = _controller.Page03(1) as ViewResult;
+        var viewData = result!.Model as Page03ViewData;
+
+        viewData!.EmailAddressWasSpecified.Should().BeFalse();
+    }
+
+    [Fact]
+    public void Page03Get_WhenRegistrationClosed_RedirectsToClosedPage()
+    {
+        _mockRepo.Setup(r => r.Config).Returns(CreateConfigWithClosedRegistration());
+
+        var result = _controller.Page03(1);
+
+        result.Should().BeOfType<RedirectToActionResult>();
+        var redirectResult = result as RedirectToActionResult;
+        redirectResult!.ActionName.Should().Be("Closed");
+    }
+
+    [Fact]
+    public void Page03Get_WhenRegistrationDown_RedirectsToDownPage()
+    {
+        _mockRepo.Setup(r => r.Config).Returns(CreateConfigWithDownRegistration());
+
+        var result = _controller.Page03(1);
+
+        result.Should().BeOfType<RedirectToActionResult>();
+        var redirectResult = result as RedirectToActionResult;
+        redirectResult!.ActionName.Should().Be("Down");
+    }
+
+    [Fact]
+    public void Page03Get_WhenRegistrationComingSoon_RedirectsToSoonPage()
+    {
+        _mockRepo.Setup(r => r.Config).Returns(CreateConfigWithComingSoonRegistration());
+
+        var result = _controller.Page03(1);
+
+        result.Should().BeOfType<RedirectToActionResult>();
+        var redirectResult = result as RedirectToActionResult;
+        redirectResult!.ActionName.Should().Be("Soon");
+    }
+
+    #endregion
+
+    #region Page03 POST Tests
+
+    [Fact]
+    public void Page03Post_WhenRestartButtonClicked_RedirectsToPage01()
+    {
+        var formCollection = new Microsoft.AspNetCore.Http.FormCollection(new Dictionary<string, Microsoft.Extensions.Primitives.StringValues>());
+
+        var result = _controller.Page03(1, null!, null!, null!, "restart", formCollection);
+
+        result.Should().BeOfType<RedirectToActionResult>();
+        var redirectResult = result as RedirectToActionResult;
+        redirectResult!.ActionName.Should().Be("Page01");
+    }
+
+    [Fact]
+    public void Page03Post_WhenSubmitButtonClicked_UpdatesJudgeEmail()
+    {
+        var formData = new Dictionary<string, Microsoft.Extensions.Primitives.StringValues>
+        {
+            { "NewEmailTextBox", "newemail@example.com" }
+        };
+        var formCollection = new Microsoft.AspNetCore.Http.FormCollection(formData);
+
+        _controller.Page03(1, "submit", null!, null!, null!, formCollection);
+
+        _mockRepo.Verify(r => r.UpdateJudgeEmail(1, "newemail@example.com"), Times.Once);
+    }
+
+    [Fact]
+    public void Page03Post_WhenSubmitButtonClicked_CallsPage03GetAgain()
+    {
+        SetupValidJudge(1);
+        var formData = new Dictionary<string, Microsoft.Extensions.Primitives.StringValues>
+        {
+            { "NewEmailTextBox", "newemail@example.com" }
+        };
+        var formCollection = new Microsoft.AspNetCore.Http.FormCollection(formData);
+
+        var result = _controller.Page03(1, "submit", null!, null!, null!, formCollection);
+
+        result.Should().BeOfType<ViewResult>();
+    }
+
+    [Fact]
+    public void Page03Post_WhenNoSpecialButtonClicked_RedirectsToHomePage()
+    {
+        var formCollection = new Microsoft.AspNetCore.Http.FormCollection(new Dictionary<string, Microsoft.Extensions.Primitives.StringValues>());
+
+        var result = _controller.Page03(1, null!, null!, null!, null!, formCollection);
+
+        result.Should().BeOfType<RedirectResult>();
+        var redirectResult = result as RedirectResult;
+        redirectResult!.Url.Should().Be("http://www.novanorth.org");
+    }
+
+    [Fact]
+    public void Page03Post_WhenNoSpecialButtonClicked_LoadsHomePageFromConfig()
+    {
+        var formCollection = new Microsoft.AspNetCore.Http.FormCollection(new Dictionary<string, Microsoft.Extensions.Primitives.StringValues>());
+
+        _controller.Page03(1, null!, null!, null!, null!, formCollection);
+
+        _mockRepo.Verify(r => r.Config, Times.AtLeastOnce);
+    }
+
+    [Fact]
+    public void Page03Post_WhenRegistrationClosed_RedirectsToClosedPage()
+    {
+        _mockRepo.Setup(r => r.Config).Returns(CreateConfigWithClosedRegistration());
+        var formCollection = new Microsoft.AspNetCore.Http.FormCollection(new Dictionary<string, Microsoft.Extensions.Primitives.StringValues>());
+
+        var result = _controller.Page03(1, null!, null!, null!, null!, formCollection);
+
+        result.Should().BeOfType<RedirectToActionResult>();
+        var redirectResult = result as RedirectToActionResult;
+        redirectResult!.ActionName.Should().Be("Closed");
+    }
+
+    [Fact]
+    public void Page03Post_WhenRegistrationDown_RedirectsToDownPage()
+    {
+        _mockRepo.Setup(r => r.Config).Returns(CreateConfigWithDownRegistration());
+        var formCollection = new Microsoft.AspNetCore.Http.FormCollection(new Dictionary<string, Microsoft.Extensions.Primitives.StringValues>());
+
+        var result = _controller.Page03(1, null!, null!, null!, null!, formCollection);
+
+        result.Should().BeOfType<RedirectToActionResult>();
+        var redirectResult = result as RedirectToActionResult;
+        redirectResult!.ActionName.Should().Be("Down");
+    }
+
+    [Fact]
+    public void Page03Post_WhenRegistrationComingSoon_RedirectsToSoonPage()
+    {
+        _mockRepo.Setup(r => r.Config).Returns(CreateConfigWithComingSoonRegistration());
+        var formCollection = new Microsoft.AspNetCore.Http.FormCollection(new Dictionary<string, Microsoft.Extensions.Primitives.StringValues>());
+
+        var result = _controller.Page03(1, null!, null!, null!, null!, formCollection);
+
+        result.Should().BeOfType<RedirectToActionResult>();
+        var redirectResult = result as RedirectToActionResult;
+        redirectResult!.ActionName.Should().Be("Soon");
+    }
+
+    #endregion
+
     #region Helper Methods
 
     private Page01ViewData CreatePage01ViewData()
@@ -456,6 +1233,29 @@ public class JudgesRegistrationControllerTests
         };
     }
 
+    private static Dictionary<string, string> CreateConfigWithClosedRegistration()
+    {
+        var config = TestHelper.CreateDefaultConfig();
+        config["JudgesRegistrationOpenDateTime"] = "01/01/2020 00:00:00";
+        config["JudgesRegistrationCloseDateTime"] = "01/02/2020 00:00:00"; // Closed
+        return config;
+    }
+
+    private static Dictionary<string, string> CreateConfigWithDownRegistration()
+    {
+        var config = TestHelper.CreateDefaultConfig();
+        config["IsJudgesRegistrationDown"] = "true";
+        return config;
+    }
+
+    private static Dictionary<string, string> CreateConfigWithComingSoonRegistration()
+    {
+        var config = TestHelper.CreateDefaultConfig();
+        config["JudgesRegistrationOpenDateTime"] = "12/31/2099 23:59:59"; // Far future
+        config["JudgesRegistrationCloseDateTime"] = "12/31/2100 23:59:59";
+        return config;
+    }
+
     /// <summary>
     /// Invokes the private static GetPreviousPositions method via reflection.
     /// </summary>
@@ -478,6 +1278,58 @@ public class JudgesRegistrationControllerTests
         var testable = new TestableJudgesRegistrationController(_mockRepo.Object);
         TestHelper.SetupControllerContext(testable);
         return testable.TestGenerateEmailBody(viewData);
+    }
+
+    private Page02ViewData CreateValidPage02ViewData()
+    {
+        return new Page02ViewData
+        {
+            FirstName = "John",
+            LastName = "Doe",
+            Address = "123 Main St",
+            AddressLine2 = "Apt 4B",
+            City = "Springfield",
+            State = "VA",
+            ZipCode = "22150",
+            EveningPhone = "703-555-1234",
+            DaytimePhone = "703-555-5678",
+            MobilePhone = "703-555-9012",
+            EmailAddress = "john.doe@example.com",
+            ProblemChoice1 = "1",
+            ProblemChoice2 = "2",
+            ProblemChoice3 = "3",
+            HasChildrenCompeting = "false",
+            ProblemConflict1 = "0",
+            ProblemConflict2 = "0",
+            ProblemConflict3 = "0",
+            YearsOfLongTermJudgingExperience = "5",
+            YearsOfSpontaneousJudgingExperience = "3",
+            PreviouslyHeadJudge = false,
+            PreviouslyProblemJudge = true,
+            PreviouslyStyleJudge = false,
+            PreviouslyStagingJudge = false,
+            PreviouslyTimekeeper = false,
+            PreviouslyScorechecker = false,
+            PreviouslyWeighInJudge = false,
+            WillingToBeScorechecker = "true",
+            WantsCeuCredit = "false",
+            Notes = "Looking forward to judging!",
+            TshirtSizes = [],
+            ProblemChoices = []
+        };
+    }
+
+    private void SetupValidJudge(int judgeId, string email = "test@example.com")
+    {
+        var judge = new Judge
+        {
+            JudgeID = judgeId,
+            FirstName = "John",
+            LastName = "Doe",
+            EmailAddress = email
+        };
+        _mockRepo.Setup(r => r.GetJudgeById(judgeId))
+            .Returns(new List<Judge> { judge }.AsQueryable());
     }
 
     #endregion
