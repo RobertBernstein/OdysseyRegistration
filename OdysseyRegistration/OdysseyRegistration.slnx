@@ -3,7 +3,9 @@
     <File Path="../README.md" />
     <File Path="OdysseyRegistration.slnlaunch" />
   </Folder>
+  <Project Path="../EFCoreToolReverseEngineeringTest.UnitTests/EFCoreToolReverseEngineeringTest.UnitTests.csproj" Id="a099269d-60f7-4edc-9152-3872805784eb" />
   <Project Path="../EFCoreToolReverseEngineeringTest/EFCoreToolReverseEngineeringTest.csproj" />
+  <Project Path="../JudgeRegistrationRazor.UnitTests/JudgeRegistrationRazor.UnitTests.csproj" Id="4210b5f9-643d-49e8-8582-4b1d337a0d86" />
   <Project Path="../JudgeRegistrationRazor/JudgeRegistrationRazor.csproj" />
   <Project Path="docker-compose.dcproj">
     <Build />
@@ -11,9 +13,11 @@
   <Project Path="Odyssey.Database/Odyssey.Database.sqlproj" Id="b5879c91-62c4-434d-89b7-0f4d671db48a">
     <Deploy />
   </Project>
+  <Project Path="OdysseyCoreMvc.UnitTests/OdysseyCoreMvc.UnitTests.csproj" Id="56a9a4fc-838e-4746-b77d-9dd7603907f9" />
   <Project Path="OdysseyCoreMvc/OdysseyCoreMvc.csproj">
     <Build Solution="Debug|*" Project="false" />
   </Project>
+  <Project Path="OdysseyMvc2023.UnitTests/OdysseyMvc2023.UnitTests.csproj" Id="01cf1d6d-5f32-496a-8397-556dda2c8f7a" />
   <Project Path="OdysseyMvc2023/OdysseyMvc2023.csproj" Id="61f704b8-472e-44c2-950b-76ac84104e24" />
   <Project Path="OdysseyMvc2024/OdysseyMvc2024.csproj" />
   <Project Path="OdysseyMvc4.Tests.Unit/OdysseyMvc4.Tests.Unit.csproj" />
@@ -23,7 +27,9 @@
   <Project Path="OdysseyMvc4/OdysseyMvc4.csproj" Id="bd2044b5-a24b-4992-960f-5af07941ab2b">
     <Build Project="false" />
   </Project>
+  <Project Path="OdysseyRegistrationWebApi.UnitTests/OdysseyRegistrationWebApi.UnitTests.csproj" Id="0511d326-e3bb-4fb5-84e7-990f5637cb71" />
   <Project Path="OdysseyRegistrationWebApi/OdysseyRegistrationWebApi.csproj" />
+  <Project Path="UpdateProblemSynopsesForRegistration.UnitTests/UpdateProblemSynopsesForRegistration.UnitTests.csproj" Id="7fdf1a67-1351-48e6-93ad-9679a1d58daf" />
   <Project Path="UpdateProblemSynopsesForRegistration/UpdateProblemSynopsesForRegistration.csproj" Id="8c5afcc9-71d8-4aa5-8fa0-ac2fc8b3c30c">
     <Build Project="false" />
   </Project>
