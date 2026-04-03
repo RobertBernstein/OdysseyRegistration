@@ -1,9 +1,9 @@
-﻿using FluentAssertions;
+using FluentAssertions;
 using OdysseyMvc4.Controllers;
 using OdysseyMvc4.ViewData.VolunteerRegistration;
-using OdysseyMvc4.Tests.Unit.Helpers;
+using OdysseyMvc4.UnitTests.Helpers;
 
-namespace OdysseyMvc4.Tests.Unit.Controllers;
+namespace OdysseyMvc4.UnitTests.Controllers;
 
 /// <summary>
 /// Tests for the VolunteerRegistrationController business logic.

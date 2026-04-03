@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using FluentAssertions;
 using OdysseyMvc4.Models;
 
-namespace OdysseyMvc4.Tests.Unit.Models;
+namespace OdysseyMvc4.UnitTests.Models;
 
 /// <summary>
 /// Tests for QueryInfo model to ensure proper initialization and property behaviors.

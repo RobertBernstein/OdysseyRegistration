@@ -3,11 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using OdysseyMvc2024.Controllers;
 using OdysseyMvc2024.Models;
-using OdysseyMvc4.Tests.Unit.Helpers;
+using OdysseyMvc4.UnitTests.Helpers;
 using System.Diagnostics.CodeAnalysis;
 using static OdysseyMvc2024.Controllers.BaseRegistrationController;
 
-namespace OdysseyMvc4.Tests.Unit.Controllers;
+namespace OdysseyMvc4.UnitTests.Controllers;
 
 /// <summary>
 /// Tests for the business logic in BaseRegistrationController that must be preserved

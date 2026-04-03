@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Web.Http;
 using FluentAssertions;
 
-namespace OdysseyMvc4.Tests.Unit;
+namespace OdysseyMvc4.UnitTests;
 
 /// <summary>
 /// Tests for the WebApiConfig class in App_Start/WebApiConfig.cs.

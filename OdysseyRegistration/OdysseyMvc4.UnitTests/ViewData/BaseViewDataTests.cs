@@ -1,8 +1,8 @@
-﻿using FluentAssertions;
+using FluentAssertions;
 using OdysseyMvc4.Models;
 using OdysseyMvc4.ViewData;
 
-namespace OdysseyMvc4.Tests.Unit.ViewData;
+namespace OdysseyMvc4.UnitTests.ViewData;
 
 /// <summary>
 /// Tests for BaseViewData properties in OdysseyMvc4.

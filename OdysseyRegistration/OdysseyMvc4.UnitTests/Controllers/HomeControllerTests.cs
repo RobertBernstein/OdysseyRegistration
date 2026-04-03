@@ -1,12 +1,12 @@
-﻿using FluentAssertions;
+using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using OdysseyMvc2024.Controllers;
 using OdysseyMvc2024.Models;
 using OdysseyMvc2024.ViewData;
-using OdysseyMvc4.Tests.Unit.Helpers;
+using OdysseyMvc4.UnitTests.Helpers;
 
-namespace OdysseyMvc4.Tests.Unit.Controllers;
+namespace OdysseyMvc4.UnitTests.Controllers;
 
 /// <summary>
 /// Tests for the HomeController business logic that must be preserved

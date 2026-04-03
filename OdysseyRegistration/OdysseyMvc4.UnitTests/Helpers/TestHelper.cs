@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc.Routing;
 using Moq;
 using OdysseyMvc2024.Models;
 
-namespace OdysseyMvc4.Tests.Unit.Helpers;
+namespace OdysseyMvc4.UnitTests.Helpers;
 
 /// <summary>
 /// Provides reusable helper methods for setting up mocks and test data

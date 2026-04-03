@@ -4,12 +4,12 @@ using OdysseyMvc2024.Models;
 using OdysseyMvc2024.ViewData;
 using OdysseyMvc2024.ViewData.JudgesRegistration;
 using OdysseyMvc2024.ViewData.TournamentRegistration;
-using OdysseyMvc4.Tests.Unit.Helpers;
+using OdysseyMvc4.UnitTests.Helpers;
 using Page01ViewDataJudges = OdysseyMvc2024.ViewData.JudgesRegistration.Page01ViewData;
 using Page01ViewDataTournament = OdysseyMvc2024.ViewData.TournamentRegistration.Page01ViewData;
 using Page02ViewDataJudges = OdysseyMvc2024.ViewData.JudgesRegistration.Page02ViewData;
 
-namespace OdysseyMvc4.Tests.Unit.ViewData;
+namespace OdysseyMvc4.UnitTests.ViewData;
 
 /// <summary>
 /// Tests for ViewData computed properties that must be preserved during migration.

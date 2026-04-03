@@ -1,8 +1,8 @@
-﻿using FluentAssertions;
+using FluentAssertions;
 using OdysseyMvc4.ViewData.JudgesRegistration;
 using System.Web.Mvc;
 
-namespace OdysseyMvc4.Tests.Unit.ViewData.JudgesRegistration;
+namespace OdysseyMvc4.UnitTests.ViewData.JudgesRegistration;
 
 /// <summary>
 /// Tests for Page02ViewData properties.

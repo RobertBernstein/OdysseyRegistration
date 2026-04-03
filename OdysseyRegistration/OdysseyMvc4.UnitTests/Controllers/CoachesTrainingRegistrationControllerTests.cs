@@ -1,9 +1,9 @@
-﻿using FluentAssertions;
+using FluentAssertions;
 using OdysseyMvc4.Controllers;
 using OdysseyMvc4.Models;
 using OdysseyMvc4.ViewData.CoachesTrainingRegistration;
 
-namespace OdysseyMvc4.Tests.Unit.Controllers;
+namespace OdysseyMvc4.UnitTests.Controllers;
 
 /// <summary>
 /// Tests for the CoachesTrainingRegistrationController business logic that must be preserved

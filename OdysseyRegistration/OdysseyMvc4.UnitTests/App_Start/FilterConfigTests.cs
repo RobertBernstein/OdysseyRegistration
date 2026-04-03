@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Web.Mvc;
 using FluentAssertions;
 using Moq;
 
-namespace OdysseyMvc4.Tests.Unit;
+namespace OdysseyMvc4.UnitTests;
 
 /// <summary>
 /// Tests for the FilterConfig class in App_Start/FilterConfig.cs.

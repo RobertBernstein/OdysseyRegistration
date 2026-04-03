@@ -1,7 +1,7 @@
 using FluentAssertions;
 using OdysseyMvc2024.Models;
 
-namespace OdysseyMvc4.Tests.Unit.Models;
+namespace OdysseyMvc4.UnitTests.Models;
 
 /// <summary>
 /// Tests for model classes to ensure property types and behaviors are preserved during migration.

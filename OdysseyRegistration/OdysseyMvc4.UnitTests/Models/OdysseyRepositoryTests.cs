@@ -1,8 +1,8 @@
-﻿using FluentAssertions;
+using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using OdysseyMvc2024.Models;
 
-namespace OdysseyMvc4.Tests.Unit.Models;
+namespace OdysseyMvc4.UnitTests.Models;
 
 /// <summary>
 /// Tests for OdysseyRepository properties that manage cached data and lazy loading.

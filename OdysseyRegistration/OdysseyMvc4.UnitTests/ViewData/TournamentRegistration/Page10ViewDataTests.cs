@@ -1,8 +1,8 @@
-﻿using FluentAssertions;
+using FluentAssertions;
 using OdysseyMvc4.Models;
 using OdysseyMvc4.ViewData.TournamentRegistration;
 
-namespace OdysseyMvc4.Tests.Unit.ViewData.TournamentRegistration;
+namespace OdysseyMvc4.UnitTests.ViewData.TournamentRegistration;
 
 /// <summary>
 /// Tests for Page10ViewData computed properties.

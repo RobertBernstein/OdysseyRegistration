@@ -4,11 +4,11 @@ using Moq;
 using OdysseyMvc2024.Controllers;
 using OdysseyMvc2024.Models;
 using OdysseyMvc2024.ViewData.JudgesRegistration;
-using OdysseyMvc4.Tests.Unit.Helpers;
+using OdysseyMvc4.UnitTests.Helpers;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
-namespace OdysseyMvc4.Tests.Unit.Controllers;
+namespace OdysseyMvc4.UnitTests.Controllers;
 
 /// <summary>
 /// Tests for the JudgesRegistrationController business logic that must be preserved

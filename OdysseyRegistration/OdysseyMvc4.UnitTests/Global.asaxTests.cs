@@ -1,6 +1,6 @@
-﻿using FluentAssertions;
+using FluentAssertions;
 
-namespace OdysseyMvc4.Tests.Unit;
+namespace OdysseyMvc4.UnitTests;
 
 /// <summary>
 /// Tests for the MvcApplication startup configuration in Global.asax.cs.

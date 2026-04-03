@@ -1,8 +1,8 @@
-﻿using FluentAssertions;
+using FluentAssertions;
 using OdysseyMvc4.Models;
 using OdysseyMvc4.ViewData.CoachesTrainingRegistration;
 
-namespace OdysseyMvc4.Tests.Unit.ViewData.CoachesTrainingRegistration;
+namespace OdysseyMvc4.UnitTests.ViewData.CoachesTrainingRegistration;
 
 /// <summary>
 /// Tests for Page01ViewData computed properties.
