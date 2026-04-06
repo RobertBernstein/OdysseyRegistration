@@ -1,12 +1,11 @@
 using FluentAssertions;
-using Microsoft.AspNetCore.Mvc;
 using Moq;
-using OdysseyMvc2024.Controllers;
-using OdysseyMvc2024.Models;
-using OdysseyMvc2024.ViewData.JudgesRegistration;
+using OdysseyMvc4.Controllers;
+using OdysseyMvc4.Models;
+using OdysseyMvc4.ViewData.JudgesRegistration;
 using OdysseyMvc4.UnitTests.Helpers;
-using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
+using System.Web.Mvc;
 
 namespace OdysseyMvc4.UnitTests.Controllers;
 
@@ -431,15 +430,15 @@ public class JudgesRegistrationControllerTests
     {
         var result = _controller.Index();
 
-        result.Should().BeOfType<RedirectToActionResult>();
+        result.Should().BeOfType<RedirectToRouteResult>();
     }
 
     [Fact]
     public void Index_RedirectsToPage01()
     {
-        var result = _controller.Index() as RedirectToActionResult;
+        var result = _controller.Index() as RedirectToRouteResult;
 
-        result!.ActionName.Should().Be("Page01");
+        result!.RouteValues["action"].Should().Be("Page01");
     }
 
     #endregion
@@ -506,9 +505,9 @@ public class JudgesRegistrationControllerTests
 
         var result = _controller.Page01();
 
-        result.Should().BeOfType<RedirectToActionResult>();
-        var redirectResult = result as RedirectToActionResult;
-        redirectResult!.ActionName.Should().Be("Closed");
+        result.Should().BeOfType<RedirectToRouteResult>();
+        var redirectResult = result as RedirectToRouteResult;
+        redirectResult!.RouteValues["action"].Should().Be("Closed");
     }
 
     [Fact]
@@ -518,9 +517,9 @@ public class JudgesRegistrationControllerTests
 
         var result = _controller.Page01();
 
-        result.Should().BeOfType<RedirectToActionResult>();
-        var redirectResult = result as RedirectToActionResult;
-        redirectResult!.ActionName.Should().Be("Down");
+        result.Should().BeOfType<RedirectToRouteResult>();
+        var redirectResult = result as RedirectToRouteResult;
+        redirectResult!.RouteValues["action"].Should().Be("Down");
     }
 
     [Fact]
@@ -530,9 +529,9 @@ public class JudgesRegistrationControllerTests
 
         var result = _controller.Page01();
 
-        result.Should().BeOfType<RedirectToActionResult>();
-        var redirectResult = result as RedirectToActionResult;
-        redirectResult!.ActionName.Should().Be("Soon");
+        result.Should().BeOfType<RedirectToRouteResult>();
+        var redirectResult = result as RedirectToRouteResult;
+        redirectResult!.RouteValues["action"].Should().Be("Soon");
     }
 
     #endregion
@@ -552,9 +551,9 @@ public class JudgesRegistrationControllerTests
     {
         var result = _controller.Page01Post();
 
-        result.Should().BeOfType<RedirectToActionResult>();
-        var redirectResult = result as RedirectToActionResult;
-        redirectResult!.ActionName.Should().Be("Page02");
+        result.Should().BeOfType<RedirectToRouteResult>();
+        var redirectResult = result as RedirectToRouteResult;
+        redirectResult!.RouteValues["action"].Should().Be("Page02");
     }
 
     [Fact]
@@ -564,7 +563,7 @@ public class JudgesRegistrationControllerTests
         _mockRepo.Setup(r => r.AddJudge(It.IsAny<Judge>()))
             .Callback<Judge>(j => j.JudgeID = newJudge.JudgeID);
 
-        var result = _controller.Page01Post() as RedirectToActionResult;
+        var result = _controller.Page01Post() as RedirectToRouteResult;
 
         result!.RouteValues.Should().ContainKey("id");
         result.RouteValues!["id"].Should().Be(123);
@@ -603,9 +602,9 @@ public class JudgesRegistrationControllerTests
 
         var result = _controller.Page01Post();
 
-        result.Should().BeOfType<RedirectToActionResult>();
-        var redirectResult = result as RedirectToActionResult;
-        redirectResult!.ActionName.Should().Be("Closed");
+        result.Should().BeOfType<RedirectToRouteResult>();
+        var redirectResult = result as RedirectToRouteResult;
+        redirectResult!.RouteValues["action"].Should().Be("Closed");
     }
 
     [Fact]
@@ -625,9 +624,9 @@ public class JudgesRegistrationControllerTests
 
         var result = _controller.Page01Post();
 
-        result.Should().BeOfType<RedirectToActionResult>();
-        var redirectResult = result as RedirectToActionResult;
-        redirectResult!.ActionName.Should().Be("Down");
+        result.Should().BeOfType<RedirectToRouteResult>();
+        var redirectResult = result as RedirectToRouteResult;
+        redirectResult!.RouteValues["action"].Should().Be("Down");
     }
 
     [Fact]
@@ -637,9 +636,9 @@ public class JudgesRegistrationControllerTests
 
         var result = _controller.Page01Post();
 
-        result.Should().BeOfType<RedirectToActionResult>();
-        var redirectResult = result as RedirectToActionResult;
-        redirectResult!.ActionName.Should().Be("Soon");
+        result.Should().BeOfType<RedirectToRouteResult>();
+        var redirectResult = result as RedirectToRouteResult;
+        redirectResult!.RouteValues["action"].Should().Be("Soon");
     }
 
     [Fact]
@@ -650,10 +649,10 @@ public class JudgesRegistrationControllerTests
 
         var result = _controller.Page01Post();
 
-        result.Should().BeOfType<RedirectToActionResult>();
-        var redirectResult = result as RedirectToActionResult;
-        redirectResult!.ActionName.Should().Be("Index");
-        redirectResult.ControllerName.Should().Be("Home");
+        result.Should().BeOfType<RedirectToRouteResult>();
+        var redirectResult = result as RedirectToRouteResult;
+        redirectResult!.RouteValues["action"].Should().Be("Index");
+        redirectResult.RouteValues["controller"].Should().Be("Home");
     }
 
     #endregion
@@ -710,9 +709,9 @@ public class JudgesRegistrationControllerTests
 
         var result = _controller.Page02(1);
 
-        result.Should().BeOfType<RedirectToActionResult>();
-        var redirectResult = result as RedirectToActionResult;
-        redirectResult!.ActionName.Should().Be("Closed");
+        result.Should().BeOfType<RedirectToRouteResult>();
+        var redirectResult = result as RedirectToRouteResult;
+        redirectResult!.RouteValues["action"].Should().Be("Closed");
     }
 
     [Fact]
@@ -722,9 +721,9 @@ public class JudgesRegistrationControllerTests
 
         var result = _controller.Page02(1);
 
-        result.Should().BeOfType<RedirectToActionResult>();
-        var redirectResult = result as RedirectToActionResult;
-        redirectResult!.ActionName.Should().Be("Down");
+        result.Should().BeOfType<RedirectToRouteResult>();
+        var redirectResult = result as RedirectToRouteResult;
+        redirectResult!.RouteValues["action"].Should().Be("Down");
     }
 
     [Fact]
@@ -734,9 +733,9 @@ public class JudgesRegistrationControllerTests
 
         var result = _controller.Page02(1);
 
-        result.Should().BeOfType<RedirectToActionResult>();
-        var redirectResult = result as RedirectToActionResult;
-        redirectResult!.ActionName.Should().Be("Soon");
+        result.Should().BeOfType<RedirectToRouteResult>();
+        var redirectResult = result as RedirectToRouteResult;
+        redirectResult!.RouteValues["action"].Should().Be("Soon");
     }
 
     #endregion
@@ -760,9 +759,9 @@ public class JudgesRegistrationControllerTests
 
         var result = _controller.Page02(1, viewData);
 
-        result.Should().BeOfType<RedirectToActionResult>();
-        var redirectResult = result as RedirectToActionResult;
-        redirectResult!.ActionName.Should().Be("Page03");
+        result.Should().BeOfType<RedirectToRouteResult>();
+        var redirectResult = result as RedirectToRouteResult;
+        redirectResult!.RouteValues["action"].Should().Be("Page03");
         redirectResult.RouteValues.Should().ContainKey("id");
         redirectResult.RouteValues!["id"].Should().Be(1);
     }
@@ -888,9 +887,9 @@ public class JudgesRegistrationControllerTests
 
         var result = _controller.Page02(1, viewData);
 
-        result.Should().BeOfType<RedirectToActionResult>();
-        var redirectResult = result as RedirectToActionResult;
-        redirectResult!.ActionName.Should().Be("Closed");
+        result.Should().BeOfType<RedirectToRouteResult>();
+        var redirectResult = result as RedirectToRouteResult;
+        redirectResult!.RouteValues["action"].Should().Be("Closed");
     }
 
     [Fact]
@@ -901,9 +900,9 @@ public class JudgesRegistrationControllerTests
 
         var result = _controller.Page02(1, viewData);
 
-        result.Should().BeOfType<RedirectToActionResult>();
-        var redirectResult = result as RedirectToActionResult;
-        redirectResult!.ActionName.Should().Be("Down");
+        result.Should().BeOfType<RedirectToRouteResult>();
+        var redirectResult = result as RedirectToRouteResult;
+        redirectResult!.RouteValues["action"].Should().Be("Down");
     }
 
     [Fact]
@@ -914,9 +913,9 @@ public class JudgesRegistrationControllerTests
 
         var result = _controller.Page02(1, viewData);
 
-        result.Should().BeOfType<RedirectToActionResult>();
-        var redirectResult = result as RedirectToActionResult;
-        redirectResult!.ActionName.Should().Be("Soon");
+        result.Should().BeOfType<RedirectToRouteResult>();
+        var redirectResult = result as RedirectToRouteResult;
+        redirectResult!.RouteValues["action"].Should().Be("Soon");
     }
 
     [Fact]
@@ -928,10 +927,10 @@ public class JudgesRegistrationControllerTests
 
         var result = _controller.Page02(1, viewData);
 
-        result.Should().BeOfType<RedirectToActionResult>();
-        var redirectResult = result as RedirectToActionResult;
-        redirectResult!.ActionName.Should().Be("Index");
-        redirectResult.ControllerName.Should().Be("Home");
+        result.Should().BeOfType<RedirectToRouteResult>();
+        var redirectResult = result as RedirectToRouteResult;
+        redirectResult!.RouteValues["action"].Should().Be("Index");
+        redirectResult.RouteValues["controller"].Should().Be("Home");
     }
 
     #endregion
@@ -1063,9 +1062,9 @@ public class JudgesRegistrationControllerTests
 
         var result = _controller.Page03(1);
 
-        result.Should().BeOfType<RedirectToActionResult>();
-        var redirectResult = result as RedirectToActionResult;
-        redirectResult!.ActionName.Should().Be("Closed");
+        result.Should().BeOfType<RedirectToRouteResult>();
+        var redirectResult = result as RedirectToRouteResult;
+        redirectResult!.RouteValues["action"].Should().Be("Closed");
     }
 
     [Fact]
@@ -1075,9 +1074,9 @@ public class JudgesRegistrationControllerTests
 
         var result = _controller.Page03(1);
 
-        result.Should().BeOfType<RedirectToActionResult>();
-        var redirectResult = result as RedirectToActionResult;
-        redirectResult!.ActionName.Should().Be("Down");
+        result.Should().BeOfType<RedirectToRouteResult>();
+        var redirectResult = result as RedirectToRouteResult;
+        redirectResult!.RouteValues["action"].Should().Be("Down");
     }
 
     [Fact]
@@ -1087,9 +1086,9 @@ public class JudgesRegistrationControllerTests
 
         var result = _controller.Page03(1);
 
-        result.Should().BeOfType<RedirectToActionResult>();
-        var redirectResult = result as RedirectToActionResult;
-        redirectResult!.ActionName.Should().Be("Soon");
+        result.Should().BeOfType<RedirectToRouteResult>();
+        var redirectResult = result as RedirectToRouteResult;
+        redirectResult!.RouteValues["action"].Should().Be("Soon");
     }
 
     #endregion
@@ -1099,23 +1098,23 @@ public class JudgesRegistrationControllerTests
     [Fact]
     public void Page03Post_WhenRestartButtonClicked_RedirectsToPage01()
     {
-        var formCollection = new Microsoft.AspNetCore.Http.FormCollection(new Dictionary<string, Microsoft.Extensions.Primitives.StringValues>());
+        var formCollection = new FormCollection();
 
         var result = _controller.Page03(1, null!, null!, null!, "restart", formCollection);
 
-        result.Should().BeOfType<RedirectToActionResult>();
-        var redirectResult = result as RedirectToActionResult;
-        redirectResult!.ActionName.Should().Be("Page01");
+        result.Should().BeOfType<RedirectToRouteResult>();
+        var redirectResult = result as RedirectToRouteResult;
+        redirectResult!.RouteValues["action"].Should().Be("Page01");
     }
 
     [Fact]
     public void Page03Post_WhenSubmitButtonClicked_UpdatesJudgeEmail()
     {
-        var formData = new Dictionary<string, Microsoft.Extensions.Primitives.StringValues>
+        var formData = new System.Collections.Specialized.NameValueCollection()
         {
             { "NewEmailTextBox", "newemail@example.com" }
         };
-        var formCollection = new Microsoft.AspNetCore.Http.FormCollection(formData);
+        var formCollection = new FormCollection(formData);
 
         _controller.Page03(1, "submit", null!, null!, null!, formCollection);
 
@@ -1126,11 +1125,11 @@ public class JudgesRegistrationControllerTests
     public void Page03Post_WhenSubmitButtonClicked_CallsPage03GetAgain()
     {
         SetupValidJudge(1);
-        var formData = new Dictionary<string, Microsoft.Extensions.Primitives.StringValues>
+        var formData = new System.Collections.Specialized.NameValueCollection()
         {
             { "NewEmailTextBox", "newemail@example.com" }
         };
-        var formCollection = new Microsoft.AspNetCore.Http.FormCollection(formData);
+        var formCollection = new FormCollection(formData);
 
         var result = _controller.Page03(1, "submit", null!, null!, null!, formCollection);
 
@@ -1140,7 +1139,7 @@ public class JudgesRegistrationControllerTests
     [Fact]
     public void Page03Post_WhenNoSpecialButtonClicked_RedirectsToHomePage()
     {
-        var formCollection = new Microsoft.AspNetCore.Http.FormCollection(new Dictionary<string, Microsoft.Extensions.Primitives.StringValues>());
+        var formCollection = new FormCollection();
 
         var result = _controller.Page03(1, null!, null!, null!, null!, formCollection);
 
@@ -1152,7 +1151,7 @@ public class JudgesRegistrationControllerTests
     [Fact]
     public void Page03Post_WhenNoSpecialButtonClicked_LoadsHomePageFromConfig()
     {
-        var formCollection = new Microsoft.AspNetCore.Http.FormCollection(new Dictionary<string, Microsoft.Extensions.Primitives.StringValues>());
+        var formCollection = new FormCollection();
 
         _controller.Page03(1, null!, null!, null!, null!, formCollection);
 
@@ -1163,39 +1162,39 @@ public class JudgesRegistrationControllerTests
     public void Page03Post_WhenRegistrationClosed_RedirectsToClosedPage()
     {
         _mockRepo.Setup(r => r.Config).Returns(CreateConfigWithClosedRegistration());
-        var formCollection = new Microsoft.AspNetCore.Http.FormCollection(new Dictionary<string, Microsoft.Extensions.Primitives.StringValues>());
+        var formCollection = new FormCollection();
 
         var result = _controller.Page03(1, null!, null!, null!, null!, formCollection);
 
-        result.Should().BeOfType<RedirectToActionResult>();
-        var redirectResult = result as RedirectToActionResult;
-        redirectResult!.ActionName.Should().Be("Closed");
+        result.Should().BeOfType<RedirectToRouteResult>();
+        var redirectResult = result as RedirectToRouteResult;
+        redirectResult!.RouteValues["action"].Should().Be("Closed");
     }
 
     [Fact]
     public void Page03Post_WhenRegistrationDown_RedirectsToDownPage()
     {
         _mockRepo.Setup(r => r.Config).Returns(CreateConfigWithDownRegistration());
-        var formCollection = new Microsoft.AspNetCore.Http.FormCollection(new Dictionary<string, Microsoft.Extensions.Primitives.StringValues>());
+        var formCollection = new FormCollection();
 
         var result = _controller.Page03(1, null!, null!, null!, null!, formCollection);
 
-        result.Should().BeOfType<RedirectToActionResult>();
-        var redirectResult = result as RedirectToActionResult;
-        redirectResult!.ActionName.Should().Be("Down");
+        result.Should().BeOfType<RedirectToRouteResult>();
+        var redirectResult = result as RedirectToRouteResult;
+        redirectResult!.RouteValues["action"].Should().Be("Down");
     }
 
     [Fact]
     public void Page03Post_WhenRegistrationComingSoon_RedirectsToSoonPage()
     {
         _mockRepo.Setup(r => r.Config).Returns(CreateConfigWithComingSoonRegistration());
-        var formCollection = new Microsoft.AspNetCore.Http.FormCollection(new Dictionary<string, Microsoft.Extensions.Primitives.StringValues>());
+        var formCollection = new FormCollection();
 
         var result = _controller.Page03(1, null!, null!, null!, null!, formCollection);
 
-        result.Should().BeOfType<RedirectToActionResult>();
-        var redirectResult = result as RedirectToActionResult;
-        redirectResult!.ActionName.Should().Be("Soon");
+        result.Should().BeOfType<RedirectToRouteResult>();
+        var redirectResult = result as RedirectToRouteResult;
+        redirectResult!.RouteValues["action"].Should().Be("Soon");
     }
 
     #endregion
@@ -1340,10 +1339,6 @@ public class JudgesRegistrationControllerTests
 /// </summary>
 public class TestableJudgesRegistrationController : JudgesRegistrationController
 {
-    // [SetsRequiredMembers] is needed because BaseRegistrationController.FriendlyRegistrationName is
-    // a 'required' property. The base JudgesRegistrationController constructor already sets it, but
-    // without this attribute the compiler prevents instantiation from external assemblies.
-    [SetsRequiredMembers]
     public TestableJudgesRegistrationController(IOdysseyRepository repository) : base(repository) { }
 
     public string TestGenerateEmailBody(Page03ViewData viewData) => GenerateEmailBody(viewData);

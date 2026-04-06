@@ -1,8 +1,9 @@
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Routing;
 using Moq;
-using OdysseyMvc2024.Models;
+using OdysseyMvc4.Models;
+using System.Collections.Specialized;
+using System.Web;
+using System.Web.Mvc;
+using System.Web.Routing;
 
 namespace OdysseyMvc4.UnitTests.Helpers;
 
@@ -48,7 +49,7 @@ public static class TestHelper
     /// <summary>
     /// Creates a default Event object suitable for tournament info.
     /// </summary>
-    public static Event CreateDefaultTournamentInfo() => new()
+    public static Event CreateDefaultTournamentInfo() => new Event
     {
         ID = 1,
         EventName = "Regional Tournament",
@@ -70,7 +71,7 @@ public static class TestHelper
     /// <summary>
     /// Creates a default Event object suitable for judges training info.
     /// </summary>
-    public static Event CreateDefaultJudgesInfo() => new()
+    public static Event CreateDefaultJudgesInfo() => new Event
     {
         ID = 2,
         EventName = "Judges Training",
@@ -107,48 +108,25 @@ public static class TestHelper
     /// <summary>
     /// Sets up the HttpContext, UrlHelper, and other MVC infrastructure on a controller
     /// so that methods like DetermineSiteName() and DetermineSiteCssFile() can be tested.
-    /// Uses a FakeUrlHelper since PageLink() is an extension method that cannot be mocked.
     /// </summary>
-    public static void SetupControllerContext(Controller controller, string host = "www.novanorth.org", string? pageLink = "http://www.novanorth.org/")
+    public static void SetupControllerContext(Controller controller, string host = "www.novanorth.org")
     {
-        var httpContext = new DefaultHttpContext();
-        httpContext.Request.Host = new HostString(host);
-        httpContext.Request.Scheme = "http";
+        var requestMock = new Mock<HttpRequestBase>();
+        requestMock.Setup(r => r.Url).Returns(new Uri($"http://{host}/"));
+        requestMock.Setup(r => r.ApplicationPath).Returns("/");
+        requestMock.Setup(r => r.ServerVariables).Returns(new NameValueCollection());
 
-        controller.ControllerContext = new ControllerContext
-        {
-            HttpContext = httpContext
-        };
+        var responseMock = new Mock<HttpResponseBase>();
+        responseMock.Setup(r => r.ApplyAppPathModifier(It.IsAny<string>())).Returns<string>(s => s);
 
-        controller.Url = new FakeUrlHelper(pageLink);
+        var httpContextMock = new Mock<HttpContextBase>();
+        httpContextMock.Setup(c => c.Request).Returns(requestMock.Object);
+        httpContextMock.Setup(c => c.Response).Returns(responseMock.Object);
+
+        var routeData = new RouteData();
+        controller.ControllerContext = new ControllerContext(httpContextMock.Object, routeData, controller);
+
+        var requestContext = new RequestContext(httpContextMock.Object, routeData);
+        controller.Url = new UrlHelper(requestContext);
     }
-}
-
-/// <summary>
-/// A fake IUrlHelper that returns predictable values for testing.
-/// This is needed because PageLink() is an extension method on IUrlHelper
-/// that cannot be mocked with Moq.
-/// </summary>
-public class FakeUrlHelper : IUrlHelper
-{
-    private readonly string? _pageLink;
-
-    public FakeUrlHelper(string? pageLink = "http://www.novanorth.org/")
-    {
-        _pageLink = pageLink;
-    }
-
-    public ActionContext ActionContext { get; } = new ActionContext(new DefaultHttpContext(), new Microsoft.AspNetCore.Routing.RouteData(), new Microsoft.AspNetCore.Mvc.Abstractions.ActionDescriptor());
-
-    public string? Action(UrlActionContext actionContext) => null;
-
-    public string? Content(string? contentPath) => contentPath?.Replace("~", "");
-
-    public bool IsLocalUrl(string? url) => false;
-
-    public string? Link(string? routeName, object? values) => _pageLink;
-
-    public string? Page(string? pageName, string? pageHandler, object? values, string? protocol, string? host, string? fragment) => _pageLink;
-
-    public string? RouteUrl(UrlRouteContext routeContext) => null;
 }

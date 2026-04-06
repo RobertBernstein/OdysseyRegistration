@@ -27,7 +27,24 @@ namespace OdysseyMvc4.Controllers
         /// <summary>
         /// The object that provides access to the database.
         /// </summary>
-        protected readonly OdysseyRepository Repository = new OdysseyRepository();
+        protected IOdysseyRepository Repository;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BaseRegistrationController"/> class.
+        /// </summary>
+        public BaseRegistrationController()
+        {
+            Repository = new OdysseyRepository();
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BaseRegistrationController"/> class
+        /// with an injected repository, used for unit testing.
+        /// </summary>
+        protected BaseRegistrationController(IOdysseyRepository repository)
+        {
+            Repository = repository;
+        }
 
         [HttpGet]
         public ActionResult BadEmail()

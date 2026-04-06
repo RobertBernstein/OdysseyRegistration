@@ -1,5 +1,5 @@
 using FluentAssertions;
-using OdysseyMvc2024.Models;
+using OdysseyMvc4.Models;
 
 namespace OdysseyMvc4.UnitTests.Models;
 
@@ -103,7 +103,7 @@ public class ModelTests
     {
         var reg = new TournamentRegistration
         {
-            Id = 1,
+            TeamID = 1,
             MembershipName = "Test Team",
             MembershipNumber = "12345",
             ProblemID = 3,
@@ -140,7 +140,7 @@ public class ModelTests
             UserAgent = "Chrome/120"
         };
 
-        reg.Id.Should().Be(1);
+        reg.TeamID.Should().Be(1);
         reg.MembershipName.Should().Be("Test Team");
         reg.Division.Should().Be("2");
         reg.CoachFirstName.Should().Be("Jane");

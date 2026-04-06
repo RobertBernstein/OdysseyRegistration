@@ -40,6 +40,16 @@ namespace OdysseyMvc4.Controllers
             this.FriendlyRegistrationName = this.GetDisplayableRegistrationName();
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="JudgesRegistrationController"/> class
+        /// with an injected repository, used for unit testing.
+        /// </summary>
+        public JudgesRegistrationController(IOdysseyRepository repository) : base(repository)
+        {
+            this.CurrentRegistrationType = RegistrationType.Judges;
+            this.FriendlyRegistrationName = this.GetDisplayableRegistrationName();
+        }
+
         public string BuildMailRegionalDirectorHyperLink(Page01ViewData viewData)
         {
             StringBuilder builder = new StringBuilder();

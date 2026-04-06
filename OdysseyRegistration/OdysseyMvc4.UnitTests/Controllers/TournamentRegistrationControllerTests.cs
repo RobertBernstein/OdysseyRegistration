@@ -1,10 +1,9 @@
 using FluentAssertions;
 using Moq;
-using OdysseyMvc2024.Controllers;
-using OdysseyMvc2024.Models;
+using OdysseyMvc4.Controllers;
+using OdysseyMvc4.Models;
 using OdysseyMvc4.UnitTests.Helpers;
 using System.Web.Mvc;
-using Mvc4Controller = OdysseyMvc4.Controllers.TournamentRegistrationController;
 
 namespace OdysseyMvc4.UnitTests.Controllers;
 
@@ -268,9 +267,9 @@ public class TournamentRegistrationControllerTests
     {
         var result = _controller.Index();
 
-        result.Should().BeOfType<Microsoft.AspNetCore.Mvc.RedirectToActionResult>();
-        var redirectResult = result as Microsoft.AspNetCore.Mvc.RedirectToActionResult;
-        redirectResult!.ActionName.Should().Be("Page01");
+        result.Should().BeOfType<System.Web.Mvc.RedirectToRouteResult>();
+        var redirectResult = result as System.Web.Mvc.RedirectToRouteResult;
+        redirectResult!.RouteValues["action"].Should().Be("Page01");
     }
 
     #endregion
@@ -285,9 +284,9 @@ public class TournamentRegistrationControllerTests
 
         var result = _controller.Page01();
 
-        result.Should().BeOfType<Microsoft.AspNetCore.Mvc.ViewResult>();
-        var viewResult = result as Microsoft.AspNetCore.Mvc.ViewResult;
-        viewResult!.Model.Should().BeOfType<OdysseyMvc2024.ViewData.TournamentRegistration.Page01ViewData>();
+        result.Should().BeOfType<System.Web.Mvc.ViewResult>();
+        var viewResult = result as System.Web.Mvc.ViewResult;
+        viewResult!.Model.Should().BeOfType<OdysseyMvc4.ViewData.TournamentRegistration.Page01ViewData>();
         _mockRepo.Verify(r => r.Config, Times.AtLeastOnce);
         _mockRepo.Verify(r => r.TournamentInfo, Times.AtLeastOnce);
     }
@@ -317,9 +316,9 @@ public class TournamentRegistrationControllerTests
 
         var result = _controller.Page01();
 
-        result.Should().BeOfType<Microsoft.AspNetCore.Mvc.RedirectToActionResult>();
-        var redirectResult = result as Microsoft.AspNetCore.Mvc.RedirectToActionResult;
-        redirectResult!.ActionName.Should().Be(state);
+        result.Should().BeOfType<System.Web.Mvc.RedirectToRouteResult>();
+        var redirectResult = result as System.Web.Mvc.RedirectToRouteResult;
+        redirectResult!.RouteValues["action"].Should().Be(state);
     }
 
     #endregion
@@ -331,17 +330,17 @@ public class TournamentRegistrationControllerTests
     {
         _mockRepo.Setup(r => r.Config).Returns(TestHelper.CreateDefaultConfig());
         _mockRepo.Setup(r => r.TournamentInfo).Returns(TestHelper.CreateDefaultTournamentInfo());
-        _mockRepo.Setup(r => r.AddTournamentRegistration(It.IsAny<OdysseyMvc2024.Models.TournamentRegistration>()))
-            .Callback<OdysseyMvc2024.Models.TournamentRegistration>(tr => tr.Id = 123);
+        _mockRepo.Setup(r => r.AddTournamentRegistration(It.IsAny<OdysseyMvc4.Models.TournamentRegistration>()))
+            .Callback<OdysseyMvc4.Models.TournamentRegistration>(tr => tr.TeamID = 123);
 
         var result = _controller.Page01Post();
 
-        result.Should().BeOfType<Microsoft.AspNetCore.Mvc.RedirectToActionResult>();
-        var redirectResult = result as Microsoft.AspNetCore.Mvc.RedirectToActionResult;
-        redirectResult!.ActionName.Should().Be("Page02");
+        result.Should().BeOfType<System.Web.Mvc.RedirectToRouteResult>();
+        var redirectResult = result as System.Web.Mvc.RedirectToRouteResult;
+        redirectResult!.RouteValues["action"].Should().Be("Page02");
         redirectResult.RouteValues.Should().ContainKey("id");
         redirectResult.RouteValues!["id"].Should().Be(123);
-        _mockRepo.Verify(r => r.AddTournamentRegistration(It.IsAny<OdysseyMvc2024.Models.TournamentRegistration>()), Times.Once);
+        _mockRepo.Verify(r => r.AddTournamentRegistration(It.IsAny<OdysseyMvc4.Models.TournamentRegistration>()), Times.Once);
     }
 
     [Theory]
@@ -369,10 +368,10 @@ public class TournamentRegistrationControllerTests
 
         var result = _controller.Page01Post();
 
-        result.Should().BeOfType<Microsoft.AspNetCore.Mvc.RedirectToActionResult>();
-        var redirectResult = result as Microsoft.AspNetCore.Mvc.RedirectToActionResult;
-        redirectResult!.ActionName.Should().Be(state);
-        _mockRepo.Verify(r => r.AddTournamentRegistration(It.IsAny<OdysseyMvc2024.Models.TournamentRegistration>()), Times.Never);
+        result.Should().BeOfType<System.Web.Mvc.RedirectToRouteResult>();
+        var redirectResult = result as System.Web.Mvc.RedirectToRouteResult;
+        redirectResult!.RouteValues["action"].Should().Be(state);
+        _mockRepo.Verify(r => r.AddTournamentRegistration(It.IsAny<OdysseyMvc4.Models.TournamentRegistration>()), Times.Never);
     }
 
     [Fact]
@@ -380,15 +379,15 @@ public class TournamentRegistrationControllerTests
     {
         _mockRepo.Setup(r => r.Config).Returns(TestHelper.CreateDefaultConfig());
         _mockRepo.Setup(r => r.TournamentInfo).Returns(TestHelper.CreateDefaultTournamentInfo());
-        _mockRepo.Setup(r => r.AddTournamentRegistration(It.IsAny<OdysseyMvc2024.Models.TournamentRegistration>()))
+        _mockRepo.Setup(r => r.AddTournamentRegistration(It.IsAny<OdysseyMvc4.Models.TournamentRegistration>()))
             .Throws(new Exception("Database error"));
 
         var result = _controller.Page01Post();
 
-        result.Should().BeOfType<Microsoft.AspNetCore.Mvc.RedirectToActionResult>();
-        var redirectResult = result as Microsoft.AspNetCore.Mvc.RedirectToActionResult;
-        redirectResult!.ActionName.Should().Be("Index");
-        redirectResult.ControllerName.Should().Be("Home");
+        result.Should().BeOfType<System.Web.Mvc.RedirectToRouteResult>();
+        var redirectResult = result as System.Web.Mvc.RedirectToRouteResult;
+        redirectResult!.RouteValues["action"].Should().Be("Index");
+        redirectResult.RouteValues["controller"].Should().Be("Home");
     }
 
     #endregion
@@ -400,7 +399,7 @@ public class TournamentRegistrationControllerTests
     {
         _mockRepo.Setup(r => r.Config).Returns(TestHelper.CreateDefaultConfig());
         _mockRepo.Setup(r => r.TournamentInfo).Returns(TestHelper.CreateDefaultTournamentInfo());
-        var schools = new List<OdysseyMvc2024.Models.School>
+        var schools = new List<OdysseyMvc4.Models.School>
         {
             new() { ID = 1, Name = "School A" },
             new() { ID = 2, Name = "School B" }
@@ -409,10 +408,10 @@ public class TournamentRegistrationControllerTests
 
         var result = _controller.Page02(123);
 
-        result.Should().BeOfType<Microsoft.AspNetCore.Mvc.ViewResult>();
-        var viewResult = result as Microsoft.AspNetCore.Mvc.ViewResult;
-        viewResult!.Model.Should().BeOfType<OdysseyMvc2024.ViewData.TournamentRegistration.Page02ViewData>();
-        var viewData = viewResult.Model as OdysseyMvc2024.ViewData.TournamentRegistration.Page02ViewData;
+        result.Should().BeOfType<System.Web.Mvc.ViewResult>();
+        var viewResult = result as System.Web.Mvc.ViewResult;
+        viewResult!.Model.Should().BeOfType<OdysseyMvc4.ViewData.TournamentRegistration.Page02ViewData>();
+        var viewData = viewResult.Model as OdysseyMvc4.ViewData.TournamentRegistration.Page02ViewData;
         viewData!.SchoolList.Should().NotBeNull();
         _mockRepo.Verify(r => r.Schools, Times.Once);
     }
@@ -442,9 +441,9 @@ public class TournamentRegistrationControllerTests
 
         var result = _controller.Page02(123);
 
-        result.Should().BeOfType<Microsoft.AspNetCore.Mvc.RedirectToActionResult>();
-        var redirectResult = result as Microsoft.AspNetCore.Mvc.RedirectToActionResult;
-        redirectResult!.ActionName.Should().Be(state);
+        result.Should().BeOfType<System.Web.Mvc.RedirectToRouteResult>();
+        var redirectResult = result as System.Web.Mvc.RedirectToRouteResult;
+        redirectResult!.RouteValues["action"].Should().Be(state);
     }
 
     #endregion
@@ -454,14 +453,14 @@ public class TournamentRegistrationControllerTests
     [Fact]
     public void Mvc4Constructor_SetsRegistrationTypeToTournament()
     {
-        var controller = new Mvc4Controller();
+        var controller = new TournamentRegistrationController();
         controller.CurrentRegistrationType.Should().Be(OdysseyMvc4.Controllers.BaseRegistrationController.RegistrationType.Tournament);
     }
 
     [Fact]
     public void Mvc4Constructor_SetsFriendlyRegistrationName()
     {
-        var controller = new Mvc4Controller();
+        var controller = new TournamentRegistrationController();
         controller.FriendlyRegistrationName.Should().Be("Tournament Registration");
     }
 
@@ -492,7 +491,7 @@ public class TournamentRegistrationControllerTests
     [InlineData("2", 0)]
     public void Mvc4GetDivisionOfTeamMember_PrimaryGrades_ReturnsDivision0(string grade, int expectedDivision)
     {
-        var controller = new Mvc4Controller();
+        var controller = new TournamentRegistrationController();
         controller.GetDivisionOfTeamMember(grade).Should().Be(expectedDivision);
     }
 
@@ -502,7 +501,7 @@ public class TournamentRegistrationControllerTests
     [InlineData("5", 1)]
     public void Mvc4GetDivisionOfTeamMember_Division1Grades_ReturnsDivision1(string grade, int expectedDivision)
     {
-        var controller = new Mvc4Controller();
+        var controller = new TournamentRegistrationController();
         controller.GetDivisionOfTeamMember(grade).Should().Be(expectedDivision);
     }
 
@@ -512,7 +511,7 @@ public class TournamentRegistrationControllerTests
     [InlineData("8", 2)]
     public void Mvc4GetDivisionOfTeamMember_Division2Grades_ReturnsDivision2(string grade, int expectedDivision)
     {
-        var controller = new Mvc4Controller();
+        var controller = new TournamentRegistrationController();
         controller.GetDivisionOfTeamMember(grade).Should().Be(expectedDivision);
     }
 
@@ -523,7 +522,7 @@ public class TournamentRegistrationControllerTests
     [InlineData("12", 3)]
     public void Mvc4GetDivisionOfTeamMember_Division3Grades_ReturnsDivision3(string grade, int expectedDivision)
     {
-        var controller = new Mvc4Controller();
+        var controller = new TournamentRegistrationController();
         controller.GetDivisionOfTeamMember(grade).Should().Be(expectedDivision);
     }
 
@@ -534,7 +533,7 @@ public class TournamentRegistrationControllerTests
     [Fact]
     public void Mvc4DetermineDivisionOfTeam_AllKindergarten_ReturnsDivision0()
     {
-        var controller = new Mvc4Controller();
+        var controller = new TournamentRegistrationController();
         var grades = new List<string> { "Kindergarten", "Kindergarten", "1" };
         controller.DetermineDivisionOfTeam(grades).Should().Be(0);
     }
@@ -542,7 +541,7 @@ public class TournamentRegistrationControllerTests
     [Fact]
     public void Mvc4DetermineDivisionOfTeam_MixedPrimaryAndDiv1_ReturnsDivision1()
     {
-        var controller = new Mvc4Controller();
+        var controller = new TournamentRegistrationController();
         var grades = new List<string> { "Kindergarten", "2", "4" };
         controller.DetermineDivisionOfTeam(grades).Should().Be(1);
     }
@@ -550,7 +549,7 @@ public class TournamentRegistrationControllerTests
     [Fact]
     public void Mvc4DetermineDivisionOfTeam_HighestGradeWins_ReturnsDivision3()
     {
-        var controller = new Mvc4Controller();
+        var controller = new TournamentRegistrationController();
         var grades = new List<string> { "3", "5", "9" };
         controller.DetermineDivisionOfTeam(grades).Should().Be(3);
     }
@@ -558,7 +557,7 @@ public class TournamentRegistrationControllerTests
     [Fact]
     public void Mvc4DetermineDivisionOfTeam_WithEmptyGrades_SkipsThem()
     {
-        var controller = new Mvc4Controller();
+        var controller = new TournamentRegistrationController();
         var grades = new List<string> { "", "3", "", "5" };
         controller.DetermineDivisionOfTeam(grades).Should().Be(1);
     }
@@ -566,7 +565,7 @@ public class TournamentRegistrationControllerTests
     [Fact]
     public void Mvc4DetermineDivisionOfTeam_WithNullGrades_SkipsThem()
     {
-        var controller = new Mvc4Controller();
+        var controller = new TournamentRegistrationController();
         var grades = new List<string> { null!, "6", null! };
         controller.DetermineDivisionOfTeam(grades).Should().Be(2);
     }
@@ -574,7 +573,7 @@ public class TournamentRegistrationControllerTests
     [Fact]
     public void Mvc4DetermineDivisionOfTeam_AllEmptyGrades_ReturnsMinus1()
     {
-        var controller = new Mvc4Controller();
+        var controller = new TournamentRegistrationController();
         var grades = new List<string> { "", "", "" };
         controller.DetermineDivisionOfTeam(grades).Should().Be(-1);
     }
@@ -582,7 +581,7 @@ public class TournamentRegistrationControllerTests
     [Fact]
     public void Mvc4DetermineDivisionOfTeam_EmptyList_ReturnsMinus1()
     {
-        var controller = new Mvc4Controller();
+        var controller = new TournamentRegistrationController();
         var grades = new List<string>();
         controller.DetermineDivisionOfTeam(grades).Should().Be(-1);
     }
@@ -590,7 +589,7 @@ public class TournamentRegistrationControllerTests
     [Fact]
     public void Mvc4DetermineDivisionOfTeam_SingleGrade12_ReturnsDivision3()
     {
-        var controller = new Mvc4Controller();
+        var controller = new TournamentRegistrationController();
         var grades = new List<string> { "12" };
         controller.DetermineDivisionOfTeam(grades).Should().Be(3);
     }
@@ -598,7 +597,7 @@ public class TournamentRegistrationControllerTests
     [Fact]
     public void Mvc4DetermineDivisionOfTeam_AllDivision2_ReturnsDivision2()
     {
-        var controller = new Mvc4Controller();
+        var controller = new TournamentRegistrationController();
         var grades = new List<string> { "6", "7", "8", "6", "7" };
         controller.DetermineDivisionOfTeam(grades).Should().Be(2);
     }
@@ -606,7 +605,7 @@ public class TournamentRegistrationControllerTests
     [Fact]
     public void Mvc4DetermineDivisionOfTeam_SevenMemberTeam_UsesHighestDivision()
     {
-        var controller = new Mvc4Controller();
+        var controller = new TournamentRegistrationController();
         var grades = new List<string> { "1", "2", "3", "4", "5", "6", "7" };
         controller.DetermineDivisionOfTeam(grades).Should().Be(2);
     }
@@ -659,22 +658,22 @@ public class TournamentRegistrationControllerTests
     {
         _mockRepo.Setup(r => r.Config).Returns(TestHelper.CreateDefaultConfig());
         _mockRepo.Setup(r => r.TournamentInfo).Returns(TestHelper.CreateDefaultTournamentInfo());
-        _mockRepo.Setup(r => r.UpdateTournamentRegistration(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<OdysseyMvc2024.Models.TournamentRegistration>()));
+        _mockRepo.Setup(r => r.UpdateTournamentRegistration(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<OdysseyMvc4.Models.TournamentRegistration>()));
 
-        var viewData = new OdysseyMvc2024.ViewData.TournamentRegistration.Page02ViewData
+        var viewData = new OdysseyMvc4.ViewData.TournamentRegistration.Page02ViewData
         {
-            SchoolList = new List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>(),
+            SchoolList = new List<System.Web.Mvc.SelectListItem>(),
             SelectedSchool = 5
         };
 
         var result = _controller.Page02(123, viewData);
 
-        result.Should().BeOfType<Microsoft.AspNetCore.Mvc.RedirectToActionResult>();
-        var redirectResult = result as Microsoft.AspNetCore.Mvc.RedirectToActionResult;
-        redirectResult!.ActionName.Should().Be("Page03");
+        result.Should().BeOfType<System.Web.Mvc.RedirectToRouteResult>();
+        var redirectResult = result as System.Web.Mvc.RedirectToRouteResult;
+        redirectResult!.RouteValues["action"].Should().Be("Page03");
         redirectResult.RouteValues.Should().ContainKey("id");
         redirectResult.RouteValues!["id"].Should().Be(123);
-        _mockRepo.Verify(r => r.UpdateTournamentRegistration(123, 2, It.Is<OdysseyMvc2024.Models.TournamentRegistration>(tr => tr.SchoolID == 5)), Times.Once);
+        _mockRepo.Verify(r => r.UpdateTournamentRegistration(123, 2, It.Is<OdysseyMvc4.Models.TournamentRegistration>(tr => tr.SchoolID == 5)), Times.Once);
     }
 
     [Theory]
@@ -700,18 +699,18 @@ public class TournamentRegistrationControllerTests
         _mockRepo.Setup(r => r.Config).Returns(config);
         _mockRepo.Setup(r => r.TournamentInfo).Returns(TestHelper.CreateDefaultTournamentInfo());
 
-        var viewData = new OdysseyMvc2024.ViewData.TournamentRegistration.Page02ViewData
+        var viewData = new OdysseyMvc4.ViewData.TournamentRegistration.Page02ViewData
         {
-            SchoolList = new List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>(),
+            SchoolList = new List<System.Web.Mvc.SelectListItem>(),
             SelectedSchool = 5
         };
 
         var result = _controller.Page02(123, viewData);
 
-        result.Should().BeOfType<Microsoft.AspNetCore.Mvc.RedirectToActionResult>();
-        var redirectResult = result as Microsoft.AspNetCore.Mvc.RedirectToActionResult;
-        redirectResult!.ActionName.Should().Be(state);
-        _mockRepo.Verify(r => r.UpdateTournamentRegistration(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<OdysseyMvc2024.Models.TournamentRegistration>()), Times.Never);
+        result.Should().BeOfType<System.Web.Mvc.RedirectToRouteResult>();
+        var redirectResult = result as System.Web.Mvc.RedirectToRouteResult;
+        redirectResult!.RouteValues["action"].Should().Be(state);
+        _mockRepo.Verify(r => r.UpdateTournamentRegistration(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<OdysseyMvc4.Models.TournamentRegistration>()), Times.Never);
     }
 
     [Fact]
@@ -719,21 +718,21 @@ public class TournamentRegistrationControllerTests
     {
         _mockRepo.Setup(r => r.Config).Returns(TestHelper.CreateDefaultConfig());
         _mockRepo.Setup(r => r.TournamentInfo).Returns(TestHelper.CreateDefaultTournamentInfo());
-        _mockRepo.Setup(r => r.UpdateTournamentRegistration(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<OdysseyMvc2024.Models.TournamentRegistration>()))
+        _mockRepo.Setup(r => r.UpdateTournamentRegistration(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<OdysseyMvc4.Models.TournamentRegistration>()))
             .Throws(new Exception("Database error"));
 
-        var viewData = new OdysseyMvc2024.ViewData.TournamentRegistration.Page02ViewData
+        var viewData = new OdysseyMvc4.ViewData.TournamentRegistration.Page02ViewData
         {
-            SchoolList = new List<Microsoft.AspNetCore.Mvc.Rendering.SelectListItem>(),
+            SchoolList = new List<System.Web.Mvc.SelectListItem>(),
             SelectedSchool = 5
         };
 
         var result = _controller.Page02(123, viewData);
 
-        result.Should().BeOfType<Microsoft.AspNetCore.Mvc.RedirectToActionResult>();
-        var redirectResult = result as Microsoft.AspNetCore.Mvc.RedirectToActionResult;
-        redirectResult!.ActionName.Should().Be("Index");
-        redirectResult.ControllerName.Should().Be("Home");
+        result.Should().BeOfType<System.Web.Mvc.RedirectToRouteResult>();
+        var redirectResult = result as System.Web.Mvc.RedirectToRouteResult;
+        redirectResult!.RouteValues["action"].Should().Be("Index");
+        redirectResult.RouteValues["controller"].Should().Be("Home");
     }
 
     #endregion
@@ -748,10 +747,10 @@ public class TournamentRegistrationControllerTests
 
         var result = _controller.Page03(123);
 
-        result.Should().BeOfType<Microsoft.AspNetCore.Mvc.ViewResult>();
-        var viewResult = result as Microsoft.AspNetCore.Mvc.ViewResult;
-        viewResult!.Model.Should().BeOfType<OdysseyMvc2024.ViewData.TournamentRegistration.Page03ViewData>();
-        var viewData = viewResult.Model as OdysseyMvc2024.ViewData.TournamentRegistration.Page03ViewData;
+        result.Should().BeOfType<System.Web.Mvc.ViewResult>();
+        var viewResult = result as System.Web.Mvc.ViewResult;
+        viewResult!.Model.Should().BeOfType<OdysseyMvc4.ViewData.TournamentRegistration.Page03ViewData>();
+        var viewData = viewResult.Model as OdysseyMvc4.ViewData.TournamentRegistration.Page03ViewData;
         viewData!.NoJudgesFound.Should().BeFalse();
         _mockRepo.Verify(r => r.Config, Times.AtLeastOnce);
         _mockRepo.Verify(r => r.TournamentInfo, Times.AtLeastOnce);
@@ -782,9 +781,9 @@ public class TournamentRegistrationControllerTests
 
         var result = _controller.Page03(123);
 
-        result.Should().BeOfType<Microsoft.AspNetCore.Mvc.RedirectToActionResult>();
-        var redirectResult = result as Microsoft.AspNetCore.Mvc.RedirectToActionResult;
-        redirectResult!.ActionName.Should().Be(state);
+        result.Should().BeOfType<System.Web.Mvc.RedirectToRouteResult>();
+        var redirectResult = result as System.Web.Mvc.RedirectToRouteResult;
+        redirectResult!.RouteValues["action"].Should().Be(state);
     }
 
     #endregion
@@ -797,17 +796,17 @@ public class TournamentRegistrationControllerTests
         _mockRepo.Setup(r => r.Config).Returns(TestHelper.CreateDefaultConfig());
         _mockRepo.Setup(r => r.TournamentInfo).Returns(TestHelper.CreateDefaultTournamentInfo());
         
-        var judges = new List<OdysseyMvc2024.Models.Judge>
+        var judges = new List<OdysseyMvc4.Models.Judge>
         {
             new() { JudgeID = 100, FirstName = "John", LastName = "Doe", TeamID = null }
         }.AsQueryable();
         
         _mockRepo.Setup(r => r.GetJudgeByIdAndName(100, "John", "Doe")).Returns(judges);
-        _mockRepo.Setup(r => r.UpdateTournamentRegistration(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<OdysseyMvc2024.Models.TournamentRegistration>()));
+        _mockRepo.Setup(r => r.UpdateTournamentRegistration(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<OdysseyMvc4.Models.TournamentRegistration>()));
 
-        var viewData = new OdysseyMvc2024.ViewData.TournamentRegistration.Page03ViewData
+        var viewData = new OdysseyMvc4.ViewData.TournamentRegistration.Page03ViewData
         {
-            ListOfJudgesFound = new List<OdysseyMvc2024.Models.Judge>().AsQueryable(),
+            ListOfJudgesFound = new List<OdysseyMvc4.Models.Judge>().AsQueryable(),
             JudgeId = "100",
             JudgeFirstName = "John",
             JudgeLastName = "Doe"
@@ -815,12 +814,12 @@ public class TournamentRegistrationControllerTests
 
         var result = _controller.Page03(123, viewData);
 
-        result.Should().BeOfType<Microsoft.AspNetCore.Mvc.RedirectToActionResult>();
-        var redirectResult = result as Microsoft.AspNetCore.Mvc.RedirectToActionResult;
-        redirectResult!.ActionName.Should().Be("Page05");
+        result.Should().BeOfType<System.Web.Mvc.RedirectToRouteResult>();
+        var redirectResult = result as System.Web.Mvc.RedirectToRouteResult;
+        redirectResult!.RouteValues["action"].Should().Be("Page05");
         redirectResult.RouteValues.Should().ContainKey("id");
         redirectResult.RouteValues!["id"].Should().Be(123);
-        _mockRepo.Verify(r => r.UpdateTournamentRegistration(123, 3, It.Is<OdysseyMvc2024.Models.TournamentRegistration>(tr => tr.JudgeID == 100)), Times.Once);
+        _mockRepo.Verify(r => r.UpdateTournamentRegistration(123, 3, It.Is<OdysseyMvc4.Models.TournamentRegistration>(tr => tr.JudgeID == 100)), Times.Once);
     }
 
     [Fact]
@@ -829,12 +828,12 @@ public class TournamentRegistrationControllerTests
         _mockRepo.Setup(r => r.Config).Returns(TestHelper.CreateDefaultConfig());
         _mockRepo.Setup(r => r.TournamentInfo).Returns(TestHelper.CreateDefaultTournamentInfo());
         
-        var emptyJudges = new List<OdysseyMvc2024.Models.Judge>().AsQueryable();
+        var emptyJudges = new List<OdysseyMvc4.Models.Judge>().AsQueryable();
         _mockRepo.Setup(r => r.GetJudgeByIdAndName(100, "Jane", "Smith")).Returns(emptyJudges);
 
-        var viewData = new OdysseyMvc2024.ViewData.TournamentRegistration.Page03ViewData
+        var viewData = new OdysseyMvc4.ViewData.TournamentRegistration.Page03ViewData
         {
-            ListOfJudgesFound = new List<OdysseyMvc2024.Models.Judge>().AsQueryable(),
+            ListOfJudgesFound = new List<OdysseyMvc4.Models.Judge>().AsQueryable(),
             JudgeId = "100",
             JudgeFirstName = "Jane",
             JudgeLastName = "Smith"
@@ -842,11 +841,11 @@ public class TournamentRegistrationControllerTests
 
         var result = _controller.Page03(123, viewData);
 
-        result.Should().BeOfType<Microsoft.AspNetCore.Mvc.ViewResult>();
-        var viewResult = result as Microsoft.AspNetCore.Mvc.ViewResult;
-        var returnedViewData = viewResult!.Model as OdysseyMvc2024.ViewData.TournamentRegistration.Page03ViewData;
+        result.Should().BeOfType<System.Web.Mvc.ViewResult>();
+        var viewResult = result as System.Web.Mvc.ViewResult;
+        var returnedViewData = viewResult!.Model as OdysseyMvc4.ViewData.TournamentRegistration.Page03ViewData;
         returnedViewData!.NoJudgesFound.Should().BeTrue();
-        _mockRepo.Verify(r => r.UpdateTournamentRegistration(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<OdysseyMvc2024.Models.TournamentRegistration>()), Times.Never);
+        _mockRepo.Verify(r => r.UpdateTournamentRegistration(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<OdysseyMvc4.Models.TournamentRegistration>()), Times.Never);
     }
 
     [Fact]
@@ -855,16 +854,16 @@ public class TournamentRegistrationControllerTests
         _mockRepo.Setup(r => r.Config).Returns(TestHelper.CreateDefaultConfig());
         _mockRepo.Setup(r => r.TournamentInfo).Returns(TestHelper.CreateDefaultTournamentInfo());
         
-        var judges = new List<OdysseyMvc2024.Models.Judge>
+        var judges = new List<OdysseyMvc4.Models.Judge>
         {
             new() { JudgeID = 100, FirstName = "John", LastName = "Doe", TeamID = "999" }
         }.AsQueryable();
         
         _mockRepo.Setup(r => r.GetJudgeByIdAndName(100, "John", "Doe")).Returns(judges);
 
-        var viewData = new OdysseyMvc2024.ViewData.TournamentRegistration.Page03ViewData
+        var viewData = new OdysseyMvc4.ViewData.TournamentRegistration.Page03ViewData
         {
-            ListOfJudgesFound = new List<OdysseyMvc2024.Models.Judge>().AsQueryable(),
+            ListOfJudgesFound = new List<OdysseyMvc4.Models.Judge>().AsQueryable(),
             JudgeId = "100",
             JudgeFirstName = "John",
             JudgeLastName = "Doe"
@@ -872,11 +871,11 @@ public class TournamentRegistrationControllerTests
 
         var result = _controller.Page03(123, viewData);
 
-        result.Should().BeOfType<Microsoft.AspNetCore.Mvc.ViewResult>();
-        var viewResult = result as Microsoft.AspNetCore.Mvc.ViewResult;
-        var returnedViewData = viewResult!.Model as OdysseyMvc2024.ViewData.TournamentRegistration.Page03ViewData;
+        result.Should().BeOfType<System.Web.Mvc.ViewResult>();
+        var viewResult = result as System.Web.Mvc.ViewResult;
+        var returnedViewData = viewResult!.Model as OdysseyMvc4.ViewData.TournamentRegistration.Page03ViewData;
         returnedViewData!.JudgeAlreadyTaken.Should().BeTrue();
-        _mockRepo.Verify(r => r.UpdateTournamentRegistration(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<OdysseyMvc2024.Models.TournamentRegistration>()), Times.Never);
+        _mockRepo.Verify(r => r.UpdateTournamentRegistration(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<OdysseyMvc4.Models.TournamentRegistration>()), Times.Never);
     }
 
     [Theory]
@@ -902,9 +901,9 @@ public class TournamentRegistrationControllerTests
         _mockRepo.Setup(r => r.Config).Returns(config);
         _mockRepo.Setup(r => r.TournamentInfo).Returns(TestHelper.CreateDefaultTournamentInfo());
 
-        var viewData = new OdysseyMvc2024.ViewData.TournamentRegistration.Page03ViewData
+        var viewData = new OdysseyMvc4.ViewData.TournamentRegistration.Page03ViewData
         {
-            ListOfJudgesFound = new List<OdysseyMvc2024.Models.Judge>().AsQueryable(),
+            ListOfJudgesFound = new List<OdysseyMvc4.Models.Judge>().AsQueryable(),
             JudgeId = "100",
             JudgeFirstName = "John",
             JudgeLastName = "Doe"
@@ -912,9 +911,9 @@ public class TournamentRegistrationControllerTests
 
         var result = _controller.Page03(123, viewData);
 
-        result.Should().BeOfType<Microsoft.AspNetCore.Mvc.RedirectToActionResult>();
-        var redirectResult = result as Microsoft.AspNetCore.Mvc.RedirectToActionResult;
-        redirectResult!.ActionName.Should().Be(state);
+        result.Should().BeOfType<System.Web.Mvc.RedirectToRouteResult>();
+        var redirectResult = result as System.Web.Mvc.RedirectToRouteResult;
+        redirectResult!.RouteValues["action"].Should().Be(state);
         _mockRepo.Verify(r => r.GetJudgeByIdAndName(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never);
     }
 
@@ -926,9 +925,9 @@ public class TournamentRegistrationControllerTests
         _mockRepo.Setup(r => r.GetJudgeByIdAndName(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>()))
             .Throws(new Exception("Database error"));
 
-        var viewData = new OdysseyMvc2024.ViewData.TournamentRegistration.Page03ViewData
+        var viewData = new OdysseyMvc4.ViewData.TournamentRegistration.Page03ViewData
         {
-            ListOfJudgesFound = new List<OdysseyMvc2024.Models.Judge>().AsQueryable(),
+            ListOfJudgesFound = new List<OdysseyMvc4.Models.Judge>().AsQueryable(),
             JudgeId = "100",
             JudgeFirstName = "John",
             JudgeLastName = "Doe"
@@ -936,10 +935,10 @@ public class TournamentRegistrationControllerTests
 
         var result = _controller.Page03(123, viewData);
 
-        result.Should().BeOfType<Microsoft.AspNetCore.Mvc.RedirectToActionResult>();
-        var redirectResult = result as Microsoft.AspNetCore.Mvc.RedirectToActionResult;
-        redirectResult!.ActionName.Should().Be("Index");
-        redirectResult.ControllerName.Should().Be("Home");
+        result.Should().BeOfType<System.Web.Mvc.RedirectToRouteResult>();
+        var redirectResult = result as System.Web.Mvc.RedirectToRouteResult;
+        redirectResult!.RouteValues["action"].Should().Be("Index");
+        redirectResult.RouteValues["controller"].Should().Be("Home");
     }
 
     #endregion
@@ -954,9 +953,9 @@ public class TournamentRegistrationControllerTests
 
         var result = _controller.Page04(null);
 
-        result.Should().BeOfType<Microsoft.AspNetCore.Mvc.RedirectToActionResult>();
-        var redirectResult = result as Microsoft.AspNetCore.Mvc.RedirectToActionResult;
-        redirectResult!.ActionName.Should().Be("Error");
+        result.Should().BeOfType<System.Web.Mvc.RedirectToRouteResult>();
+        var redirectResult = result as System.Web.Mvc.RedirectToRouteResult;
+        redirectResult!.RouteValues["action"].Should().Be("Error");
     }
 
     [Fact]
@@ -967,10 +966,10 @@ public class TournamentRegistrationControllerTests
 
         var result = _controller.Page04(123);
 
-        result.Should().BeOfType<Microsoft.AspNetCore.Mvc.ViewResult>();
-        var viewResult = result as Microsoft.AspNetCore.Mvc.ViewResult;
-        viewResult!.Model.Should().BeOfType<OdysseyMvc2024.ViewData.TournamentRegistration.Page04ViewData>();
-        var viewData = viewResult.Model as OdysseyMvc2024.ViewData.TournamentRegistration.Page04ViewData;
+        result.Should().BeOfType<System.Web.Mvc.ViewResult>();
+        var viewResult = result as System.Web.Mvc.ViewResult;
+        viewResult!.Model.Should().BeOfType<OdysseyMvc4.ViewData.TournamentRegistration.Page04ViewData>();
+        var viewData = viewResult.Model as OdysseyMvc4.ViewData.TournamentRegistration.Page04ViewData;
         viewData!.NoVolunteersFound.Should().BeFalse();
         _mockRepo.Verify(r => r.Config, Times.AtLeastOnce);
         _mockRepo.Verify(r => r.TournamentInfo, Times.AtLeastOnce);
@@ -1001,9 +1000,9 @@ public class TournamentRegistrationControllerTests
 
         var result = _controller.Page04(123);
 
-        result.Should().BeOfType<Microsoft.AspNetCore.Mvc.RedirectToActionResult>();
-        var redirectResult = result as Microsoft.AspNetCore.Mvc.RedirectToActionResult;
-        redirectResult!.ActionName.Should().Be(state);
+        result.Should().BeOfType<System.Web.Mvc.RedirectToRouteResult>();
+        var redirectResult = result as System.Web.Mvc.RedirectToRouteResult;
+        redirectResult!.RouteValues["action"].Should().Be(state);
     }
 
     #endregion
@@ -1016,13 +1015,13 @@ public class TournamentRegistrationControllerTests
         _mockRepo.Setup(r => r.Config).Returns(TestHelper.CreateDefaultConfig());
         _mockRepo.Setup(r => r.TournamentInfo).Returns(TestHelper.CreateDefaultTournamentInfo());
 
-        var viewData = new OdysseyMvc2024.ViewData.TournamentRegistration.Page04ViewData();
+        var viewData = new OdysseyMvc4.ViewData.TournamentRegistration.Page04ViewData();
 
         var result = _controller.Page04(null, viewData);
 
-        result.Should().BeOfType<Microsoft.AspNetCore.Mvc.RedirectToActionResult>();
-        var redirectResult = result as Microsoft.AspNetCore.Mvc.RedirectToActionResult;
-        redirectResult!.ActionName.Should().Be("Error");
+        result.Should().BeOfType<System.Web.Mvc.RedirectToRouteResult>();
+        var redirectResult = result as System.Web.Mvc.RedirectToRouteResult;
+        redirectResult!.RouteValues["action"].Should().Be("Error");
     }
 
     [Fact]
@@ -1031,13 +1030,13 @@ public class TournamentRegistrationControllerTests
         _mockRepo.Setup(r => r.Config).Returns(TestHelper.CreateDefaultConfig());
         _mockRepo.Setup(r => r.TournamentInfo).Returns(TestHelper.CreateDefaultTournamentInfo());
 
-        var viewData = new OdysseyMvc2024.ViewData.TournamentRegistration.Page04ViewData();
+        var viewData = new OdysseyMvc4.ViewData.TournamentRegistration.Page04ViewData();
 
         var result = _controller.Page04(123, viewData);
 
-        result.Should().BeOfType<Microsoft.AspNetCore.Mvc.RedirectToActionResult>();
-        var redirectResult = result as Microsoft.AspNetCore.Mvc.RedirectToActionResult;
-        redirectResult!.ActionName.Should().Be("Page05");
+        result.Should().BeOfType<System.Web.Mvc.RedirectToRouteResult>();
+        var redirectResult = result as System.Web.Mvc.RedirectToRouteResult;
+        redirectResult!.RouteValues["action"].Should().Be("Page05");
         redirectResult.RouteValues.Should().ContainKey("id");
         redirectResult.RouteValues!["id"].Should().Be(123);
     }
@@ -1065,13 +1064,13 @@ public class TournamentRegistrationControllerTests
         _mockRepo.Setup(r => r.Config).Returns(config);
         _mockRepo.Setup(r => r.TournamentInfo).Returns(TestHelper.CreateDefaultTournamentInfo());
 
-        var viewData = new OdysseyMvc2024.ViewData.TournamentRegistration.Page04ViewData();
+        var viewData = new OdysseyMvc4.ViewData.TournamentRegistration.Page04ViewData();
 
         var result = _controller.Page04(123, viewData);
 
-        result.Should().BeOfType<Microsoft.AspNetCore.Mvc.RedirectToActionResult>();
-        var redirectResult = result as Microsoft.AspNetCore.Mvc.RedirectToActionResult;
-        redirectResult!.ActionName.Should().Be(state);
+        result.Should().BeOfType<System.Web.Mvc.RedirectToRouteResult>();
+        var redirectResult = result as System.Web.Mvc.RedirectToRouteResult;
+        redirectResult!.RouteValues["action"].Should().Be(state);
     }
 
     #endregion
@@ -1152,9 +1151,9 @@ public class TournamentRegistrationControllerTests
 
         var result = _controller.Page05(123);
 
-        result.Should().BeOfType<Microsoft.AspNetCore.Mvc.ViewResult>();
-        var viewResult = result as Microsoft.AspNetCore.Mvc.ViewResult;
-        viewResult!.Model.Should().BeOfType<OdysseyMvc2024.ViewData.TournamentRegistration.Page05ViewData>();
+        result.Should().BeOfType<System.Web.Mvc.ViewResult>();
+        var viewResult = result as System.Web.Mvc.ViewResult;
+        viewResult!.Model.Should().BeOfType<OdysseyMvc4.ViewData.TournamentRegistration.Page05ViewData>();
         _mockRepo.Verify(r => r.Config, Times.AtLeastOnce);
         _mockRepo.Verify(r => r.TournamentInfo, Times.AtLeastOnce);
     }
@@ -1184,9 +1183,9 @@ public class TournamentRegistrationControllerTests
 
         var result = _controller.Page05(123);
 
-        result.Should().BeOfType<Microsoft.AspNetCore.Mvc.RedirectToActionResult>();
-        var redirectResult = result as Microsoft.AspNetCore.Mvc.RedirectToActionResult;
-        redirectResult!.ActionName.Should().Be(state);
+        result.Should().BeOfType<System.Web.Mvc.RedirectToRouteResult>();
+        var redirectResult = result as System.Web.Mvc.RedirectToRouteResult;
+        redirectResult!.RouteValues["action"].Should().Be(state);
     }
 
     #endregion

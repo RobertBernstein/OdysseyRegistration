@@ -1,11 +1,10 @@
 using FluentAssertions;
-using Microsoft.AspNetCore.Mvc;
 using Moq;
-using OdysseyMvc2024.Controllers;
-using OdysseyMvc2024.Models;
+using OdysseyMvc4.Controllers;
+using OdysseyMvc4.Models;
 using OdysseyMvc4.UnitTests.Helpers;
-using System.Diagnostics.CodeAnalysis;
-using static OdysseyMvc2024.Controllers.BaseRegistrationController;
+using System.Web.Mvc;
+using static OdysseyMvc4.Controllers.BaseRegistrationController;
 
 namespace OdysseyMvc4.UnitTests.Controllers;
 
@@ -28,35 +27,35 @@ public class BaseRegistrationControllerTests
     public void GetFriendlyRegistrationName_WhenNone_ReturnsEmptyString()
     {
         var controller = CreateController(RegistrationType.None);
-        controller.GetFriendlyRegistrationName().Should().BeEmpty();
+        controller.GetDisplayableRegistrationName().Should().BeEmpty();
     }
 
     [Fact]
     public void GetFriendlyRegistrationName_WhenTournament_ReturnsTournamentRegistration()
     {
         var controller = CreateController(RegistrationType.Tournament);
-        controller.GetFriendlyRegistrationName().Should().Be("Tournament Registration");
+        controller.GetDisplayableRegistrationName().Should().Be("Tournament Registration");
     }
 
     [Fact]
     public void GetFriendlyRegistrationName_WhenJudges_ReturnsJudgesRegistration()
     {
         var controller = CreateController(RegistrationType.Judges);
-        controller.GetFriendlyRegistrationName().Should().Be("Judges Registration");
+        controller.GetDisplayableRegistrationName().Should().Be("Judges Registration");
     }
 
     [Fact]
     public void GetFriendlyRegistrationName_WhenCoachesTraining_ReturnsCoachesTrainingRegistration()
     {
         var controller = CreateController(RegistrationType.CoachesTraining);
-        controller.GetFriendlyRegistrationName().Should().Be("Coaches Training Registration");
+        controller.GetDisplayableRegistrationName().Should().Be("Coaches Training Registration");
     }
 
     [Fact]
     public void GetFriendlyRegistrationName_WhenVolunteer_ReturnsVolunteerRegistration()
     {
         var controller = CreateController(RegistrationType.Volunteer);
-        controller.GetFriendlyRegistrationName().Should().Be("Volunteer Registration");
+        controller.GetDisplayableRegistrationName().Should().Be("Volunteer Registration");
     }
 
     #endregion
@@ -105,7 +104,7 @@ public class BaseRegistrationControllerTests
     [Fact]
     public void RegistrationType_HasExpectedValues()
     {
-        Enum.GetValues<RegistrationType>().Should().HaveCount(5);
+        ((RegistrationType[])Enum.GetValues(typeof(RegistrationType))).Should().HaveCount(5);
         ((int)RegistrationType.None).Should().Be(0);
         ((int)RegistrationType.Tournament).Should().Be(1);
         ((int)RegistrationType.Judges).Should().Be(2);
@@ -120,7 +119,7 @@ public class BaseRegistrationControllerTests
     [Fact]
     public void RegistrationState_HasExpectedValues()
     {
-        Enum.GetValues<RegistrationState>().Should().HaveCount(4);
+        ((RegistrationState[])Enum.GetValues(typeof(RegistrationState))).Should().HaveCount(4);
         ((int)RegistrationState.Available).Should().Be(0);
         ((int)RegistrationState.Closed).Should().Be(1);
         ((int)RegistrationState.Down).Should().Be(2);
@@ -559,7 +558,7 @@ public class BaseRegistrationControllerTests
 
         var viewResult = result.Should().BeOfType<ViewResult>().Subject;
         viewResult.Model.Should().NotBeNull();
-        viewResult.Model.Should().BeOfType<OdysseyMvc2024.ViewData.BaseViewData>();
+        viewResult.Model.Should().BeOfType<OdysseyMvc4.ViewData.BaseViewData>();
     }
 
     [Fact]
@@ -624,7 +623,7 @@ public class BaseRegistrationControllerTests
 
         var viewResult = result.Should().BeOfType<ViewResult>().Subject;
         viewResult.Model.Should().NotBeNull();
-        viewResult.Model.Should().BeOfType<OdysseyMvc2024.ViewData.BaseViewData>();
+        viewResult.Model.Should().BeOfType<OdysseyMvc4.ViewData.BaseViewData>();
     }
 
     [Fact]
@@ -689,7 +688,7 @@ public class BaseRegistrationControllerTests
 
         var viewResult = result.Should().BeOfType<ViewResult>().Subject;
         viewResult.Model.Should().NotBeNull();
-        viewResult.Model.Should().BeOfType<OdysseyMvc2024.ViewData.BaseViewData>();
+        viewResult.Model.Should().BeOfType<OdysseyMvc4.ViewData.BaseViewData>();
     }
 
     [Fact]
@@ -715,7 +714,7 @@ public class BaseRegistrationControllerTests
     public void SendMessage_WithValidConfiguration_ReturnsNullOnSuccess()
     {
         var controller = CreateController(RegistrationType.Tournament);
-        var viewData = new OdysseyMvc2024.ViewData.BaseViewData();
+        var viewData = new OdysseyMvc4.ViewData.BaseViewData();
         controller.TestSetBaseViewData(viewData);
 
         var mailMessage = new System.Net.Mail.MailMessage("from@test.com", "to@test.com")
@@ -737,7 +736,7 @@ public class BaseRegistrationControllerTests
     public void SetBaseViewData_SetsConfig()
     {
         var controller = CreateController(RegistrationType.Tournament);
-        var viewData = new OdysseyMvc2024.ViewData.BaseViewData();
+        var viewData = new OdysseyMvc4.ViewData.BaseViewData();
 
         controller.TestSetBaseViewData(viewData);
 
@@ -749,7 +748,7 @@ public class BaseRegistrationControllerTests
     public void SetBaseViewData_SetsRegionName()
     {
         var controller = CreateController(RegistrationType.Tournament);
-        var viewData = new OdysseyMvc2024.ViewData.BaseViewData();
+        var viewData = new OdysseyMvc4.ViewData.BaseViewData();
 
         controller.TestSetBaseViewData(viewData);
 
@@ -760,7 +759,7 @@ public class BaseRegistrationControllerTests
     public void SetBaseViewData_SetsRegionNumber()
     {
         var controller = CreateController(RegistrationType.Tournament);
-        var viewData = new OdysseyMvc2024.ViewData.BaseViewData();
+        var viewData = new OdysseyMvc4.ViewData.BaseViewData();
 
         controller.TestSetBaseViewData(viewData);
 
@@ -771,7 +770,7 @@ public class BaseRegistrationControllerTests
     public void SetBaseViewData_SetsTournamentInfo()
     {
         var controller = CreateController(RegistrationType.Tournament);
-        var viewData = new OdysseyMvc2024.ViewData.BaseViewData();
+        var viewData = new OdysseyMvc4.ViewData.BaseViewData();
 
         controller.TestSetBaseViewData(viewData);
 
@@ -783,7 +782,7 @@ public class BaseRegistrationControllerTests
     public void SetBaseViewData_SetsFriendlyRegistrationName()
     {
         var controller = CreateController(RegistrationType.Tournament);
-        var viewData = new OdysseyMvc2024.ViewData.BaseViewData();
+        var viewData = new OdysseyMvc4.ViewData.BaseViewData();
 
         controller.TestSetBaseViewData(viewData);
 
@@ -794,7 +793,7 @@ public class BaseRegistrationControllerTests
     public void SetBaseViewData_SetsSiteName()
     {
         var controller = CreateController(RegistrationType.Tournament);
-        var viewData = new OdysseyMvc2024.ViewData.BaseViewData();
+        var viewData = new OdysseyMvc4.ViewData.BaseViewData();
 
         controller.TestSetBaseViewData(viewData);
 
@@ -805,7 +804,7 @@ public class BaseRegistrationControllerTests
     public void SetBaseViewData_SetsPathToSiteCssFile()
     {
         var controller = CreateController(RegistrationType.Tournament);
-        var viewData = new OdysseyMvc2024.ViewData.BaseViewData();
+        var viewData = new OdysseyMvc4.ViewData.BaseViewData();
 
         controller.TestSetBaseViewData(viewData);
 
@@ -836,7 +835,7 @@ public class BaseRegistrationControllerTests
 
         var viewResult = result.Should().BeOfType<ViewResult>().Subject;
         viewResult.Model.Should().NotBeNull();
-        viewResult.Model.Should().BeOfType<OdysseyMvc2024.ViewData.BaseViewData>();
+        viewResult.Model.Should().BeOfType<OdysseyMvc4.ViewData.BaseViewData>();
     }
 
     [Fact]
@@ -865,7 +864,7 @@ public class BaseRegistrationControllerTests
             FriendlyRegistrationName = ""
         };
         TestHelper.SetupControllerContext(controller);
-        controller.FriendlyRegistrationName = controller.GetFriendlyRegistrationName();
+        controller.FriendlyRegistrationName = controller.GetDisplayableRegistrationName();
         return controller;
     }
 
@@ -887,22 +886,18 @@ public class BaseRegistrationControllerTests
 /// </summary>
 public class TestableBaseRegistrationController : BaseRegistrationController
 {
-    // [SetsRequiredMembers] is needed because BaseRegistrationController.FriendlyRegistrationName is
-    // a 'required' property. Without this attribute, the compiler prevents instantiation from external
-    // assemblies even though the constructor sets the property.
-    [SetsRequiredMembers]
     public TestableBaseRegistrationController(IOdysseyRepository repository)
         : base(repository)
     {
         FriendlyRegistrationName = "";
     }
 
-    public System.Net.Mail.MailMessage? TestBuildMessage(string from, string subject, string body, string to, string bcc, string cc)
+    public System.Net.Mail.MailMessage TestBuildMessage(string from, string subject, string body, string to, string bcc, string cc)
         => BuildMessage(from, subject, body, to, bcc, cc);
 
-    public void TestSetBaseViewData(OdysseyMvc2024.ViewData.BaseViewData viewData)
+    public void TestSetBaseViewData(OdysseyMvc4.ViewData.BaseViewData viewData)
         => SetBaseViewData(viewData);
 
-    public string? TestSendMessage(OdysseyMvc2024.ViewData.BaseViewData viewData, System.Net.Mail.MailMessage mailMessage)
+    public string TestSendMessage(OdysseyMvc4.ViewData.BaseViewData viewData, System.Net.Mail.MailMessage mailMessage)
         => SendMessage(viewData, mailMessage);
 }

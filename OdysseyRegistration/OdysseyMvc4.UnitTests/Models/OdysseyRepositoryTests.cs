@@ -1,6 +1,6 @@
 using FluentAssertions;
-using Microsoft.EntityFrameworkCore;
-using OdysseyMvc2024.Models;
+using OdysseyMvc4.Models;
+using OdysseyEntities = OdysseyMvc4.Models.OdysseyEntities;
 
 namespace OdysseyMvc4.UnitTests.Models;
 
@@ -29,10 +29,8 @@ public class OdysseyRepositoryTests : IDisposable
 
     public OdysseyRepositoryTests()
     {
-        var options = new DbContextOptionsBuilder<OdysseyEntities>()
-            .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
-            .Options;
-        _context = new OdysseyEntities(options);
+        //_context = new OdysseyEntities(options);
+        _context = new OdysseyEntities();
     }
 
     public void Dispose()
@@ -50,8 +48,7 @@ public class OdysseyRepositoryTests : IDisposable
         _context.Configs.Add(new Config { Name = "RegionNumber", Value = "9" });
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
-
+        var repository = new OdysseyRepository();
         repository.Config.Should().NotBeNull();
         repository.Config.Should().ContainKey("Year");
         repository.Config["Year"].Should().Be("2025");
@@ -65,7 +62,7 @@ public class OdysseyRepositoryTests : IDisposable
         _context.Configs.Add(new Config { Name = "Year", Value = "2025" });
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
 
         repository.Config.Should().ContainKey("EndYear");
         repository.Config["EndYear"].Should().Be("2026");
@@ -77,7 +74,7 @@ public class OdysseyRepositoryTests : IDisposable
         _context.Configs.Add(new Config { Name = "Year", Value = "2030" });
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
 
         repository.Config["EndYear"].Should().Be("2031");
     }
@@ -90,7 +87,7 @@ public class OdysseyRepositoryTests : IDisposable
         _context.Configs.Add(new Config { Name = "CustomKey", Value = "CustomValue" });
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
 
         repository.Config.Should().HaveCount(4); // Year, RegionName, CustomKey, EndYear
         repository.Config["CustomKey"].Should().Be("CustomValue");
@@ -102,7 +99,7 @@ public class OdysseyRepositoryTests : IDisposable
         _context.Configs.Add(new Config { Name = "Year", Value = "2025" });
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
         var originalConfig = repository.Config;
 
         originalConfig.Should().BeSameAs(repository.Config);
@@ -114,7 +111,7 @@ public class OdysseyRepositoryTests : IDisposable
         _context.Configs.Add(new Config { Name = "Year", Value = "2025" });
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
 
         repository.Config.Should().HaveCount(2); // Only Year and calculated EndYear
         repository.Config.Should().ContainKey("Year");
@@ -127,9 +124,8 @@ public class OdysseyRepositoryTests : IDisposable
         _context.Configs.Add(new Config { Name = "Year", Value = "2025" });
         _context.SaveChanges();
 
-        var repository1 = new OdysseyRepository(_context);
-        var repository2 = new OdysseyRepository(_context);
-
+        var repository1 = new OdysseyRepository();
+        var repository2 = new OdysseyRepository();
         repository1.Config["EndYear"].Should().Be(repository2.Config["EndYear"]);
     }
 
@@ -157,7 +153,7 @@ public class OdysseyRepositoryTests : IDisposable
         });
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
 
         repository.Judges.Should().NotBeNull();
         repository.Judges.Should().HaveCount(2);
@@ -189,10 +185,10 @@ public class OdysseyRepositoryTests : IDisposable
             EmailAddress = "bob@example.com"
         };
 
-        _context.Judges.AddRange(judge1, judge2, judge3);
+        _context.Judges.AddRange([judge1, judge2, judge3]);
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
 
         repository.Judges.Should().HaveCount(3);
         repository.Judges.Should().Contain(j => j.FirstName == "John");
@@ -205,7 +201,7 @@ public class OdysseyRepositoryTests : IDisposable
     {
         AddMinimalConfig();
         _context.SaveChanges();
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
 
         repository.Judges.Should().NotBeNull();
         repository.Judges.Should().BeEmpty();
@@ -224,7 +220,7 @@ public class OdysseyRepositoryTests : IDisposable
         });
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
         var firstAccess = repository.Judges;
 
         // Add another judge to database after first access
@@ -257,7 +253,7 @@ public class OdysseyRepositoryTests : IDisposable
         });
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
 
         repository.Judges.Should().BeAssignableTo<IEnumerable<Judge>>();
     }
@@ -275,7 +271,7 @@ public class OdysseyRepositoryTests : IDisposable
         });
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
         var firstAccess = repository.Judges;
         var secondAccess = repository.Judges;
         var thirdAccess = repository.Judges;
@@ -300,7 +296,7 @@ public class OdysseyRepositoryTests : IDisposable
         });
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
 
         repository.Judges.Should().HaveCount(1);
         var judge = repository.Judges!.First();
@@ -361,7 +357,7 @@ public class OdysseyRepositoryTests : IDisposable
         _context.Events.Add(judgesEvent);
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
 
         repository.JudgesInfo.Should().NotBeNull();
         repository.JudgesInfo.ID.Should().Be(1);
@@ -377,7 +373,7 @@ public class OdysseyRepositoryTests : IDisposable
         _context.Events.Add(new Event { ID = 3, EventName = "Judges Training Event" });
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
 
         repository.JudgesInfo.Should().NotBeNull();
         repository.JudgesInfo.ID.Should().Be(3);
@@ -397,7 +393,7 @@ public class OdysseyRepositoryTests : IDisposable
         _context.Events.Add(judgesEvent);
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
         var firstAccess = repository.JudgesInfo;
 
         // Add another event after first access
@@ -422,7 +418,7 @@ public class OdysseyRepositoryTests : IDisposable
         AddMinimalConfig();
         _context.SaveChanges();
         
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
         var newEvent = new Event
         {
             ID = 99,
@@ -442,7 +438,7 @@ public class OdysseyRepositoryTests : IDisposable
         _context.Events.Add(new Event { ID = 1, EventName = "Judges Training" });
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
         var firstAccess = repository.JudgesInfo;
         var secondAccess = repository.JudgesInfo;
         var thirdAccess = repository.JudgesInfo;
@@ -467,7 +463,7 @@ public class OdysseyRepositoryTests : IDisposable
         _context.Problems.Add(primaryProblem);
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
 
         repository.PrimaryProblem.Should().NotBeNull();
         repository.PrimaryProblem.Should().HaveCount(1);
@@ -484,7 +480,7 @@ public class OdysseyRepositoryTests : IDisposable
         _context.Problems.Add(new Problem { ProblemID = 7, ProblemName = "Spontaneous" });
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
 
         repository.PrimaryProblem.Should().HaveCount(1);
         repository.PrimaryProblem.First().ProblemID.Should().Be(6);
@@ -497,7 +493,7 @@ public class OdysseyRepositoryTests : IDisposable
         AddMinimalConfig();
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
 
         repository.PrimaryProblem.Should().NotBeNull();
         repository.PrimaryProblem.Should().BeEmpty();
@@ -510,7 +506,7 @@ public class OdysseyRepositoryTests : IDisposable
         _context.Problems.Add(new Problem { ProblemID = 6, ProblemName = "Primary Problem" });
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
         var firstAccess = repository.PrimaryProblem;
 
         // Add another problem with ID 6 after first access (shouldn't affect cache)
@@ -530,7 +526,7 @@ public class OdysseyRepositoryTests : IDisposable
         _context.Problems.Add(new Problem { ProblemID = 6, ProblemName = "Primary Problem" });
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
 
         repository.PrimaryProblem.Should().BeAssignableTo<IQueryable<Problem>>();
     }
@@ -547,7 +543,7 @@ public class OdysseyRepositoryTests : IDisposable
         _context.Problems.Add(new Problem { ProblemID = 2, ProblemName = "Problem 2" });
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
 
         repository.ProblemChoices.Should().NotBeNull();
         repository.ProblemChoices.Should().HaveCount(2);
@@ -562,7 +558,7 @@ public class OdysseyRepositoryTests : IDisposable
         _context.Problems.Add(new Problem { ProblemID = 3, ProblemName = "Problem 3" });
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
         var problemList = repository.ProblemChoices.ToList();
 
         problemList[0].ProblemID.Should().Be(1);
@@ -578,7 +574,7 @@ public class OdysseyRepositoryTests : IDisposable
         _context.Problems.Add(new Problem { ProblemID = 6, ProblemName = "Primary" });
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
         var primaryProblem = repository.ProblemChoices.FirstOrDefault(p => p.ProblemID == 6);
 
         primaryProblem.Should().NotBeNull();
@@ -595,7 +591,7 @@ public class OdysseyRepositoryTests : IDisposable
         _context.Problems.Add(new Problem { ProblemID = 7, ProblemName = "Spontaneous" });
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
         var problems = repository.ProblemChoices.ToList();
 
         problems.First(p => p.ProblemID == 1).ProblemName.Should().Be("Problem 1");
@@ -610,7 +606,7 @@ public class OdysseyRepositoryTests : IDisposable
         _context.Problems.Add(new Problem { ProblemID = 2, ProblemName = "Problem 2" });
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
         var problems = repository.ProblemChoices.ToList();
 
         problems.Should().NotContain(p => p.ProblemName!.Contains("(The Primary Problem)"));
@@ -622,7 +618,7 @@ public class OdysseyRepositoryTests : IDisposable
         AddMinimalConfig();
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
 
         repository.ProblemChoices.Should().NotBeNull();
         repository.ProblemChoices.Should().BeEmpty();
@@ -635,7 +631,7 @@ public class OdysseyRepositoryTests : IDisposable
         _context.Problems.Add(new Problem { ProblemID = 1, ProblemName = "Problem 1" });
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
         var firstAccess = repository.ProblemChoices;
 
         _context.Problems.Add(new Problem { ProblemID = 2, ProblemName = "Problem 2" });
@@ -659,7 +655,7 @@ public class OdysseyRepositoryTests : IDisposable
         _context.Problems.Add(new Problem { ProblemID = 2, ProblemName = "Problem 2" });
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
 
         repository.ProblemChoicesWithoutSpontaneous.Should().NotBeNull();
         repository.ProblemChoicesWithoutSpontaneous.Should().HaveCount(2);
@@ -674,7 +670,7 @@ public class OdysseyRepositoryTests : IDisposable
         _context.Problems.Add(new Problem { ProblemID = 3, ProblemName = "Problem 3" });
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
         var problems = repository.ProblemChoicesWithoutSpontaneous.ToList();
 
         problems.Should().HaveCount(2);
@@ -690,7 +686,7 @@ public class OdysseyRepositoryTests : IDisposable
         _context.Problems.Add(new Problem { ProblemID = 3, ProblemName = "Problem 3" });
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
         var problemList = repository.ProblemChoicesWithoutSpontaneous.ToList();
 
         problemList[0].ProblemID.Should().Be(1);
@@ -706,7 +702,7 @@ public class OdysseyRepositoryTests : IDisposable
         _context.Problems.Add(new Problem { ProblemID = 6, ProblemName = "Primary" });
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
         var primaryProblem = repository.ProblemChoicesWithoutSpontaneous.FirstOrDefault(p => p.ProblemID == 6);
 
         primaryProblem.Should().NotBeNull();
@@ -719,7 +715,7 @@ public class OdysseyRepositoryTests : IDisposable
         AddMinimalConfig();
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
 
         repository.ProblemChoicesWithoutSpontaneous.Should().NotBeNull();
         repository.ProblemChoicesWithoutSpontaneous.Should().BeEmpty();
@@ -732,7 +728,7 @@ public class OdysseyRepositoryTests : IDisposable
         _context.Problems.Add(new Problem { ProblemID = 7, ProblemName = "Spontaneous" });
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
 
         repository.ProblemChoicesWithoutSpontaneous.Should().BeEmpty();
     }
@@ -749,7 +745,7 @@ public class OdysseyRepositoryTests : IDisposable
         _context.Problems.Add(new Problem { ProblemID = 2, ProblemName = "Problem 2" });
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
 
         repository.ProblemConflicts.Should().NotBeNull();
         repository.ProblemConflicts.Should().HaveCount(2);
@@ -764,7 +760,7 @@ public class OdysseyRepositoryTests : IDisposable
         _context.Problems.Add(new Problem { ProblemID = 3, ProblemName = "Problem 3" });
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
         var problems = repository.ProblemConflicts.ToList();
 
         problems.Should().HaveCount(2);
@@ -780,7 +776,7 @@ public class OdysseyRepositoryTests : IDisposable
         _context.Problems.Add(new Problem { ProblemID = 3, ProblemName = "Problem 3" });
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
         var problemList = repository.ProblemConflicts.ToList();
 
         problemList[0].ProblemID.Should().Be(1);
@@ -797,7 +793,7 @@ public class OdysseyRepositoryTests : IDisposable
         _context.Problems.Add(new Problem { ProblemID = 7, ProblemName = "Spontaneous" });
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
         var problems = repository.ProblemConflicts.ToList();
 
         problems.Should().Contain(p => p.ProblemID == 6);
@@ -810,7 +806,7 @@ public class OdysseyRepositoryTests : IDisposable
         AddMinimalConfig();
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
 
         repository.ProblemConflicts.Should().NotBeNull();
         repository.ProblemConflicts.Should().BeEmpty();
@@ -823,7 +819,7 @@ public class OdysseyRepositoryTests : IDisposable
         _context.Problems.Add(new Problem { ProblemID = 1, ProblemName = "Problem 1" });
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
         var firstAccess = repository.ProblemConflicts;
 
         _context.Problems.Add(new Problem { ProblemID = 2, ProblemName = "Problem 2" });
@@ -842,7 +838,7 @@ public class OdysseyRepositoryTests : IDisposable
         _context.Problems.Add(new Problem { ProblemID = 7, ProblemName = "Spontaneous" });
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
 
         repository.ProblemConflicts.Should().BeEmpty();
     }
@@ -859,7 +855,7 @@ public class OdysseyRepositoryTests : IDisposable
         _context.Problems.Add(new Problem { ProblemID = 2, ProblemName = "Problem 2", ProblemCategory = "Technical" });
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
 
         repository.Problems.Should().NotBeNull();
         repository.Problems.Should().HaveCount(2);
@@ -874,7 +870,7 @@ public class OdysseyRepositoryTests : IDisposable
         _context.Problems.Add(new Problem { ProblemID = 3, ProblemName = "Problem 3", ProblemCategory = "Technical" });
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
 
         repository.Problems.Should().HaveCount(2);
         repository.Problems.Should().Contain(p => p.ProblemID == 1);
@@ -891,7 +887,7 @@ public class OdysseyRepositoryTests : IDisposable
         _context.Problems.Add(new Problem { ProblemID = 3, ProblemName = "Problem 3", ProblemCategory = "Classics" });
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
         var problemList = repository.Problems!.ToList();
 
         problemList[0].ProblemID.Should().Be(1);
@@ -905,7 +901,7 @@ public class OdysseyRepositoryTests : IDisposable
         AddMinimalConfig();
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
 
         repository.Problems.Should().NotBeNull();
         repository.Problems.Should().BeEmpty();
@@ -918,7 +914,7 @@ public class OdysseyRepositoryTests : IDisposable
         _context.Problems.Add(new Problem { ProblemID = 1, ProblemName = "Problem 1", ProblemCategory = "Vehicle" });
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
         var firstAccess = repository.Problems;
 
         // Add another problem after first access
@@ -939,7 +935,7 @@ public class OdysseyRepositoryTests : IDisposable
         _context.Problems.Add(new Problem { ProblemID = 1, ProblemName = "Problem 1", ProblemCategory = "Vehicle" });
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
         var firstAccess = repository.Problems;
         var secondAccess = repository.Problems;
         var thirdAccess = repository.Problems;
@@ -956,7 +952,7 @@ public class OdysseyRepositoryTests : IDisposable
         _context.Problems.Add(new Problem { ProblemID = 6, ProblemName = "Primary", ProblemCategory = "Primary" });
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
 
         repository.Problems.Should().Contain(p => p.ProblemID == 6);
     }
@@ -969,7 +965,7 @@ public class OdysseyRepositoryTests : IDisposable
         _context.Problems.Add(new Problem { ProblemID = 7, ProblemName = "Spontaneous", ProblemCategory = "Spontaneous" });
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
 
         repository.Problems.Should().Contain(p => p.ProblemID == 7);
     }
@@ -986,7 +982,7 @@ public class OdysseyRepositoryTests : IDisposable
         _context.Problems.Add(new Problem { ProblemID = 11, ProblemName = "Problem 11" });
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
 
         repository.ProblemsWithoutPrimaryOrSpontaneous.Should().NotBeNull();
         repository.ProblemsWithoutPrimaryOrSpontaneous.Should().HaveCount(2);
@@ -1000,7 +996,7 @@ public class OdysseyRepositoryTests : IDisposable
         _context.Problems.Add(new Problem { ProblemID = 6, ProblemName = "Primary" });
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
 
         repository.ProblemsWithoutPrimaryOrSpontaneous.Should().HaveCount(1);
         repository.ProblemsWithoutPrimaryOrSpontaneous.Should().NotContain(p => p.ProblemID == 6);
@@ -1014,7 +1010,7 @@ public class OdysseyRepositoryTests : IDisposable
         _context.Problems.Add(new Problem { ProblemID = 7, ProblemName = "Spontaneous" });
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
 
         repository.ProblemsWithoutPrimaryOrSpontaneous.Should().HaveCount(1);
         repository.ProblemsWithoutPrimaryOrSpontaneous.Should().NotContain(p => p.ProblemID == 7);
@@ -1030,7 +1026,7 @@ public class OdysseyRepositoryTests : IDisposable
         _context.Problems.Add(new Problem { ProblemID = 7, ProblemName = "Spontaneous" });
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
 
         repository.ProblemsWithoutPrimaryOrSpontaneous.Should().HaveCount(2);
         repository.ProblemsWithoutPrimaryOrSpontaneous.Should().Contain(p => p.ProblemID == 10);
@@ -1046,7 +1042,7 @@ public class OdysseyRepositoryTests : IDisposable
         _context.Problems.Add(new Problem { ProblemID = 3, ProblemName = "Problem 3" });
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
         var problemList = repository.ProblemsWithoutPrimaryOrSpontaneous!.ToList();
 
         problemList[0].ProblemID.Should().Be(1);
@@ -1060,7 +1056,7 @@ public class OdysseyRepositoryTests : IDisposable
         AddMinimalConfig();
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
 
         repository.ProblemsWithoutPrimaryOrSpontaneous.Should().NotBeNull();
         repository.ProblemsWithoutPrimaryOrSpontaneous.Should().BeEmpty();
@@ -1073,7 +1069,7 @@ public class OdysseyRepositoryTests : IDisposable
         _context.Problems.Add(new Problem { ProblemID = 10, ProblemName = "Problem 10" });
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
         var firstAccess = repository.ProblemsWithoutPrimaryOrSpontaneous;
 
         // Add another problem after first access
@@ -1094,7 +1090,7 @@ public class OdysseyRepositoryTests : IDisposable
         _context.Problems.Add(new Problem { ProblemID = 1, ProblemName = "Problem 1" });
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
 
         repository.ProblemsWithoutPrimaryOrSpontaneous.Should().BeAssignableTo<IQueryable<Problem>>();
     }
@@ -1111,7 +1107,7 @@ public class OdysseyRepositoryTests : IDisposable
         _context.Problems.Add(new Problem { ProblemID = 11, ProblemName = "Problem 11" });
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
 
         repository.ProblemsWithoutSpontaneous.Should().NotBeNull();
         repository.ProblemsWithoutSpontaneous.Should().HaveCount(2);
@@ -1125,7 +1121,7 @@ public class OdysseyRepositoryTests : IDisposable
         _context.Problems.Add(new Problem { ProblemID = 7, ProblemName = "Spontaneous" });
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
 
         repository.ProblemsWithoutSpontaneous.Should().HaveCount(1);
         repository.ProblemsWithoutSpontaneous.Should().NotContain(p => p.ProblemID == 7);
@@ -1140,7 +1136,7 @@ public class OdysseyRepositoryTests : IDisposable
         _context.Problems.Add(new Problem { ProblemID = 7, ProblemName = "Spontaneous" });
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
 
         repository.ProblemsWithoutSpontaneous.Should().HaveCount(2);
         repository.ProblemsWithoutSpontaneous.Should().Contain(p => p.ProblemID == 6);
@@ -1156,7 +1152,7 @@ public class OdysseyRepositoryTests : IDisposable
         _context.Problems.Add(new Problem { ProblemID = 3, ProblemName = "Problem 3" });
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
         var problemList = repository.ProblemsWithoutSpontaneous!.ToList();
 
         problemList[0].ProblemID.Should().Be(1);
@@ -1170,7 +1166,7 @@ public class OdysseyRepositoryTests : IDisposable
         AddMinimalConfig();
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
 
         repository.ProblemsWithoutSpontaneous.Should().NotBeNull();
         repository.ProblemsWithoutSpontaneous.Should().BeEmpty();
@@ -1183,7 +1179,7 @@ public class OdysseyRepositoryTests : IDisposable
         _context.Problems.Add(new Problem { ProblemID = 10, ProblemName = "Problem 10" });
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
         var firstAccess = repository.ProblemsWithoutSpontaneous;
 
         // Add another problem after first access
@@ -1204,7 +1200,7 @@ public class OdysseyRepositoryTests : IDisposable
         _context.Problems.Add(new Problem { ProblemID = 1, ProblemName = "Problem 1" });
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
 
         repository.ProblemsWithoutSpontaneous.Should().BeAssignableTo<IQueryable<Problem>>();
     }
@@ -1220,7 +1216,7 @@ public class OdysseyRepositoryTests : IDisposable
         _context.Configs.Add(new Config { Name = "RegionName", Value = "NoVA North" });
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
 
         repository.RegionName.Should().Be("NoVA North");
     }
@@ -1232,7 +1228,7 @@ public class OdysseyRepositoryTests : IDisposable
         _context.Configs.Add(new Config { Name = "RegionName", Value = "NoVA North" });
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
         var firstAccess = repository.RegionName;
 
         // Update config in database after first access
@@ -1254,7 +1250,7 @@ public class OdysseyRepositoryTests : IDisposable
         _context.Configs.Add(new Config { Name = "RegionName", Value = "NoVA North" });
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
         var firstAccess = repository.RegionName;
         var secondAccess = repository.RegionName;
         var thirdAccess = repository.RegionName;
@@ -1270,7 +1266,7 @@ public class OdysseyRepositoryTests : IDisposable
         _context.Configs.Add(new Config { Name = "RegionName", Value = "NoVA & North Region's Test" });
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
 
         repository.RegionName.Should().Be("NoVA & North Region's Test");
     }
@@ -1282,7 +1278,7 @@ public class OdysseyRepositoryTests : IDisposable
         _context.Configs.Add(new Config { Name = "RegionName", Value = "" });
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
 
         repository.RegionName.Should().Be("");
     }
@@ -1298,7 +1294,7 @@ public class OdysseyRepositoryTests : IDisposable
         _context.Configs.Add(new Config { Name = "RegionNumber", Value = "9" });
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
 
         repository.RegionNumber.Should().Be("9");
     }
@@ -1310,7 +1306,7 @@ public class OdysseyRepositoryTests : IDisposable
         _context.Configs.Add(new Config { Name = "RegionNumber", Value = "9" });
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
         var firstAccess = repository.RegionNumber;
 
         // Update config in database after first access
@@ -1332,7 +1328,7 @@ public class OdysseyRepositoryTests : IDisposable
         _context.Configs.Add(new Config { Name = "RegionNumber", Value = "9" });
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
         var firstAccess = repository.RegionNumber;
         var secondAccess = repository.RegionNumber;
         var thirdAccess = repository.RegionNumber;
@@ -1348,7 +1344,7 @@ public class OdysseyRepositoryTests : IDisposable
         _context.Configs.Add(new Config { Name = "RegionNumber", Value = "123" });
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
 
         repository.RegionNumber.Should().Be("123");
     }
@@ -1360,7 +1356,7 @@ public class OdysseyRepositoryTests : IDisposable
         _context.Configs.Add(new Config { Name = "RegionNumber", Value = "" });
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
 
         repository.RegionNumber.Should().Be("");
     }
@@ -1375,17 +1371,17 @@ public class OdysseyRepositoryTests : IDisposable
         AddMinimalConfig();
         _context.TournamentRegistrations.Add(new TournamentRegistration
         {
-            Id = 1,
+            TeamID = 1,
             CoachFirstName = "John"
         });
         _context.TournamentRegistrations.Add(new TournamentRegistration
         {
-            Id = 2,
+            TeamID = 2,
             CoachFirstName = "Jane"
         });
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
 
         repository.TournamentRegistrations.Should().NotBeNull();
         repository.TournamentRegistrations.Should().HaveCount(2);
@@ -1397,27 +1393,27 @@ public class OdysseyRepositoryTests : IDisposable
         AddMinimalConfig();
         var reg1 = new TournamentRegistration
         {
-            Id = 1,
+            TeamID = 1,
             CoachFirstName = "John",
             CoachLastName = "Doe"
         };
         var reg2 = new TournamentRegistration
         {
-            Id = 2,
+            TeamID = 2,
             CoachFirstName = "Jane",
             CoachLastName = "Smith"
         };
         var reg3 = new TournamentRegistration
         {
-            Id = 3,
+            TeamID = 3,
             CoachFirstName = "Bob",
             CoachLastName = "Johnson"
         };
 
-        _context.TournamentRegistrations.AddRange(reg1, reg2, reg3);
+        _context.TournamentRegistrations.AddRange([reg1, reg2, reg3]);
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
 
         repository.TournamentRegistrations.Should().HaveCount(3);
         repository.TournamentRegistrations.Should().Contain(r => r.CoachFirstName == "John");
@@ -1430,7 +1426,7 @@ public class OdysseyRepositoryTests : IDisposable
     {
         AddMinimalConfig();
         _context.SaveChanges();
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
 
         repository.TournamentRegistrations.Should().NotBeNull();
         repository.TournamentRegistrations.Should().BeEmpty();
@@ -1442,27 +1438,27 @@ public class OdysseyRepositoryTests : IDisposable
         AddMinimalConfig();
         _context.TournamentRegistrations.Add(new TournamentRegistration
         {
-            Id = 3,
+            TeamID = 3,
             CoachFirstName = "Third"
         });
         _context.TournamentRegistrations.Add(new TournamentRegistration
         {
-            Id = 1,
+            TeamID = 1,
             CoachFirstName = "First"
         });
         _context.TournamentRegistrations.Add(new TournamentRegistration
         {
-            Id = 2,
+            TeamID = 2,
             CoachFirstName = "Second"
         });
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
         var results = repository.TournamentRegistrations.ToList();
 
-        results[0].Id.Should().Be(1);
-        results[1].Id.Should().Be(2);
-        results[2].Id.Should().Be(3);
+        results[0].TeamID.Should().Be(1);
+        results[1].TeamID.Should().Be(2);
+        results[2].TeamID.Should().Be(3);
     }
 
     [Fact]
@@ -1471,17 +1467,17 @@ public class OdysseyRepositoryTests : IDisposable
         AddMinimalConfig();
         _context.TournamentRegistrations.Add(new TournamentRegistration
         {
-            Id = 1,
+            TeamID = 1,
             CoachFirstName = "John"
         });
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
         var firstAccess = repository.TournamentRegistrations.Count();
 
         _context.TournamentRegistrations.Add(new TournamentRegistration
         {
-            Id = 2,
+            TeamID = 2,
             CoachFirstName = "Jane"
         });
         _context.SaveChanges();
@@ -1495,19 +1491,19 @@ public class OdysseyRepositoryTests : IDisposable
     #endregion
 
     #region VolunteerInfo Property Tests
-    // Note: VolunteerInfo property is commented out in OdysseyMvc2024.
+    // Note: VolunteerInfo property is commented out in OdysseyMvc4.
     // To test this property, first uncomment it in OdysseyRepository.cs
     // and restore the corresponding DbSet in OdysseyEntities.cs.
     #endregion
 
     #region Volunteers Property Tests
-    // Note: Volunteers property is commented out in OdysseyMvc2024.
+    // Note: Volunteers property is commented out in OdysseyMvc4.
     // To test this property, first uncomment it in OdysseyRepository.cs
     // and restore the corresponding DbSet<Volunteer> in OdysseyEntities.cs.
     #endregion
 
     #region AddCoachesTrainingRegistration Method Tests
-    // Note: AddCoachesTrainingRegistration method is commented out in OdysseyMvc2024.
+    // Note: AddCoachesTrainingRegistration method is commented out in OdysseyMvc4.
     // To test this method, first uncomment it in OdysseyRepository.cs
     // and restore the corresponding DbSet<CoachesTrainingRegistration> in OdysseyEntities.cs.
     #endregion
@@ -1519,7 +1515,7 @@ public class OdysseyRepositoryTests : IDisposable
     {
         AddMinimalConfig();
         _context.SaveChanges();
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
         var newJudge = new Judge
         {
             FirstName = "John",
@@ -1539,7 +1535,7 @@ public class OdysseyRepositoryTests : IDisposable
     {
         AddMinimalConfig();
         _context.SaveChanges();
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
 
         var result = repository.AddJudge(null!);
 
@@ -1552,7 +1548,7 @@ public class OdysseyRepositoryTests : IDisposable
     {
         AddMinimalConfig();
         _context.SaveChanges();
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
         var judge1 = new Judge
         {
             FirstName = "John",
@@ -1577,7 +1573,7 @@ public class OdysseyRepositoryTests : IDisposable
     {
         AddMinimalConfig();
         _context.SaveChanges();
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
         var newJudge = new Judge
         {
             FirstName = "Test",
@@ -1595,7 +1591,7 @@ public class OdysseyRepositoryTests : IDisposable
     {
         AddMinimalConfig();
         _context.SaveChanges();
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
         var newJudge = new Judge
         {
             FirstName = "John",
@@ -1633,7 +1629,7 @@ public class OdysseyRepositoryTests : IDisposable
         AddMinimalConfig();
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
         var registration = new TournamentRegistration
         {
             CoachFirstName = "John",
@@ -1651,7 +1647,7 @@ public class OdysseyRepositoryTests : IDisposable
         AddMinimalConfig();
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
         var registration = new TournamentRegistration
         {
             CoachFirstName = "Jane",
@@ -1674,7 +1670,7 @@ public class OdysseyRepositoryTests : IDisposable
         AddMinimalConfig();
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
 
         var result = repository.AddTournamentRegistration(null!);
 
@@ -1687,7 +1683,7 @@ public class OdysseyRepositoryTests : IDisposable
         AddMinimalConfig();
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
 
         repository.AddTournamentRegistration(null!);
 
@@ -1700,7 +1696,7 @@ public class OdysseyRepositoryTests : IDisposable
         AddMinimalConfig();
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
         var registration1 = new TournamentRegistration { CoachFirstName = "John" };
         var registration2 = new TournamentRegistration { CoachFirstName = "Jane" };
 
@@ -1721,7 +1717,8 @@ public class OdysseyRepositoryTests : IDisposable
         AddMinimalConfig();
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        //var repository = new OdysseyMvc4.Models.OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
         var volunteer = new Volunteer
         {
             FirstName = "John",
@@ -1739,7 +1736,7 @@ public class OdysseyRepositoryTests : IDisposable
         AddMinimalConfig();
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
         var volunteer = new Volunteer
         {
             FirstName = "Jane",
@@ -1762,7 +1759,7 @@ public class OdysseyRepositoryTests : IDisposable
         AddMinimalConfig();
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
         var volunteer = new Volunteer
         {
             FirstName = "John",
@@ -1782,7 +1779,7 @@ public class OdysseyRepositoryTests : IDisposable
         AddMinimalConfig();
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
         var volunteer = new Volunteer
         {
             FirstName = "John",
@@ -1803,7 +1800,7 @@ public class OdysseyRepositoryTests : IDisposable
         AddMinimalConfig();
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
 
         var result = repository.AddVolunteer(null!);
 
@@ -1816,7 +1813,7 @@ public class OdysseyRepositoryTests : IDisposable
         AddMinimalConfig();
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
 
         repository.AddVolunteer(null!);
 
@@ -1829,7 +1826,7 @@ public class OdysseyRepositoryTests : IDisposable
         AddMinimalConfig();
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
         var volunteer1 = new Volunteer { FirstName = "John" };
         var volunteer2 = new Volunteer { FirstName = "Jane" };
 
@@ -1853,13 +1850,13 @@ public class OdysseyRepositoryTests : IDisposable
             JudgeID = 1,
             FirstName = "John",
             LastName = "Doe",
-            TeamID = 42,
+            TeamID = "42",
             EmailAddress = "john@example.com"
         };
         _context.Judges.Add(judge);
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
 
         repository.ClearTeamIdFromJudgeRecord(1, "John", "Doe");
 
@@ -1883,7 +1880,7 @@ public class OdysseyRepositoryTests : IDisposable
         _context.Judges.Add(judge);
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
 
         repository.ClearTeamIdFromJudgeRecord(1, "John", "Doe");
 
@@ -1898,7 +1895,7 @@ public class OdysseyRepositoryTests : IDisposable
         AddMinimalConfig();
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
 
         var act = () => repository.ClearTeamIdFromJudgeRecord(999, "NonExistent", "Judge");
 
@@ -1914,19 +1911,19 @@ public class OdysseyRepositoryTests : IDisposable
             JudgeID = 1,
             FirstName = "John",
             LastName = "Doe",
-            TeamID = 42,
+            TeamID = "42",
             EmailAddress = "john@example.com"
         };
         _context.Judges.Add(judge);
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
 
         repository.ClearTeamIdFromJudgeRecord(999, "NonExistent", "Judge");
 
         var unchanged = _context.Judges.Find(1);
         unchanged.Should().NotBeNull();
-        unchanged!.TeamID.Should().Be(42);
+        unchanged!.TeamID.Should().Be("42");
     }
 
     [Fact]
@@ -1938,13 +1935,13 @@ public class OdysseyRepositoryTests : IDisposable
             JudgeID = 1,
             FirstName = "John",
             LastName = "Doe",
-            TeamID = 42,
+            TeamID = "42",
             EmailAddress = "john@example.com"
         };
         _context.Judges.Add(judge);
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
         repository.ClearTeamIdFromJudgeRecord(1, "John", "Doe");
 
         var updated = _context.Judges.AsNoTracking().FirstOrDefault(j => j.JudgeID == 1);
@@ -1962,7 +1959,7 @@ public class OdysseyRepositoryTests : IDisposable
         AddMinimalConfig();
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
 
         var result = repository.ExportJudges();
 
@@ -1975,7 +1972,7 @@ public class OdysseyRepositoryTests : IDisposable
         AddMinimalConfig();
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
 
         var result = repository.ExportJudges().ToList();
 
@@ -1992,7 +1989,7 @@ public class OdysseyRepositoryTests : IDisposable
         _context.Problems.Add(new Problem { ProblemID = 1, ProblemName = "Problem 1" });
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
 
         var result = repository.ExportJudges().ToList();
 
@@ -2009,7 +2006,7 @@ public class OdysseyRepositoryTests : IDisposable
         _context.Judges.Add(new Judge
         {
             JudgeID = 1,
-            TeamID = 42,
+            TeamID = "42",
             FirstName = "John",
             LastName = "Doe",
             Address = "123 Main St",
@@ -2038,14 +2035,14 @@ public class OdysseyRepositoryTests : IDisposable
         _context.Problems.Add(new Problem { ProblemID = 1, ProblemName = "Problem 1" });
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
 
         var result = repository.ExportJudges().ToList();
 
         result.Should().HaveCount(1);
         var exported = result[0];
         exported.JudgeId.Should().Be(1);
-        exported.TeamId.Should().Be(42);
+        exported.TeamId.Should().Be("42");
         exported.FirstName.Should().Be("John");
         exported.LastName.Should().Be("Doe");
         exported.Address.Should().Be("123 Main St");
@@ -2090,7 +2087,7 @@ public class OdysseyRepositoryTests : IDisposable
         _context.CoachesTrainingRegistrations.Add(coach);
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
 
         var result = repository.GetCoachById(1).ToList();
 
@@ -2106,7 +2103,7 @@ public class OdysseyRepositoryTests : IDisposable
         AddMinimalConfig();
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
 
         var result = repository.GetCoachById(999).ToList();
 
@@ -2131,7 +2128,7 @@ public class OdysseyRepositoryTests : IDisposable
         });
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
 
         var result = repository.GetCoachById(2).ToList();
 
@@ -2146,7 +2143,7 @@ public class OdysseyRepositoryTests : IDisposable
         AddMinimalConfig();
         _context.SaveChanges();
 
-        var repository = new OdysseyRepository(_context);
+        var repository = new OdysseyRepository();
 
         var result = repository.GetCoachById(1);
 

@@ -196,6 +196,7 @@
     <Compile Include="Models\Event.cs">
       <DependentUpon>OdysseyModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\IOdysseyRepository.cs" />
     <Compile Include="Models\Judge.cs">
       <DependentUpon>OdysseyModel.tt</DependentUpon>
     </Compile>

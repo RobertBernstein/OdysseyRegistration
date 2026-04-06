@@ -38,6 +38,16 @@ namespace OdysseyMvc4.Controllers
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="TournamentRegistrationController"/> class
+        /// with an injected repository, used for unit testing.
+        /// </summary>
+        public TournamentRegistrationController(IOdysseyRepository repository) : base(repository)
+        {
+            this.CurrentRegistrationType = RegistrationType.Tournament;
+            this.FriendlyRegistrationName = this.GetDisplayableRegistrationName();
+        }
+
+        /// <summary>
         /// Handle HTTP GET requests for the BadAltCoachEmail page.
         /// </summary>
         /// <returns>

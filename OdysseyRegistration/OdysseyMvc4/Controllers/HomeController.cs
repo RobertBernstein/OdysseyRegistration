@@ -22,7 +22,24 @@ namespace OdysseyMvc4.Controllers
         /// <summary>
         /// Provides database access.
         /// </summary>
-        private readonly OdysseyRepository repository = new OdysseyRepository();
+        private readonly IOdysseyRepository repository;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="HomeController"/> class.
+        /// </summary>
+        public HomeController()
+        {
+            repository = new OdysseyRepository();
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="HomeController"/> class
+        /// with an injected repository, used for unit testing.
+        /// </summary>
+        public HomeController(IOdysseyRepository repository) : base(repository)
+        {
+            this.repository = repository;
+        }
 
         /// <summary>
         /// The view for the Index page.

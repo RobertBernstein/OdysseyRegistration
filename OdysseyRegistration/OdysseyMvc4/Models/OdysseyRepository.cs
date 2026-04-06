@@ -19,7 +19,7 @@ namespace OdysseyMvc4.Models
     /// <summary>
     /// The Odyssey registration database repository.
     /// </summary>
-    public class OdysseyRepository
+    public class OdysseyRepository : IOdysseyRepository
     {
         /// <summary>
         /// The database context.
