@@ -22,7 +22,7 @@
 ├── JudgeRegistrationRazor          → .NET 10.0 Razor Pages project
 ├── OdysseyRegistration/            → Main project folder
 │   ├── docker-compose              → Docker Compose orchestration (.dcproj)
-│   ├── init/                       → SQL Server initialization scripts
+│   ├── init/                       → SQL Server initialization scripts (`sqlserver-entrypoint.sh`, `init.sql`, `novanorth-prod.sql`)
 │   ├── Odyssey.Database/           → SQL Server database project (.sqlproj)
 │   ├── OdysseyCoreMvc/             → .NET 10.0 (unused?)
 │   ├── OdysseyMvc4/                → .NET Framework 4.8 (PRODUCTION)

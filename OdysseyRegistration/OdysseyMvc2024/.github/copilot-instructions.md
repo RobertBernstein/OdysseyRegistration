@@ -237,10 +237,13 @@ OdysseyMvc2024 depends on a SQL Server database running in Docker. The solution 
 
 ### Key Files for Docker Startup
 - **`OdysseyRegistration/docker-compose.dcproj`**: Docker Compose project that orchestrates containers
-- **`OdysseyRegistration/docker-compose.yml`**: Defines SQL Server and WebAPI services
+- **`OdysseyRegistration/docker-compose.yml`**: Defines SQL Server and WebAPI services; `sqlserver` service uses `command: ["/bin/bash", "/init/sqlserver-entrypoint.sh"]`
 - **`OdysseyRegistration/docker-compose.override.yml`**: Development environment overrides
 - **`OdysseyRegistration/launchSettings.json`**: Solution-level launch profiles for Docker + projects
 - **`OdysseyRegistration/OdysseyRegistration.slnlaunch`**: Multiple startup project configurations
+- **`OdysseyRegistration/init/sqlserver-entrypoint.sh`**: Bash script that orchestrates SQL Server startup and DB initialization (replaces inline `command:` bash)
+- **`OdysseyRegistration/init/init.sql`**: Creates login `vaodyssey` and database `DB_12824_registration` (idempotent)
+- **`OdysseyRegistration/init/novanorth-prod.sql`**: Populates the database with schema, stored procedures, and seed data (UTF-16 LE encoded)
 
 ### Launch Profiles Available
 1. **Docker Compose**: Starts only the WebAPI service with debugging
@@ -257,7 +260,10 @@ OdysseyMvc2024 depends on a SQL Server database running in Docker. The solution 
 - **Port**: 1433 (exposed to localhost)
 - **Health Check**: 90-second start period with 15-second intervals
 - **Data Persistence**: Named volumes `sqlserver_odyssey` and `sqlserver_backup`
-- **Initialization**: Scripts in `/init` folder run on first startup
+- **Startup Command**: `/init/sqlserver-entrypoint.sh` (dedicated script replaces inline bash in `command:`)
+- **Initialization**: Runs `init.sql` then `novanorth-prod.sql` on first startup; guarded by sentinel file `/var/opt/mssql/.db-initialized` on the persistent volume
+- **Re-initialization**: If the sentinel exists but `DB_12824_registration` is absent (e.g., manually dropped), the full init sequence runs again automatically
+- **Race condition handling**: Entrypoint waits for all system databases to finish upgrading before running init scripts; retries `novanorth-prod.sql` up to 20 times on transient errors
 
 ### Connection String Configuration
 

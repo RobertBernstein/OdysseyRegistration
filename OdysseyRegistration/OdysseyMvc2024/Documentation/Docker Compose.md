@@ -210,20 +210,38 @@ docker-compose config
 
 Check the output for unexpected empty values.
 
-## Stop Docker Compose from trying to interpolate $pid
+## Database Initialization: `sqlserver-entrypoint.sh`
 
-Here’s a minimal fix to stop Compose from trying to interpolate $pid.
-yaml OdysseyRegistration/docker-compose.yml services: sqlserver: ... command: > bash -c " /opt/mssql/bin/sqlservr & pid=$$!
+The `sqlserver` service no longer uses an inline `command:` bash string. Instead, `docker-compose.yml` specifies:
 
-What changed
-•	Escaped the dollar signs so Docker Compose doesn’t try to substitute an env var named pid:
-•	pid=$! → pid=$$!
-•	wait $pid → wait $$pid
-Why this works
-•	Compose interpolates $VAR or ${VAR}. Using $$ escapes the $, leaving $! and $pid for the bash process at runtime. This removes the warning and preserves the intended shell behavior.
-Verify
-•	Run: docker compose config and check the rendered command contains wait $pid (with a single $).
+```yaml
+command: ["/bin/bash", "/init/sqlserver-entrypoint.sh"]
+```
 
-> [!note] Rob tried this on his setup
-> It showed double $$ in the rendered config, but at runtime the bash process got the single $ as intended.
-> So it works as expected.
+This eliminates all shell-quoting issues that arise when embedding multi-line bash with SQL queries inside YAML.
+
+### What `sqlserver-entrypoint.sh` does
+
+1. Starts `sqlservr` in the background and captures its PID
+2. Waits up to 240 seconds for SQL Server to accept connections (`SELECT 1`)
+3. Waits up to 120 seconds for all system databases to finish upgrading (`sys.databases WHERE state NOT IN (0,6)`) — prevents the `Msg 904` race condition
+4. Checks whether `DB_12824_registration` exists **and** whether the sentinel file `/var/opt/mssql/.db-initialized` is present
+5. **If either is absent**, runs the full initialization sequence:
+   - `init.sql` — creates login `vaodyssey` and database `DB_12824_registration` (idempotent)
+   - Waits up to 180 seconds for `DB_12824_registration` to come ONLINE
+   - `novanorth-prod.sql` — populates schema, stored procedures, and seed data; retries up to 20 times (only fails on Level 16+ SQL errors)
+   - Touches `/var/opt/mssql/.db-initialized` as a sentinel
+6. Prints `"Database initialization complete."` on success, or `"Database already initialized; skipping script execution."` on subsequent starts
+7. Calls `wait "$pid"` so the container stays alive with SQL Server as the foreground process
+
+### Re-initialization behavior
+
+The sentinel file lives on the **persistent named volume** (`sqlserver_odyssey`), so it survives `docker compose down`. Re-initialization is triggered when:
+
+| Condition | Result |
+|-----------|--------|
+| Sentinel absent (fresh volume) | Full init runs |
+| Sentinel present, DB exists | Skipped — normal restart |
+| Sentinel present, **DB missing** (e.g., manually dropped) | Full init runs anyway |
+
+To force a clean slate including volume data, use `docker compose down -v` (**destructive** — deletes all SQL Server data).
