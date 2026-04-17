@@ -8,7 +8,16 @@ BEGIN
 END
 GO
 
-IF NOT EXISTS (SELECT * FROM sys.databases WHERE name = 'DB_12824_registration')
+-- Drop DB if it exists in a non-online state (leftover from a previously failed init)
+IF EXISTS (SELECT 1 FROM sys.databases WHERE name = 'DB_12824_registration' AND state != 0)
+BEGIN
+    ALTER DATABASE [DB_12824_registration] SET EMERGENCY;
+    ALTER DATABASE [DB_12824_registration] SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
+    DROP DATABASE [DB_12824_registration];
+END
+GO
+
+IF NOT EXISTS (SELECT 1 FROM sys.databases WHERE name = 'DB_12824_registration')
 BEGIN
     CREATE DATABASE [DB_12824_registration] ON PRIMARY (
         NAME = N'DB_12824_registration_data',

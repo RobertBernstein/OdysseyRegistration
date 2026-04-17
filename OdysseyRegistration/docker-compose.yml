@@ -37,36 +37,7 @@ services:
       retries: 6
       start_period: 90s
       timeout: 10s
-    command: >
-      bash -c "
-        /opt/mssql/bin/sqlservr &
-        pid=$$!
-
-        echo 'Waiting for SQL Server startup...'
-        for i in {1..60}; do
-          /opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P $(cat /run/secrets/sa_password) -Q 'SELECT 1' >/dev/null 2>&1 && break
-          sleep 2
-        done
-
-        if [ ! -f /var/opt/mssql/.db-initialized ]; then
-          echo 'Initializing database from SQL scripts...'
-          if [ -f /init/init.sql ]; then
-            /opt/mssql-tools18/bin/sqlcmd -b -C -S localhost -U sa -P $(cat /run/secrets/sa_password) -d master -v sa_password=$(cat /run/secrets/sa_password) -i /init/init.sql || { echo 'init.sql failed'; exit 1; }
-          fi
-          if [ -f /init/novanorth-prod.sql ]; then
-            /opt/mssql-tools18/bin/sqlcmd -b -C -S localhost -U sa -P $(cat /run/secrets/sa_password) -d master -v sa_password=$(cat /run/secrets/sa_password) -i /init/novanorth-prod.sql || { echo 'novanorth-prod.sql failed'; exit 1; }
-          else
-            echo 'ERROR: /init/novanorth-prod.sql not found'
-            exit 1
-          fi
-          touch /var/opt/mssql/.db-initialized
-          echo 'Database initialization complete.'
-        else
-          echo 'Database already initialized; skipping script execution.'
-        fi
-
-        wait $$pid
-      "
+    command: ["/bin/bash", "/init/sqlserver-entrypoint.sh"]
 
 secrets:
   sa_password:
