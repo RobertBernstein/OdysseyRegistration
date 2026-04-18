@@ -229,6 +229,82 @@ last successful build?` dialog box.
 
 ## Deploying to Production
 
+### Automated Deployment via FTPS (`publish.ps1`)
+
+The `OdysseyRegistration/publish/` directory contains a PowerShell script and configuration file for automated FTPS deployment to Winhost. Supports separate **test** and **prod** environments.
+
+#### Files
+
+| File | Purpose |
+|---|---|
+| `publish.ps1` | Main deployment script: runs `dotnet publish` then uploads via FTPS |
+| `publish-config.json` | Per-environment configuration (paths, FTP host, remote path, TLS fingerprint) |
+| `WinSCPnet.dll` | WinSCP .NET assembly (required at runtime) |
+| `WinSCP.exe` | WinSCP executable (required alongside the .NET assembly) |
+
+#### One-Time Setup (per machine)
+
+Store FTP passwords as user-scoped environment variables — **never put plain-text passwords in `publish-config.json`**:
+
+```powershell
+[System.Environment]::SetEnvironmentVariable("TEST_FTP_PASS", "yourTestPassword", "User")
+[System.Environment]::SetEnvironmentVariable("PROD_FTP_PASS",  "yourProdPassword",  "User")
+```
+
+The `publish-config.json` file references these as `%TEST_FTP_PASS%` and `%PROD_FTP_PASS%`, which the script resolves at runtime via `[System.Environment]::ExpandEnvironmentVariables()`.
+
+#### Usage
+
+```powershell
+cd OdysseyRegistration\publish
+
+# Build and deploy to test
+.\publish.ps1 -Environment test
+
+# Build and deploy to production
+.\publish.ps1 -Environment prod
+
+# Re-upload without rebuilding (e.g., after a failed upload)
+.\publish.ps1 -Environment test -SkipPublish
+.\publish.ps1 -Environment prod -SkipPublish
+```
+
+#### Updating `publish-config.json`
+
+The config file is committed to source control (passwords are excluded — only `%VAR_NAME%` placeholders appear). Update it when:
+
+- The FTP hostname or credentials change
+- The remote deployment path changes
+- The TLS certificate fingerprint changes (e.g., after Winhost renews their cert)
+
+To retrieve the current TLS fingerprint, run this once (accepts any cert temporarily):
+
+```powershell
+Add-Type -Path .\WinSCPnet.dll
+
+$sessionOptions = New-Object WinSCP.SessionOptions
+$sessionOptions.Protocol   = [WinSCP.Protocol]::Ftp
+$sessionOptions.FtpSecure  = [WinSCP.FtpSecure]::ExplicitTls
+$sessionOptions.HostName   = "ftp.novanorth.org"
+$sessionOptions.PortNumber = 21
+$sessionOptions.UserName   = "your_ftp_user"
+$sessionOptions.Password   = $env:TEST_FTP_PASS
+$sessionOptions.GiveUpSecurityAndAcceptAnyTlsHostCertificate = $true
+
+$session = New-Object WinSCP.Session
+$session.Open($sessionOptions)
+Write-Host "TLS Fingerprint: $($session.TlsHostCertificateFingerprint)"
+$session.Dispose()
+```
+
+Copy the printed value into `publish-config.json` under `global.testTlsFingerprint` or `global.prodTlsFingerprint`, then remove the `GiveUpSecurity...` property.
+
+#### `.gitignore` Notes
+
+The `publish-test/` and `publish-prod/` output directories are ignored by git (added to `.gitignore`). The `publish/` directory itself (containing the scripts) is tracked.
+
+---
+
 ### Files to Configure
 
 Make sure to copy the web.config file from **the `OdysseyRegistration` directory**, i.e., the top-most/root directory, into the root directory of your website at WinHost (the hosting company).

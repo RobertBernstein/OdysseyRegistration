@@ -31,6 +31,8 @@ bld/
 [Oo]bj/
 [Ll]og/
 [Ll]ogs/
+OdysseyRegistration/OdysseyMvc2024/publish-test
+OdysseyRegistration/OdysseyMvc2024/publish-prod
 
 # Visual Studio 2015/2017 cache/options directory
 .vs/
@@ -180,7 +182,8 @@ DocProject/Help/Html2
 DocProject/Help/html
 
 # Click-Once directory
-publish/
+# Note: I'm using publish/ for the website publishing scripts, so I'm ignoring it here, but you may want to include it if you use Click-Once
+# publish/
 
 # Publish Web Output
 *.[Pp]ublish.xml
@@ -402,3 +405,4 @@ FodyWeavers.xsd
 
 # Docker Passwords
 /**/sa_password.txt
+

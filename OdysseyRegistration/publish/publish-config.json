@@ -1,0 +1,25 @@
+{
+  "environments": {
+    "test": {
+      "projectPath": "..\\OdysseyMvc2024\\OdysseyMvc2024.csproj",
+      "publishDir": "..\\OdysseyMvc2024\\publish-test\\",
+      "ftpHost": "ftp.novanorth.org",
+      "ftpUser": "vaodysse",
+      "ftpPass": "%TEST_FTP_PASS%",
+      "remotePath": "test3/"
+    },
+    "prod": {
+      "projectPath": "..\\OdysseyMvc2024\\OdysseyMvc2024.csproj",
+      "publishDir": "..\\OdysseyMvc2024\\publish-prod\\",
+      "ftpHost": "ftp.novanorth.org",
+      "ftpUser": "vaodysse",
+      "ftpPass": "%PROD_FTP_PASS%",
+      "remotePath": "invalid/"
+    }
+  },
+  "global": {
+    "winscpAssembly": ".\\WinSCPnet.dll",
+    "testTlsFingerprint": "e8:e4:03:50:21:15:dc:c2:b8:14:d4:4f:a1:28:88:6d:4d:89:63:e9:fb:6c:18:74:a8:92:e2:74:cf:fd:1a:3e",
+    "prodTlsFingerprint": "e8:e4:03:50:21:15:dc:c2:b8:14:d4:4f:a1:28:88:6d:4d:89:63:e9:fb:6c:18:74:a8:92:e2:74:cf:fd:1a:3e"
+  }
+}
