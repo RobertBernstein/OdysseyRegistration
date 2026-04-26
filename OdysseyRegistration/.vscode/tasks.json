@@ -1,0 +1,24 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Build OdysseyMvc4 (MSBuild)",
+      "type": "shell",
+      "command": "& \"C:\\Program Files\\Microsoft Visual Studio\\18\\Enterprise\\MSBuild\\Current\\Bin\\MSBuild.exe\"",
+      "args": [
+        "OdysseyMvc4\\OdysseyMvc4.csproj",
+        "/t:Build",
+        "/p:Configuration=Debug",
+        "/v:minimal"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": "$msCompile"
+    }
+  ]
+}

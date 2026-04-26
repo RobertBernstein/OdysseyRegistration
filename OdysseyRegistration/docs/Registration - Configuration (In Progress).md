@@ -10,6 +10,36 @@ Initially written by Robert Bernstein
 * [Website - Fixing WordPress Theme Problems](./Website%20-%20Fixing%20WordPress%20Theme%20Problems.md)
 * [Connecting to the SQL Server Database used for Registration](./Registration%20-%20Connecting%20to%20the%20SQL%20Server%20Database.md)
 
+## Building OdysseyMvc4 in VS Code
+
+### What was updated
+
+To support the legacy ASP.NET MVC 5 / .NET Framework project (`OdysseyMvc4`) in VS Code, a workspace build task was added:
+
+- File: `.vscode/tasks.json`
+- Task label: `Build OdysseyMvc4 (MSBuild)`
+- Build engine: full Visual Studio `MSBuild.exe` (not `dotnet build`)
+
+This change was made because `dotnet build` can fail on this project type with legacy task-loading errors (for example, `MSB4062` involving `Microsoft.Bcl.Build`).
+
+### How to execute the build task
+
+In VS Code:
+
+1. Open the `OdysseyRegistration` workspace folder.
+2. Use **Terminal → Run Build Task...**
+3. Choose **Build OdysseyMvc4 (MSBuild)**.
+
+Because it is marked as the default build task, you can also use:
+
+- **Ctrl+Shift+B** (Run Build Task)
+
+The task builds:
+
+- `OdysseyMvc4\OdysseyMvc4.csproj`
+- Configuration: `Debug`
+- Verbosity: `minimal`
+
 ## Web Deploy Publishing Information
 
 > [!note]

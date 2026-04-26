@@ -1,5 +1,9 @@
 # NoVA North Odyssey Web Site Configuration Information
 
+## See also
+
+- [OdysseyMvc4 build instructions in VS Code](./Registration%20-%20Configuration%20%28In%20Progress%29.md#building-odysseymvc4-in-vs-code)
+
 ## As of 04/18/2026
 
 | Setting | Value |

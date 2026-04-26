@@ -7,6 +7,18 @@
 
 This repository contains the code for the Judge and Tournament Registration websites for NoVA North Odyssey of the Mind.
 
+## VS Code workspace setting: `.vscode/settings.json`
+
+This workspace includes the following VS Code setting:
+
+```jsonc
+{
+   "dotnet.preferCSharpExtension": true
+}
+```
+
+This tells VS Code/.NET tooling to prefer the C# extension experience when opening and working with C# code in this repository. It mainly affects IDE behavior (project loading, IntelliSense, diagnostics, and navigation consistency), not runtime behavior of the applications.
+
 ## Projects in this Solution (.slnx)
 
 | Folder                | Project Name                         | .NET Version       | Purpose             |
