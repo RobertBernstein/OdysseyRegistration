@@ -7,7 +7,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/OdysseyRegistration/OdysseyMvc2024/OdysseyMvc2024.csproj",
+                "${workspaceFolder}/src/OdysseyMvc2024/OdysseyMvc2024.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary;ForceNoAlign"
             ],
@@ -19,7 +19,7 @@
             "type": "process",
             "args": [
                 "publish",
-                "${workspaceFolder}/OdysseyRegistration/OdysseyMvc2024/OdysseyMvc2024.csproj",
+                "${workspaceFolder}/src/OdysseyMvc2024/OdysseyMvc2024.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary;ForceNoAlign"
             ],
@@ -33,7 +33,7 @@
                 "watch",
                 "run",
                 "--project",
-                "${workspaceFolder}/OdysseyRegistration/OdysseyMvc2024/OdysseyMvc2024.csproj"
+                "${workspaceFolder}/src/OdysseyMvc2024/OdysseyMvc2024.csproj"
             ],
             "problemMatcher": "$msCompile"
         }

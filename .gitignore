@@ -403,6 +403,6 @@ FodyWeavers.xsd
 # JetBrains Rider
 *.sln.iml
 
-# Docker Passwords
-/**/sa_password.txt
-
+# Exclude Docker passwords
+src/sa_password.txt
+src/webmaster_email_password.txt

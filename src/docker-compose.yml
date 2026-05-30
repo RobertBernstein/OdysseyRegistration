@@ -1,0 +1,47 @@
+volumes:
+  sqlserver_odyssey:
+  sqlserver_backup:
+
+services:
+  odysseyregistrationwebapi:
+    image: ${DOCKER_REGISTRY-}odysseyregistrationwebapi
+    container_name: webapi
+    build:
+      context: .
+      dockerfile: OdysseyRegistrationWebApi/Dockerfile
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: sqlserver
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_PID: Developer
+      CONFIG_EDGE_BUILD: 0
+      MSSQL_SA_PASSWORD_FILE: /run/secrets/sa_password
+    secrets:
+      - sa_password
+      - webmaster_email_password
+    ports:
+      - "1433:1433"
+    volumes:
+      - ./init:/init
+      - sqlserver_odyssey:/var/opt/mssql
+      - sqlserver_backup:/var/opt/mssql/backup
+    restart: always
+    # Key fix: add -C (trust cert) and give more time during heavy initialization
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P $(cat /run/secrets/sa_password) -Q 'SELECT 1' >/dev/null 2>&1 || exit 1"]
+      interval: 15s
+      retries: 6
+      start_period: 90s
+      timeout: 10s
+    command: ["/bin/bash", "/init/sqlserver-entrypoint.sh"]
+
+secrets:
+  sa_password:
+    file: sa_password.txt
+  webmaster_email_password:
+    file: webmaster_email_password.txt

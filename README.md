@@ -1,11 +1,18 @@
 # Odyssey of the Mind Registration
 
 > [!TODO]
-> Read the "Database first approach with DotNet Core" article in Obsidian before continuing to work on this project.
+> Read the [Database first approach with DotNet Core](obsidian://open?vault=Rob's%20Programming%20Notebook&file=C%EF%BC%83%20%2B%20.NET%2Fdotnet%20(Core)%2FDatabases%20in%20.NET%2FDatabase%20first%20approach%20with%20DotNet%20Core) article in Obsidian before continuing to work on this project.
 
 ## Overview
 
 This repository contains the code for the Judge and Tournament Registration websites for NoVA North Odyssey of the Mind.
+
+## Start the Dev/Test Environment
+
+Use these links to start the local development and test environment with Docker + OdysseyMvc2024:
+
+1. [How to Use in Visual Studio](docs/Docker%20Compose.md#how-to-use-in-visual-studio)
+2. [How to Use in VS Code](docs/Docker%20Compose.md#how-to-use-in-vs-code)
 
 ## VS Code workspace setting: `.vscode/settings.json`
 
@@ -21,20 +28,20 @@ This tells VS Code/.NET tooling to prefer the C# extension experience when openi
 
 ## Projects in this Solution (.slnx)
 
-| Folder                | Project Name                         | .NET Version       | Purpose             |
-|-----------------------|--------------------------------------|--------------------|---------------------|
-| /                     | EFCoreToolReverseEngineeringTest     | .NET 10.0          | ==TBD==    |
-| /                     | JudgeRegistrationRazor               | .NET 10.0          | ==TBD==    |
-| /OdysseyRegistration/ | docker-compose                       | N/A                | Docker Compose project (.dcproj)<br />* Also builds the OdysseyRegistrationWebApi project.|
-| /OdysseyRegistration/ | init                                 | N/A                | SQL Server initialization files for the Docker Compose project |
-| /OdysseyRegistration/ | Odyssey.Database                     | SQL Server 2019 (==how can you tell which version?==)   | Database management project (.sqlproj) |
-| /OdysseyRegistration/ | OdysseyCoreMvc                       | .NET 10.0          | Unused (I think): Core MVC framework  |
-| /OdysseyRegistration/ | OdysseyMvc4                          | .NET Framework 4.8 | MVC framework 4<br />**This is what is running in production today (01/01/2025).** |
-| /OdysseyRegistration/ | OdysseyMvc4.Tests                    | .NET Framework 4.8 | MVC framework 4 tests |
-| /OdysseyRegistration/ | OdysseyMvc2023                       | **.NET Framework 4.8** | MVC framework 2023, ==I think unused since it's .NET Framework==  |
-| /OdysseyRegistration/ | OdysseyMvc2024                       | .NET 10.0          | ==Is this the current project or is it the 2023 project? I think it's this one.== |
-| /OdysseyRegistration/ | OdysseyRegistrationWebApi            | .NET 10.0          | Web API for registration |
-| /OdysseyRegistration/ | UpdateProblemSynopsesForRegistration | .NET Framework 4.8 | Update problem synopses, ==Need to figure out what this does and if it's worth keeping== |
+| Folder  | Project Name                         | .NET Version       | Purpose             |
+|---------|--------------------------------------|--------------------|---------------------|
+| /src/   | EFCoreToolReverseEngineeringTest     | .NET 10.0          | ==TBD==    |
+| /src/   | JudgeRegistrationRazor               | .NET 10.0          | ==TBD==    |
+| /src/   | docker-compose                       | N/A                | Docker Compose project (.dcproj)<br />* Also builds the OdysseyRegistrationWebApi project.|
+| /src/   | init                                 | N/A                | SQL Server initialization files for the Docker Compose project |
+| /src/   | Odyssey.Database                     | SQL Server 2019 (==how can you tell which version?==)   | Database management project (.sqlproj) |
+| /src/   | OdysseyCoreMvc                       | .NET 10.0          | Unused (I think): Core MVC framework  |
+| /src/   | OdysseyMvc4                          | .NET Framework 4.8 | MVC framework 4<br />**This is what is running in production today (01/01/2025).** |
+| /src/   | OdysseyMvc4.Tests                    | .NET Framework 4.8 | MVC framework 4 tests |
+| /src/   | OdysseyMvc2023                       | **.NET Framework 4.8** | MVC framework 2023, ==I think unused since it's .NET Framework==  |
+| /src/   | OdysseyMvc2024                       | .NET 10.0          | ==Is this the current project or is it the 2023 project? I think it's this one.== |
+| /src/   | OdysseyRegistrationWebApi            | .NET 10.0          | Web API for registration |
+| /src/   | UpdateProblemSynopsesForRegistration | .NET Framework 4.8 | Update problem synopses, ==Need to figure out what this does and if it's worth keeping== |
 
 ## Technologies
 
@@ -51,30 +58,7 @@ The OdysseyMvc4 (original) and OdysseyMvc2023 (current? I think it's really Odys
 
 ## TODO
 
-1. [x] Update (all) the projects to use ASP.NET (Core) 10.0 or later.
-2. [ ] Document how I added the SQL Project to Visual Studio and how to modify, use, and deploy it.
-3. [ ] Rolled back to EF 4.4 to make sure everything worked. See if the code works as-is with EF 6.x.
-4. [ ] Create Elmah test DB
-5. [ ] Determine what all the projects in this solution are for.
-6. [ ] Upgrade the Odyssey.Database project to SQL Server 2022.
-7. [ ] Clean up the "Purpose" column in the Projects table above.
-8. [ ] Add logging to all projects!
-9. [ ] Make all "Return to the Home Page" buttons return to the home page at the current base URL, not hard-coded to a specific Odyssey Registration home page.
-10. [ ] Move docker-compose.dcproj and its associated files into its own subdirectory.
-11. [ ] Set up automated SQL Server Backups for Odyssey Registration.
-12. [ ] 09/29/2024: Read "Get started with Entity Framework Core and an existing database in minutes - Quick Start Guide":
-   1. https://x.com/ErikEJ/status/1740635086742069720, 2:25 AM · Dec 29, 2023.
-   2. This can produce Mermaid diagrams, as well.
-13. [ ] 11/09/2024: Add [sweetalert2](https://github.com/sweetalert2/sweetalert2) to replace alerts.
-   1. A beautiful, responsive, customizable, accessible (WAI-ARIA) replacement for JavaScript's popup boxes. Zero dependencies.
-14. [ ] 11/17/2024: Mandatory: Add the membership name and number to the tournament registration email sent to the coach.
-15. [ ] 11/17/2024: Preferable: Populate the membership name and number from the schools table into the tournament registration table at the time of registration.
-16. [ ] 01/01/2025: Roll back anything in the .NET updates that are incompatible with the .NET Framework / ASP.NET v4 version of the website just to get onto .NET (Core) and be finished with .NET Framework once and for all.
-   1. [ ] 01/01/2025: This includes the changes I made to the Odyssey database schema.
-17. [ ] 01/01/2025: Once the .NET (not Framework) site is in production, then re-add updates/changes that were checked in today.
-18. [ ] 01/01/2025: Convert the [Run the SQL Server database in a Docker container (manually)](#run-the-sql-server-database-in-a-docker-container-manually) section into a Dockerfile that can be built instead of step-by-step PowerShell cmdlets.
-19. [ ] 04/06/2025: Add [Humanizer: meets all your .NET needs for manipulating and displaying strings, enums, dates, times, timespans, numbers and quantities](https://github.com/Humanizr/Humanizer).
-20. [ ] 04/06/2025: Figure out why the `sqlserver.configurator` docker container doesn't run once the `sqlserver` container is healthy.
+See [docs/TODO.md](docs/TODO.md) for the full project TODO list.
 
 ## Update secrets in OdysseyMvc4 and other projects
 
@@ -101,7 +85,7 @@ The OdysseyMvc2024 project uses ASP.NET Core User Secrets to store the database 
 **Setup (already completed):**
 ```bash
 # Navigate to the project directory
-cd OdysseyRegistration\OdysseyMvc2024
+cd src\OdysseyMvc2024
 
 # Initialize User Secrets (adds UserSecretsId to csproj)
 dotnet user-secrets init
@@ -122,7 +106,7 @@ dotnet user-secrets clear
 - They override values in `appsettings.json`
 - They are never committed to source control
 
-**Important**: The password in User Secrets must match the password in `OdysseyRegistration/sa_password.txt` (used by Docker for SQL Server).
+**Important**: The password in User Secrets must match the password in `src/sa_password.txt` (used by Docker for SQL Server).
 
 ### Production Secrets Management
 
@@ -206,9 +190,9 @@ If migrating to Azure App Service:
 
 1. Start Docker Desktop for Windows.
    1. You may need to delete any previous container named `sqlserver`.
-      1. Otherwise, you may get an error at build time for the `docker-compose` project in VS 2022.
-2. Open VS 2022.
-3. Set the `docker-compose` VS 2022 project as the start up project.
+      1. Otherwise, you may get an error at build time for the `docker-compose` project in VS 2026.
+   2. Open VS 2026.
+   3. Set the `docker-compose` VS 2026 project as the start up project.
 4. Build the `docker-compose` project in the .slnx. This builds two projects:
    1. OdysseyRegistrationWebApi
    2. docker-compose
@@ -220,12 +204,12 @@ If migrating to Azure App Service:
 7. This resulted in a `There were build errors. Would you like to continue and run the
 last successful build?` dialog box.
    1. Click No.
-   1. The `docker-compose` project build showed the following error in the Error List window in VS 2022:
+   1. The `docker-compose` project build showed the following error in the Error List window in VS 2026:
       1. `Volume sharing is not enabled. On the Settings screen in Docker Desktop, click Resources -> Shared Drives, and select the drive(s) or folder(s) containing your project files. For more information, please visit - https://aka.ms/DockerToolsTroubleshooting`.
 1. Now start the `sqlserver.configurator` container and the SQL data will be populated in the database.
    1. It will run for a few seconds and exit.
    2. This is expected.
-2. You may now connect to the running SQL Server instance using VS 2022, etc., with the following settings:
+2. You may now connect to the running SQL Server instance using VS 2026, etc., with the following settings:
    1. Server Name: localhost
    2. Authentication: SQL Server Authentication
    3. User name: sa
@@ -243,7 +227,7 @@ last successful build?` dialog box.
 
 ### Automated Deployment via FTPS (`publish.ps1`)
 
-The `OdysseyRegistration/publish/` directory contains a PowerShell script and configuration file for automated FTPS deployment to Winhost. Supports separate **test** and **prod** environments.
+The `publish/` directory contains a PowerShell script and configuration file for automated FTPS deployment to Winhost. Supports separate **test** and **prod** environments.
 
 #### Files
 
@@ -268,7 +252,7 @@ The `publish-config.json` file references these as `%TEST_FTP_PASS%` and `%PROD_
 #### Usage
 
 ```powershell
-cd OdysseyRegistration\publish
+cd publish
 
 # Build and deploy to test
 .\publish.ps1 -Environment test
@@ -428,25 +412,9 @@ Connection String: "Data Source=tcp:s06.winhost.com;Initial Catalog=DB_12824_reg
 
 ==How did I create this VS project in the first place?==
 
-1. See [docker-compose.yml](OdysseyRegistration/docker-compose.yml).
+1. See [docker-compose.yml](src/docker-compose.yml).
 2. Manually run the `sqlserver.configurator` docker container (from within the Docker Desktop UI) to create the Odyssey login and database.
    1. It should run automatically once the `sqlserver` container is healthy. I added to TODO to figure out why this isn't running.
-
-#### Manually (Don't need to use this any longer)
-
-Open a PowerShell prompt.
-
-```powershell
-docker pull mcr.microsoft.com/mssql/server:2022-latest
-docker volume create sql-volume
-$mssql_sa_password = "" # set this to a strong password
-docker run -e 'ACCEPT_EULA=Y' -e "MSSQL_SA_PASSWORD=$mssql_sa_password" -p 1433:1433 --name sqlserver --hostname sqlserver --mount "source=sql-volume,target=/sqldata" -d mcr.microsoft.com/mssql/server:2022-latest
-docker exec -it -u 0 sqlserver "bash"   # -u 0 lets us log in as root.
-chmod 777 /sqldata
-docker container exec sqlserver /opt/mssql-tools18/bin/sqlcmd -U sa -P "$mssql_sa_password" -Q "CREATE DATABASE [DB_12824_registration] ON  PRIMARY ( NAME = N'DB_12824_registration_data', FILENAME = N'/sqldata/DB_12824_registration_data.mdf' , SIZE = 4160KB , MAXSIZE = 25600KB , FILEGROWTH = 1024KB ) LOG ON ( NAME = N'DB_12824_registration_log', FILENAME = N'/sqldata/DB_12824_registration_log.ldf' , SIZE = 1024KB , MAXSIZE = 1024000KB , FILEGROWTH = 65536KB );"`
-docker cp "2022-08-06 - NoVA North Production Database Export Script.sql" sqlserver:/sqldata
-docker container exec sqlserver /opt/mssql-tools18/bin/sqlcmd -U sa -P "$mssql_sa_password" -i "/sqldata/2022-08-06 - NoVA North Production Database Export Script.sql"
-```
 
 ### Generate the Odyssey database schema with `mermerd`
 
@@ -527,7 +495,7 @@ Created a new project in the solution named `OdysseyRegistrationWebApi`
 
 ### 08/05/2024
 
-1. In VS 2022, I right-clicked on the solution and selected Add, Container Orchestrator Support.
+1. In VS 2026, I right-clicked on the solution and selected Add, Container Orchestrator Support.
    1. Docker Compose
    2. Linux Containers
 1. I updated the `docker-compose.yml` file with the contents of one I found for adding a SQL Server 2022 database, modifying it by leveraging Docker Compose secrets.
@@ -606,7 +574,7 @@ Created a new project in the solution named `OdysseyRegistrationWebApi`
     ```
 
 3. Add a link like `entity.HasData(SeedHelper.SeedData<School>("Schools.json"));` to the `modelBuilder.Entity<School>()` code within the `OnModelCreating` method in the `OdysseyContext` class.
-4. Added EF migrations using the Developer PowerShell for VS 2022 window.
+4. Added EF migrations using the Developer PowerShell for VS 2026 window.
 5. Used the following commands:
 
    ```powershell
@@ -643,4 +611,4 @@ Created a new project in the solution named `OdysseyRegistrationWebApi`
 ## References
 
 1. [MySQL 9.2 Reference Manual](https://dev.mysql.com/doc/refman/9.2/en/)
-1. [MySQL for WordPress docs](OdysseyRegistration/docs/MySQL-for-WordPress.md)
+1. [MySQL for WordPress docs](docs/MySQL-for-WordPress.md)

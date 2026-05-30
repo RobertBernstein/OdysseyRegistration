@@ -1,6 +1,7 @@
 # OdysseyRegistration Project Instructions
 
 ## What this repo is
+
 - ASP.NET registration system for NoVA North Odyssey of the Mind
 - Multiple projects in different stages of migration from .NET Framework to .NET 10.0
 - Primary production site: OdysseyMvc4 (.NET Framework 4.8)
@@ -8,6 +9,7 @@
 - Supporting WebAPI: OdysseyRegistrationWebApi (.NET 10.0)
 
 ## Tech stack
+
 - .NET 10.0 (new projects) / .NET Framework 4.8 (legacy)
 - ASP.NET MVC (controllers, not Minimal APIs)
 - Entity Framework Core (new) / Entity Framework 6.x (legacy)
@@ -16,6 +18,7 @@
 - Hosted on WinHost (production)
 
 ## Repo map
+
 ```
 /                                    → Solution root
 ├── EFCoreToolReverseEngineeringTest → .NET 10.0 test project
@@ -35,10 +38,12 @@
 ```
 
 ## Detailed Project Documentation
+
 - See `.copilot/odysseymvc4-architecture.md` for the **complete OdysseyMvc4 architecture reference** including: project structure, controller hierarchy, entity models, database schema, registration wizard flows, ViewData classes, multi-region support, email system, routing, client-side architecture, configuration, deployment profiles, business rules, and known issues.
 - See `.copilot/odysseymvc2024-architecture.md` for the **complete OdysseyMvc2024 architecture reference** including: project structure, DI-based controller hierarchy, EF Core Code First models, repository interface, NuGet dependencies, ViewData classes, migration status vs OdysseyMvc4, known issues, and decompilation artifacts.
 
 ## Hard rules (do not violate)
+
 - NEVER break OdysseyMvc4 (.NET Framework) - it's running in production
 - NEVER commit passwords, connection strings, or secrets to git
 - The sa_password.txt file must exist in OdysseyRegistration/OdysseyRegistration/ but NEVER commit it
@@ -49,6 +54,7 @@
 - When migrating code from OdysseyMvc4 to OdysseyMvc2024, maintain backward compatibility
 
 ## Database rules
+
 - Local dev: SQL Server in Docker (localhost, sa account)
 - Production: WinHost SQL Server 2008 R2 (s06.winhost.com)
   - Database: DB_12824_registration
@@ -59,11 +65,13 @@
 - Database schema managed via Odyssey.Database project
 
 ## Security & Secrets
+
 - NEVER commit secrets, passwords, or connection strings to git
 - WebmasterEmailPassword comes from Config table in production DB
 - Never store passwords in init.sql or novanorth-prod.sql directly
 
 ### Development: User Secrets (OdysseyMvc2024)
+
 User Secrets is configured for OdysseyMvc2024. To set up on a new machine:
 ```bash
 cd OdysseyRegistration\OdysseyMvc2024
@@ -74,11 +82,13 @@ dotnet user-secrets set "ConnectionStrings:OdysseyConnection" "Server=localhost;
 - View secrets: `dotnet user-secrets list`
 
 ### Docker: sa_password.txt
+
 - Use `OdysseyRegistration/sa_password.txt` for local Docker SQL Server password
 - Docker Secrets mount this as `/run/secrets/sa_password`
 - Do NOT commit this file to git
 
 ### Production: WinHost Options
+
 1. **Environment Variables (Recommended)**: WinHost Control Panel → Site Manager → IIS Settings → Application Settings
 2. **appsettings.Production.json**: Create on server via FTP (not in source control)
 3. **Web.config** (Legacy .NET Framework): Use transforms or edit on server
@@ -87,6 +97,7 @@ dotnet user-secrets set "ConnectionStrings:OdysseyConnection" "Server=localhost;
 See `.copilot/security.md` for detailed configuration instructions.
 
 ## Default workflow
+
 1. Ask for missing requirements before changing code
 2. Identify which project(s) need changes (Framework vs Core)
 3. Propose a plan + list files to touch
@@ -95,27 +106,33 @@ See `.copilot/security.md` for detailed configuration instructions.
 6. Verify OdysseyMvc4 still works if touched
 
 ## Commands
+
 ### Build & Test (mandatory)
+
 - Build solution: `dotnet build OdysseyRegistration.slnx`
 - Run tests: `dotnet test OdysseyRegistration\OdysseyMvc4.Tests`
 - If tests fail: fix until green before summarizing.
 
 ### Run
+
 - Run WebAPI: `dotnet run --project OdysseyRegistration\OdysseyRegistrationWebApi`
 
 ### Docker
-- Start environment: Set docker-compose as startup project, F5 in VS 2022
+
+- Start environment: Set docker-compose as startup project, F5 in VS 2026
 - Or: Right-click docker-compose → "Compose Up"
 - Connect to SQL: localhost, sa, password from sa_password.txt
 - Shell into SQL container: `docker container exec -it sqlserver bash`
 - SQL query: `docker container exec sqlserver /opt/mssql-tools18/bin/sqlcmd -U sa -P <password> -Q "query"`
 
 ### Database
+
 - Generate schema diagram: `mermerd -c "sqlserver://sa:<password>@localhost:1433?database=DB_12824_registration" -s dbo --useAllTables -o OdysseySchema.mmd`
 - EF Core migrations: `dotnet ef migrations add <name>` then `dotnet ef database update`
 - Export as JSON: `SELECT * FROM <table> FOR JSON AUTO` in SSMS
 
 ## Known issues to avoid
+
 - Volume sharing must be enabled in Docker Desktop (Settings → Resources → Shared Drives)
 - sqlserver.configurator container should run automatically but doesn't (TODO to fix)
 - EventName in Events table must match RegionName or code throws exception (line 355 in OdysseyRepository.cs)
@@ -123,6 +140,7 @@ See `.copilot/security.md` for detailed configuration instructions.
 - Problem IDs changed from 0-based to 1-based (needs code updates)
 
 ## Migration status
+
 Copying OdysseyMvc4 (.NET Framework) to OdysseyMvc2024 (.NET 10.0):
 - ✅ BaseRegistrationController - Complete
 - ✅ HomeController - Complete
@@ -130,6 +148,7 @@ Copying OdysseyMvc4 (.NET Framework) to OdysseyMvc2024 (.NET 10.0):
 - ❓ TournamentRegistrationController - Stopped at line 144
 
 ## Output format
+
 - Explain which project(s) are affected and why
 - Show file paths relative to repo root
 - For .NET Framework changes, note potential compatibility issues
@@ -137,9 +156,11 @@ Copying OdysseyMvc4 (.NET Framework) to OdysseyMvc2024 (.NET 10.0):
 - Provide Docker and connection string changes separately
 
 ## Commit messages
+
 Use **Conventional Commits** format for all commit messages.
 
 ### First line (subject)
+
 ```
 type(scope): short imperative description
 ```
@@ -148,6 +169,7 @@ type(scope): short imperative description
 - Use imperative mood ("add", "fix", "update" — not "added" or "adds")
 
 ### Types
+
 | Type | When to use |
 |---|---|
 | `feat` | New feature or behavior |
@@ -160,6 +182,7 @@ type(scope): short imperative description
 | `perf` | Performance improvement |
 
 ### Scopes (project-specific)
+
 | Scope | Area |
 |---|---|
 | `mvc4` | OdysseyMvc4 (production) |
@@ -171,12 +194,14 @@ type(scope): short imperative description
 | `deps` | NuGet / package updates |
 
 ### Body
+
 - Blank line between subject and body
 - Bullet points for each logical change
 - Explain *what* changed and *why* (not how)
 - Finish with one sentence on the impact or purpose
 
 ### Example
+
 ```
 feat(mvc2024): add Page05 coach info to tournament registration
 
