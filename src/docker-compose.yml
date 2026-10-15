@@ -1,3 +1,5 @@
+name: odyssey-registration
+
 volumes:
   sqlserver_odyssey:
   sqlserver_backup:
