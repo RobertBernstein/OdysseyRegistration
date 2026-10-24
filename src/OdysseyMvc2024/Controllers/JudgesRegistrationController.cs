@@ -486,7 +486,7 @@ namespace OdysseyMvc2024.Controllers
                 YearsOfSpontaneousJudgingExperience = page02ViewData.YearsOfSpontaneousJudgingExperience,
                 PreviousPositions = GetPreviousPositions(page02ViewData),
                 WillingToBeScorechecker = page02ViewData.WillingToBeScorechecker,
-                TshirtSize = page02ViewData.SelectedTshirtSize as string,
+                TshirtSize = page02ViewData.SelectedTshirtSize,
                 WantsCEUCredit = page02ViewData.WantsCeuCredit,
                 Notes = page02ViewData.Notes
             };

@@ -1,4 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Page02ViewData.cs" company="Tardis Technologies">
 //   Copyright 2014 Tardis Technologies. All rights reserved.
 // </copyright>
@@ -288,6 +288,7 @@ namespace OdysseyMvc2024.ViewData.JudgesRegistration
         /// <summary>
         /// Gets or sets the selected t-shirt size.
         /// </summary>
-        public object? SelectedTshirtSize { get; internal set; }
+        [Required(ErrorMessage = "You must choose a t-shirt size.")]
+        public string? SelectedTshirtSize { get; set; }
     }
 }

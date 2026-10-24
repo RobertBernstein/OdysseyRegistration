@@ -1,4 +1,4 @@
-﻿@{
+@{
     // Package:	Odyssey of the Mind Web Site
     // Module:	Judges Registration
     // File:	Page02.cshtml
@@ -46,7 +46,7 @@
         $("#hasChildrenCompetingDiv").hide();
 
         // Display or hide the fields allowing a judge to specify conflicts of interest.
-        // See http://stackoverflow.com/questions/2777139/how-to-use-jquery-to-show-hide-divs-based-on-radio-button-selection
+        // See https://stackoverflow.com/questions/2777139/how-to-use-jquery-to-show-hide-divs-based-on-radio-button-selection
         $("input[name$='HasChildrenCompeting']").click(function () {
             var hasChildrenCompeting = $(this).val();
             if (hasChildrenCompeting == "Yes") {
@@ -85,6 +85,12 @@
                 $("#ProblemChoice1").focus();
                 return false;
             }
+        }
+
+        if (!$("#SelectedTshirtSize").val()) {
+            alert("Please select a t-shirt size before continuing.");
+            $("#SelectedTshirtSize").focus();
+            return false;
         }
 
         return true;
@@ -259,7 +265,7 @@
         &nbsp; <a href="@Model.Config["LinkToSynopses"]" target="_blank">
             Click here for
             a description of the problems
-        </a>
+        </a> (opens in a new browser tab)
     </p>
     <p>
         @Html.LabelFor(x => x.ProblemChoice2)
