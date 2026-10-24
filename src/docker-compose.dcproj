@@ -18,6 +18,7 @@
     <None Include=".dockerignore" />
     <None Include="init\init.sql" />
     <None Include="init\novanorth-prod.sql" />
+    <None Include="init\sqlserver-entrypoint.sh" />
     <None Include="sa_password.txt" />
   </ItemGroup>
 </Project>
