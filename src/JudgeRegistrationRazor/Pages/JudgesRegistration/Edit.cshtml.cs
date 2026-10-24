@@ -11,7 +11,7 @@ using JudgeRegistrationRazor.Models;
 
 namespace JudgeRegistrationRazor.Pages.JudgesRegistration
 {
-    public class EditModel : PageModel
+    internal class EditModel : PageModel
     {
         private readonly OdysseyContext _context;
 
@@ -30,7 +30,7 @@ namespace JudgeRegistrationRazor.Pages.JudgesRegistration
                 return NotFound();
             }
 
-            var judge = await _context.Judges.FirstOrDefaultAsync(m => m.Id == id);
+            var judge = await _context.Judges.FirstOrDefaultAsync(m => m.Id == id).ConfigureAwait(false);
             if (judge == null)
             {
                 return NotFound();
@@ -52,7 +52,7 @@ namespace JudgeRegistrationRazor.Pages.JudgesRegistration
 
             try
             {
-                await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync().ConfigureAwait(false);
             }
             catch (DbUpdateConcurrencyException)
             {

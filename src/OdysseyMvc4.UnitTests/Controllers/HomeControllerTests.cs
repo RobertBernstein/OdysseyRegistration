@@ -12,19 +12,25 @@ namespace OdysseyMvc4.UnitTests.Controllers;
 /// Tests for the HomeController business logic that must be preserved
 /// during the migration from .NET Framework 4.8 (OdysseyMvc4) to .NET 10 (OdysseyMvc2024).
 /// </summary>
-public class HomeControllerTests
+public sealed class HomeControllerTests : IDisposable
 {
     private readonly Mock<IOdysseyRepository> _mockRepo;
     private readonly HomeController _controller;
 
     public HomeControllerTests()
     {
-        _mockRepo = TestHelper.CreateMockRepository();
+        _mockRepo = new Mock<IOdysseyRepository>();
         _controller = new HomeController(_mockRepo.Object)
         {
             FriendlyRegistrationName = "Test Registration"
         };
         TestHelper.SetupControllerContext(_controller);
+    }
+
+    public void Dispose()
+    {
+        _controller.Dispose();
+        GC.SuppressFinalize(this);
     }
 
     [Fact]

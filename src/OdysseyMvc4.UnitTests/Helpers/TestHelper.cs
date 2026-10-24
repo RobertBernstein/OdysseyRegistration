@@ -58,12 +58,12 @@ public static class TestHelper
         LocationAddress = "123 Main St",
         LocationCity = "Springfield",
         LocationState = "VA",
-        StartDate = new DateTime(2025, 3, 15),
+        StartDate = new DateTime(2025, 3, 15, 0, 0, 0, DateTimeKind.Unspecified),
         Time = "8:00 AM",
         EventCost = "100",
         LateEventCost = "125",
-        LateEventCostStartDate = new DateTime(2025, 3, 1),
-        PaymentDueDate = new DateTime(2025, 3, 10),
+        LateEventCostStartDate = new DateTime(2025, 3, 1, 0, 0, 0, DateTimeKind.Unspecified),
+        PaymentDueDate = new DateTime(2025, 3, 10, 0, 0, 0, DateTimeKind.Unspecified),
         EventMailBody = "Thank you for registering.",
         EventMakeChecksOutTo = "NoVA North Odyssey"
     };
@@ -80,7 +80,7 @@ public static class TestHelper
         LocationAddress = "456 Oak Ave",
         LocationCity = "Fairfax",
         LocationState = "VA",
-        StartDate = new DateTime(2025, 2, 20),
+        StartDate = new DateTime(2025, 2, 20, 0, 0, 0, DateTimeKind.Unspecified),
         Time = "9:00 AM",
         EventMailBody = "Dear <span>FirstName</span> <span>LastName</span>, Thank you for registering as a judge (ID: <span>JudgeID</span>) for <span>Region</span>. " +
                         "Judges Training: <span>JudgesTrainingLocation</span> on <span>JudgesTrainingDate</span> at <span>JudgesTrainingTime</span>. " +
@@ -111,10 +111,16 @@ public static class TestHelper
     /// </summary>
     public static void SetupControllerContext(Controller controller, string host = "www.novanorth.org")
     {
+        if (controller == null)
+        {
+            throw new ArgumentNullException(nameof(controller));
+        }
+
         var requestMock = new Mock<HttpRequestBase>();
         requestMock.Setup(r => r.Url).Returns(new Uri($"http://{host}/"));
         requestMock.Setup(r => r.ApplicationPath).Returns("/");
         requestMock.Setup(r => r.ServerVariables).Returns(new NameValueCollection());
+        requestMock.Setup(r => r.UserAgent).Returns("xUnit test agent");
 
         var responseMock = new Mock<HttpResponseBase>();
         responseMock.Setup(r => r.ApplyAppPathModifier(It.IsAny<string>())).Returns<string>(s => s);

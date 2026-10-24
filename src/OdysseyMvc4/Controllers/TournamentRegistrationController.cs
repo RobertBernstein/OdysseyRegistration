@@ -81,16 +81,13 @@ namespace OdysseyMvc4.Controllers
         public int DetermineDivisionOfTeam(List<string> gradesOfTeamMembers)
         {
             int divisionOfTeam = -1;
-            foreach (string grade in gradesOfTeamMembers)
+            foreach (var divisionOfTeamMember in from string grade in gradesOfTeamMembers
+                                                 where !string.IsNullOrEmpty(grade)
+                                                 let divisionOfTeamMember = this.GetDivisionOfTeamMember(grade)
+                                                 where divisionOfTeamMember > divisionOfTeam
+                                                 select divisionOfTeamMember)
             {
-                if (!string.IsNullOrEmpty(grade))
-                {
-                    int divisionOfTeamMember = this.GetDivisionOfTeamMember(grade);
-                    if (divisionOfTeamMember > divisionOfTeam)
-                    {
-                        divisionOfTeam = divisionOfTeamMember;
-                    }
-                }
+                divisionOfTeam = divisionOfTeamMember;
             }
 
             return divisionOfTeam;
@@ -112,7 +109,30 @@ namespace OdysseyMvc4.Controllers
 
             // divisionOfTeamMember = 0 when the team member is Primary, divisionOfTeamMember = 1, 2, or 3 when the
             // team member is Division 1, 2, or 3.
-            return (division >= 0) && (division <= 2) ? 0 : ((division <= 5) ? 1 : ((division <= 8) ? 2 : 3));
+            if ((division >= 0) && (division <= 2))
+            {
+                // divisionOfTeamMember = 0 when the team member is Primary, divisionOfTeamMember = 1, 2, or 3 when the
+                // team member is Division 1, 2, or 3.
+                return 0;
+            }
+            else if (division <= 5)
+            {
+                // divisionOfTeamMember = 0 when the team member is Primary, divisionOfTeamMember = 1, 2, or 3 when the
+                // team member is Division 1, 2, or 3.
+                return 1;
+            }
+            else if (division <= 8)
+            {
+                // divisionOfTeamMember = 0 when the team member is Primary, divisionOfTeamMember = 1, 2, or 3 when the
+                // team member is Division 1, 2, or 3.
+                return 2;
+            }
+            else
+            {
+                // divisionOfTeamMember = 0 when the team member is Primary, divisionOfTeamMember = 1, 2, or 3 when the
+                // team member is Division 1, 2, or 3.
+                return 3;
+            }
         }
 
         /// <summary>
@@ -209,7 +229,7 @@ namespace OdysseyMvc4.Controllers
             }
             catch (Exception exception)
             {
-                ErrorSignal.FromCurrentContext().Raise(exception);
+                ReportError(exception);
 
                 // TODO: Replace with Error Message
                 return this.RedirectToAction("Index", "Home");
@@ -275,7 +295,7 @@ namespace OdysseyMvc4.Controllers
             }
             catch (Exception exception)
             {
-                ErrorSignal.FromCurrentContext().Raise(exception);
+                ReportError(exception);
 
                 // TODO: Replace with Error Message
                 return this.RedirectToAction("Index", "Home");
@@ -329,7 +349,7 @@ namespace OdysseyMvc4.Controllers
             try
             {
                 this.SetBaseViewData(page03ViewData);
-                this.UpdateModel(page03ViewData);
+                SafeUpdateModel(page03ViewData);
 
                 page03ViewData.ListOfJudgesFound = this.Repository.GetJudgeByIdAndName(
                     int.Parse(page03ViewData.JudgeId),
@@ -362,7 +382,7 @@ namespace OdysseyMvc4.Controllers
             }
             catch (Exception exception)
             {
-                ErrorSignal.FromCurrentContext().Raise(exception);
+                ReportError(exception);
 
                 // TODO: Replace with Error Message
                 return this.RedirectToAction("Index", "Home");
@@ -435,8 +455,8 @@ namespace OdysseyMvc4.Controllers
 
             try
             {
-                this.SetBaseViewData(page04ViewData);
-                this.UpdateModel(page04ViewData);
+                SetBaseViewData(page04ViewData);
+                SafeUpdateModel(page04ViewData);
 
                 page04ViewData.VolunteerFound =
                     this.Repository.GetVolunteerByIdAndName(
@@ -469,7 +489,7 @@ namespace OdysseyMvc4.Controllers
             }
             catch (Exception exception)
             {
-                ErrorSignal.FromCurrentContext().Raise(exception);
+                ReportError(exception);
                 return this.RedirectToAction("Error");
             }
         }
@@ -518,11 +538,11 @@ namespace OdysseyMvc4.Controllers
 
             try
             {
-                this.UpdateModel(page05ViewData);
-                this.SetBaseViewData(page05ViewData);
+                SafeUpdateModel(page05ViewData);
+                SetBaseViewData(page05ViewData);
 
                 // Instantiate a new instance of MailMessage to test the legitimacy of the coach e-mail address entered.
-                if (this.BuildMessage(
+                if (BuildMessage(
                     page05ViewData.Config["WebmasterEmail"],
                     "test",
                     "test",
@@ -572,7 +592,7 @@ namespace OdysseyMvc4.Controllers
             }
             catch (Exception exception)
             {
-                ErrorSignal.FromCurrentContext().Raise(exception);
+                ReportError(exception);
 
                 // TODO: Replace with Error Message
                 return this.RedirectToAction("Index", "Home");
@@ -633,7 +653,7 @@ namespace OdysseyMvc4.Controllers
             try
             {
                 // Retrieve the data entered on the page
-                this.UpdateModel(page06ViewData);
+                SafeUpdateModel(page06ViewData);
 
                 // Copy drop-down list values into TournamentRegistration object in the viewData to pass to the
                 // repository.
@@ -669,7 +689,7 @@ namespace OdysseyMvc4.Controllers
             }
             catch (Exception exception)
             {
-                ErrorSignal.FromCurrentContext().Raise(exception);
+                ReportError(exception);
 
                 // TODO: Replace with Error Message
                 return this.RedirectToAction("Index", "Home");
@@ -738,40 +758,33 @@ namespace OdysseyMvc4.Controllers
                     Division = page07ViewData.DivisionRadioGroup ?? page07ViewData.DivisionOfTeam.ToString(CultureInfo.InvariantCulture)
                 };
 
-                // TODO: Get rid of all these labels, Rob - 12/10/2014
                 string divisionRadioGroup = page07ViewData.DivisionRadioGroup;
                 if (divisionRadioGroup == null)
                 {
-                    goto Label_00C9;
+                    newRegistrationData.ProblemID = int.Parse(page07ViewData.SelectedProblem);
                 }
-
-                if (divisionRadioGroup != "0")
+                else if (divisionRadioGroup == "0")
                 {
-                    if (divisionRadioGroup == "1")
-                    {
-                        goto Label_00B0;
-                    }
-
-                    goto Label_00C9;
+                    // Only record Spontaneous if the team is competing in the Primary Division
+                    newRegistrationData.ProblemID = 6;
+                    newRegistrationData.Spontaneous = page07ViewData.IsDoingSpontaneous == "Yes";
+                }
+                else if (divisionRadioGroup == "1")
+                {
+                    newRegistrationData.ProblemID = int.Parse(page07ViewData.Division123ProblemChoice);
+                }
+                else
+                {
+                    newRegistrationData.ProblemID = int.Parse(page07ViewData.SelectedProblem);
                 }
 
-                // Only record Spontaneous if the team is competing in the Primary Division
-                newRegistrationData.ProblemID = 6;
-                newRegistrationData.Spontaneous = page07ViewData.IsDoingSpontaneous == "Yes";
-                goto Label_00E2;
-            Label_00B0:
-                newRegistrationData.ProblemID = int.Parse(page07ViewData.Division123ProblemChoice);
-                goto Label_00E2;
-            Label_00C9:
-                newRegistrationData.ProblemID = int.Parse(page07ViewData.SelectedProblem);
-            Label_00E2:
                 this.Repository.UpdateTournamentRegistration(id, 7, newRegistrationData);
 
                 return this.RedirectToAction("Page08", new { id });
             }
             catch (Exception exception)
             {
-                ErrorSignal.FromCurrentContext().Raise(exception);
+                ReportError(exception);
 
                 // TODO: Replace with Error Message
                 return this.RedirectToAction("Index", "Home");
@@ -836,7 +849,7 @@ namespace OdysseyMvc4.Controllers
             }
             catch (Exception exception)
             {
-                ErrorSignal.FromCurrentContext().Raise(exception);
+                ReportError(exception);
 
                 // TODO: Replace with Error Message
                 return this.RedirectToAction("Index", "Home");
@@ -1091,7 +1104,7 @@ namespace OdysseyMvc4.Controllers
         public ActionResult ResendEmail(FormCollection collection)
         {
             ResendEmailViewData model = new ResendEmailViewData();
-            this.UpdateModel(model);
+            SafeUpdateModel(model);
 
             Page10ViewData viewData = new Page10ViewData
             {
@@ -1099,7 +1112,7 @@ namespace OdysseyMvc4.Controllers
                 TournamentRegistration = this.Repository.GetTournamentRegistrationById(model.TeamNumber)
             };
 
-            this.SetBaseViewData(viewData);
+            SetBaseViewData(viewData);
 
             // Make sure at least one of the two check boxes was checked.
             if ((model.CoachCheckbox == "false") && (model.AltCoachCheckbox == "false"))

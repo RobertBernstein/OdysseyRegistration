@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Migrations;
+using System.Diagnostics.CodeAnalysis;
 
 #nullable disable
 
@@ -6,15 +7,30 @@
 
 namespace JudgeRegistrationRazor.Migrations
 {
-    /// <inheritdoc />
-    public partial class UpdateSchoolsSeedData : Migration
+    internal partial class UpdateSchoolsSeedData : Migration
     {
-        /// <inheritdoc />
+        private static readonly string[] SchoolColumns =
+        {
+            "Id", "Address", "City", "CoordAddress", "CoordAltPhone", "CoordCity", "CoordEmailName", "CoordFaxNumber",
+            "CoordFirstName", "CoordLastName", "CoordMobilePhone", "CoordNew?", "CoordPhone", "CoordPostalCode", "CoordState",
+            "Membership#1", "Membership#1seen", "Membership#2", "Membership#2seen", "Membership#3", "Membership#3seen",
+            "Membership#4", "Membership#4seen", "Name", "Notes", "Phone", "PostalCode", "RegionNumber", "Share?", "State"
+        };
+
         protected override void Up(MigrationBuilder migrationBuilder)
+        {
+            InsertSchoolSeedBatch1(migrationBuilder);
+            InsertSchoolSeedBatch2(migrationBuilder);
+            InsertSchoolSeedBatch3(migrationBuilder);
+            InsertSchoolSeedBatch4(migrationBuilder);
+            InsertSchoolSeedBatch5(migrationBuilder);
+        }
+
+        private static void InsertSchoolSeedBatch1(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.InsertData(
                 table: "Schools",
-                columns: new[] { "Id", "Address", "City", "CoordAddress", "CoordAltPhone", "CoordCity", "CoordEmailName", "CoordFaxNumber", "CoordFirstName", "CoordLastName", "CoordMobilePhone", "CoordNew?", "CoordPhone", "CoordPostalCode", "CoordState", "Membership#1", "Membership#1seen", "Membership#2", "Membership#2seen", "Membership#3", "Membership#3seen", "Membership#4", "Membership#4seen", "Name", "Notes", "Phone", "PostalCode", "RegionNumber", "Share?", "State" },
+                columns: SchoolColumns,
                 values: new object[,]
                 {
                     { 8, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, "Crossfield Elementary (27938)", null, null, null, (short)9, null, null },
@@ -42,6 +58,16 @@ namespace JudgeRegistrationRazor.Migrations
                     { 79, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, "Marshall Road Elementary (32229)", null, null, null, (short)9, null, null },
                     { 80, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, "Montessori School of McLean (35043)", null, null, null, (short)9, null, null },
                     { 83, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, "Pine Spring Elementary (33080)", null, null, null, (short)9, null, null },
+                });
+        }
+
+        private static void InsertSchoolSeedBatch2(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.InsertData(
+                table: "Schools",
+                columns: SchoolColumns,
+                values: new object[,]
+                {
                     { 86, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, "Vienna Elementary (25021)", null, null, null, (short)9, null, null },
                     { 89, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, "Woodburn Elementary (34491)", null, null, null, (short)9, null, null },
                     { 90, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, "Lemon Road Elementary (32154)", null, null, null, (short)9, null, null },
@@ -67,6 +93,16 @@ namespace JudgeRegistrationRazor.Migrations
                     { 151, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, "Beech Tree Ele Sch (34226)", null, null, null, (short)9, null, null },
                     { 152, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, "Belvedere Ele Sch (23724)", null, null, null, (short)9, null, null },
                     { 153, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, "Canterbury Woods Ele Sch (19995)", null, null, null, (short)12, null, null },
+                });
+        }
+
+        private static void InsertSchoolSeedBatch3(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.InsertData(
+                table: "Schools",
+                columns: SchoolColumns,
+                values: new object[,]
+                {
                     { 154, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, "Congressional School of VA (40743)", null, null, null, (short)9, null, null },
                     { 156, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, "Kent Gardens Ele Sch (23353)", null, null, null, (short)9, null, null },
                     { 157, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, "Lutheran Church of the Redeemer (40973)", null, null, null, (short)9, null, null },
@@ -92,6 +128,16 @@ namespace JudgeRegistrationRazor.Migrations
                     { 180, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, "Westbriar Elementary School (42145)", null, null, null, (short)9, null, null },
                     { 181, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, "Pinecrest School (42218)", null, null, null, (short)9, null, null },
                     { 182, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, "Potomac School (42228)", null, null, null, (short)9, null, null },
+                });
+        }
+
+        private static void InsertSchoolSeedBatch4(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.InsertData(
+                table: "Schools",
+                columns: SchoolColumns,
+                values: new object[,]
+                {
                     { 183, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, "Emmanuel Lutheran Church (42435)", null, null, null, (short)9, null, null },
                     { 184, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, "Longfellow Middle (15934)", null, null, null, (short)9, null, null },
                     { 185, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, "Chesterbrook Elementary (30092)", null, null, null, (short)9, null, null },
@@ -117,6 +163,16 @@ namespace JudgeRegistrationRazor.Migrations
                     { 208, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, "Immanuel Christian School (35779)", null, null, null, (short)11, null, null },
                     { 209, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, "Nysmith School for the Gifted (30470)", null, null, null, (short)12, null, null },
                     { 210, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, "Oak Hill Elementary School (31486)", null, null, null, (short)12, null, null },
+                });
+        }
+
+        private static void InsertSchoolSeedBatch5(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.InsertData(
+                table: "Schools",
+                columns: SchoolColumns,
+                values: new object[,]
+                {
                     { 211, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, "Clermont Elementary School (10502)", null, null, null, (short)11, null, null },
                     { 212, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, "Sangster Elementary School A (29184)", null, null, null, (short)12, null, null },
                     { 213, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, "McNair Upper Elementary School (49397)", null, null, null, (short)12, null, null },
@@ -128,572 +184,24 @@ namespace JudgeRegistrationRazor.Migrations
                     { 220, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, "Sangster Elementary School E (45153)", null, null, null, (short)12, null, null },
                     { 221, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, "Sangster Elementary School F (45154)", null, null, null, (short)12, null, null },
                     { 222, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, "Lake Braddock Secondary School (5812)", null, null, null, (short)12, null, null },
-                    { 223, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, "Powell Elementary School (39730)", null, null, null, (short)12, null, null }
+                    { 223, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, "Powell Elementary School (39730)", null, null, null, (short)12, null, null },
                 });
         }
 
-        /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 8);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 10);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 11);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 16);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 19);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 21);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 25);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 28);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 29);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 35);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 42);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 44);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 46);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 69);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 71);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 72);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 73);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 74);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 75);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 76);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 77);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 78);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 79);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 80);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 83);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 86);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 89);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 90);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 94);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 99);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 100);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 101);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 102);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 105);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 107);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 113);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 114);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 115);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 120);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 127);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 131);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 135);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 141);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 143);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 145);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 149);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 150);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 151);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 152);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 153);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 154);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 156);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 157);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 158);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 159);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 160);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 161);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 162);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 163);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 164);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 165);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 166);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 168);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 169);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 170);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 172);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 173);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 174);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 175);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 176);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 178);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 179);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 180);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 181);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 182);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 183);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 184);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 185);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 186);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 187);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 188);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 189);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 191);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 193);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 194);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 195);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 196);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 197);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 198);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 200);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 201);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 202);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 203);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 204);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 205);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 206);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 207);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 208);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 209);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 210);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 211);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 212);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 213);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 214);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 215);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 216);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 217);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 218);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 220);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 221);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 222);
-
-            migrationBuilder.DeleteData(
-                table: "Schools",
-                keyColumn: "Id",
-                keyValue: 223);
+            DeleteSchoolSeedData(migrationBuilder, 8, 10, 11, 16, 19, 21, 25, 28, 29, 35, 42, 44, 46, 69, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 83, 86, 89, 90, 94, 99, 100, 101, 102, 105, 107, 113, 114, 115, 120, 127, 131, 135, 141, 143, 145, 149, 150, 151, 152, 153, 154, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166, 168, 169, 170, 172, 173, 174, 175, 176, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188, 189, 191, 193, 194, 195, 196, 197, 198, 200, 201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213, 214, 215, 216, 217, 218, 220, 221, 222, 223);
+        }
+
+        private static void DeleteSchoolSeedData(MigrationBuilder migrationBuilder, params int[] ids)
+        {
+            foreach (var id in ids)
+            {
+                migrationBuilder.DeleteData(
+                    table: "Schools",
+                    keyColumn: "Id",
+                    keyValue: id);
+            }
         }
     }
 }

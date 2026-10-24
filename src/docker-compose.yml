@@ -1,3 +1,8 @@
+# To bring up just the Web API service, run the following command in the terminal:
+#   docker compose up -d
+#
+# To bring up the Web API service in addition to the SQL Server service, run the following command in the terminal:
+#   docker compose -f docker-compose.yml -f docker-compose.webapi.yml up -d --build
 name: odyssey-registration
 
 volumes:
@@ -5,16 +10,6 @@ volumes:
   sqlserver_backup:
 
 services:
-  odysseyregistrationwebapi:
-    image: ${DOCKER_REGISTRY-}odysseyregistrationwebapi
-    container_name: webapi
-    build:
-      context: .
-      dockerfile: OdysseyRegistrationWebApi/Dockerfile
-    depends_on:
-      sqlserver:
-        condition: service_healthy
-
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: sqlserver

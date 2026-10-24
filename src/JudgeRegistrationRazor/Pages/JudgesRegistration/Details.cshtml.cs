@@ -10,7 +10,7 @@ using JudgeRegistrationRazor.Models;
 
 namespace JudgeRegistrationRazor.Pages.JudgesRegistration
 {
-    public class DetailsModel : PageModel
+    internal class DetailsModel : PageModel
     {
         private readonly OdysseyContext _context;
 
@@ -28,7 +28,7 @@ namespace JudgeRegistrationRazor.Pages.JudgesRegistration
                 return NotFound();
             }
 
-            var judge = await _context.Judges.FirstOrDefaultAsync(m => m.Id == id);
+            var judge = await _context.Judges.FirstOrDefaultAsync(m => m.Id == id).ConfigureAwait(false);
             if (judge == null)
             {
                 return NotFound();

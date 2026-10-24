@@ -9,13 +9,24 @@ namespace OdysseyMvc4.UnitTests.Controllers;
 /// Tests for the CoachesTrainingRegistrationController business logic that must be preserved
 /// during the migration from .NET Framework 4.8 to .NET 10.
 /// </summary>
-public class CoachesTrainingRegistrationControllerTests
+public class CoachesTrainingRegistrationControllerTests : IDisposable
 {
-    private readonly TestableCoachesTrainingRegistrationController _controller;
+    private bool _disposed;
 
-    public CoachesTrainingRegistrationControllerTests()
+    public void Dispose()
     {
-        _controller = new TestableCoachesTrainingRegistrationController();
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (_disposed)
+        {
+            return;
+        }
+
+        _disposed = true;
     }
 
     #region GenerateEmailBody Tests
@@ -27,9 +38,11 @@ public class CoachesTrainingRegistrationControllerTests
         var viewData = CreatePage02ViewDataWithAllFields();
 
         // Act
-        var result = _controller.GenerateEmailBodyPublic(viewData);
+        var result = CoachesTrainingRegistrationControllerTests.TestableCoachesTrainingRegistrationController.GenerateEmailBodyPublic(viewData);
 
         // Assert
+        result.Should().NotBeNull();
+        result.Should().NotBeEmpty();
         result.Should().Contain("Region 9");
         result.Should().Contain("<a href=\"http://location.example.com\" target=\"_blank\">Test Location, 123 Main St, Springfield, VA</a>");
         result.Should().Contain("Saturday, March 15, 2025");
@@ -49,7 +62,7 @@ public class CoachesTrainingRegistrationControllerTests
         viewData.CoachesTrainingInfo.LocationURL = null;
 
         // Act
-        var result = _controller.GenerateEmailBodyPublic(viewData);
+        var result = CoachesTrainingRegistrationControllerTests.TestableCoachesTrainingRegistrationController.GenerateEmailBodyPublic(viewData);
 
         // Assert
         result.Should().Contain("Test Location, 123 Main St, Springfield, VA");
@@ -65,7 +78,7 @@ public class CoachesTrainingRegistrationControllerTests
         viewData.CoachesTrainingInfo.LocationURL = "";
 
         // Act
-        var result = _controller.GenerateEmailBodyPublic(viewData);
+        var result = CoachesTrainingRegistrationControllerTests.TestableCoachesTrainingRegistrationController.GenerateEmailBodyPublic(viewData);
 
         // Assert
         result.Should().Contain("Test Location, 123 Main St, Springfield, VA");
@@ -80,7 +93,7 @@ public class CoachesTrainingRegistrationControllerTests
         viewData.CoachesTrainingInfo.LocationURL = "   ";
 
         // Act
-        var result = _controller.GenerateEmailBodyPublic(viewData);
+        var result = CoachesTrainingRegistrationControllerTests.TestableCoachesTrainingRegistrationController.GenerateEmailBodyPublic(viewData);
 
         // Assert
         result.Should().Contain("Test Location, 123 Main St, Springfield, VA");
@@ -98,7 +111,7 @@ public class CoachesTrainingRegistrationControllerTests
         viewData.CoachesTrainingInfo.LocationState = null;
 
         // Act
-        var result = _controller.GenerateEmailBodyPublic(viewData);
+        var result = CoachesTrainingRegistrationControllerTests.TestableCoachesTrainingRegistrationController.GenerateEmailBodyPublic(viewData);
 
         // Assert
         result.Should().Contain("Test Location");
@@ -114,7 +127,7 @@ public class CoachesTrainingRegistrationControllerTests
         viewData.CoachesTrainingInfo.LocationState = null;
 
         // Act
-        var result = _controller.GenerateEmailBodyPublic(viewData);
+        var result = CoachesTrainingRegistrationControllerTests.TestableCoachesTrainingRegistrationController.GenerateEmailBodyPublic(viewData);
 
         // Assert
         result.Should().Contain("Test Location, 123 Main St");
@@ -129,7 +142,7 @@ public class CoachesTrainingRegistrationControllerTests
         viewData.CoachesTrainingInfo.LocationState = null;
 
         // Act
-        var result = _controller.GenerateEmailBodyPublic(viewData);
+        var result = CoachesTrainingRegistrationControllerTests.TestableCoachesTrainingRegistrationController.GenerateEmailBodyPublic(viewData);
 
         // Assert
         result.Should().Contain("Test Location, 123 Main St, Springfield");
@@ -144,7 +157,7 @@ public class CoachesTrainingRegistrationControllerTests
         viewData.CoachesTrainingInfo.LocationAddress = "";
 
         // Act
-        var result = _controller.GenerateEmailBodyPublic(viewData);
+        var result = CoachesTrainingRegistrationControllerTests.TestableCoachesTrainingRegistrationController.GenerateEmailBodyPublic(viewData);
 
         // Assert
         result.Should().Contain("Test Location, Springfield, VA");
@@ -159,7 +172,7 @@ public class CoachesTrainingRegistrationControllerTests
         viewData.CoachesTrainingInfo.LocationCity = "   ";
 
         // Act
-        var result = _controller.GenerateEmailBodyPublic(viewData);
+        var result = CoachesTrainingRegistrationControllerTests.TestableCoachesTrainingRegistrationController.GenerateEmailBodyPublic(viewData);
 
         // Assert
         result.Should().Contain("Test Location, 123 Main St, VA");
@@ -174,7 +187,7 @@ public class CoachesTrainingRegistrationControllerTests
         viewData.CoachesTrainingInfo.LocationState = null;
 
         // Act
-        var result = _controller.GenerateEmailBodyPublic(viewData);
+        var result = CoachesTrainingRegistrationControllerTests.TestableCoachesTrainingRegistrationController.GenerateEmailBodyPublic(viewData);
 
         // Assert
         result.Should().Contain("Test Location, 123 Main St, Springfield");
@@ -189,7 +202,7 @@ public class CoachesTrainingRegistrationControllerTests
         viewData.CoachesTrainingInfo.StartDate = null;
 
         // Act
-        var result = _controller.GenerateEmailBodyPublic(viewData);
+        var result = CoachesTrainingRegistrationControllerTests.TestableCoachesTrainingRegistrationController.GenerateEmailBodyPublic(viewData);
 
         // Assert
         result.Should().Contain("TBA");
@@ -201,10 +214,10 @@ public class CoachesTrainingRegistrationControllerTests
     {
         // Arrange
         var viewData = CreatePage02ViewDataWithAllFields();
-        viewData.CoachesTrainingInfo.StartDate = new DateTime(2025, 12, 25);
+        viewData.CoachesTrainingInfo.StartDate = new DateTime(2025, 12, 25, 0, 0, 0, DateTimeKind.Unspecified);
 
         // Act
-        var result = _controller.GenerateEmailBodyPublic(viewData);
+        var result = CoachesTrainingRegistrationControllerTests.TestableCoachesTrainingRegistrationController.GenerateEmailBodyPublic(viewData);
 
         // Assert
         result.Should().Contain("Thursday, December 25, 2025");
@@ -218,7 +231,7 @@ public class CoachesTrainingRegistrationControllerTests
         viewData.CoachesTrainingInfo.Time = null;
 
         // Act
-        var result = _controller.GenerateEmailBodyPublic(viewData);
+        var result = CoachesTrainingRegistrationControllerTests.TestableCoachesTrainingRegistrationController.GenerateEmailBodyPublic(viewData);
 
         // Assert
         result.Should().Contain("TBA");
@@ -232,7 +245,7 @@ public class CoachesTrainingRegistrationControllerTests
         viewData.CoachesTrainingInfo.Time = "";
 
         // Act
-        var result = _controller.GenerateEmailBodyPublic(viewData);
+        var result = CoachesTrainingRegistrationControllerTests.TestableCoachesTrainingRegistrationController.GenerateEmailBodyPublic(viewData);
 
         // Assert
         result.Should().Contain("TBA");
@@ -246,7 +259,7 @@ public class CoachesTrainingRegistrationControllerTests
         viewData.CoachesTrainingInfo.Time = "   ";
 
         // Act
-        var result = _controller.GenerateEmailBodyPublic(viewData);
+        var result = CoachesTrainingRegistrationControllerTests.TestableCoachesTrainingRegistrationController.GenerateEmailBodyPublic(viewData);
 
         // Assert
         result.Should().Contain("TBA");
@@ -260,7 +273,7 @@ public class CoachesTrainingRegistrationControllerTests
         viewData.CoachesTrainingInfo.Time = "2:30 PM";
 
         // Act
-        var result = _controller.GenerateEmailBodyPublic(viewData);
+        var result = CoachesTrainingRegistrationControllerTests.TestableCoachesTrainingRegistrationController.GenerateEmailBodyPublic(viewData);
 
         // Assert
         result.Should().Contain("2:30 PM");
@@ -274,7 +287,7 @@ public class CoachesTrainingRegistrationControllerTests
         viewData.Config["CoachesHandbookURL"] = "http://virginia.example.com/handbook";
 
         // Act
-        var result = _controller.GenerateEmailBodyPublic(viewData);
+        var result = CoachesTrainingRegistrationControllerTests.TestableCoachesTrainingRegistrationController.GenerateEmailBodyPublic(viewData);
 
         // Assert
         result.Should().Contain("<li>\ta copy of the Coaches Handbook from the Virginia state website (<a href=\"http://virginia.example.com/handbook\" target=\"blank\">http://virginia.example.com/handbook</a>),</li>");
@@ -288,7 +301,7 @@ public class CoachesTrainingRegistrationControllerTests
         viewData.Config["CoachesHandbookURL"] = "";
 
         // Act
-        var result = _controller.GenerateEmailBodyPublic(viewData);
+        var result = CoachesTrainingRegistrationControllerTests.TestableCoachesTrainingRegistrationController.GenerateEmailBodyPublic(viewData);
 
         // Assert
         result.Should().NotContain("Coaches Handbook from the Virginia state website");
@@ -302,7 +315,7 @@ public class CoachesTrainingRegistrationControllerTests
         viewData.Config["CoachesHandbookURL"] = "   ";
 
         // Act
-        var result = _controller.GenerateEmailBodyPublic(viewData);
+        var result = CoachesTrainingRegistrationControllerTests.TestableCoachesTrainingRegistrationController.GenerateEmailBodyPublic(viewData);
 
         // Assert
         result.Should().NotContain("Coaches Handbook from the Virginia state website");
@@ -316,7 +329,7 @@ public class CoachesTrainingRegistrationControllerTests
         // Key not added to Config dictionary
 
         // Act
-        var result = _controller.GenerateEmailBodyPublic(viewData);
+        var result = CoachesTrainingRegistrationControllerTests.TestableCoachesTrainingRegistrationController.GenerateEmailBodyPublic(viewData);
 
         // Assert
         result.Should().NotContain("Coaches Handbook from the Virginia state website");
@@ -331,7 +344,7 @@ public class CoachesTrainingRegistrationControllerTests
         viewData.Config["SchoolCoordinatorsDoNotPayMessage"] = "School coordinators are exempt from paying the registration fee.";
 
         // Act
-        var result = _controller.GenerateEmailBodyPublic(viewData);
+        var result = CoachesTrainingRegistrationControllerTests.TestableCoachesTrainingRegistrationController.GenerateEmailBodyPublic(viewData);
 
         // Assert
         result.Should().Contain("School coordinators are exempt from paying the registration fee.");
@@ -346,7 +359,7 @@ public class CoachesTrainingRegistrationControllerTests
         viewData.Config["SchoolCoordinatorsDoNotPayMessage"] = "School coordinators are exempt from paying the registration fee.";
 
         // Act
-        var result = _controller.GenerateEmailBodyPublic(viewData);
+        var result = CoachesTrainingRegistrationControllerTests.TestableCoachesTrainingRegistrationController.GenerateEmailBodyPublic(viewData);
 
         // Assert
         result.Should().Contain("School coordinators are exempt from paying the registration fee.");
@@ -361,7 +374,7 @@ public class CoachesTrainingRegistrationControllerTests
         viewData.Config["SchoolCoordinatorsDoNotPayMessage"] = "School coordinators are exempt from paying the registration fee.";
 
         // Act
-        var result = _controller.GenerateEmailBodyPublic(viewData);
+        var result = CoachesTrainingRegistrationControllerTests.TestableCoachesTrainingRegistrationController.GenerateEmailBodyPublic(viewData);
 
         // Assert
         result.Should().Contain("School coordinators are exempt from paying the registration fee.");
@@ -376,7 +389,7 @@ public class CoachesTrainingRegistrationControllerTests
         viewData.Config["SchoolCoordinatorsDoNotPayMessage"] = "School coordinators are exempt from paying the registration fee.";
 
         // Act
-        var result = _controller.GenerateEmailBodyPublic(viewData);
+        var result = CoachesTrainingRegistrationControllerTests.TestableCoachesTrainingRegistrationController.GenerateEmailBodyPublic(viewData);
 
         // Assert
         result.Should().NotContain("School coordinators are exempt from paying the registration fee.");
@@ -391,7 +404,7 @@ public class CoachesTrainingRegistrationControllerTests
         viewData.Config["SchoolCoordinatorsDoNotPayMessage"] = "School coordinators are exempt from paying the registration fee.";
 
         // Act
-        var result = _controller.GenerateEmailBodyPublic(viewData);
+        var result = CoachesTrainingRegistrationControllerTests.TestableCoachesTrainingRegistrationController.GenerateEmailBodyPublic(viewData);
 
         // Assert
         result.Should().NotContain("School coordinators are exempt from paying the registration fee.");
@@ -406,7 +419,7 @@ public class CoachesTrainingRegistrationControllerTests
         // CoordinatorsDoNotPayCoachesTrainingRegistrationFee key not added
 
         // Act
-        var result = _controller.GenerateEmailBodyPublic(viewData);
+        var result = CoachesTrainingRegistrationControllerTests.TestableCoachesTrainingRegistrationController.GenerateEmailBodyPublic(viewData);
 
         // Assert
         result.Should().NotContain("School coordinators are exempt from paying the registration fee.");
@@ -420,7 +433,7 @@ public class CoachesTrainingRegistrationControllerTests
         viewData.Config["RegionNumber"] = "12";
 
         // Act
-        var result = _controller.GenerateEmailBodyPublic(viewData);
+        var result = CoachesTrainingRegistrationControllerTests.TestableCoachesTrainingRegistrationController.GenerateEmailBodyPublic(viewData);
 
         // Assert
         result.Should().Contain("Region 12");
@@ -436,7 +449,7 @@ public class CoachesTrainingRegistrationControllerTests
         viewData.Config["EndYear"] = "2025";
 
         // Act
-        var result = _controller.GenerateEmailBodyPublic(viewData);
+        var result = CoachesTrainingRegistrationControllerTests.TestableCoachesTrainingRegistrationController.GenerateEmailBodyPublic(viewData);
 
         // Assert
         result.Should().Contain("2024 - 2025");
@@ -451,7 +464,7 @@ public class CoachesTrainingRegistrationControllerTests
         viewData.Config["ProgramGuideURL"] = "http://test.com/program";
 
         // Act
-        var result = _controller.GenerateEmailBodyPublic(viewData);
+        var result = CoachesTrainingRegistrationControllerTests.TestableCoachesTrainingRegistrationController.GenerateEmailBodyPublic(viewData);
 
         // Assert
         result.Should().Contain("<a href=\"http://test.com/program\" target=\"_blank\">http://test.com/program</a>");
@@ -466,7 +479,7 @@ public class CoachesTrainingRegistrationControllerTests
         viewData.CoachesTrainingInfo.EventCost = "$75.00";
 
         // Act
-        var result = _controller.GenerateEmailBodyPublic(viewData);
+        var result = CoachesTrainingRegistrationControllerTests.TestableCoachesTrainingRegistrationController.GenerateEmailBodyPublic(viewData);
 
         // Assert
         result.Should().Contain("$75.00");
@@ -481,7 +494,7 @@ public class CoachesTrainingRegistrationControllerTests
         viewData.CoachesTrainingInfo.EventMakeChecksOutTo = "Test Payee Name";
 
         // Act
-        var result = _controller.GenerateEmailBodyPublic(viewData);
+        var result = CoachesTrainingRegistrationControllerTests.TestableCoachesTrainingRegistrationController.GenerateEmailBodyPublic(viewData);
 
         // Assert
         result.Should().Contain("Test Payee Name");
@@ -496,7 +509,7 @@ public class CoachesTrainingRegistrationControllerTests
         viewData.Config["RegionalDirectorEmail"] = "test@example.com";
 
         // Act
-        var result = _controller.GenerateEmailBodyPublic(viewData);
+        var result = CoachesTrainingRegistrationControllerTests.TestableCoachesTrainingRegistrationController.GenerateEmailBodyPublic(viewData);
 
         // Assert
         result.Should().Contain("<a href=\"mailto:test@example.com\">test@example.com</a>");
@@ -527,7 +540,7 @@ public class CoachesTrainingRegistrationControllerTests
         };
 
         // Act
-        var result = _controller.GenerateEmailBodyPublic(viewData);
+        var result = CoachesTrainingRegistrationControllerTests.TestableCoachesTrainingRegistrationController.GenerateEmailBodyPublic(viewData);
 
         // Assert
         result.Should().Contain("Region 5");
@@ -550,7 +563,7 @@ public class CoachesTrainingRegistrationControllerTests
         viewData.CoachesTrainingInfo.LocationState = "Virginia";
 
         // Act
-        var result = _controller.GenerateEmailBodyPublic(viewData);
+        var result = CoachesTrainingRegistrationControllerTests.TestableCoachesTrainingRegistrationController.GenerateEmailBodyPublic(viewData);
 
         // Assert
         result.Should().Contain("<a href=\"https://maps.google.com/complex-location\" target=\"_blank\">");
@@ -568,7 +581,7 @@ public class CoachesTrainingRegistrationControllerTests
         viewData.Config["SchoolCoordinatorsDoNotPayMessage"] = "Coordinators exempt";
 
         // Act
-        var result = _controller.GenerateEmailBodyPublic(viewData);
+        var result = CoachesTrainingRegistrationControllerTests.TestableCoachesTrainingRegistrationController.GenerateEmailBodyPublic(viewData);
 
         // Assert
         result.Should().NotContain("<span>Region</span>");
@@ -588,7 +601,7 @@ public class CoachesTrainingRegistrationControllerTests
 
     #region Helper Methods
 
-    private Page02ViewData CreatePage02ViewDataWithAllFields()
+    private static Page02ViewData CreatePage02ViewDataWithAllFields()
     {
         return new Page02ViewData
         {
@@ -608,7 +621,7 @@ public class CoachesTrainingRegistrationControllerTests
                 LocationAddress = "123 Main St",
                 LocationCity = "Springfield",
                 LocationState = "VA",
-                StartDate = new DateTime(2025, 3, 15),
+                StartDate = new DateTime(2025, 3, 15, 0, 0, 0, DateTimeKind.Unspecified),
                 Time = "9:00 AM",
                 EventCost = "$50",
                 EventMakeChecksOutTo = "NoVA North Odyssey"
@@ -623,10 +636,12 @@ public class CoachesTrainingRegistrationControllerTests
     /// <summary>
     /// Testable subclass that exposes protected methods as public.
     /// </summary>
-    private class TestableCoachesTrainingRegistrationController : CoachesTrainingRegistrationController
+    private sealed class TestableCoachesTrainingRegistrationController : CoachesTrainingRegistrationController
     {
-        public string GenerateEmailBodyPublic(Page02ViewData viewData)
+        public static string GenerateEmailBodyPublic(Page02ViewData viewData)
         {
+            using var controller = new TestableCoachesTrainingRegistrationController();
+            _ = controller;
             return GenerateEmailBody(viewData);
         }
     }

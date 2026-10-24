@@ -1,4 +1,3 @@
-﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
@@ -7,10 +6,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace JudgeRegistrationRazor.Migrations
 {
-    /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    internal partial class InitialCreate : Migration
     {
-        /// <inheritdoc />
+        private static readonly string[] ConfigColumns = ["Id", "Name", "Value"];
+
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
@@ -21,10 +20,7 @@ namespace JudgeRegistrationRazor.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_coaches_training_divisions", x => x.Id);
-                });
+                constraints: table => table.PrimaryKey("PK_coaches_training_divisions", x => x.Id));
 
             migrationBuilder.CreateTable(
                 name: "CoachesTrainingRegions",
@@ -34,10 +30,7 @@ namespace JudgeRegistrationRazor.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true)
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_coaches_training_regions", x => x.Id);
-                });
+                constraints: table => table.PrimaryKey("PK_coaches_training_regions", x => x.Id));
 
             migrationBuilder.CreateTable(
                 name: "CoachesTrainingRegistrations",
@@ -57,10 +50,7 @@ namespace JudgeRegistrationRazor.Migrations
                     TimeRegistered = table.Column<DateTime>(type: "datetime", nullable: true),
                     UserAgent = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_coaches_training", x => x.Id);
-                });
+                constraints: table => table.PrimaryKey("PK_coaches_training", x => x.Id));
 
             migrationBuilder.CreateTable(
                 name: "CoachesTrainingRoles",
@@ -70,10 +60,7 @@ namespace JudgeRegistrationRazor.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_coaches_training_roles", x => x.Id);
-                });
+                constraints: table => table.PrimaryKey("PK_coaches_training_roles", x => x.Id));
 
             migrationBuilder.CreateTable(
                 name: "Config",
@@ -84,10 +71,7 @@ namespace JudgeRegistrationRazor.Migrations
                     Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Value = table.Column<string>(type: "nvarchar(800)", maxLength: 800, nullable: true)
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_config", x => x.Id);
-                });
+                constraints: table => table.PrimaryKey("PK_config", x => x.Id));
 
             migrationBuilder.CreateTable(
                 name: "ContactUsRecipients",
@@ -98,10 +82,7 @@ namespace JudgeRegistrationRazor.Migrations
                     contact_name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     email_address = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_contact_us_recipients", x => x.Id);
-                });
+                constraints: table => table.PrimaryKey("PK_contact_us_recipients", x => x.Id));
 
             migrationBuilder.CreateTable(
                 name: "ContactUsSenderRoles",
@@ -111,10 +92,7 @@ namespace JudgeRegistrationRazor.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     role_name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true)
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_contact_us_sender_roles", x => x.Id);
-                });
+                constraints: table => table.PrimaryKey("PK_contact_us_sender_roles", x => x.Id));
 
             migrationBuilder.CreateTable(
                 name: "Events",
@@ -155,10 +133,7 @@ namespace JudgeRegistrationRazor.Migrations
                     TeamsVolunteerWantsToSeeMessage = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     EventMailBody = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_events", x => x.Id);
-                });
+                constraints: table => table.PrimaryKey("PK_events", x => x.Id));
 
             migrationBuilder.CreateTable(
                 name: "Judges",
@@ -188,8 +163,8 @@ namespace JudgeRegistrationRazor.Migrations
                     ProblemCOI2 = table.Column<string>(type: "nvarchar(60)", maxLength: 60, nullable: true),
                     ProblemCOI3 = table.Column<string>(type: "nvarchar(60)", maxLength: 60, nullable: true),
                     ProblemAssigned = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    InformationMailed = table.Column<bool>(name: "InformationMailed?", type: "bit", nullable: true),
-                    AttendedJT = table.Column<bool>(name: "AttendedJT?", type: "bit", nullable: true),
+                    InformationMailed = table.Column<bool>(type: "bit", name: "InformationMailed?", nullable: true),
+                    AttendedJT = table.Column<bool>(type: "bit", name: "AttendedJT?", nullable: true),
                     Active = table.Column<bool>(type: "bit", nullable: true),
                     WillingToBeScorechecker = table.Column<string>(type: "nvarchar(3)", maxLength: 3, nullable: true),
                     TshirtSize = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
@@ -203,10 +178,7 @@ namespace JudgeRegistrationRazor.Migrations
                     TimeRegistrationStarted = table.Column<DateTime>(type: "datetime", nullable: true),
                     UserAgent = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_judges", x => x.Id);
-                });
+                constraints: table => table.PrimaryKey("PK_judges", x => x.Id));
 
             migrationBuilder.CreateTable(
                 name: "Problem",
@@ -234,14 +206,11 @@ namespace JudgeRegistrationRazor.Migrations
                     PCEmail2 = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     Notes = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_problem", x => x.Id);
-                });
+                constraints: table => table.PrimaryKey("PK_problem", x => x.Id));
 
             migrationBuilder.CreateTable(
                 name: "Schools",
-                columns: table => new
+                columns: static table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
@@ -252,15 +221,15 @@ namespace JudgeRegistrationRazor.Migrations
                     State = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
                     PostalCode = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
                     Phone = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: true),
-                    Membership1 = table.Column<string>(name: "Membership#1", type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    Membership1seen = table.Column<string>(name: "Membership#1seen", type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    Membership2 = table.Column<string>(name: "Membership#2", type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    Membership2seen = table.Column<string>(name: "Membership#2seen", type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    Membership3 = table.Column<string>(name: "Membership#3", type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    Membership3seen = table.Column<string>(name: "Membership#3seen", type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    Membership4 = table.Column<string>(name: "Membership#4", type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    Membership4seen = table.Column<string>(name: "Membership#4seen", type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    CoordNew = table.Column<string>(name: "CoordNew?", type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    Membership1 = table.Column<string>(type: "nvarchar(50)", maxLength: 50, name: "Membership#1", nullable: true),
+                    Membership1seen = table.Column<string>(type: "nvarchar(50)", maxLength: 50, name: "Membership#1seen", nullable: true),
+                    Membership2 = table.Column<string>(type: "nvarchar(50)", maxLength: 50, name: "Membership#2", nullable: true),
+                    Membership2seen = table.Column<string>(type: "nvarchar(50)", maxLength: 50, name: "Membership#2seen", nullable: true),
+                    Membership3 = table.Column<string>(type: "nvarchar(50)", maxLength: 50, name: "Membership#3", nullable: true),
+                    Membership3seen = table.Column<string>(type: "nvarchar(50)", maxLength: 50, name: "Membership#3seen", nullable: true),
+                    Membership4 = table.Column<string>(type: "nvarchar(50)", maxLength: 50, name: "Membership#4", nullable: true),
+                    Membership4seen = table.Column<string>(type: "nvarchar(50)", maxLength: 50, name: "Membership#4seen", nullable: true),
+                    CoordNew = table.Column<string>(type: "nvarchar(50)", maxLength: 50, name: "CoordNew?", nullable: true),
                     CoordFirstName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     CoordLastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     CoordAddress = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
@@ -272,78 +241,17 @@ namespace JudgeRegistrationRazor.Migrations
                     CoordMobilePhone = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: true),
                     CoordFaxNumber = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: true),
                     CoordEmailName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    Share = table.Column<string>(name: "Share?", type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    Share = table.Column<string>(type: "nvarchar(50)", maxLength: 50, name: "Share?", nullable: true),
                     Notes = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Schools", x => x.Id);
-                });
+                constraints: table => table.PrimaryKey("PK_Schools", x => x.Id));
 
-            migrationBuilder.CreateTable(
-                name: "TournamentRegistration",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    MembershipName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    MembershipNumber = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    ProblemID = table.Column<int>(type: "int", nullable: true),
-                    Division = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    SchoolID = table.Column<int>(type: "int", nullable: true),
-                    CoachFirstName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    CoachLastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    CoachAddress = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: true),
-                    CoachCity = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    CoachState = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
-                    CoachZipCode = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
-                    CoachEveningPhone = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: true),
-                    CoachDaytimePhone = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: true),
-                    CoachMobilePhone = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: true),
-                    CoachEmailAddress = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    AltCoachFirstName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    AltCoachLastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    AltCoachEveningPhone = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    AltCoachDaytimePhone = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    AltCoachMobilePhone = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: true),
-                    AltCoachEmailAddress = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    MemberFirstName1 = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    MemberLastName1 = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    MemberGrade1 = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    MemberFirstName2 = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    MemberLastName2 = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    MemberGrade2 = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    MemberFirstName3 = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    MemberLastName3 = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    MemberGrade3 = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    MemberFirstName4 = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    MemberLastName4 = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    MemberGrade4 = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    MemberFirstName5 = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    MemberLastName5 = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    MemberGrade5 = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    MemberFirstName6 = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    MemberLastName6 = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    MemberGrade6 = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    MemberFirstName7 = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    MemberLastName7 = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    MemberGrade7 = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    Spontaneous = table.Column<bool>(type: "bit", nullable: true),
-                    Notes = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    SpecialConsiderations = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    SchedulingIssues = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Paid = table.Column<short>(type: "smallint", nullable: true),
-                    JudgeID = table.Column<short>(type: "smallint", nullable: true),
-                    TeamRegistrationFee = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
-                    VolunteerID = table.Column<int>(type: "int", nullable: true),
-                    TimeRegistrationStarted = table.Column<DateTime>(type: "datetime", nullable: true),
-                    TimeRegistered = table.Column<DateTime>(type: "datetime", nullable: true),
-                    UserAgent = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_TournamentRegistration", x => x.Id);
-                });
+            CreateTournamentRegistrationTable(migrationBuilder);
+            AddRegistrationDetails(migrationBuilder);
+            AddCoachDetails(migrationBuilder);
+            AddAlternateCoachDetails(migrationBuilder);
+            AddMemberDetails(migrationBuilder);
+            AddRegistrationState(migrationBuilder);
 
             migrationBuilder.CreateTable(
                 name: "Volunteers",
@@ -365,14 +273,11 @@ namespace JudgeRegistrationRazor.Migrations
                     TimeAssignedToTeam = table.Column<DateTime>(type: "datetime", nullable: true),
                     UserAgent = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Volunteers", x => x.Id);
-                });
+                constraints: table => table.PrimaryKey("PK_Volunteers", x => x.Id));
 
             migrationBuilder.InsertData(
                 table: "Config",
-                columns: new[] { "Id", "Name", "Value" },
+                columns: ConfigColumns,
                 values: new object[,]
                 {
                     { 1, "AcceptingPayPal", "True" },
@@ -412,7 +317,6 @@ namespace JudgeRegistrationRazor.Migrations
                 });
         }
 
-        /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
@@ -453,6 +357,185 @@ namespace JudgeRegistrationRazor.Migrations
 
             migrationBuilder.DropTable(
                 name: "Volunteers");
+        }
+
+        private static void CreateTournamentRegistrationTable(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.CreateTable(
+                name: "TournamentRegistration",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1")
+                },
+                constraints: table => table.PrimaryKey("PK_TournamentRegistration", x => x.Id));
+        }
+
+        private static void AddRegistrationDetails(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.AddColumn<string>(
+                name: "MembershipName",
+                table: "TournamentRegistration",
+                type: "nvarchar(50)",
+                maxLength: 50,
+                nullable: true);
+
+            migrationBuilder.AddColumn<string>(
+                name: "MembershipNumber",
+                table: "TournamentRegistration",
+                type: "nvarchar(50)",
+                maxLength: 50,
+                nullable: true);
+
+            migrationBuilder.AddColumn<int>(
+                name: "ProblemID",
+                table: "TournamentRegistration",
+                type: "int",
+                nullable: true);
+
+            migrationBuilder.AddColumn<string>(
+                name: "Division",
+                table: "TournamentRegistration",
+                type: "nvarchar(50)",
+                maxLength: 50,
+                nullable: true);
+
+            migrationBuilder.AddColumn<int>(
+                name: "SchoolID",
+                table: "TournamentRegistration",
+                type: "int",
+                nullable: true);
+        }
+
+        private static void AddCoachDetails(MigrationBuilder migrationBuilder)
+        {
+            AddTextColumn(migrationBuilder, "CoachFirstName", 50);
+            AddTextColumn(migrationBuilder, "CoachLastName", 50);
+            AddTextColumn(migrationBuilder, "CoachAddress", 255);
+            AddTextColumn(migrationBuilder, "CoachCity", 50);
+            AddTextColumn(migrationBuilder, "CoachState", 20);
+            AddTextColumn(migrationBuilder, "CoachZipCode", 20);
+            AddTextColumn(migrationBuilder, "CoachEveningPhone", 30);
+            AddTextColumn(migrationBuilder, "CoachDaytimePhone", 30);
+            AddTextColumn(migrationBuilder, "CoachMobilePhone", 30);
+            AddTextColumn(migrationBuilder, "CoachEmailAddress", 50);
+        }
+
+        private static void AddAlternateCoachDetails(MigrationBuilder migrationBuilder)
+        {
+            AddTextColumn(migrationBuilder, "AltCoachFirstName", 50);
+            AddTextColumn(migrationBuilder, "AltCoachLastName", 50);
+            AddTextColumn(migrationBuilder, "AltCoachEveningPhone", 50);
+            AddTextColumn(migrationBuilder, "AltCoachDaytimePhone", 50);
+            AddTextColumn(migrationBuilder, "AltCoachMobilePhone", 30);
+            AddTextColumn(migrationBuilder, "AltCoachEmailAddress", 50);
+        }
+
+        private static void AddMemberDetails(MigrationBuilder migrationBuilder)
+        {
+            AddMemberFields(migrationBuilder, "1");
+            AddMemberFields(migrationBuilder, "2");
+            AddMemberFields(migrationBuilder, "3");
+            AddMemberFields(migrationBuilder, "4");
+            AddMemberFields(migrationBuilder, "5");
+            AddMemberFields(migrationBuilder, "6");
+            AddMemberFields(migrationBuilder, "7");
+        }
+
+        private static void AddMemberFields(MigrationBuilder migrationBuilder, string memberNumber)
+        {
+            migrationBuilder.AddColumn<string>(
+                name: $"MemberFirstName{memberNumber}",
+                table: "TournamentRegistration",
+                type: "nvarchar(50)",
+                maxLength: 50,
+                nullable: true);
+
+            migrationBuilder.AddColumn<string>(
+                name: $"MemberLastName{memberNumber}",
+                table: "TournamentRegistration",
+                type: "nvarchar(50)",
+                maxLength: 50,
+                nullable: true);
+
+            migrationBuilder.AddColumn<string>(
+                name: $"MemberGrade{memberNumber}",
+                table: "TournamentRegistration",
+                type: "nvarchar(50)",
+                maxLength: 50,
+                nullable: true);
+        }
+
+        private static void AddRegistrationState(MigrationBuilder migrationBuilder)
+        {
+            AddBooleanRegistrationStateFields(migrationBuilder);
+            AddTextRegistrationStateFields(migrationBuilder);
+            AddNumericRegistrationStateFields(migrationBuilder);
+            AddDateTimeRegistrationStateFields(migrationBuilder);
+        }
+
+        private static void AddBooleanRegistrationStateFields(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.AddColumn<bool>(
+                name: "Spontaneous",
+                table: "TournamentRegistration",
+                type: "bit",
+                nullable: true);
+        }
+
+        private static void AddTextRegistrationStateFields(MigrationBuilder migrationBuilder)
+        {
+            AddTextColumn(migrationBuilder, "Notes");
+            AddTextColumn(migrationBuilder, "SpecialConsiderations");
+            AddTextColumn(migrationBuilder, "SchedulingIssues");
+            AddTextColumn(migrationBuilder, "TeamRegistrationFee", 20);
+            AddTextColumn(migrationBuilder, "UserAgent");
+        }
+
+        private static void AddNumericRegistrationStateFields(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.AddColumn<short>(
+                name: "Paid",
+                table: "TournamentRegistration",
+                type: "smallint",
+                nullable: true);
+
+            migrationBuilder.AddColumn<short>(
+                name: "JudgeID",
+                table: "TournamentRegistration",
+                type: "smallint",
+                nullable: true);
+
+            migrationBuilder.AddColumn<int>(
+                name: "VolunteerID",
+                table: "TournamentRegistration",
+                type: "int",
+                nullable: true);
+        }
+
+        private static void AddDateTimeRegistrationStateFields(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.AddColumn<DateTime>(
+                name: "TimeRegistrationStarted",
+                table: "TournamentRegistration",
+                type: "datetime",
+                nullable: true);
+
+            migrationBuilder.AddColumn<DateTime>(
+                name: "TimeRegistered",
+                table: "TournamentRegistration",
+                type: "datetime",
+                nullable: true);
+        }
+
+        private static void AddTextColumn(MigrationBuilder migrationBuilder, string columnName, int? maxLength = null)
+        {
+            migrationBuilder.AddColumn<string>(
+                name: columnName,
+                table: "TournamentRegistration",
+                type: maxLength.HasValue ? $"nvarchar({maxLength.Value})" : "nvarchar(max)",
+                maxLength: maxLength,
+                nullable: true);
         }
     }
 }

@@ -13,7 +13,7 @@ namespace OdysseyMvc4.UnitTests.Controllers;
 /// Tests for the JudgesRegistrationController business logic that must be preserved
 /// during the migration from .NET Framework 4.8 to .NET 10.
 /// </summary>
-public class JudgesRegistrationControllerTests
+public sealed class JudgesRegistrationControllerTests : IDisposable
 {
     private readonly Mock<IOdysseyRepository> _mockRepo;
     private readonly JudgesRegistrationController _controller;
@@ -24,6 +24,12 @@ public class JudgesRegistrationControllerTests
         _mockRepo.Setup(r => r.JudgesInfo).Returns(TestHelper.CreateDefaultJudgesInfo());
         _controller = new JudgesRegistrationController(_mockRepo.Object);
         TestHelper.SetupControllerContext(_controller);
+    }
+
+    public void Dispose()
+    {
+        _controller.Dispose();
+        GC.SuppressFinalize(this);
     }
 
     #region BuildMailRegionalDirectorHyperLink Tests
@@ -505,9 +511,13 @@ public class JudgesRegistrationControllerTests
 
         var result = _controller.Page01();
 
+        result.Should().NotBeNull();
         result.Should().BeOfType<RedirectToRouteResult>();
+
         var redirectResult = result as RedirectToRouteResult;
-        redirectResult!.RouteValues["action"].Should().Be("Closed");
+        redirectResult.Should().NotBeNull();
+        redirectResult!.RouteValues.Should().ContainKey("action");
+        redirectResult.RouteValues["action"].Should().Be("Closed");
     }
 
     [Fact]
@@ -517,9 +527,13 @@ public class JudgesRegistrationControllerTests
 
         var result = _controller.Page01();
 
+        result.Should().NotBeNull();
         result.Should().BeOfType<RedirectToRouteResult>();
+
         var redirectResult = result as RedirectToRouteResult;
-        redirectResult!.RouteValues["action"].Should().Be("Down");
+        redirectResult.Should().NotBeNull();
+        redirectResult!.RouteValues.Should().ContainKey("action");
+        redirectResult.RouteValues["action"].Should().Be("Down");
     }
 
     [Fact]
@@ -529,9 +543,13 @@ public class JudgesRegistrationControllerTests
 
         var result = _controller.Page01();
 
+        result.Should().NotBeNull();
         result.Should().BeOfType<RedirectToRouteResult>();
+
         var redirectResult = result as RedirectToRouteResult;
-        redirectResult!.RouteValues["action"].Should().Be("Soon");
+        redirectResult.Should().NotBeNull();
+        redirectResult!.RouteValues.Should().ContainKey("action");
+        redirectResult.RouteValues["action"].Should().Be("Soon");
     }
 
     #endregion
@@ -543,6 +561,7 @@ public class JudgesRegistrationControllerTests
     {
         var result = _controller.Page01Post();
 
+        result.Should().NotBeNull();
         _mockRepo.Verify(r => r.AddJudge(It.IsAny<Judge>()), Times.Once);
     }
 
@@ -551,9 +570,13 @@ public class JudgesRegistrationControllerTests
     {
         var result = _controller.Page01Post();
 
+        result.Should().NotBeNull();
         result.Should().BeOfType<RedirectToRouteResult>();
+
         var redirectResult = result as RedirectToRouteResult;
-        redirectResult!.RouteValues["action"].Should().Be("Page02");
+        redirectResult.Should().NotBeNull();
+        redirectResult!.RouteValues.Should().ContainKey("action");
+        redirectResult.RouteValues["action"].Should().Be("Page02");
     }
 
     [Fact]
@@ -602,9 +625,13 @@ public class JudgesRegistrationControllerTests
 
         var result = _controller.Page01Post();
 
+        result.Should().NotBeNull();
         result.Should().BeOfType<RedirectToRouteResult>();
+
         var redirectResult = result as RedirectToRouteResult;
-        redirectResult!.RouteValues["action"].Should().Be("Closed");
+        redirectResult.Should().NotBeNull();
+        redirectResult!.RouteValues.Should().ContainKey("action");
+        redirectResult.RouteValues["action"].Should().Be("Closed");
     }
 
     [Fact]
@@ -1201,7 +1228,7 @@ public class JudgesRegistrationControllerTests
 
     #region Helper Methods
 
-    private Page01ViewData CreatePage01ViewData()
+    private static Page01ViewData CreatePage01ViewData()
     {
         var config = TestHelper.CreateDefaultConfig();
         return new Page01ViewData
@@ -1215,7 +1242,7 @@ public class JudgesRegistrationControllerTests
         };
     }
 
-    private Page03ViewData CreatePage03ViewData()
+    private static Page03ViewData CreatePage03ViewData()
     {
         return new Page03ViewData
         {
@@ -1274,12 +1301,12 @@ public class JudgesRegistrationControllerTests
     /// </summary>
     private string InvokeGenerateEmailBody(Page03ViewData viewData)
     {
-        var testable = new TestableJudgesRegistrationController(_mockRepo.Object);
+        using var testable = new TestableJudgesRegistrationController(_mockRepo.Object);
         TestHelper.SetupControllerContext(testable);
-        return testable.TestGenerateEmailBody(viewData);
+        return TestableJudgesRegistrationController.TestGenerateEmailBody(viewData);
     }
 
-    private Page02ViewData CreateValidPage02ViewData()
+    private static Page02ViewData CreateValidPage02ViewData()
     {
         return new Page02ViewData
         {
@@ -1337,9 +1364,9 @@ public class JudgesRegistrationControllerTests
 /// <summary>
 /// Testable subclass to expose protected methods.
 /// </summary>
-public class TestableJudgesRegistrationController : JudgesRegistrationController
+#pragma warning disable MA0048 // File name must match type name
+public class TestableJudgesRegistrationController(IOdysseyRepository repository) : JudgesRegistrationController(repository)
+#pragma warning restore MA0048 // File name must match type name
 {
-    public TestableJudgesRegistrationController(IOdysseyRepository repository) : base(repository) { }
-
-    public string TestGenerateEmailBody(Page03ViewData viewData) => GenerateEmailBody(viewData);
+    public static string TestGenerateEmailBody(Page03ViewData viewData) => GenerateEmailBody(viewData);
 }

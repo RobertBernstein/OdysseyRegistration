@@ -1,4 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="JudgesRegistrationController.cs" company="Tardis Technologies">
 //   Copyright 2021 Tardis Technologies. All rights reserved.
 // </copyright>
@@ -52,6 +52,22 @@ namespace OdysseyMvc4.Controllers
 
         public string BuildMailRegionalDirectorHyperLink(Page01ViewData viewData)
         {
+            if (viewData == null)
+            {
+                throw new ArgumentNullException(nameof(viewData));
+            }
+
+            if (viewData.Config == null)
+            {
+                throw new ArgumentNullException(nameof(viewData));
+            }
+
+            if (!viewData.Config.ContainsKey("RegionalDirectorEmail") ||
+                string.IsNullOrWhiteSpace(viewData.Config["RegionalDirectorEmail"]))
+            {
+                throw new ArgumentException("The regional director email address is required.", nameof(viewData));
+            }
+
             StringBuilder builder = new StringBuilder();
             builder.Append("mailto:");
             builder.Append(viewData.Config["RegionalDirectorEmail"]);
@@ -63,7 +79,7 @@ namespace OdysseyMvc4.Controllers
             return builder.ToString();
         }
 
-        protected string GenerateEmailBody(Page03ViewData page03ViewData)
+        protected static string GenerateEmailBody(Page03ViewData page03ViewData)
         {
             string input = Regex.Replace(Regex.Replace(Regex.Replace(Regex.Replace(page03ViewData.JudgesInfo.EventMailBody, "<span>JudgeID</span>", page03ViewData.Judge.JudgeID.ToString(CultureInfo.InvariantCulture)), "<span>FirstName</span>", page03ViewData.Judge.FirstName), "<span>LastName</span>", page03ViewData.Judge.LastName), "<span>Region</span>", "Region " + page03ViewData.Config["RegionNumber"]);
             StringBuilder mailBody = new StringBuilder();
@@ -267,7 +283,7 @@ namespace OdysseyMvc4.Controllers
             }
             catch (Exception exception)
             {
-                ErrorSignal.FromCurrentContext().Raise(exception);
+                ReportError(exception);
 
                 // TODO: Replace with Error Message
                 return this.RedirectToAction("Index", "Home");
@@ -381,7 +397,7 @@ namespace OdysseyMvc4.Controllers
             }
             catch (Exception exception)
             {
-                ErrorSignal.FromCurrentContext().Raise(exception);
+                ReportError(exception);
 
                 // TODO: Replace with Error Message
                 return this.RedirectToAction("Index", "Home");
@@ -426,7 +442,7 @@ namespace OdysseyMvc4.Controllers
 
             this.Repository.UpdateJudge(id, 3, viewData.Judge);
 
-            viewData.MailBody = this.GenerateEmailBody(viewData);
+            viewData.MailBody = GenerateEmailBody(viewData);
 
             if (!string.IsNullOrWhiteSpace(viewData.Judge.EmailAddress) && (viewData.Judge.EmailAddress != "None"))
             {

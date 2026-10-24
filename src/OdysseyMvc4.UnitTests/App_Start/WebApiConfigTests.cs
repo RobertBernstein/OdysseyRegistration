@@ -1,9 +1,7 @@
-using System;
-using System.Linq;
 using System.Web.Http;
 using FluentAssertions;
 
-namespace OdysseyMvc4.UnitTests;
+namespace OdysseyMvc4.UnitTests.App_Start;
 
 /// <summary>
 /// Tests for the WebApiConfig class in App_Start/WebApiConfig.cs.
@@ -14,7 +12,7 @@ public class WebApiConfigTests
     public void Register_WithValidConfiguration_AddsDefaultApiRoute()
     {
         // Arrange
-        var config = new HttpConfiguration();
+        using var config = new HttpConfiguration();
 
         // Act
         WebApiConfig.Register(config);
@@ -29,7 +27,7 @@ public class WebApiConfigTests
     public void Register_WithValidConfiguration_AddsRouteWithCorrectName()
     {
         // Arrange
-        var config = new HttpConfiguration();
+        using var config = new HttpConfiguration();
 
         // Act
         WebApiConfig.Register(config);
@@ -44,14 +42,14 @@ public class WebApiConfigTests
     public void Register_WithValidConfiguration_AddsRouteWithOptionalIdParameter()
     {
         // Arrange
-        var config = new HttpConfiguration();
+        using var config = new HttpConfiguration();
 
         // Act
         WebApiConfig.Register(config);
 
         // Assert
         var route = config.Routes.Single();
-        var httpRoute = route as System.Web.Http.Routing.IHttpRoute;
+        var httpRoute = route;
         httpRoute.Should().NotBeNull();
         httpRoute!.Defaults.Should().ContainKey("id", "the route should have an 'id' default parameter");
         httpRoute.Defaults["id"].Should().Be(System.Web.Http.RouteParameter.Optional, "the 'id' parameter should be marked as optional");
@@ -74,7 +72,7 @@ public class WebApiConfigTests
     public void Register_WithExistingRoutes_AddsDefaultApiRouteToCollection()
     {
         // Arrange
-        var config = new HttpConfiguration();
+        using var config = new HttpConfiguration();
         config.Routes.MapHttpRoute(
             name: "ExistingRoute",
             routeTemplate: "test/{controller}",
@@ -94,7 +92,7 @@ public class WebApiConfigTests
     public void Register_WithValidConfiguration_RouteTemplateContainsControllerPlaceholder()
     {
         // Arrange
-        var config = new HttpConfiguration();
+        using var config = new HttpConfiguration();
 
         // Act
         WebApiConfig.Register(config);
@@ -108,7 +106,7 @@ public class WebApiConfigTests
     public void Register_WithValidConfiguration_RouteTemplateContainsIdPlaceholder()
     {
         // Arrange
-        var config = new HttpConfiguration();
+        using var config = new HttpConfiguration();
 
         // Act
         WebApiConfig.Register(config);
@@ -116,5 +114,15 @@ public class WebApiConfigTests
         // Assert
         var route = config.Routes.Single();
         route.RouteTemplate.Should().Contain("{id}", "the route template should contain an id placeholder");
+    }
+
+    [Fact]
+    public void RegisterConfig()
+    {
+        using var config = new HttpConfiguration();
+        WebApiConfig.Register(config);
+
+        // existing assertions or checks go here
+        Assert.NotNull(config);
     }
 }

@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+using FluentAssertions;
 using JudgeRegistrationRazor.Pages;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using System.Diagnostics;
 
-namespace JudgeRegistrationRazor.UnitTests.Pages;
+namespace JudgeRegistrationRazor.UnitTests;
 
 public class ErrorModelTests
 {
@@ -14,10 +14,9 @@ public class ErrorModelTests
     public void Constructor_ShouldCreateInstance_WhenCalled()
     {
         // Arrange
-        var mockLogger = new Mock<ILogger<ErrorModel>>();
 
         // Act
-        var model = new ErrorModel(mockLogger.Object);
+        var model = new ErrorModel();
 
         // Assert
         model.Should().NotBeNull();
@@ -27,35 +26,32 @@ public class ErrorModelTests
     public void Constructor_ShouldInheritFromPageModel_WhenCalled()
     {
         // Arrange
-        var mockLogger = new Mock<ILogger<ErrorModel>>();
 
         // Act
-        var model = new ErrorModel(mockLogger.Object);
+        var model = new ErrorModel();
 
         // Assert
         model.Should().BeAssignableTo<PageModel>();
     }
 
     [Fact]
-    public void Constructor_ShouldStoreLogger_WhenCalled()
+    public void Constructor_ShouldInitializeRequestIdToNull_WhenCalled()
     {
         // Arrange
-        var mockLogger = new Mock<ILogger<ErrorModel>>();
+        var model = new ErrorModel();
 
         // Act
-        var model = new ErrorModel(mockLogger.Object);
+        var requestId = model.RequestId;
 
         // Assert
-        model.Should().NotBeNull();
-        // Logger is private, but we can verify construction succeeded
+        requestId.Should().BeNull();
     }
 
     [Fact]
     public void ShowRequestId_ShouldReturnFalse_WhenRequestIdIsNull()
     {
         // Arrange
-        var mockLogger = new Mock<ILogger<ErrorModel>>();
-        var model = new ErrorModel(mockLogger.Object)
+        var model = new ErrorModel
         {
             RequestId = null
         };
@@ -71,8 +67,7 @@ public class ErrorModelTests
     public void ShowRequestId_ShouldReturnFalse_WhenRequestIdIsEmpty()
     {
         // Arrange
-        var mockLogger = new Mock<ILogger<ErrorModel>>();
-        var model = new ErrorModel(mockLogger.Object)
+        var model = new ErrorModel
         {
             RequestId = string.Empty
         };
@@ -88,8 +83,7 @@ public class ErrorModelTests
     public void ShowRequestId_ShouldReturnTrue_WhenRequestIdHasValue()
     {
         // Arrange
-        var mockLogger = new Mock<ILogger<ErrorModel>>();
-        var model = new ErrorModel(mockLogger.Object)
+        var model = new ErrorModel
         {
             RequestId = "test-request-id"
         };
@@ -105,8 +99,7 @@ public class ErrorModelTests
     public void OnGet_ShouldSetRequestIdFromActivityCurrent_WhenActivityCurrentExists()
     {
         // Arrange
-        var mockLogger = new Mock<ILogger<ErrorModel>>();
-        var model = new ErrorModel(mockLogger.Object);
+        var model = new ErrorModel();
         var mockHttpContext = new Mock<HttpContext>();
         mockHttpContext.Setup(c => c.TraceIdentifier).Returns("trace-id");
         model.PageContext = new PageContext
@@ -114,34 +107,26 @@ public class ErrorModelTests
             HttpContext = mockHttpContext.Object
         };
 
-        var activity = new Activity("test-activity");
+        using var activity = new Activity("test-activity");
         activity.Start();
 
-        try
-        {
-            // Act
-            model.OnGet();
+        // Act
+        model.OnGet();
 
-            // Assert
-            model.RequestId.Should().Be(activity.Id);
-        }
-        finally
-        {
-            activity.Stop();
-        }
+        // Assert
+        model.RequestId.Should().Be(activity.Id);
     }
 
     [Fact]
     public void OnGet_ShouldSetRequestIdFromHttpContextTraceIdentifier_WhenActivityCurrentIsNull()
     {
         // Arrange
-        var mockLogger = new Mock<ILogger<ErrorModel>>();
-        var model = new ErrorModel(mockLogger.Object);
+        var model = new ErrorModel();
         var mockHttpContext = new Mock<HttpContext>();
         mockHttpContext.Setup(c => c.TraceIdentifier).Returns("trace-id-123");
         model.PageContext = new PageContext
         {
-            HttpContext = mockHttpContext.Object
+            HttpContext = mockHttpContext.Object,
         };
 
         // Ensure no current activity

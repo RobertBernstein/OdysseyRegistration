@@ -39,4 +39,4 @@ app.UseAuthorization();
 // https://learn.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.routing.iendpointroutebuilder
 app.MapRazorPages();
 
-app.Run();
+await app.RunAsync().ConfigureAwait(false);

@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+using FluentAssertions;
 using JudgeRegistrationRazor.Data;
 using JudgeRegistrationRazor.Models;
 using JudgeRegistrationRazor.Pages.JudgesRegistration;
@@ -11,7 +11,7 @@ namespace JudgeRegistrationRazor.UnitTests.Pages.JudgesRegistration;
 
 public class DeleteModelTests
 {
-    private static OdysseyContext CreateInMemoryContext(string databaseName)
+    private static TestOdysseyContext CreateInMemoryContext(string databaseName)
     {
         var options = new DbContextOptionsBuilder<OdysseyContext>()
             .UseInMemoryDatabase(databaseName: databaseName)
@@ -24,7 +24,7 @@ public class DeleteModelTests
     public void Constructor_WithValidContext_SetsContext()
     {
         // Arrange
-        var context = CreateInMemoryContext("TestDb_Constructor");
+        using var context = CreateInMemoryContext("TestDb_Constructor");
 
         // Act
         var model = new DeleteModel(context);
@@ -37,7 +37,7 @@ public class DeleteModelTests
     public async Task OnGetAsync_NullId_ReturnsNotFound()
     {
         // Arrange
-        var context = CreateInMemoryContext("TestDb_OnGetAsync_NullId");
+        using var context = CreateInMemoryContext("TestDb_OnGetAsync_NullId");
         var model = new DeleteModel(context);
 
         // Act
@@ -51,7 +51,7 @@ public class DeleteModelTests
     public async Task OnGetAsync_JudgeNotFound_ReturnsNotFound()
     {
         // Arrange
-        var context = CreateInMemoryContext("TestDb_OnGetAsync_JudgeNotFound");
+        using var context = CreateInMemoryContext("TestDb_OnGetAsync_JudgeNotFound");
         var model = new DeleteModel(context);
 
         // Act
@@ -65,7 +65,7 @@ public class DeleteModelTests
     public async Task OnGetAsync_JudgeExists_SetsJudgeAndReturnsPage()
     {
         // Arrange
-        var context = CreateInMemoryContext("TestDb_OnGetAsync_JudgeExists");
+        using var context = CreateInMemoryContext("TestDb_OnGetAsync_JudgeExists");
         context.Judges.Add(new Judge { Id = 1, TeamId = "Team1" });
         await context.SaveChangesAsync(TestContext.Current.CancellationToken);
 
@@ -84,7 +84,7 @@ public class DeleteModelTests
     public async Task OnPostAsync_NullId_ReturnsNotFound()
     {
         // Arrange
-        var context = CreateInMemoryContext("TestDb_OnPostAsync_NullId");
+        using var context = CreateInMemoryContext("TestDb_OnPostAsync_NullId");
         var model = new DeleteModel(context);
 
         // Act
@@ -98,7 +98,7 @@ public class DeleteModelTests
     public async Task OnPostAsync_JudgeNotFound_ReturnsRedirectToPage()
     {
         // Arrange
-        var context = CreateInMemoryContext("TestDb_OnPostAsync_JudgeNotFound");
+        using var context = CreateInMemoryContext("TestDb_OnPostAsync_JudgeNotFound");
         var model = new DeleteModel(context);
 
         // Act
@@ -114,7 +114,7 @@ public class DeleteModelTests
     public async Task OnPostAsync_JudgeExists_RemovesJudgeAndReturnsRedirectToPage()
     {
         // Arrange
-        var context = CreateInMemoryContext("TestDb_OnPostAsync_JudgeExists");
+        using var context = CreateInMemoryContext("TestDb_OnPostAsync_JudgeExists");
         context.Judges.Add(new Judge { Id = 1, TeamId = "Team1" });
         await context.SaveChangesAsync(TestContext.Current.CancellationToken);
 

@@ -5,7 +5,7 @@
 namespace JudgeRegistrationRazor.Migrations
 {
     /// <inheritdoc />
-    public partial class UpdateConfigSeedData : Migration
+    internal partial class UpdateConfigSeedData : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

@@ -115,7 +115,7 @@ public class Page01ViewDataTests
         {
             TournamentInfo = new Event
             {
-                LateEventCostStartDate = new DateTime(2025, 3, 15)
+                LateEventCostStartDate = new DateTime(2025, 3, 15, 0, 0, 0, DateTimeKind.Unspecified)
             }
         };
 
@@ -123,7 +123,7 @@ public class Page01ViewDataTests
         var result = viewData.LateEventCostStartDate;
 
         // Assert
-        result.Should().Be(new DateTime(2025, 3, 14).ToLongDateString());
+        result.Should().Be(new DateTime(2025, 3, 14, 0, 0, 0, DateTimeKind.Unspecified).ToLongDateString());
     }
 
     [Fact]
@@ -237,7 +237,7 @@ public class Page01ViewDataTests
         {
             TournamentInfo = new Event
             {
-                PaymentDueDate = new DateTime(2025, 4, 1)
+                PaymentDueDate = new DateTime(2025, 4, 1, 0, 0, 0, DateTimeKind.Unspecified)
             }
         };
 
@@ -245,7 +245,7 @@ public class Page01ViewDataTests
         var result = viewData.PaymentDueDate;
 
         // Assert
-        result.Should().Be(new DateTime(2025, 4, 1).ToLongDateString());
+        result.Should().Be(new DateTime(2025, 4, 1, 0, 0, 0, DateTimeKind.Unspecified).ToLongDateString());
     }
 
     [Fact]
@@ -459,7 +459,7 @@ public class Page01ViewDataTests
         var result = viewData.TournamentRegistrationCloseDateTime;
 
         // Assert
-        result.Should().Be(new DateTime(2025, 3, 15).ToLongDateString());
+        result.Should().Be(new DateTime(2025, 3, 15, 0, 0, 0, DateTimeKind.Unspecified).ToLongDateString());
     }
 
     [Fact]
@@ -570,7 +570,7 @@ public class Page01ViewDataTests
         var result = viewData.TournamentRegistrationCloseDateTime;
 
         // Assert
-        result.Should().Be(new DateTime(2025, 12, 25).ToLongDateString());
+        result.Should().Be(new DateTime(2025, 12, 25, 0, 0, 0, DateTimeKind.Unspecified).ToLongDateString());
     }
 
     #endregion

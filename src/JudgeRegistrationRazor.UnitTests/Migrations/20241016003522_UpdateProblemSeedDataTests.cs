@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using FluentAssertions;
 using JudgeRegistrationRazor.Migrations;
 using Microsoft.EntityFrameworkCore.Migrations;
@@ -461,7 +461,7 @@ public class UpdateProblemSeedDataTests
 
         // Assert
         var invocations = mockMigrationBuilder.Invocations;
-        invocations.Should().OnlyContain(inv => 
-            inv.Arguments.Count > 3 ? inv.Arguments[3] == null : true);
+        invocations.Should().OnlyContain(inv =>
+            inv.Arguments.Count <= 3 || inv.Arguments[3] == null);
     }
 }

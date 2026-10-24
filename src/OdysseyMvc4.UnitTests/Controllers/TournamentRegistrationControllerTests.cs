@@ -3,6 +3,7 @@ using Moq;
 using OdysseyMvc4.Controllers;
 using OdysseyMvc4.Models;
 using OdysseyMvc4.UnitTests.Helpers;
+using System;
 using System.Web.Mvc;
 
 namespace OdysseyMvc4.UnitTests.Controllers;
@@ -12,7 +13,7 @@ namespace OdysseyMvc4.UnitTests.Controllers;
 /// during the migration from .NET Framework 4.8 to .NET 10.
 /// Focuses on grade-to-division mapping, team division determination, and HTML generation.
 /// </summary>
-public class TournamentRegistrationControllerTests
+public sealed class TournamentRegistrationControllerTests : IDisposable
 {
     private readonly Mock<IOdysseyRepository> _mockRepo;
     private readonly TournamentRegistrationController _controller;
@@ -24,6 +25,17 @@ public class TournamentRegistrationControllerTests
         TestHelper.SetupControllerContext(_controller);
     }
 
+    public void Dispose()
+    {
+        _controller.Dispose();
+        GC.SuppressFinalize(this);
+    }
+
+    private static void AssertDivisionForGrade(TournamentRegistrationController controller, string grade, int expectedDivision)
+    {
+        controller.GetDivisionOfTeamMember(grade).Should().Be(expectedDivision);
+    }
+
     #region GetDivisionOfTeamMember Tests
 
     [Theory]
@@ -33,7 +45,7 @@ public class TournamentRegistrationControllerTests
     [InlineData("2", 0)]
     public void GetDivisionOfTeamMember_PrimaryGrades_ReturnsDivision0(string grade, int expectedDivision)
     {
-        _controller.GetDivisionOfTeamMember(grade).Should().Be(expectedDivision);
+        AssertDivisionForGrade(_controller, grade, expectedDivision);
     }
 
     [Theory]
@@ -42,7 +54,7 @@ public class TournamentRegistrationControllerTests
     [InlineData("5", 1)]
     public void GetDivisionOfTeamMember_Division1Grades_ReturnsDivision1(string grade, int expectedDivision)
     {
-        _controller.GetDivisionOfTeamMember(grade).Should().Be(expectedDivision);
+        AssertDivisionForGrade(_controller, grade, expectedDivision);
     }
 
     [Theory]
@@ -51,7 +63,7 @@ public class TournamentRegistrationControllerTests
     [InlineData("8", 2)]
     public void GetDivisionOfTeamMember_Division2Grades_ReturnsDivision2(string grade, int expectedDivision)
     {
-        _controller.GetDivisionOfTeamMember(grade).Should().Be(expectedDivision);
+        AssertDivisionForGrade(_controller, grade, expectedDivision);
     }
 
     [Theory]
@@ -61,7 +73,7 @@ public class TournamentRegistrationControllerTests
     [InlineData("12", 3)]
     public void GetDivisionOfTeamMember_Division3Grades_ReturnsDivision3(string grade, int expectedDivision)
     {
-        _controller.GetDivisionOfTeamMember(grade).Should().Be(expectedDivision);
+        AssertDivisionForGrade(_controller, grade, expectedDivision);
     }
 
     #endregion
@@ -380,7 +392,7 @@ public class TournamentRegistrationControllerTests
         _mockRepo.Setup(r => r.Config).Returns(TestHelper.CreateDefaultConfig());
         _mockRepo.Setup(r => r.TournamentInfo).Returns(TestHelper.CreateDefaultTournamentInfo());
         _mockRepo.Setup(r => r.AddTournamentRegistration(It.IsAny<OdysseyMvc4.Models.TournamentRegistration>()))
-            .Throws(new Exception("Database error"));
+            .Throws(new InvalidOperationException("Database error"));
 
         var result = _controller.Page01Post();
 
@@ -453,14 +465,14 @@ public class TournamentRegistrationControllerTests
     [Fact]
     public void Mvc4Constructor_SetsRegistrationTypeToTournament()
     {
-        var controller = new TournamentRegistrationController();
+        using var controller = new TournamentRegistrationController();
         controller.CurrentRegistrationType.Should().Be(OdysseyMvc4.Controllers.BaseRegistrationController.RegistrationType.Tournament);
     }
 
     [Fact]
     public void Mvc4Constructor_SetsFriendlyRegistrationName()
     {
-        var controller = new TournamentRegistrationController();
+        using var controller = new TournamentRegistrationController();
         controller.FriendlyRegistrationName.Should().Be("Tournament Registration");
     }
 
@@ -482,58 +494,12 @@ public class TournamentRegistrationControllerTests
 
     #endregion
 
-    #region OdysseyMvc4 GetDivisionOfTeamMember Tests
-
-    [Theory]
-    [InlineData("Kindergarten", 0)]
-    [InlineData("0", 0)]
-    [InlineData("1", 0)]
-    [InlineData("2", 0)]
-    public void Mvc4GetDivisionOfTeamMember_PrimaryGrades_ReturnsDivision0(string grade, int expectedDivision)
-    {
-        var controller = new TournamentRegistrationController();
-        controller.GetDivisionOfTeamMember(grade).Should().Be(expectedDivision);
-    }
-
-    [Theory]
-    [InlineData("3", 1)]
-    [InlineData("4", 1)]
-    [InlineData("5", 1)]
-    public void Mvc4GetDivisionOfTeamMember_Division1Grades_ReturnsDivision1(string grade, int expectedDivision)
-    {
-        var controller = new TournamentRegistrationController();
-        controller.GetDivisionOfTeamMember(grade).Should().Be(expectedDivision);
-    }
-
-    [Theory]
-    [InlineData("6", 2)]
-    [InlineData("7", 2)]
-    [InlineData("8", 2)]
-    public void Mvc4GetDivisionOfTeamMember_Division2Grades_ReturnsDivision2(string grade, int expectedDivision)
-    {
-        var controller = new TournamentRegistrationController();
-        controller.GetDivisionOfTeamMember(grade).Should().Be(expectedDivision);
-    }
-
-    [Theory]
-    [InlineData("9", 3)]
-    [InlineData("10", 3)]
-    [InlineData("11", 3)]
-    [InlineData("12", 3)]
-    public void Mvc4GetDivisionOfTeamMember_Division3Grades_ReturnsDivision3(string grade, int expectedDivision)
-    {
-        var controller = new TournamentRegistrationController();
-        controller.GetDivisionOfTeamMember(grade).Should().Be(expectedDivision);
-    }
-
-    #endregion
-
     #region OdysseyMvc4 DetermineDivisionOfTeam Tests
 
     [Fact]
     public void Mvc4DetermineDivisionOfTeam_AllKindergarten_ReturnsDivision0()
     {
-        var controller = new TournamentRegistrationController();
+        using var controller = new TournamentRegistrationController();
         var grades = new List<string> { "Kindergarten", "Kindergarten", "1" };
         controller.DetermineDivisionOfTeam(grades).Should().Be(0);
     }
@@ -541,7 +507,7 @@ public class TournamentRegistrationControllerTests
     [Fact]
     public void Mvc4DetermineDivisionOfTeam_MixedPrimaryAndDiv1_ReturnsDivision1()
     {
-        var controller = new TournamentRegistrationController();
+        using var controller = new TournamentRegistrationController();
         var grades = new List<string> { "Kindergarten", "2", "4" };
         controller.DetermineDivisionOfTeam(grades).Should().Be(1);
     }
@@ -549,7 +515,7 @@ public class TournamentRegistrationControllerTests
     [Fact]
     public void Mvc4DetermineDivisionOfTeam_HighestGradeWins_ReturnsDivision3()
     {
-        var controller = new TournamentRegistrationController();
+        using var controller = new TournamentRegistrationController();
         var grades = new List<string> { "3", "5", "9" };
         controller.DetermineDivisionOfTeam(grades).Should().Be(3);
     }
@@ -557,7 +523,7 @@ public class TournamentRegistrationControllerTests
     [Fact]
     public void Mvc4DetermineDivisionOfTeam_WithEmptyGrades_SkipsThem()
     {
-        var controller = new TournamentRegistrationController();
+        using var controller = new TournamentRegistrationController();
         var grades = new List<string> { "", "3", "", "5" };
         controller.DetermineDivisionOfTeam(grades).Should().Be(1);
     }
@@ -565,7 +531,7 @@ public class TournamentRegistrationControllerTests
     [Fact]
     public void Mvc4DetermineDivisionOfTeam_WithNullGrades_SkipsThem()
     {
-        var controller = new TournamentRegistrationController();
+        using var controller = new TournamentRegistrationController();
         var grades = new List<string> { null!, "6", null! };
         controller.DetermineDivisionOfTeam(grades).Should().Be(2);
     }
@@ -573,7 +539,7 @@ public class TournamentRegistrationControllerTests
     [Fact]
     public void Mvc4DetermineDivisionOfTeam_AllEmptyGrades_ReturnsMinus1()
     {
-        var controller = new TournamentRegistrationController();
+        using var controller = new TournamentRegistrationController();
         var grades = new List<string> { "", "", "" };
         controller.DetermineDivisionOfTeam(grades).Should().Be(-1);
     }
@@ -581,7 +547,7 @@ public class TournamentRegistrationControllerTests
     [Fact]
     public void Mvc4DetermineDivisionOfTeam_EmptyList_ReturnsMinus1()
     {
-        var controller = new TournamentRegistrationController();
+        using var controller = new TournamentRegistrationController();
         var grades = new List<string>();
         controller.DetermineDivisionOfTeam(grades).Should().Be(-1);
     }
@@ -589,7 +555,7 @@ public class TournamentRegistrationControllerTests
     [Fact]
     public void Mvc4DetermineDivisionOfTeam_SingleGrade12_ReturnsDivision3()
     {
-        var controller = new TournamentRegistrationController();
+        using var controller = new TournamentRegistrationController();
         var grades = new List<string> { "12" };
         controller.DetermineDivisionOfTeam(grades).Should().Be(3);
     }
@@ -597,7 +563,7 @@ public class TournamentRegistrationControllerTests
     [Fact]
     public void Mvc4DetermineDivisionOfTeam_AllDivision2_ReturnsDivision2()
     {
-        var controller = new TournamentRegistrationController();
+        using var controller = new TournamentRegistrationController();
         var grades = new List<string> { "6", "7", "8", "6", "7" };
         controller.DetermineDivisionOfTeam(grades).Should().Be(2);
     }
@@ -605,7 +571,7 @@ public class TournamentRegistrationControllerTests
     [Fact]
     public void Mvc4DetermineDivisionOfTeam_SevenMemberTeam_UsesHighestDivision()
     {
-        var controller = new TournamentRegistrationController();
+        using var controller = new TournamentRegistrationController();
         var grades = new List<string> { "1", "2", "3", "4", "5", "6", "7" };
         controller.DetermineDivisionOfTeam(grades).Should().Be(2);
     }
@@ -719,7 +685,7 @@ public class TournamentRegistrationControllerTests
         _mockRepo.Setup(r => r.Config).Returns(TestHelper.CreateDefaultConfig());
         _mockRepo.Setup(r => r.TournamentInfo).Returns(TestHelper.CreateDefaultTournamentInfo());
         _mockRepo.Setup(r => r.UpdateTournamentRegistration(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<OdysseyMvc4.Models.TournamentRegistration>()))
-            .Throws(new Exception("Database error"));
+            .Throws(new InvalidOperationException("Database error"));
 
         var viewData = new OdysseyMvc4.ViewData.TournamentRegistration.Page02ViewData
         {
@@ -923,7 +889,7 @@ public class TournamentRegistrationControllerTests
         _mockRepo.Setup(r => r.Config).Returns(TestHelper.CreateDefaultConfig());
         _mockRepo.Setup(r => r.TournamentInfo).Returns(TestHelper.CreateDefaultTournamentInfo());
         _mockRepo.Setup(r => r.GetJudgeByIdAndName(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>()))
-            .Throws(new Exception("Database error"));
+            .Throws(new InvalidOperationException("Database error"));
 
         var viewData = new OdysseyMvc4.ViewData.TournamentRegistration.Page03ViewData
         {
@@ -1030,7 +996,23 @@ public class TournamentRegistrationControllerTests
         _mockRepo.Setup(r => r.Config).Returns(TestHelper.CreateDefaultConfig());
         _mockRepo.Setup(r => r.TournamentInfo).Returns(TestHelper.CreateDefaultTournamentInfo());
 
-        var viewData = new OdysseyMvc4.ViewData.TournamentRegistration.Page04ViewData();
+        var volunteer = new OdysseyMvc4.Models.Volunteer
+        {
+            VolunteerID = 200,
+            FirstName = "Jane",
+            LastName = "Smith",
+            TeamID = null
+        };
+
+        _mockRepo.Setup(r => r.GetVolunteerByIdAndName(200, "Jane", "Smith")).Returns(volunteer);
+        _mockRepo.Setup(r => r.UpdateTournamentRegistration(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<OdysseyMvc4.Models.TournamentRegistration>()));
+
+        var viewData = new OdysseyMvc4.ViewData.TournamentRegistration.Page04ViewData
+        {
+            VolunteerId = "200",
+            VolunteerFirstName = "Jane",
+            VolunteerLastName = "Smith"
+        };
 
         var result = _controller.Page04(123, viewData);
 
@@ -1039,6 +1021,7 @@ public class TournamentRegistrationControllerTests
         redirectResult!.RouteValues["action"].Should().Be("Page05");
         redirectResult.RouteValues.Should().ContainKey("id");
         redirectResult.RouteValues!["id"].Should().Be(123);
+        _mockRepo.Verify(r => r.UpdateTournamentRegistration(123, 4, It.Is<OdysseyMvc4.Models.TournamentRegistration>(tr => tr.VolunteerID == 200)), Times.Once);
     }
 
     [Theory]

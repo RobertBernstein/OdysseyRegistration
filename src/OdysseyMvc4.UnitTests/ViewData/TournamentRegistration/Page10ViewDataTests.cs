@@ -115,7 +115,7 @@ public class Page10ViewDataTests
         {
             TournamentInfo = new Event
             {
-                PaymentDueDate = new DateTime(2025, 4, 1)
+                PaymentDueDate = new DateTime(2025, 4, 1, 0, 0, 0, DateTimeKind.Unspecified)
             }
         };
 
@@ -123,7 +123,7 @@ public class Page10ViewDataTests
         var result = viewData.PaymentDueDate;
 
         // Assert
-        result.Should().Be(new DateTime(2025, 4, 1).ToLongDateString());
+        result.Should().Be(new DateTime(2025, 4, 1, 0, 0, 0, DateTimeKind.Unspecified).ToLongDateString());
     }
 
     [Fact]

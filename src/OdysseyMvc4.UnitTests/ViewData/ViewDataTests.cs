@@ -23,10 +23,10 @@ public class ViewDataTests
     {
         var viewData = new BaseViewData
         {
-            TournamentInfo = new Event { StartDate = new DateTime(2025, 3, 15) }
+            TournamentInfo = new Event { StartDate = new DateTime(2025, 3, 15, 0, 0, 0, DateTimeKind.Unspecified) }
         };
 
-        viewData.TournamentDate.Should().Be(new DateTime(2025, 3, 15).ToLongDateString());
+        viewData.TournamentDate.Should().Be(new DateTime(2025, 3, 15, 0, 0, 0, DateTimeKind.Unspecified).ToLongDateString());
     }
 
     [Fact]
@@ -322,9 +322,9 @@ public class ViewDataTests
     public void PaymentDueDate_WithValidDate_ReturnsLongDateString()
     {
         var viewData = CreateTournamentPage01ViewData();
-        viewData.TournamentInfo!.PaymentDueDate = new DateTime(2025, 3, 10);
+        viewData.TournamentInfo!.PaymentDueDate = new DateTime(2025, 3, 10, 0, 0, 0, DateTimeKind.Unspecified);
 
-        viewData.PaymentDueDate.Should().Be(new DateTime(2025, 3, 10).ToLongDateString());
+        viewData.PaymentDueDate.Should().Be(new DateTime(2025, 3, 10, 0, 0, 0, DateTimeKind.Unspecified).ToLongDateString());
     }
 
     [Fact]
@@ -340,10 +340,10 @@ public class ViewDataTests
     public void LateEventCostStartDate_WithValidDate_ReturnsDateMinusOneDay()
     {
         var viewData = CreateTournamentPage01ViewData();
-        viewData.TournamentInfo!.LateEventCostStartDate = new DateTime(2025, 3, 1);
+        viewData.TournamentInfo!.LateEventCostStartDate = new DateTime(2025, 3, 1, 0, 0, 0, DateTimeKind.Unspecified);
 
         // The property returns the day BEFORE the late cost start date
-        viewData.LateEventCostStartDate.Should().Be(new DateTime(2025, 2, 28).ToLongDateString());
+        viewData.LateEventCostStartDate.Should().Be(new DateTime(2025, 2, 28, 0, 0, 0, DateTimeKind.Unspecified).ToLongDateString());
     }
 
     [Fact]
@@ -388,7 +388,7 @@ public class ViewDataTests
         var viewData = CreateTournamentPage01ViewData();
         viewData.Config!["TournamentRegistrationCloseDateTime"] = "12/31/2025 23:59:59";
 
-        viewData.TournamentRegistrationCloseDateTime.Should().Be(new DateTime(2025, 12, 31).ToLongDateString());
+        viewData.TournamentRegistrationCloseDateTime.Should().Be(new DateTime(2025, 12, 31, 0, 0, 0, DateTimeKind.Unspecified).ToLongDateString());
     }
 
     #endregion

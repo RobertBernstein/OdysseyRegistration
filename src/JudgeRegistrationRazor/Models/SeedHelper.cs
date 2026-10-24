@@ -1,8 +1,8 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 
 namespace JudgesRegistrationRazor.Models
 {
-    public static class SeedHelper
+    internal static class SeedHelper
     {
         public static List<TEntity>? SeedData<TEntity>(string fileName)
         {

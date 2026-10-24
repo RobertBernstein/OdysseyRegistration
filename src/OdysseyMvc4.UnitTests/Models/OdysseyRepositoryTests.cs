@@ -23,7 +23,7 @@ namespace OdysseyMvc4.UnitTests.Models;
 /// To test the commented-out properties, first uncomment them in OdysseyRepository.cs
 /// and restore the corresponding DbSets in OdysseyEntities.cs.
 /// </summary>
-public class OdysseyRepositoryTests : IDisposable
+public sealed class OdysseyRepositoryTests : IDisposable
 {
     private readonly OdysseyEntities _context;
 
@@ -36,6 +36,7 @@ public class OdysseyRepositoryTests : IDisposable
     public void Dispose()
     {
         _context.Dispose();
+        GC.SuppressFinalize(this);
     }
 
     #region Config Property Tests
@@ -633,6 +634,8 @@ public class OdysseyRepositoryTests : IDisposable
 
         var repository = new OdysseyRepository();
         var firstAccess = repository.ProblemChoices;
+        firstAccess.Should().NotBeNull();
+        firstAccess.Should().HaveCount(1);
 
         _context.Problems.Add(new Problem { ProblemID = 2, ProblemName = "Problem 2" });
         _context.SaveChanges();
@@ -821,6 +824,8 @@ public class OdysseyRepositoryTests : IDisposable
 
         var repository = new OdysseyRepository();
         var firstAccess = repository.ProblemConflicts;
+        firstAccess.Should().NotBeNull();
+        firstAccess.Should().HaveCount(1);
 
         _context.Problems.Add(new Problem { ProblemID = 2, ProblemName = "Problem 2" });
         _context.SaveChanges();
@@ -2027,9 +2032,9 @@ public class OdysseyRepositoryTests : IDisposable
             WantsCEUCredit = "Yes",
             YearsOfLongTermJudgingExperience = "5",
             YearsOfSpontaneousJudgingExperience = "3",
-            TimeRegistered = new DateTime(2025, 1, 15),
-            TimeAssignedToTeam = new DateTime(2025, 1, 20),
-            TimeRegistrationStarted = new DateTime(2025, 1, 10),
+            TimeRegistered = new DateTime(2025, 1, 15, 0, 0, 0, DateTimeKind.Unspecified),
+            TimeAssignedToTeam = new DateTime(2025, 1, 20, 0, 0, 0, DateTimeKind.Unspecified),
+            TimeRegistrationStarted = new DateTime(2025, 1, 10, 0, 0, 0, DateTimeKind.Unspecified),
             UserAgent = "TestAgent"
         });
         _context.Problems.Add(new Problem { ProblemID = 1, ProblemName = "Problem 1" });
@@ -2063,9 +2068,9 @@ public class OdysseyRepositoryTests : IDisposable
         exported.ContinuingEducationUnits.Should().Be("Yes");
         exported.YearsOfLongTermJudgingExperience.Should().Be("5");
         exported.YearsOfSpontaneousJudgingExperience.Should().Be("3");
-        exported.TimeRegistered.Should().Be(new DateTime(2025, 1, 15));
-        exported.TimeAssignedToTeam.Should().Be(new DateTime(2025, 1, 20));
-        exported.TimeRegistrationStarted.Should().Be(new DateTime(2025, 1, 10));
+        exported.TimeRegistered.Should().Be(new DateTime(2025, 1, 15, 0, 0, 0, DateTimeKind.Unspecified));
+        exported.TimeAssignedToTeam.Should().Be(new DateTime(2025, 1, 20, 0, 0, 0, DateTimeKind.Unspecified));
+        exported.TimeRegistrationStarted.Should().Be(new DateTime(2025, 1, 10, 0, 0, 0, DateTimeKind.Unspecified));
         exported.UserAgent.Should().Be("TestAgent");
     }
 

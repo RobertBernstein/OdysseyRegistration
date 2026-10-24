@@ -1,4 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Page01ViewData.cs" company="Tardis Technologies">
 //   Copyright 2021 Tardis Technologies. All rights reserved.
 // </copyright>
@@ -134,9 +134,10 @@ namespace OdysseyMvc4.ViewData.CoachesTrainingRegistration
                     return string.Empty;
                 }
 
-                return this.Config["CoordinatorsDoNotPayCoachesTrainingRegistrationFee"].ToLower() == "true"
-                    ? " &nbsp;We invite School Coordinators to attend at no charge."
-                    : string.Empty;
+                return string.Equals(
+                    this.Config["CoordinatorsDoNotPayCoachesTrainingRegistrationFee"], "true", System.StringComparison.CurrentCultureIgnoreCase)
+                        ? " &nbsp;We invite School Coordinators to attend at no charge."
+                        : string.Empty;
             }
         }
 

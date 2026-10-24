@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+using FluentAssertions;
 using JudgeRegistrationRazor.Data;
 using JudgeRegistrationRazor.Models;
 using JudgeRegistrationRazor.Pages.JudgesRegistration;
@@ -10,7 +10,7 @@ namespace JudgeRegistrationRazor.UnitTests.Pages.JudgesRegistration;
 
 public class EditModelTests
 {
-    private static OdysseyContext CreateInMemoryContext(string databaseName)
+    private static TestOdysseyContext CreateInMemoryContext(string databaseName)
     {
         var options = new DbContextOptionsBuilder<OdysseyContext>()
             .UseInMemoryDatabase(databaseName: databaseName)
@@ -23,7 +23,7 @@ public class EditModelTests
     public void Constructor_WithValidContext_SetsContext()
     {
         // Arrange
-        var context = CreateInMemoryContext("TestDb_Constructor");
+        using var context = CreateInMemoryContext("TestDb_Constructor");
 
         // Act
         var model = new EditModel(context);
@@ -36,7 +36,7 @@ public class EditModelTests
     public async Task OnGetAsync_NullId_ReturnsNotFound()
     {
         // Arrange
-        var context = CreateInMemoryContext("TestDb_OnGetAsync_NullId");
+        using var context = CreateInMemoryContext("TestDb_OnGetAsync_NullId");
         var model = new EditModel(context);
 
         // Act
@@ -50,7 +50,7 @@ public class EditModelTests
     public async Task OnGetAsync_JudgeNotFound_ReturnsNotFound()
     {
         // Arrange
-        var context = CreateInMemoryContext("TestDb_OnGetAsync_JudgeNotFound");
+        using var context = CreateInMemoryContext("TestDb_OnGetAsync_JudgeNotFound");
         var model = new EditModel(context);
 
         // Act
@@ -64,7 +64,7 @@ public class EditModelTests
     public async Task OnGetAsync_JudgeExists_SetsJudgeAndReturnsPage()
     {
         // Arrange
-        var context = CreateInMemoryContext("TestDb_OnGetAsync_JudgeExists");
+        using var context = CreateInMemoryContext("TestDb_OnGetAsync_JudgeExists");
         var judge = new Judge { TeamId = "Team1", FirstName = "John", LastName = "Doe" };
         context.Judges.Add(judge);
         await context.SaveChangesAsync(TestContext.Current.CancellationToken);
@@ -86,7 +86,7 @@ public class EditModelTests
     public async Task OnPostAsync_InvalidModelState_ReturnsPage()
     {
         // Arrange
-        var context = CreateInMemoryContext("TestDb_OnPostAsync_InvalidModelState");
+        using var context = CreateInMemoryContext("TestDb_OnPostAsync_InvalidModelState");
         var model = new EditModel(context);
         model.ModelState.AddModelError("TestError", "Test error message");
         model.Judge = new Judge { Id = 1, TeamId = "Team1" };
@@ -139,7 +139,7 @@ public class EditModelTests
     public async Task OnPostAsync_ConcurrencyExceptionJudgeNotExists_ReturnsNotFound()
     {
         // Arrange
-        var context = CreateInMemoryContext("TestDb_OnPostAsync_ConcurrencyException_NotExists");
+        using var context = CreateInMemoryContext("TestDb_OnPostAsync_ConcurrencyException_NotExists");
         var model = new EditModel(context);
         model.Judge = new Judge { Id = 999, TeamId = "Team999" };
 
@@ -154,7 +154,7 @@ public class EditModelTests
     public async Task OnPostAsync_ConcurrencyExceptionJudgeExists_Rethrows()
     {
         // Arrange
-        var dbName = "TestDb_OnPostAsync_ConcurrencyException_Rethrows";
+        const string dbName = "TestDb_OnPostAsync_ConcurrencyException_Rethrows";
         var options = new DbContextOptionsBuilder<OdysseyContext>()
             .UseInMemoryDatabase(databaseName: dbName)
             .Options;

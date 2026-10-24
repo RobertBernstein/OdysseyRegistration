@@ -13,6 +13,7 @@
 // MVID: 7B658547-521F-44CB-80FA-52857CB94B72
 // Assembly location: C:\Users\rob\OneDrive\Odyssey\OdysseyProd\registration\bin\OdysseyMvc4.dll
 
+using System.Diagnostics.CodeAnalysis;
 using OdysseyMvc2024.Models;
 using OdysseyMvc2024.ViewData;
 using Microsoft.AspNetCore.Mvc;
@@ -23,6 +24,7 @@ namespace OdysseyMvc2024.Controllers
     /// <summary>
     /// The home controller, i.e., the root of the website,  for the Odyssey Registration website.
     /// </summary>
+    [SuppressMessage("Design", "CA1515:Consider making public types internal", Justification = "ASP.NET MVC controller types are intentionally public.")]
     public class HomeController : BaseRegistrationController
     {
         public HomeController(IOdysseyRepository repository)

@@ -1,4 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Page01ViewData.cs" company="Tardis Technologies">
 //   Copyright 2015 Tardis Technologies. All rights reserved.
 // </copyright>
@@ -10,6 +10,7 @@
 namespace OdysseyMvc4.ViewData.TournamentRegistration
 {
     using System;
+    using System.Globalization;
 
     using OdysseyMvc4.ViewData;
 
@@ -88,13 +89,17 @@ namespace OdysseyMvc4.ViewData.TournamentRegistration
         {
             get
             {
-                DateTime time;
                 if (this.Config["TournamentRegistrationCloseDateTime"] == null)
                 {
                     return "TBA";
                 }
 
-                DateTime.TryParse(this.Config["TournamentRegistrationCloseDateTime"], out time);
+                DateTime.TryParseExact(
+                    this.Config["TournamentRegistrationCloseDateTime"],
+                    "M/d/yyyy h:mm tt",
+                    CultureInfo.InvariantCulture,
+                    DateTimeStyles.None,
+                    out DateTime time);
                 return time.ToLongDateString();
             }
         }

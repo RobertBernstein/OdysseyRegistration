@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using FluentAssertions;
 using JudgeRegistrationRazor.Migrations;
 using Microsoft.EntityFrameworkCore.Migrations;
@@ -259,6 +259,8 @@ public class UpdateSchoolsSeedDataTests
         else if (values is object?[] flatArray)
         {
             var columnCount = columns!.Length;
+            flatArray.Length.Should().BeGreaterThanOrEqualTo(columnCount);
+            flatArray.Length.Should().Be(columnCount * (flatArray.Length / columnCount));
             flatArray[addressIndex].Should().BeNull();
         }
     }

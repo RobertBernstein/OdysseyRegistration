@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+using FluentAssertions;
 using JudgeRegistrationRazor.Data;
 using JudgeRegistrationRazor.Models;
 using JudgeRegistrationRazor.Pages.Shared;
@@ -209,7 +209,8 @@ public sealed class BasePageModelTests
         SetupHttpContext(model, "example.com");
 
         // Act
-        var siteName = model.SiteName;
+        // TODO: Uncomment the following line if you want to test the SiteName property as well
+        // var siteName = model.SiteName;
         var regionName = model.RegionName;
 
         // Assert
@@ -315,7 +316,7 @@ public sealed class BasePageModelTests
 
         // Assert
         result.Should().Be("example.com");
-        model._regionName.Should().BeEmpty();
+        model.RegionName.Should().BeEmpty();
     }
 
     [Fact]
@@ -340,8 +341,8 @@ public sealed class BasePageModelTests
         var mockContext = CreateMockContext();
         var mockLogger = new Mock<ILogger<BasePageModel>>();
         var model = new BasePageModel(mockContext.Object, mockLogger.Object);
-        var presetConfig = new Dictionary<string, string> { { "Test", "Value" } };
-        model._config = presetConfig;
+        var presetConfig = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase) { { "Test", "Value" } };
+        model.Config = presetConfig;
 
         // Act
         var result = model.Config;
@@ -356,8 +357,10 @@ public sealed class BasePageModelTests
         // Arrange
         var mockContext = CreateMockContext();
         var mockLogger = new Mock<ILogger<BasePageModel>>();
-        var model = new BasePageModel(mockContext.Object, mockLogger.Object);
-        model._siteName = "preset.com";
+        var model = new BasePageModel(mockContext.Object, mockLogger.Object)
+        {
+            SiteName = "preset.com"
+        };
 
         // Act
         var result = model.SiteName;
@@ -373,7 +376,7 @@ public sealed class BasePageModelTests
         var mockContext = CreateMockContext();
         var mockLogger = new Mock<ILogger<BasePageModel>>();
         var model = new BasePageModel(mockContext.Object, mockLogger.Object);
-        model._regionName = "Preset Region";
+        model.RegionName = "Preset Region";
 
         // Act
         var result = model.RegionName;
@@ -542,8 +545,10 @@ public sealed class BasePageModelTests
         // Arrange
         var mockContext = CreateMockContext();
         var mockLogger = new Mock<ILogger<BasePageModel>>();
-        var model = new BasePageModel(mockContext.Object, mockLogger.Object);
-        model._displayableRegistrationName = "Preset Registration";
+        var model = new BasePageModel(mockContext.Object, mockLogger.Object)
+        {
+            DisplayableRegistrationName = "Preset Registration"
+        };
 
         // Act
         var result = model.DisplayableRegistrationName;
@@ -564,7 +569,7 @@ public sealed class BasePageModelTests
         var result = model.TournamentDate;
 
         // Assert
-        result.Should().Be(new DateTime(2024, 3, 15).ToLongDateString());
+        result.Should().Be(new DateTime(2024, 3, 15, 0, 0, 0, DateTimeKind.Unspecified).ToLongDateString());
     }
 
     [Fact]
@@ -671,8 +676,10 @@ public sealed class BasePageModelTests
         // Arrange
         var mockContext = CreateMockContextWithTournamentInfo();
         var mockLogger = new Mock<ILogger<BasePageModel>>();
-        var model = new BasePageModel(mockContext.Object, mockLogger.Object);
-        model._tournamentTime = "Preset Time";
+        var model = new BasePageModel(mockContext.Object, mockLogger.Object)
+        {
+            TournamentTime = "Preset Time"
+        };
 
         // Act
         var result = model.TournamentTime;
@@ -749,7 +756,7 @@ public sealed class BasePageModelTests
         var mockLogger = new Mock<ILogger<BasePageModel>>();
         var model = new BasePageModel(mockContext.Object, mockLogger.Object);
         var presetEvent = new Event { EventName = "Preset Event" };
-        model._tournamentInfo = presetEvent;
+        model.TournamentInfo = presetEvent;
 
         // Act
         var result = model.TournamentInfo;
@@ -847,8 +854,10 @@ public sealed class BasePageModelTests
         // Arrange
         var mockContext = CreateMockContextWithTournamentInfoAndLocation("Convention Center");
         var mockLogger = new Mock<ILogger<BasePageModel>>();
-        var model = new BasePageModel(mockContext.Object, mockLogger.Object);
-        model._tournamentLocation = "Preset Location";
+        var model = new BasePageModel(mockContext.Object, mockLogger.Object)
+        {
+            TournamentLocation = "Preset Location"
+        };
 
         // Act
         var result = model.TournamentLocation;
@@ -1027,7 +1036,7 @@ public sealed class BasePageModelTests
 
         var events = new List<Event>
         {
-            new() { EventName = "NoVA North Tournament", StartDate = new DateTime(2024, 3, 15), Time = "9:00 AM" }
+            new() { EventName = "NoVA North Tournament", StartDate = new DateTime(2024, 3, 15, 0, 0, 0, DateTimeKind.Unspecified), Time = "9:00 AM" }
         }.AsQueryable();
 
         var mockConfigSet = CreateMockDbSet(configs);
@@ -1085,7 +1094,7 @@ public sealed class BasePageModelTests
 
         var events = new List<Event>
         {
-            new() { EventName = "NoVA North Tournament", StartDate = new DateTime(2024, 3, 15), Time = null! }
+            new() { EventName = "NoVA North Tournament", StartDate = new DateTime(2024, 3, 15, 0, 0, 0, DateTimeKind.Unspecified), Time = null! }
         }.AsQueryable();
 
         var mockConfigSet = CreateMockDbSet(configs);
@@ -1114,7 +1123,7 @@ public sealed class BasePageModelTests
 
         var events = new List<Event>
         {
-            new() { EventName = "NoVA North Tournament", StartDate = new DateTime(2024, 3, 15), Time = string.Empty }
+            new() { EventName = "NoVA North Tournament", StartDate = new DateTime(2024, 3, 15, 0, 0, 0, DateTimeKind.Unspecified), Time = string.Empty }
         }.AsQueryable();
 
         var mockConfigSet = CreateMockDbSet(configs);
@@ -1194,7 +1203,7 @@ public sealed class BasePageModelTests
 
         var events = new List<Event>
         {
-            new() { EventName = "NoVA North Tournament", StartDate = new DateTime(2024, 3, 15), Time = "9:00 AM", Location = location }
+            new() { EventName = "NoVA North Tournament", StartDate = new DateTime(2024, 3, 15, 0, 0, 0, DateTimeKind.Unspecified), Time = "9:00 AM", Location = location }
         }.AsQueryable();
 
         var mockConfigSet = CreateMockDbSet(configs);

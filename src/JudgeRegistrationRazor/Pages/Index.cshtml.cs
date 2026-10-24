@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace JudgeRegistrationRazor.Pages
 {
-    public class IndexModel : BasePageModel
+    internal class IndexModel : BasePageModel
     {
         public IndexModel(OdysseyContext context, ILogger<IndexModel> logger)
             : base(context, logger)
@@ -13,6 +13,8 @@ namespace JudgeRegistrationRazor.Pages
 
         public void OnGet()
         {
+            // This page intentionally has no server-side work; it exists to route the home page.
+            _ = HttpContext;
         }
 
         // TODO: Change this back to OnPostAsync.
@@ -23,8 +25,12 @@ namespace JudgeRegistrationRazor.Pages
                 return Page();
             }
 
-            // TODO: Fix this possible null reference.
-            return Redirect(Config?["HomePage"]);
+            if (Config == null || !Config.TryGetValue("HomePage", out var homePage) || string.IsNullOrWhiteSpace(homePage))
+            {
+                return Page();
+            }
+
+            return Redirect(homePage);
         }
     }
 }

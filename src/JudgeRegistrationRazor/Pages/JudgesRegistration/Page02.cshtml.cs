@@ -18,13 +18,13 @@ namespace JudgeRegistrationRazor.Pages.JudgesRegistration
     /// example, the Index page is named IndexModel.
     /// https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.mvc.razorpages.pagemodel
     /// </summary>
-    public class Page02Model : BasePageModel
+    internal class Page02Model : BasePageModel
     {
         public string Title { get; private set; }
 
         // The constructor uses dependency injection to add the OdysseyContext and logging to the page.
         // https://docs.microsoft.com/en-us/aspnet/core/fundamentals/dependency-injection?view=aspnetcore-6.0
-        public Page02Model(OdysseyContext context, ILogger<Page01Model> logger)
+        public Page02Model(OdysseyContext context, ILogger<Page02Model> logger)
             : base(context, logger)
         {
             CurrentRegistrationType = RegistrationType.Judges;
@@ -48,7 +48,7 @@ namespace JudgeRegistrationRazor.Pages.JudgesRegistration
             }
 
             Context.Judges.Add(Judge);
-            await Context.SaveChangesAsync();
+            await Context.SaveChangesAsync().ConfigureAwait(false);
 
             return RedirectToPage("Page03");
         }

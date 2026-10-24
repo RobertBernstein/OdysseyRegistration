@@ -5,15 +5,15 @@
     <DockerTargetOS>Linux</DockerTargetOS>
     <DockerPublishLocally>False</DockerPublishLocally>
     <ProjectGuid>f7b7e327-a096-48a5-8759-858e3d4a5257</ProjectGuid>
-    <DockerLaunchAction>LaunchBrowser</DockerLaunchAction>
-    <DockerServiceUrl>{Scheme}://localhost:{ServicePort}/swagger</DockerServiceUrl>
-    <DockerServiceName>odysseyregistrationwebapi</DockerServiceName>
+    <DockerLaunchAction>None</DockerLaunchAction>
+    <DockerServiceName>sqlserver</DockerServiceName>
     <DockerComposeProjectName>odyssey-registration</DockerComposeProjectName>
   </PropertyGroup>
   <ItemGroup>
     <None Include="docker-compose.override.yml">
       <DependentUpon>docker-compose.yml</DependentUpon>
     </None>
+    <None Include="docker-compose.webapi.yml" />
     <None Include="docker-compose.yml" />
     <None Include=".dockerignore" />
     <None Include="init\init.sql" />

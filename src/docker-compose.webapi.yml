@@ -1,0 +1,22 @@
+# To bring up the Web API service, run the following command in the terminal:
+#   docker compose -f docker-compose.yml -f docker-compose.webapi.yml up -d --build
+services:
+  odysseyregistrationwebapi:
+    image: ${DOCKER_REGISTRY-}odysseyregistrationwebapi
+    container_name: webapi
+    build:
+      context: .
+      dockerfile: OdysseyRegistrationWebApi/Dockerfile
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8080
+      - ASPNETCORE_HTTPS_PORTS=8081
+    ports:
+      - "8080"
+      - "8081"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro

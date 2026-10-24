@@ -10,7 +10,7 @@ using JudgeRegistrationRazor.Models;
 
 namespace JudgeRegistrationRazor.Pages.JudgesRegistration
 {
-    public class DeleteModel : PageModel
+    internal class DeleteModel : PageModel
     {
         private readonly OdysseyContext _context;
 
@@ -29,7 +29,7 @@ namespace JudgeRegistrationRazor.Pages.JudgesRegistration
                 return NotFound();
             }
 
-            var judge = await _context.Judges.FirstOrDefaultAsync(m => m.Id == id);
+            var judge = await _context.Judges.FirstOrDefaultAsync(m => m.Id == id).ConfigureAwait(false);
 
             if (judge == null)
             {
@@ -49,12 +49,12 @@ namespace JudgeRegistrationRazor.Pages.JudgesRegistration
                 return NotFound();
             }
 
-            var judge = await _context.Judges.FindAsync(id);
+            var judge = await _context.Judges.FindAsync(id).ConfigureAwait(false);
             if (judge != null)
             {
                 Judge = judge;
                 _context.Judges.Remove(Judge);
-                await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync().ConfigureAwait(false);
             }
 
             return RedirectToPage("./Index");

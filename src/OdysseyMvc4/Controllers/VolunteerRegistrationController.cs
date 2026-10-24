@@ -121,7 +121,7 @@ namespace OdysseyMvc4.Controllers
             }
             catch (Exception exception)
             {
-                ErrorSignal.FromCurrentContext().Raise(exception);
+                ReportError(exception);
 
                 // TODO: Replace with Error Message.
                 return this.RedirectToAction("Index", "Home");
@@ -196,7 +196,7 @@ namespace OdysseyMvc4.Controllers
             }
             catch (Exception exception)
             {
-                ErrorSignal.FromCurrentContext().Raise(exception);
+                ReportError(exception);
 
                 // TODO: Replace with Error Message.
                 return this.RedirectToAction("Index", "Home");
@@ -240,7 +240,7 @@ namespace OdysseyMvc4.Controllers
 
             this.Repository.UpdateVolunteer(id, 3, viewData.Volunteer);
 
-            viewData.MailBody = this.GenerateEmailBody(viewData);
+            viewData.MailBody = GenerateEmailBody(viewData);
             
             if (!string.IsNullOrEmpty(viewData.Volunteer.EmailAddress) && (viewData.Volunteer.EmailAddress != "None"))
             {
@@ -331,7 +331,7 @@ namespace OdysseyMvc4.Controllers
         /// <returns>
         /// The <see cref="string"/>.
         /// </returns>
-        protected string GenerateEmailBody(Page03ViewData page03ViewData)
+        protected static string GenerateEmailBody(Page03ViewData page03ViewData)
         {
             string input = Regex.Replace(Regex.Replace(Regex.Replace(Regex.Replace(page03ViewData.VolunteerInfo.EventMailBody, "<span>VolunteerID</span>", page03ViewData.Volunteer.VolunteerID.ToString(CultureInfo.InvariantCulture)), "<span>FirstName</span>", page03ViewData.Volunteer.FirstName), "<span>LastName</span>", page03ViewData.Volunteer.LastName), "<span>Region</span>", "Region " + page03ViewData.Config["RegionNumber"]);
             StringBuilder builder = new StringBuilder();

@@ -19,7 +19,7 @@ namespace OdysseyMvc4.Models
     /// </summary>
     public interface IOdysseyRepository
     {
-        Dictionary<string, string> Config { get; }
+        IDictionary<string, string> Config { get; }
         Event CoachesTrainingInfo { get; set; }
         IEnumerable<CoachesTrainingDivision> Divisions { get; }
         IEnumerable<Judge> Judges { get; }
@@ -51,7 +51,9 @@ namespace OdysseyMvc4.Models
         IQueryable<Judge> GetJudgeByIdAndName(int judgeId, string judgeFirstName, string judgeLastName);
         short? GetJudgeIdFromTournamentRegistrationId(int tournamentRegistrationId);
         void GetJudgeNameFromJudgeId(short? judgeId, out string judgeFirstName, out string judgeLastName);
+#pragma warning disable MA0016
         List<string> GetMemberGradesByRegistration(int id);
+#pragma warning restore MA0016
         string GetProblemNameFromProblemId(int? problemId);
         string GetSchoolNameFromSchoolId(int? schoolId);
         TournamentRegistration GetTournamentRegistrationById(int tournamentRegistrationId);

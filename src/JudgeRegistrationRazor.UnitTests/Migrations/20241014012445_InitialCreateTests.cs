@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using FluentAssertions;
 using JudgeRegistrationRazor.Migrations;
 using Microsoft.EntityFrameworkCore.Migrations;
@@ -21,7 +21,7 @@ public class InitialCreateTests
 
         // Assert
         var invocations = mockMigrationBuilder.Invocations;
-        var createTableInvocations = invocations.Where(inv => inv.Method.Name == "CreateTable").ToList();
+        var createTableInvocations = invocations.Where(inv => string.Equals(inv.Method.Name, "CreateTable", StringComparison.Ordinal)).ToList();
         createTableInvocations.Should().Contain(inv => inv.Arguments[0].Equals("CoachesTrainingDivisions"));
     }
 
@@ -38,7 +38,7 @@ public class InitialCreateTests
 
         // Assert
         var invocations = mockMigrationBuilder.Invocations;
-        var createTableInvocations = invocations.Where(inv => inv.Method.Name == "CreateTable").ToList();
+        var createTableInvocations = invocations.Where(inv => string.Equals(inv.Method.Name, "CreateTable", StringComparison.Ordinal)).ToList();
         createTableInvocations.Should().HaveCount(13);
     }
 
@@ -55,7 +55,7 @@ public class InitialCreateTests
 
         // Assert
         var invocations = mockMigrationBuilder.Invocations;
-        var createTableInvocations = invocations.Where(inv => inv.Method.Name == "CreateTable").ToList();
+        var createTableInvocations = invocations.Where(inv => string.Equals(inv.Method.Name, "CreateTable", StringComparison.Ordinal)).ToList();
         var tableNames = createTableInvocations.Select(inv => inv.Arguments[0] as string).ToList();
 
         tableNames.Should().Contain("CoachesTrainingDivisions");
@@ -86,7 +86,7 @@ public class InitialCreateTests
 
         // Assert
         var invocations = mockMigrationBuilder.Invocations;
-        var insertDataInvocations = invocations.Where(inv => inv.Method.Name == "InsertData").ToList();
+        var insertDataInvocations = invocations.Where(inv => string.Equals(inv.Method.Name, "InsertData", StringComparison.Ordinal)).ToList();
         insertDataInvocations.Should().ContainSingle();
         insertDataInvocations[0].Arguments[0].Should().Be("Config");
     }
@@ -104,7 +104,7 @@ public class InitialCreateTests
 
         // Assert
         var invocations = mockMigrationBuilder.Invocations;
-        var insertDataInvocations = invocations.Where(inv => inv.Method.Name == "InsertData").ToList();
+        var insertDataInvocations = invocations.Where(inv => string.Equals(inv.Method.Name, "InsertData", StringComparison.Ordinal)).ToList();
         var columns = insertDataInvocations[0].Arguments[1] as string[];
 
         columns.Should().NotBeNull();
@@ -127,7 +127,7 @@ public class InitialCreateTests
 
         // Assert
         var invocations = mockMigrationBuilder.Invocations;
-        var insertDataInvocations = invocations.Where(inv => inv.Method.Name == "InsertData").ToList();
+        var insertDataInvocations = invocations.Where(inv => string.Equals(inv.Method.Name, "InsertData", StringComparison.Ordinal)).ToList();
         var values = insertDataInvocations[0].Arguments[2];
 
         values.Should().NotBeNull();
@@ -160,7 +160,7 @@ public class InitialCreateTests
 
         // Assert
         var invocations = mockMigrationBuilder.Invocations;
-        var insertDataInvocations = invocations.Where(inv => inv.Method.Name == "InsertData").ToList();
+        var insertDataInvocations = invocations.Where(inv => string.Equals(inv.Method.Name, "InsertData", StringComparison.Ordinal)).ToList();
         var columns = insertDataInvocations[0].Arguments[1] as string[];
         var values = insertDataInvocations[0].Arguments[2];
 
@@ -206,14 +206,14 @@ public class InitialCreateTests
 
         // Assert
         var invocations = mockMigrationBuilder.Invocations;
-        var insertDataInvocations = invocations.Where(inv => inv.Method.Name == "InsertData").ToList();
+        var insertDataInvocations = invocations.Where(inv => string.Equals(inv.Method.Name, "InsertData", StringComparison.Ordinal)).ToList();
         var columns = insertDataInvocations[0].Arguments[1] as string[];
         var values = insertDataInvocations[0].Arguments[2];
 
         var nameIndex = Array.IndexOf(columns!, "Name");
         var valueIndex = Array.IndexOf(columns!, "Value");
 
-        var configData = new Dictionary<string, string?>();
+        var configData = new Dictionary<string, string?>(StringComparer.Ordinal);
         if (values is object?[,] multiArray)
         {
             for (var row = 0; row < multiArray.GetLength(0); row++)
@@ -262,7 +262,7 @@ public class InitialCreateTests
 
         // Assert
         var invocations = mockMigrationBuilder.Invocations;
-        var insertDataInvocations = invocations.Where(inv => inv.Method.Name == "InsertData").ToList();
+        var insertDataInvocations = invocations.Where(inv => string.Equals(inv.Method.Name, "InsertData", StringComparison.Ordinal)).ToList();
         var columns = insertDataInvocations[0].Arguments[1] as string[];
         var values = insertDataInvocations[0].Arguments[2];
 
@@ -297,7 +297,7 @@ public class InitialCreateTests
 
         // Assert
         var invocations = mockMigrationBuilder.Invocations;
-        var insertDataInvocations = invocations.Where(inv => inv.Method.Name == "InsertData").ToList();
+        var insertDataInvocations = invocations.Where(inv => string.Equals(inv.Method.Name, "InsertData", StringComparison.Ordinal)).ToList();
         var columns = insertDataInvocations[0].Arguments[1] as string[];
         var values = insertDataInvocations[0].Arguments[2];
 
@@ -335,7 +335,7 @@ public class InitialCreateTests
 
         // Assert
         var invocations = mockMigrationBuilder.Invocations;
-        var insertDataInvocations = invocations.Where(inv => inv.Method.Name == "InsertData").ToList();
+        var insertDataInvocations = invocations.Where(inv => string.Equals(inv.Method.Name, "InsertData", StringComparison.Ordinal)).ToList();
         var columns = insertDataInvocations[0].Arguments[1] as string[];
         var values = insertDataInvocations[0].Arguments[2];
 
@@ -377,7 +377,7 @@ public class InitialCreateTests
 
         // Assert
         var invocations = mockMigrationBuilder.Invocations;
-        var insertDataInvocations = invocations.Where(inv => inv.Method.Name == "InsertData").ToList();
+        var insertDataInvocations = invocations.Where(inv => string.Equals(inv.Method.Name, "InsertData", StringComparison.Ordinal)).ToList();
         var columns = insertDataInvocations[0].Arguments[1] as string[];
         var values = insertDataInvocations[0].Arguments[2];
 
@@ -388,7 +388,7 @@ public class InitialCreateTests
         {
             for (var row = 0; row < multiArray.GetLength(0); row++)
             {
-                if (multiArray[row, nameIndex] as string == "CoachesHandbookURL")
+                if (string.Equals(multiArray[row, nameIndex] as string, "CoachesHandbookURL", StringComparison.Ordinal))
                 {
                     multiArray[row, valueIndex].Should().Be("");
                 }
@@ -399,7 +399,7 @@ public class InitialCreateTests
             var columnCount = columns!.Length;
             for (var i = 0; i < flatArray.Length; i += columnCount)
             {
-                if (flatArray[i + nameIndex] as string == "CoachesHandbookURL")
+                if (string.Equals(flatArray[i + nameIndex] as string, "CoachesHandbookURL", StringComparison.Ordinal))
                 {
                     flatArray[i + valueIndex].Should().Be("");
                 }
@@ -420,7 +420,7 @@ public class InitialCreateTests
 
         // Assert
         var invocations = mockMigrationBuilder.Invocations;
-        var insertDataInvocations = invocations.Where(inv => inv.Method.Name == "InsertData").ToList();
+        var insertDataInvocations = invocations.Where(inv => string.Equals(inv.Method.Name, "InsertData", StringComparison.Ordinal)).ToList();
         var columns = insertDataInvocations[0].Arguments[1] as string[];
         var values = insertDataInvocations[0].Arguments[2];
 
@@ -431,7 +431,7 @@ public class InitialCreateTests
         {
             for (var row = 0; row < multiArray.GetLength(0); row++)
             {
-                if (multiArray[row, nameIndex] as string == "WebmasterEmailPassword")
+                if (string.Equals(multiArray[row, nameIndex] as string, $"WebmasterEmailPassword", StringComparison.Ordinal))
                 {
                     multiArray[row, valueIndex].Should().Be("");
                 }
@@ -442,7 +442,7 @@ public class InitialCreateTests
             var columnCount = columns!.Length;
             for (var i = 0; i < flatArray.Length; i += columnCount)
             {
-                if (flatArray[i + nameIndex] as string == "WebmasterEmailPassword")
+                if (string.Equals(flatArray[i + nameIndex] as string, "WebmasterEmailPassword", StringComparison.Ordinal))
                 {
                     flatArray[i + valueIndex].Should().Be("");
                 }
@@ -463,7 +463,7 @@ public class InitialCreateTests
 
         // Assert
         var invocations = mockMigrationBuilder.Invocations;
-        var dropTableInvocations = invocations.Where(inv => inv.Method.Name == "DropTable").ToList();
+        var dropTableInvocations = invocations.Where(inv => string.Equals(inv.Method.Name, "DropTable", StringComparison.Ordinal)).ToList();
         dropTableInvocations.Should().Contain(inv => inv.Arguments[0].Equals("CoachesTrainingDivisions"));
     }
 
@@ -480,7 +480,7 @@ public class InitialCreateTests
 
         // Assert
         var invocations = mockMigrationBuilder.Invocations;
-        var dropTableInvocations = invocations.Where(inv => inv.Method.Name == "DropTable").ToList();
+        var dropTableInvocations = invocations.Where(inv => string.Equals(inv.Method.Name, "DropTable", StringComparison.Ordinal)).ToList();
         dropTableInvocations.Should().HaveCount(13);
     }
 
@@ -497,7 +497,7 @@ public class InitialCreateTests
 
         // Assert
         var invocations = mockMigrationBuilder.Invocations;
-        var dropTableInvocations = invocations.Where(inv => inv.Method.Name == "DropTable").ToList();
+        var dropTableInvocations = invocations.Where(inv => string.Equals(inv.Method.Name, "DropTable", StringComparison.Ordinal)).ToList();
         var tableNames = dropTableInvocations.Select(inv => inv.Arguments[0] as string).ToList();
 
         tableNames.Should().Contain("CoachesTrainingDivisions");
@@ -528,7 +528,7 @@ public class InitialCreateTests
 
         // Assert
         var invocations = mockMigrationBuilder.Invocations;
-        var dropTableInvocations = invocations.Where(inv => inv.Method.Name == "DropTable").ToList();
+        var dropTableInvocations = invocations.Where(inv => string.Equals(inv.Method.Name, "DropTable", StringComparison.Ordinal)).ToList();
         dropTableInvocations.Should().Contain(inv => inv.Arguments[0].Equals("Config"));
     }
 
@@ -545,7 +545,7 @@ public class InitialCreateTests
 
         // Assert
         var invocations = mockMigrationBuilder.Invocations;
-        var dropTableInvocations = invocations.Where(inv => inv.Method.Name == "DropTable").ToList();
+        var dropTableInvocations = invocations.Where(inv => string.Equals(inv.Method.Name, "DropTable", StringComparison.Ordinal)).ToList();
         dropTableInvocations.Should().Contain(inv => inv.Arguments[0].Equals("Judges"));
     }
 
@@ -562,7 +562,7 @@ public class InitialCreateTests
 
         // Assert
         var invocations = mockMigrationBuilder.Invocations;
-        var dropTableInvocations = invocations.Where(inv => inv.Method.Name == "DropTable").ToList();
+        var dropTableInvocations = invocations.Where(inv => string.Equals(inv.Method.Name, "DropTable", StringComparison.Ordinal)).ToList();
         dropTableInvocations.Should().Contain(inv => inv.Arguments[0].Equals("TournamentRegistration"));
     }
 
@@ -579,7 +579,7 @@ public class InitialCreateTests
 
         // Assert
         var invocations = mockMigrationBuilder.Invocations;
-        var dropTableInvocations = invocations.Where(inv => inv.Method.Name == "DropTable").ToList();
+        var dropTableInvocations = invocations.Where(inv => string.Equals(inv.Method.Name, "DropTable", StringComparison.Ordinal)).ToList();
         dropTableInvocations.Should().Contain(inv => inv.Arguments[0].Equals("Events"));
     }
 
@@ -596,7 +596,7 @@ public class InitialCreateTests
 
         // Assert
         var invocations = mockMigrationBuilder.Invocations;
-        var dropTableInvocations = invocations.Where(inv => inv.Method.Name == "DropTable").ToList();
+        var dropTableInvocations = invocations.Where(inv => string.Equals(inv.Method.Name, "DropTable", StringComparison.Ordinal)).ToList();
         dropTableInvocations.Should().Contain(inv => inv.Arguments[0].Equals("Volunteers"));
     }
 
@@ -613,7 +613,7 @@ public class InitialCreateTests
 
         // Assert
         var invocations = mockMigrationBuilder.Invocations;
-        var dropTableInvocations = invocations.Where(inv => inv.Method.Name == "DropTable").ToList();
+        var dropTableInvocations = invocations.Where(inv => string.Equals(inv.Method.Name, "DropTable", StringComparison.Ordinal)).ToList();
         dropTableInvocations.Should().Contain(inv => inv.Arguments[0].Equals("Schools"));
     }
 
@@ -630,7 +630,7 @@ public class InitialCreateTests
 
         // Assert
         var invocations = mockMigrationBuilder.Invocations;
-        var dropTableInvocations = invocations.Where(inv => inv.Method.Name == "DropTable").ToList();
+        var dropTableInvocations = invocations.Where(inv => string.Equals(inv.Method.Name, "DropTable", StringComparison.Ordinal)).ToList();
         dropTableInvocations.Should().Contain(inv => inv.Arguments[0].Equals("Problem"));
     }
 
@@ -647,7 +647,7 @@ public class InitialCreateTests
 
         // Assert
         var invocations = mockMigrationBuilder.Invocations;
-        var dropTableInvocations = invocations.Where(inv => inv.Method.Name == "DropTable").ToList();
+        var dropTableInvocations = invocations.Where(inv => string.Equals(inv.Method.Name, "DropTable", StringComparison.Ordinal)).ToList();
         dropTableInvocations.Should().Contain(inv => inv.Arguments[0].Equals("ContactUsRecipients"));
     }
 
@@ -664,7 +664,7 @@ public class InitialCreateTests
 
         // Assert
         var invocations = mockMigrationBuilder.Invocations;
-        var dropTableInvocations = invocations.Where(inv => inv.Method.Name == "DropTable").ToList();
+        var dropTableInvocations = invocations.Where(inv => string.Equals(inv.Method.Name, "DropTable", StringComparison.Ordinal)).ToList();
         dropTableInvocations.Should().Contain(inv => inv.Arguments[0].Equals("ContactUsSenderRoles"));
     }
 
@@ -681,7 +681,7 @@ public class InitialCreateTests
 
         // Assert
         var invocations = mockMigrationBuilder.Invocations;
-        var dropTableInvocations = invocations.Where(inv => inv.Method.Name == "DropTable").ToList();
+        var dropTableInvocations = invocations.Where(inv => string.Equals(inv.Method.Name, "DropTable", StringComparison.Ordinal)).ToList();
         dropTableInvocations.Should().Contain(inv => inv.Arguments[0].Equals("CoachesTrainingRegions"));
     }
 
@@ -698,7 +698,7 @@ public class InitialCreateTests
 
         // Assert
         var invocations = mockMigrationBuilder.Invocations;
-        var dropTableInvocations = invocations.Where(inv => inv.Method.Name == "DropTable").ToList();
+        var dropTableInvocations = invocations.Where(inv => string.Equals(inv.Method.Name, "DropTable", StringComparison.Ordinal)).ToList();
         dropTableInvocations.Should().Contain(inv => inv.Arguments[0].Equals("CoachesTrainingRegistrations"));
     }
 
@@ -715,7 +715,7 @@ public class InitialCreateTests
 
         // Assert
         var invocations = mockMigrationBuilder.Invocations;
-        var dropTableInvocations = invocations.Where(inv => inv.Method.Name == "DropTable").ToList();
+        var dropTableInvocations = invocations.Where(inv => string.Equals(inv.Method.Name, "DropTable", StringComparison.Ordinal)).ToList();
         dropTableInvocations.Should().Contain(inv => inv.Arguments[0].Equals("CoachesTrainingRoles"));
     }
 
@@ -735,12 +735,12 @@ public class InitialCreateTests
 
         // Assert
         var createdTables = mockUpBuilder.Invocations
-            .Where(inv => inv.Method.Name == "CreateTable")
+            .Where(inv => string.Equals(inv.Method.Name, "CreateTable", StringComparison.Ordinal))
             .Select(inv => inv.Arguments[0] as string)
             .ToList();
 
         var droppedTables = mockDownBuilder.Invocations
-            .Where(inv => inv.Method.Name == "DropTable")
+            .Where(inv => string.Equals(inv.Method.Name, "DropTable", StringComparison.Ordinal))
             .Select(inv => inv.Arguments[0] as string)
             .ToList();
 

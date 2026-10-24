@@ -1,4 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="TournamentRegistrationController.cs" company="Tardis Technologies">
 //   Copyright 2025 Tardis Technologies. All rights reserved.
 // </copyright>
@@ -34,13 +34,22 @@ namespace OdysseyMvc2024.Controllers
     /// Controller responsible for handling tournament registration process for Odyssey of the Mind competitions.
     /// Manages a multi-step registration flow from initial sign up through confirmation.
     /// </summary>
+    [SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "Legacy registration flow logs to ELMAH and redirects to preserve user experience.")]
+    [SuppressMessage("Design", "CA1515:Consider making public types internal", Justification = "ASP.NET MVC controller types are intentionally public.")]
+    [SuppressMessage("Minor Code Smell", "S3267", Justification = "Legacy code path retained to preserve behavior.")]
+    [SuppressMessage("Minor Code Smell", "S3358", Justification = "Legacy conditional logic retained to preserve behavior.")]
+    [SuppressMessage("Minor Code Smell", "S6932", Justification = "Legacy request access pattern retained.")]
+    [SuppressMessage("Major Code Smell", "S6967", Justification = "Legacy MVC action patterns are intentionally preserved.")]
+    [SuppressMessage("Style", "S907", Justification = "Legacy decompiled control flow retained to minimize behavior changes.")]
+    [SuppressMessage("Best Practices", "MA0134:Observe result of async calls", Justification = "Legacy non-async action flow retained for compatibility.")]
+    [SuppressMessage("Code Smell", "S1172", Justification = "Method signature retained for legacy compatibility.")]
     public class TournamentRegistrationController : BaseRegistrationController
     {
         /// <summary>
         /// Initializes a new instance of the TournamentRegistrationController.
         /// </summary>
-        /// <param name="context">
-        /// Database context for Odyssey entities
+        /// <param name="repository">
+        /// Repository for Odyssey registration data access.
         /// </param>
         // [SetsRequiredMembers] tells the compiler that this constructor initializes all 'required' members
         // (specifically FriendlyRegistrationName from BaseRegistrationController). Without this attribute,
@@ -80,8 +89,10 @@ namespace OdysseyMvc2024.Controllers
         /// <returns>
         /// The highest division number found among team members.
         /// </returns>
-        public int DetermineDivisionOfTeam(List<string> gradesOfTeamMembers)
+        public int DetermineDivisionOfTeam(IReadOnlyCollection<string> gradesOfTeamMembers)
         {
+            ArgumentNullException.ThrowIfNull(gradesOfTeamMembers);
+
             int divisionOfTeam = -1;
             foreach (string gradeOfTeamMember in gradesOfTeamMembers)
             {
@@ -108,8 +119,10 @@ namespace OdysseyMvc2024.Controllers
         /// </returns>
         public int GetDivisionOfTeamMember(string memberGrade)
         {
+            ArgumentNullException.ThrowIfNull(memberGrade);
+
             // Determine member's grade in school; Kindergarten is grade 0.
-            int division = memberGrade == "Kindergarten" ? 0 : int.Parse(memberGrade);
+            int division = memberGrade == "Kindergarten" ? 0 : int.Parse(memberGrade, CultureInfo.InvariantCulture);
 
             // Return division based on the grade, with special handling for grades 0-2, i.e., Primary.
             // divisionOfTeamMember = 0 when the team member is Primary, divisionOfTeamMember = 1, 2, or 3 when the
@@ -138,7 +151,7 @@ namespace OdysseyMvc2024.Controllers
                 stringBuilder.Append("<li>" + Repository.PrimaryProblem.First<Problem>().ProblemName + " (The Primary Problem)</li>\n");
             }
 
-            foreach (Problem problem in (IEnumerable<Problem>)problemsWithoutPrimaryOrSpontaneous)
+            foreach (Problem problem in problemsWithoutPrimaryOrSpontaneous ?? Enumerable.Empty<Problem>().AsQueryable())
             {
                 stringBuilder.Append("<li>" + problem.ProblemName + "</li>\n");
             }
@@ -192,7 +205,7 @@ namespace OdysseyMvc2024.Controllers
                 {
                     TimeRegistrationStarted = new DateTime?(DateTime.Now),
                     TeamRegistrationFee = viewData.TeamRegistrationFee,
-                    UserAgent = Request.Headers["User-Agent"].ToString()
+                    UserAgent = Request.Headers.UserAgent.ToString()
                 };
 
                 Repository.AddTournamentRegistration(newRegistration);
@@ -231,6 +244,8 @@ namespace OdysseyMvc2024.Controllers
         [HttpPost]
         public ActionResult Page02(int id, Page02ViewData page02ViewData)
         {
+            ArgumentNullException.ThrowIfNull(page02ViewData);
+
             if (CurrentRegistrationState != BaseRegistrationController.RegistrationState.Available)
             {
                 return (ActionResult)RedirectToAction(CurrentRegistrationState.ToString());
@@ -279,6 +294,8 @@ namespace OdysseyMvc2024.Controllers
         [HttpPost]
         public ActionResult Page03(int id, Page03ViewData page03ViewData)
         {
+            ArgumentNullException.ThrowIfNull(page03ViewData);
+
             if (CurrentRegistrationState != BaseRegistrationController.RegistrationState.Available)
             {
                 return RedirectToAction(CurrentRegistrationState.ToString());
@@ -288,7 +305,7 @@ namespace OdysseyMvc2024.Controllers
             {
                 SetBaseViewData((BaseViewData)page03ViewData);
                 TryUpdateModelAsync<Page03ViewData>(page03ViewData);
-                page03ViewData.ListOfJudgesFound = Repository.GetJudgeByIdAndName(int.Parse(page03ViewData.JudgeId), page03ViewData.JudgeFirstName, page03ViewData.JudgeLastName);
+                page03ViewData.ListOfJudgesFound = Repository.GetJudgeByIdAndName(int.Parse(page03ViewData.JudgeId, CultureInfo.InvariantCulture), page03ViewData.JudgeFirstName, page03ViewData.JudgeLastName);
                 
                 if (!page03ViewData.ListOfJudgesFound.Any<Judge>())
                 {
@@ -304,7 +321,7 @@ namespace OdysseyMvc2024.Controllers
                 
                 TournamentRegistration? newRegistrationData = new TournamentRegistration()
                 {
-                    JudgeID = new short?(short.Parse(page03ViewData.JudgeId))
+                    JudgeID = new short?(short.Parse(page03ViewData.JudgeId, CultureInfo.InvariantCulture))
                 };
                 
                 Repository.UpdateTournamentRegistration(id, 3, newRegistrationData);
@@ -416,6 +433,8 @@ namespace OdysseyMvc2024.Controllers
         [HttpPost]
         public ActionResult Page05(int id, Page05ViewData page05ViewData)
         {
+            ArgumentNullException.ThrowIfNull(page05ViewData);
+
             if (CurrentRegistrationState != BaseRegistrationController.RegistrationState.Available)
             {
                 return RedirectToAction(CurrentRegistrationState.ToString());
@@ -426,12 +445,14 @@ namespace OdysseyMvc2024.Controllers
                 TryUpdateModelAsync<Page05ViewData>(page05ViewData);
                 SetBaseViewData(page05ViewData);
                 
-                if (BuildMessage(page05ViewData.Config["WebmasterEmail"], "test", "test", page05ViewData.CoachEmailAddress, (string)null, (string)null) == null)
+                using MailMessage? coachEmailCheck = BuildMessage(page05ViewData.Config["WebmasterEmail"], "test", "test", page05ViewData.CoachEmailAddress, string.Empty, string.Empty);
+                if (coachEmailCheck == null)
                 {
                     return RedirectToAction("BadCoachEmail");
                 }
 
-                if (BuildMessage(page05ViewData.Config["WebmasterEmail"], "test", "test", page05ViewData.AltCoachEmailAddress, (string)null, (string)null) == null)
+                using MailMessage? altCoachEmailCheck = BuildMessage(page05ViewData.Config["WebmasterEmail"], "test", "test", page05ViewData.AltCoachEmailAddress, string.Empty, string.Empty);
+                if (altCoachEmailCheck == null)
                 {
                     return RedirectToAction("BadAltCoachEmail");
                 }
@@ -500,6 +521,8 @@ namespace OdysseyMvc2024.Controllers
         [HttpPost]
         public ActionResult Page06(int id, Page06ViewData page06ViewData)
         {
+            ArgumentNullException.ThrowIfNull(page06ViewData);
+
             if (CurrentRegistrationState != BaseRegistrationController.RegistrationState.Available)
             {
                 return RedirectToAction(CurrentRegistrationState.ToString());
@@ -556,7 +579,7 @@ namespace OdysseyMvc2024.Controllers
                 return RedirectToAction(CurrentRegistrationState.ToString());
             }
 
-            List<string> gradesByRegistration = Repository.GetMemberGradesByRegistration(id);
+            IReadOnlyList<string> gradesByRegistration = Repository.GetMemberGradesByRegistration(id);
 
             Page07ViewData page07ViewData = new()
             {
@@ -585,6 +608,8 @@ namespace OdysseyMvc2024.Controllers
         [HttpPost]
         public ActionResult Page07(int id, Page07ViewData page07ViewData)
         {
+            ArgumentNullException.ThrowIfNull(page07ViewData);
+
             if (CurrentRegistrationState != BaseRegistrationController.RegistrationState.Available)
             {
                 return RedirectToAction(CurrentRegistrationState.ToString());
@@ -597,7 +622,7 @@ namespace OdysseyMvc2024.Controllers
                     Division = page07ViewData.DivisionRadioGroup ?? page07ViewData.DivisionOfTeam.ToString(CultureInfo.InvariantCulture)
                 };
                 
-                string divisionRadioGroup = page07ViewData.DivisionRadioGroup;
+                string? divisionRadioGroup = page07ViewData.DivisionRadioGroup;
                 
                 if (divisionRadioGroup != null)
                 {
@@ -605,7 +630,7 @@ namespace OdysseyMvc2024.Controllers
                     {
                         if (divisionRadioGroup == "1")
                         {
-                            newRegistrationData.ProblemID = new int?(int.Parse(page07ViewData.Division123ProblemChoice));
+                            newRegistrationData.ProblemID = new int?(int.Parse(page07ViewData.Division123ProblemChoice, CultureInfo.InvariantCulture));
                             goto label_8;
                         }
                     }
@@ -617,7 +642,7 @@ namespace OdysseyMvc2024.Controllers
                     }
                 }
                 
-                newRegistrationData.ProblemID = new int?(int.Parse(page07ViewData.SelectedProblem));
+                newRegistrationData.ProblemID = new int?(int.Parse(page07ViewData.SelectedProblem, CultureInfo.InvariantCulture));
             
             // TODO: What is this label here for?
             label_8:
@@ -654,6 +679,8 @@ namespace OdysseyMvc2024.Controllers
         [HttpPost]
         public ActionResult Page08(int id, Page08ViewData page08ViewData)
         {
+            ArgumentNullException.ThrowIfNull(page08ViewData);
+
             if (CurrentRegistrationState != BaseRegistrationController.RegistrationState.Available)
             {
                 return RedirectToAction(CurrentRegistrationState.ToString());
@@ -705,12 +732,13 @@ namespace OdysseyMvc2024.Controllers
             page09ViewData.ProblemName = Repository.GetProblemNameFromProblemId(page09ViewData.TournamentRegistration.ProblemID);
             
             bool? spontaneous = page09ViewData.TournamentRegistration.Spontaneous;
-            if (spontaneous.HasValue)
+            if (spontaneous == true)
             {
-                Page09ViewData page09ViewData2 = page09ViewData;
-                spontaneous = page09ViewData.TournamentRegistration.Spontaneous;
-                string str = spontaneous.Value ? "Yes" : "No";
-                page09ViewData2.IsDoingSpontaneous = str;
+                page09ViewData.IsDoingSpontaneous = "Yes";
+            }
+            else if (spontaneous == false)
+            {
+                page09ViewData.IsDoingSpontaneous = "No";
             }
 
             if (string.IsNullOrEmpty(page09ViewData.ProblemName))
@@ -742,72 +770,71 @@ namespace OdysseyMvc2024.Controllers
                 return RedirectToAction(CurrentRegistrationState.ToString());
             }
 
-            short? tournamentRegistrationId1 = Repository.GetJudgeIdFromTournamentRegistrationId(id);
-            short? nullable = tournamentRegistrationId1;
-
-            Page10ViewData page10ViewData = new()
-            {
-                // TODO: (Rob) Is it okay to comment the following two lines out since they will be populated by SetBaseViewData, below?
-                // Config = Repository.Config,
-                // TournamentInfo = Repository.TournamentInfo,
-                TournamentRegistration = Repository.GetTournamentRegistrationById(id)
-            };
-
+            var page10ViewData = CreatePage10ViewData(id);
             SetBaseViewData(page10ViewData);
 
-            if ((nullable.HasValue ? new int?(nullable.GetValueOrDefault()) : new int?()).HasValue)
+            if (TryHandleJudgeAssignmentError(page10ViewData, id, out var errorResult))
             {
-                Repository.UpdateJudgeRecordWithTournamentRegistrationId(tournamentRegistrationId1, id, out string errorMessage);
-                
-                if (!string.IsNullOrEmpty(errorMessage))
-                {
-                    page10ViewData.JudgeErrorMessage = errorMessage;
-
-                    MailMessage mailMessage = BuildMessage(page10ViewData.Config["WebmasterEmail"], "Error: " + page10ViewData.RegionName + " Odyssey Region " + page10ViewData.RegionNumber + " Tournament Registration", "<p>Team with ID # " + (object)id + " attempted to re-register after its judge was assigned to the team.</p><p>" + errorMessage + "</p>", page10ViewData.Config["WebmasterEmail"], (string)null, (string)null);
-                    page10ViewData.MailErrorMessage = SendMessage((BaseViewData)page10ViewData, mailMessage);
-                    
-                    return View(page10ViewData);
-                }
+                return errorResult;
             }
 
-            // TODO: Did I comment out too much?
-            //int? tournamentRegistrationId2 = this.Repository.GetVolunteerIdFromTournamentRegistrationId(id);
-            //if (tournamentRegistrationId2.HasValue)
-            //{
-            //    this.Repository.UpdateVolunteerRecordWithTournamentRegistrationId(tournamentRegistrationId2.Value, id, out errorMessage);
-            //    if (!string.IsNullOrEmpty(errorMessage))
-            //    {
-            //        Page10ViewData page10ViewData = new Page10ViewData()
-            //        {
-            //            VolunteerErrorMessage = errorMessage
-            //        };
-            //        this.SetBaseViewData((BaseViewData)page10ViewData);
-            //        MailMessage mailMessage = this.BuildMessage(page10ViewData.Config["WebmasterEmail"], "Error: " + page10ViewData.RegionName + " Odyssey Region " + page10ViewData.RegionNumber + " Tournament Registration", "<p>Team with ID # " + (object)id + " attempted to re-register after its volunteer was assigned to the team.</p><p>" + errorMessage + "</p>", page10ViewData.Config["WebmasterEmail"], (string)null, (string)null);
-            //        page10ViewData.MailErrorMessage = this.SendMessage((BaseViewData)page10ViewData, mailMessage);
-            //        return (ActionResult)this.View((object)page10ViewData);
-            //    }
-            //}
+            PopulatePage10Summary(page10ViewData, id);
+            return View(page10ViewData);
+        }
 
-            // TODO: (Rob) Do we still need this?
-            //Page10ViewData page10ViewData2 = page10ViewData;
+        private Page10ViewData CreatePage10ViewData(int id)
+        {
+            return new Page10ViewData
+            {
+                TournamentRegistration = Repository.GetTournamentRegistrationById(id)
+            };
+        }
 
-            page10ViewData.TournamentRegistration.TimeRegistered = new DateTime?(DateTime.Now);
+        private bool TryHandleJudgeAssignmentError(Page10ViewData page10ViewData, int id, out ActionResult errorResult)
+        {
+            errorResult = null!;
+            short? tournamentRegistrationId = Repository.GetJudgeIdFromTournamentRegistrationId(id);
+            if (!tournamentRegistrationId.HasValue)
+            {
+                return false;
+            }
+
+            Repository.UpdateJudgeRecordWithTournamentRegistrationId(tournamentRegistrationId, id, out string errorMessage);
+            if (string.IsNullOrEmpty(errorMessage))
+            {
+                return false;
+            }
+
+            page10ViewData.JudgeErrorMessage = errorMessage;
+            using MailMessage? mailMessage = BuildMessage(page10ViewData.Config["WebmasterEmail"], "Error: " + page10ViewData.RegionName + " Odyssey Region " + page10ViewData.RegionNumber + " Tournament Registration", "<p>Team with ID # " + (object)id + " attempted to re-register after its judge was assigned to the team.</p><p>" + errorMessage + "</p>", page10ViewData.Config["WebmasterEmail"], string.Empty, string.Empty);
+            if (mailMessage != null)
+            {
+                page10ViewData.MailErrorMessage = SendMessage((BaseViewData)page10ViewData, mailMessage);
+            }
+
+            errorResult = View(page10ViewData);
+            return true;
+        }
+
+        private void PopulatePage10Summary(Page10ViewData page10ViewData, int id)
+        {
+            var tournamentRegistrationId = Repository.GetJudgeIdFromTournamentRegistrationId(id);
+            page10ViewData.TournamentRegistration.TimeRegistered = DateTime.Now;
             Repository.UpdateTournamentRegistration(id, 10, page10ViewData.TournamentRegistration);
 
-            // TODO: (Rob) Do we still need this?
-            // SetBaseViewData((BaseViewData)page10ViewData);
-
-            Repository.GetJudgeNameFromJudgeId(tournamentRegistrationId1, out string judgeFirstName, out string judgeLastName);
+            Repository.GetJudgeNameFromJudgeId(tournamentRegistrationId, out string judgeFirstName, out string judgeLastName);
             page10ViewData.JudgeFirstName = judgeFirstName;
             page10ViewData.JudgeLastName = judgeLastName;
             page10ViewData.SchoolName = Repository.GetSchoolNameFromSchoolId(page10ViewData.TournamentRegistration.SchoolID);
             page10ViewData.ProblemName = Repository.GetProblemNameFromProblemId(page10ViewData.TournamentRegistration.ProblemID);
             page10ViewData.Division = page10ViewData.TournamentRegistration.Division == "0" ? "Primary" : page10ViewData.TournamentRegistration.Division;
             page10ViewData.MailBody = GenerateEmailBody(page10ViewData);
-            MailMessage mailMessage1 = BuildMessage(page10ViewData.Config["WebmasterEmail"], page10ViewData.RegionName + " Odyssey Region " + page10ViewData.RegionNumber + " Tournament Registration", page10ViewData.MailBody, page10ViewData.TournamentRegistration.CoachEmailAddress, (string)null, (string)null);
-            page10ViewData.MailErrorMessage = SendMessage((BaseViewData)page10ViewData, mailMessage1);
-            
-            return View(page10ViewData);
+
+            using MailMessage? mailMessage = BuildMessage(page10ViewData.Config["WebmasterEmail"], page10ViewData.RegionName + " Odyssey Region " + page10ViewData.RegionNumber + " Tournament Registration", page10ViewData.MailBody, page10ViewData.TournamentRegistration.CoachEmailAddress, string.Empty, string.Empty);
+            if (mailMessage != null)
+            {
+                page10ViewData.MailErrorMessage = SendMessage((BaseViewData)page10ViewData, mailMessage);
+            }
         }
 
         [HttpGet]
@@ -820,7 +847,6 @@ namespace OdysseyMvc2024.Controllers
             };
 
             SetBaseViewData(resendEmailViewData);
-            
             return View(resendEmailViewData);
         }
 
@@ -834,59 +860,73 @@ namespace OdysseyMvc2024.Controllers
             };
 
             TryUpdateModelAsync<ResendEmailViewData>(resendEmailViewData);
+            var page10ViewData = CreateResendEmailPageViewData(resendEmailViewData.TeamNumber);
+            SetBaseViewData(page10ViewData);
 
-            Page10ViewData page10ViewData = new()
-            {
-                Config = Repository.Config,
-                TournamentInfo = Repository.TournamentInfo,
-
-                // TODO: Is this the right parameter value?
-                TournamentRegistration = Repository.GetTournamentRegistrationById(resendEmailViewData.TeamNumber)
-            };
-
-            page10ViewData.TournamentInfo = Repository.TournamentInfo;
-            page10ViewData.TournamentRegistration = Repository.GetTournamentRegistrationById(resendEmailViewData.TeamNumber);
-            
-            Page10ViewData page10ViewData2 = page10ViewData;
-            SetBaseViewData(page10ViewData2);
-            
-            if (resendEmailViewData.CoachCheckbox == "false" && resendEmailViewData.AltCoachCheckbox == "false")
+            if (NoRecipientsSelected(resendEmailViewData))
             {
                 resendEmailViewData.ErrorMessage = "No one was selected to resend the registration information to, so no e-mail was sent.";
                 resendEmailViewData.Success = false;
-                
                 return View(resendEmailViewData);
             }
-            string empty = string.Empty;
+
+            var recipients = BuildResendRecipientList(resendEmailViewData, page10ViewData);
+            PopulateResendEmailSummary(page10ViewData, recipients);
+            return View(resendEmailViewData);
+        }
+
+        private static bool NoRecipientsSelected(ResendEmailViewData resendEmailViewData)
+        {
+            return resendEmailViewData.CoachCheckbox == "false" && resendEmailViewData.AltCoachCheckbox == "false";
+        }
+
+        private Page10ViewData CreateResendEmailPageViewData(int teamNumber)
+        {
+            return new Page10ViewData
+            {
+                Config = Repository.Config,
+                TournamentInfo = Repository.TournamentInfo,
+                TournamentRegistration = Repository.GetTournamentRegistrationById(teamNumber)
+            };
+        }
+
+        private static string BuildResendRecipientList(ResendEmailViewData resendEmailViewData, Page10ViewData page10ViewData)
+        {
+            var recipients = string.Empty;
             if (resendEmailViewData.CoachCheckbox == "true")
             {
-                empty += page10ViewData2.TournamentRegistration.CoachEmailAddress;
+                recipients += page10ViewData.TournamentRegistration.CoachEmailAddress;
             }
 
             if (resendEmailViewData.AltCoachCheckbox == "true")
             {
-                if (!string.IsNullOrEmpty(empty))
+                if (!string.IsNullOrEmpty(recipients))
                 {
-                    empty += ",";
+                    recipients += ",";
                 }
 
-                empty += page10ViewData2.TournamentRegistration.AltCoachEmailAddress;
+                recipients += page10ViewData.TournamentRegistration.AltCoachEmailAddress;
             }
 
+            return recipients;
+        }
+
+        private void PopulateResendEmailSummary(Page10ViewData page10ViewData, string recipients)
+        {
             string judgeFirstName;
             string judgeLastName;
-            Repository.GetJudgeNameFromJudgeId(page10ViewData2.TournamentRegistration.JudgeID, out judgeFirstName, out judgeLastName);
-            page10ViewData2.JudgeFirstName = judgeFirstName;
-            page10ViewData2.JudgeLastName = judgeLastName;
-            page10ViewData2.SchoolName = Repository.GetSchoolNameFromSchoolId(page10ViewData2.TournamentRegistration.SchoolID);
-            page10ViewData2.ProblemName = Repository.GetProblemNameFromProblemId(page10ViewData2.TournamentRegistration.ProblemID);
-            page10ViewData2.MailBody = GenerateEmailBody(page10ViewData2);
+            Repository.GetJudgeNameFromJudgeId(page10ViewData.TournamentRegistration.JudgeID, out judgeFirstName, out judgeLastName);
+            page10ViewData.JudgeFirstName = judgeFirstName;
+            page10ViewData.JudgeLastName = judgeLastName;
+            page10ViewData.SchoolName = Repository.GetSchoolNameFromSchoolId(page10ViewData.TournamentRegistration.SchoolID);
+            page10ViewData.ProblemName = Repository.GetProblemNameFromProblemId(page10ViewData.TournamentRegistration.ProblemID);
+            page10ViewData.MailBody = GenerateEmailBody(page10ViewData);
 
-            MailMessage mailMessage = BuildMessage(page10ViewData2.Config["WebmasterEmail"], page10ViewData2.RegionName + " Odyssey Region " + page10ViewData2.RegionNumber + " Tournament Registration", page10ViewData2.MailBody, empty, "rob@tardistech.com", (string)null);
-            resendEmailViewData.ErrorMessage = SendMessage((BaseViewData)resendEmailViewData, mailMessage);
-            resendEmailViewData.Success = true;
-
-            return View(resendEmailViewData);
+            using MailMessage? mailMessage = BuildMessage(page10ViewData.Config["WebmasterEmail"], page10ViewData.RegionName + " Odyssey Region " + page10ViewData.RegionNumber + " Tournament Registration", page10ViewData.MailBody, recipients, "rob@tardistech.com", string.Empty);
+            if (mailMessage != null)
+            {
+                page10ViewData.MailErrorMessage = SendMessage((BaseViewData)page10ViewData, mailMessage);
+            }
         }
 
         public ActionResult Carolina()

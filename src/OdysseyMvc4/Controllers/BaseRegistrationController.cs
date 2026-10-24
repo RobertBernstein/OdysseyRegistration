@@ -1,4 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="BaseRegistrationController.cs" company="Tardis Technologies">
 //   Copyright 2021 Tardis Technologies. All rights reserved.
 // </copyright>
@@ -12,7 +12,9 @@ namespace OdysseyMvc4.Controllers
     using System;
     using System.Net.Mail;
     using System.Threading;
+    using System.Web;
     using System.Web.Mvc;
+    using System.Globalization;
 
     using Elmah;
 
@@ -43,7 +45,21 @@ namespace OdysseyMvc4.Controllers
         /// </summary>
         protected BaseRegistrationController(IOdysseyRepository repository)
         {
-            Repository = repository;
+            Repository = repository ?? throw new ArgumentNullException(nameof(repository));
+        }
+
+        protected static void ReportError(Exception exception)
+        {
+            if (exception == null)
+            {
+                return;
+            }
+
+            System.Web.HttpContext currentContext = System.Web.HttpContext.Current;
+            if (currentContext != null)
+            {
+                ErrorSignal.FromContext(currentContext).Raise(exception);
+            }
         }
 
         [HttpGet]
@@ -92,7 +108,7 @@ namespace OdysseyMvc4.Controllers
             };
 
             // Set the recepient address of the mail message.
-            string[] recipients = to.Split(new[] { ',' });
+            string[] recipients = to.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
             foreach (string recipient in recipients)
             {
                 try
@@ -132,9 +148,7 @@ namespace OdysseyMvc4.Controllers
         [HttpGet]
         public ActionResult Closed()
         {
-            BaseViewData viewData = new BaseViewData();
-            this.SetBaseViewData(viewData);
-            return this.View(viewData);
+            return this.View(this.CreateBaseViewData());
         }
 
         /// <summary>
@@ -150,14 +164,24 @@ namespace OdysseyMvc4.Controllers
         [HttpPost]
         public ActionResult ClosedPost()
         {
-            var viewData = new BaseViewData();
+            return this.RedirectToHome();
+        }
+
+        private BaseViewData CreateBaseViewData()
+        {
+            BaseViewData viewData = new BaseViewData();
             this.SetBaseViewData(viewData);
-            return this.Redirect(viewData.Config["HomePage"]);
+            return viewData;
+        }
+
+        private ActionResult RedirectToHome()
+        {
+            return this.Redirect(this.CreateBaseViewData().Config["HomePage"]);
         }
 
         private string DetermineSiteCssFile()
         {
-            if ((this.Request.Url != null) && this.Request.Url.AbsoluteUri.ToLowerInvariant().Contains("novasouth"))
+            if ((this.Request.Url?.AbsoluteUri.IndexOf("novasouth", StringComparison.InvariantCultureIgnoreCase) >= 0))
             {
                 return this.Url.Content("~/Content/NovaSouth.css");
             }
@@ -189,9 +213,7 @@ namespace OdysseyMvc4.Controllers
         [HttpGet]
         public ActionResult Down()
         {
-            BaseViewData viewData = new BaseViewData();
-            this.SetBaseViewData(viewData);
-            return this.View(viewData);
+            return this.View(this.CreateBaseViewData());
         }
 
         /// <summary>
@@ -207,9 +229,7 @@ namespace OdysseyMvc4.Controllers
         [HttpPost]
         public ActionResult DownPost()
         {
-            var viewData = new BaseViewData();
-            this.SetBaseViewData(viewData);
-            return this.Redirect(viewData.Config["HomePage"]);
+            return this.RedirectToHome();
         }
 
         /// <summary>
@@ -222,9 +242,7 @@ namespace OdysseyMvc4.Controllers
         [HttpGet]
         public ActionResult Error()
         {
-            BaseViewData viewData = new BaseViewData();
-            this.SetBaseViewData(viewData);
-            return this.View(viewData);
+            return this.View(this.CreateBaseViewData());
         }
 
         /// <summary>
@@ -277,7 +295,9 @@ namespace OdysseyMvc4.Controllers
             try
             {
                 // TODO: (Rob) Add a check for leap year dates, other invalid dates.
-                registrationCloseDateTime = DateTime.Parse(viewData.Config[registrationType + "RegistrationCloseDateTime"]);
+                registrationCloseDateTime = DateTime.Parse(
+                    viewData.Config[registrationType + "RegistrationCloseDateTime"],
+                    CultureInfo.InvariantCulture);
             }
             catch (Exception)
             {
@@ -309,7 +329,9 @@ namespace OdysseyMvc4.Controllers
 
             try
             {
-                registrationOpenDate = DateTime.Parse(viewData.Config[registrationType + "RegistrationOpenDateTime"]);
+                registrationOpenDate = DateTime.Parse(
+                    viewData.Config[registrationType + "RegistrationOpenDateTime"],
+                    CultureInfo.InvariantCulture);
             }
             catch (Exception)
             {
@@ -371,7 +393,7 @@ namespace OdysseyMvc4.Controllers
             }
             catch (SmtpFailedRecipientsException exception)
             {
-                ErrorSignal.FromCurrentContext().Raise(exception);
+                ReportError(exception);
 
                 foreach (SmtpFailedRecipientException smtpFailedRecipientException in exception.InnerExceptions)
                 {
@@ -391,7 +413,7 @@ namespace OdysseyMvc4.Controllers
             }
             catch (SmtpException smtpException)
             {
-                ErrorSignal.FromCurrentContext().Raise(smtpException);
+                ReportError(smtpException);
 
                 return smtpException.StatusCode.ToString();
             }
@@ -416,6 +438,36 @@ namespace OdysseyMvc4.Controllers
             viewData.PathToSiteCssFile = this.DetermineSiteCssFile();
         }
 
+        protected void SafeUpdateModel<TModel>(TModel model) where TModel : class
+        {
+            if (model == null)
+            {
+                return;
+            }
+
+            if (this.ControllerContext == null || this.ControllerContext.HttpContext == null ||
+                this.ControllerContext.HttpContext.Request == null)
+            {
+                return;
+            }
+
+            try
+            {
+                if (this.ValueProvider == null)
+                {
+                    return;
+                }
+
+                this.UpdateModel(model);
+            }
+            catch (Exception ex)
+            {
+                // Some unit tests instantiate controllers without a full ASP.NET form/request pipeline.
+                // In those cases the caller has already populated the model object and no model bind is possible.
+                ReportError(ex);
+            }
+        }
+
         /// <summary>
         /// Handle HTTP GET requests for the Soon page.
         /// </summary>
@@ -426,9 +478,7 @@ namespace OdysseyMvc4.Controllers
         [HttpGet]
         public ActionResult Soon()
         {
-            BaseViewData viewData = new BaseViewData();
-            this.SetBaseViewData(viewData);
-            return this.View(viewData);
+            return this.View(this.CreateBaseViewData());
         }
 
         /// <summary>
@@ -444,9 +494,7 @@ namespace OdysseyMvc4.Controllers
         [HttpPost]
         public ActionResult SoonPost()
         {
-            var viewData = new BaseViewData();
-            this.SetBaseViewData(viewData);
-            return this.Redirect(viewData.Config["HomePage"]);
+            return this.RedirectToHome();
         }
 
         /// <summary>

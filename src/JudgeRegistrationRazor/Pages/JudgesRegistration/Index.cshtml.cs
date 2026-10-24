@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace JudgeRegistrationRazor.Pages.JudgesRegistration
 {
-    public class IndexModel : PageModel
+    internal class IndexModel : PageModel
     {
         public IndexModel()
         {

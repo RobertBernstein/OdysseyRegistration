@@ -9,6 +9,7 @@
 
 namespace OdysseyMvc4.Models
 {
+    using System;
     using System.Collections.Generic;
 
     /// <summary>
@@ -21,7 +22,7 @@ namespace OdysseyMvc4.Models
         /// </summary>
         public QueryInfo()
         {
-            this.CsFieldMap = new Dictionary<string, string>();
+            this.CsFieldMap = new Dictionary<string, string>(System.StringComparer.OrdinalIgnoreCase);
         }
 
         /// <summary>
@@ -39,6 +40,6 @@ namespace OdysseyMvc4.Models
         /// <summary>
         /// Gets or sets the cs field map.
         /// </summary>
-        public Dictionary<string, string> CsFieldMap { get; set; }
+        public IDictionary<string, string> CsFieldMap { get; set; }
     }
 }

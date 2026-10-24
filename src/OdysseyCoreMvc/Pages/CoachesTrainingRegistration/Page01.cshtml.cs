@@ -1,4 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Page01.cshtml.cs" company="Tardis Technologies">
 //   Copyright 2022 Tardis Technologies. All rights reserved.
 // </copyright>
@@ -15,17 +15,19 @@ using OdysseyCoreMvc.Models;
 namespace OdysseyCoreMvc.Pages.CoachesTrainingRegistration
 {
     /// <summary>
-    /// The Coaches Training Registration Page01 page model.
-    /// 
+    /// <para>The Coaches Training Registration Page01 page model.</para>
+    /// <para>
     /// Razor Pages are derived from PageModel. By convention, the PageModel derived class is named PageNameModel. For
     /// example, the Index page is named IndexModel.
     /// https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.mvc.razorpages.pagemodel
+    /// </para>
     /// </summary>
-    public class Page01Model : BasePageModel
+
+    // The constructor uses dependency injection to add the OdysseyContext and logging to the page.
+    // https://docs.microsoft.com/en-us/aspnet/core/fundamentals/dependency-injection?view=aspnetcore-6.0
+    internal sealed class Page01Model : BasePageModel
     {
-        // The constructor uses dependency injection to add the OdysseyContext and logging to the page.
-        // https://docs.microsoft.com/en-us/aspnet/core/fundamentals/dependency-injection?view=aspnetcore-6.0
-        public Page01Model(OdysseyContext context, ILogger<BasePageModel> logger) : base(context, logger)
+        internal Page01Model(OdysseyContext context, ILogger<Page01Model> logger) : base(context ?? throw new System.ArgumentNullException(nameof(context)), logger ?? throw new System.ArgumentNullException(nameof(logger)))
         {
         }
 
@@ -144,7 +146,9 @@ namespace OdysseyCoreMvc.Pages.CoachesTrainingRegistration
                     return string.Empty;
                 }
 
-                return this.Config["CoordinatorsDoNotPayCoachesTrainingRegistrationFee"].ToLower() == "true"
+                return bool.TryParse(
+                        Config["CoordinatorsDoNotPayCoachesTrainingRegistrationFee"],
+                        out bool parsed) && parsed
                     ? " &nbsp;We invite School Coordinators to attend at no charge."
                     : string.Empty;
             }
@@ -157,8 +161,8 @@ namespace OdysseyCoreMvc.Pages.CoachesTrainingRegistration
         {
             get
             {
-                return CoachesTrainingInfo.StartDate != null
-                    ? CoachesTrainingInfo.StartDate.Value.ToLongDateString()
+                return CoachesTrainingInfo?.StartDate is DateTime startDate
+                    ? startDate.ToLongDateString()
                     : "TBA";
             }
         }
@@ -166,14 +170,8 @@ namespace OdysseyCoreMvc.Pages.CoachesTrainingRegistration
         /// <summary>
         /// Gets the coaches training time.
         /// </summary>
-        public string CoachesTrainingTime
-        {
-            get
-            {
-                return !string.IsNullOrWhiteSpace(CoachesTrainingInfo.Time)
-                    ? CoachesTrainingInfo.Time
-                    : "TBA";
-            }
-        }
+        public string CoachesTrainingTime => !string.IsNullOrWhiteSpace(CoachesTrainingInfo?.Time)
+            ? CoachesTrainingInfo.Time
+            : "TBA";
     }
 }

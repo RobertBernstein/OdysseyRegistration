@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace JudgesRegistrationRazorDb.Models
 {
-    public static class SeedHelper
+    internal static class SeedHelper
     {
         public static List<TEntity>? SeedData<TEntity>(string fileName)
         {

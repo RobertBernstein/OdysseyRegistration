@@ -1,4 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="OdysseyRepository.cs" company="Tardis Technologies">
 //   Copyright 2021 Tardis Technologies. All rights reserved.
 // </copyright>
@@ -34,7 +34,7 @@ namespace OdysseyMvc4.Models
         /// <summary>
         /// The registration system configuration.
         /// </summary>
-        private Dictionary<string, string> config;
+        private IDictionary<string, string> config;
 
         /// <summary>
         /// The divisions.
@@ -65,7 +65,7 @@ namespace OdysseyMvc4.Models
         /// The problem choices without spontaneous.
         /// </summary>
         /// TODO: Is this still needed?  Can it be removed?  Why is it never initialized? - Rob, 12/17/2018.
-        private readonly IEnumerable<Problem> problemChoicesWithoutSpontaneous;
+        private IEnumerable<Problem> problemChoicesWithoutSpontaneous;
 
         /// <summary>
         /// The problem conflicts.
@@ -183,9 +183,14 @@ namespace OdysseyMvc4.Models
         {
             get
             {
-                return this.coachesTrainingInfo ?? (this.CoachesTrainingInfo = (from o in this.context.Events
-                                                                                where o.EventName.Contains("Coaches") && o.EventName.Contains("Training")
-                                                                                select o).First());
+                if (this.coachesTrainingInfo == null)
+                {
+                    this.CoachesTrainingInfo = (from o in this.context.Events
+                                                where o.EventName.Contains("Coaches") && o.EventName.Contains("Training")
+                                                select o).First();
+                }
+
+                return this.coachesTrainingInfo;
             }
 
             set
@@ -210,7 +215,7 @@ namespace OdysseyMvc4.Models
         /// <summary>
         /// Gets the registration system configuration.
         /// </summary>
-        public Dictionary<string, string> Config
+        public IDictionary<string, string> Config
         {
             get
             {
@@ -218,7 +223,7 @@ namespace OdysseyMvc4.Models
                 if (this.config == null)
                 {
                     this.Config = (from c in this.context.Configs
-                                   select c).ToDictionary(d => d.Name, d => d.Value);
+                                   select c).ToDictionary(d => d.Name, d => d.Value, StringComparer.OrdinalIgnoreCase);
                 }
 
                 return this.config;
@@ -227,7 +232,7 @@ namespace OdysseyMvc4.Models
             private set
             {
                 this.config = value;
-                this.config.Add("EndYear", (int.Parse(this.config["Year"]) + 1).ToString(CultureInfo.InvariantCulture));
+                this.config.Add("EndYear", (int.Parse(this.config["Year"], CultureInfo.InvariantCulture) + 1).ToString(CultureInfo.InvariantCulture));
             }
         }
 
@@ -239,9 +244,14 @@ namespace OdysseyMvc4.Models
             get
             {
                 // If divisions is null, run the LINQ query, assign the result to Divisions, and return the result.
-                return this.divisions ?? (this.Divisions = from d in this.context.CoachesTrainingDivisions
-                                                           orderby d.ID
-                                                           select d);
+                if (this.divisions == null)
+                {
+                    this.Divisions = from d in this.context.CoachesTrainingDivisions
+                                     orderby d.ID
+                                     select d;
+                }
+
+                return this.divisions;
             }
 
             private set
@@ -258,9 +268,14 @@ namespace OdysseyMvc4.Models
             get
             {
                 // If judges is null, run the LINQ query, assign the result to Judges, and return the result.
-                return this.judges ?? (this.Judges = from j in this.context.Judges
-                                                     orderby j.JudgeID
-                                                     select j);
+                if (this.judges == null)
+                {
+                    this.Judges = from j in this.context.Judges
+                                  orderby j.JudgeID
+                                  select j;
+                }
+
+                return this.judges;
             }
 
             private set
@@ -276,9 +291,14 @@ namespace OdysseyMvc4.Models
         {
             get
             {
-                return this.judgesInfo ?? (this.JudgesInfo = (from o in this.context.Events
-                                                              where o.EventName.Contains("Judges") && o.EventName.Contains("Training")
-                                                              select o).First());
+                if (this.judgesInfo == null)
+                {
+                    this.JudgesInfo = (from o in this.context.Events
+                                       where o.EventName.Contains("Judges") && o.EventName.Contains("Training")
+                                       select o).First();
+                }
+
+                return this.judgesInfo;
             }
 
             set
@@ -296,9 +316,14 @@ namespace OdysseyMvc4.Models
             {
                 // If primaryProblem is null, run the LINQ query, assign the result to PrimaryProblem, and return the result.
                 // - The Primary problem is ProblemID 6
-                return this.primaryProblem ?? (this.PrimaryProblem = from p in this.context.Problems
-                                                                     where p.ProblemID == 6
-                                                                     select p);
+                if (this.primaryProblem == null)
+                {
+                    this.PrimaryProblem = from p in this.context.Problems
+                                          where p.ProblemID == 6
+                                          select p;
+                }
+
+                return this.primaryProblem;
             }
 
             private set
@@ -325,7 +350,12 @@ namespace OdysseyMvc4.Models
                     thePrimaryProblem.ProblemName += " (The Primary Problem)";
                 }
 
-                return this.problemChoices ?? (this.ProblemChoices = temp);
+                if (this.problemChoices == null)
+                {
+                    this.ProblemChoices = temp;
+                }
+
+                return this.problemChoices;
             }
 
             private set
@@ -354,7 +384,12 @@ namespace OdysseyMvc4.Models
                 }
 
                 // TODO: Look into what this does - Rob, 12/12/2014.
-                return this.problemChoicesWithoutSpontaneous ?? (this.ProblemChoices = temp);
+                if (this.problemChoicesWithoutSpontaneous == null)
+                {
+                    this.problemChoicesWithoutSpontaneous = temp;
+                }
+
+                return this.problemChoicesWithoutSpontaneous;
             }
         }
 
@@ -380,7 +415,12 @@ namespace OdysseyMvc4.Models
                 ////primaryProblem.ProblemName += " (The Primary Problem)";
                 ////}
 
-                return this.problemConflicts ?? (this.ProblemConflicts = temp);
+                if (this.problemConflicts == null)
+                {
+                    this.ProblemConflicts = temp;
+                }
+
+                return this.problemConflicts;
             }
 
             private set
@@ -398,10 +438,15 @@ namespace OdysseyMvc4.Models
             {
                 // If problems is null, run the LINQ query, assign the result to Problems, and return the result.
                 // - Skip ProblemID 0, which is "Not Specified"
-                return this.problems ?? (this.Problems = from p in this.context.Problems
-                                                         where p.ProblemCategory != null // not "No Preference" and not "Spontaneous"
-                                                         orderby p.ProblemID
-                                                         select p);
+                if (this.problems == null)
+                {
+                    this.Problems = from p in this.context.Problems
+                                    where p.ProblemCategory != null // not "No Preference" and not "Spontaneous"
+                                    orderby p.ProblemID
+                                    select p;
+                }
+
+                return this.problems;
             }
 
             private set
@@ -419,10 +464,15 @@ namespace OdysseyMvc4.Models
             {
                 // If problems is null, run the LINQ query, assign the result to Problems, and return the result.
                 // - Skip ProblemIDs 0 ("Not Specified"), 6 (Primary), and 7 (Spontaneous)
-                return this.problemsWithoutPrimaryOrSpontaneous ?? (this.ProblemsWithoutPrimaryOrSpontaneous = from p in this.context.Problems
-                                                                                                               where p.ProblemID != 0 && p.ProblemID != 6 && p.ProblemID != 7
-                                                                                                               orderby p.ProblemID
-                                                                                                               select p);
+                if (this.problemsWithoutPrimaryOrSpontaneous == null)
+                {
+                    this.ProblemsWithoutPrimaryOrSpontaneous = from p in this.context.Problems
+                                                               where p.ProblemID != 0 && p.ProblemID != 6 && p.ProblemID != 7
+                                                               orderby p.ProblemID
+                                                               select p;
+                }
+
+                return this.problemsWithoutPrimaryOrSpontaneous;
             }
 
             private set
@@ -440,10 +490,15 @@ namespace OdysseyMvc4.Models
             {
                 // If problems is null, run the LINQ query, assign the result to Problems, and return the result.
                 // - Skip ProblemID 0, which is "Not Specified"
-                return this.problemsWithoutSpontaneous ?? (this.ProblemsWithoutSpontaneous = from p in this.context.Problems
-                                                                                             where p.ProblemID != 0 && p.ProblemID != 7
-                                                                                             orderby p.ProblemID
-                                                                                             select p);
+                if (this.problemsWithoutSpontaneous == null)
+                {
+                    this.ProblemsWithoutSpontaneous = from p in this.context.Problems
+                                                      where p.ProblemID != 0 && p.ProblemID != 7
+                                                      orderby p.ProblemID
+                                                      select p;
+                }
+
+                return this.problemsWithoutSpontaneous;
             }
 
             private set
@@ -460,7 +515,12 @@ namespace OdysseyMvc4.Models
             get
             {
                 // If _regionName is null, run the LINQ query, assign the result to RegionName, and return the result
-                return this.regionName ?? (this.RegionName = this.Config["RegionName"]);
+                if (this.regionName == null)
+                {
+                    this.RegionName = this.Config["RegionName"];
+                }
+
+                return this.regionName;
             }
 
             private set
@@ -477,7 +537,12 @@ namespace OdysseyMvc4.Models
             get
             {
                 // If _regionName is null, run the LINQ query, assign the result to RegionName, and return the result
-                return this.regionNumber ?? (this.RegionNumber = this.Config["RegionNumber"]);
+                if (this.regionNumber == null)
+                {
+                    this.RegionNumber = this.Config["RegionNumber"];
+                }
+
+                return this.regionNumber;
             }
 
             private set
@@ -495,9 +560,14 @@ namespace OdysseyMvc4.Models
             {
                 // If _problems is null, run the LINQ query, assign the result to Problems, and return the result
                 // - Skip ProblemID 0, which is "Not Specified"
-                return this.regions ?? (this.Regions = from r in this.context.CoachesTrainingRegions
-                                                       orderby r.ID
-                                                       select r);
+                if (this.regions == null)
+                {
+                    this.Regions = from r in this.context.CoachesTrainingRegions
+                                   orderby r.ID
+                                   select r;
+                }
+
+                return this.regions;
             }
 
             private set
@@ -515,9 +585,14 @@ namespace OdysseyMvc4.Models
             {
                 // If _problems is null, run the LINQ query, assign the result to Problems, and return the result
                 // - Skip ProblemID 0, which is "Not Specified"
-                return this.roles ?? (this.Roles = from r in this.context.CoachesTrainingRoles
-                                                   orderby r.ID
-                                                   select r);
+                if (this.roles == null)
+                {
+                    this.Roles = from r in this.context.CoachesTrainingRoles
+                                 orderby r.ID
+                                 select r;
+                }
+
+                return this.roles;
             }
 
             private set
@@ -534,10 +609,15 @@ namespace OdysseyMvc4.Models
             get
             {
                 // If schools is null, run the LINQ query, assign the result to Schools, and return the result.
-                return this.schools ?? (this.Schools = from s in this.context.Schools
-                                                       where s.Membership_1seen == "yes"
-                                                       orderby s.Name
-                                                       select new { s.ID, s.Name });
+                if (this.schools == null)
+                {
+                    this.Schools = from s in this.context.Schools
+                                   where s.Membership_1seen == "yes"
+                                   orderby s.Name
+                                   select new { s.ID, s.Name };
+                }
+
+                return this.schools;
             }
 
             private set
@@ -553,9 +633,14 @@ namespace OdysseyMvc4.Models
         {
             get
             {
-                return this.tournamentInfo ?? (this.TournamentInfo = (from o in this.context.Events
-                                                                      where o.EventName.StartsWith(this.RegionName) && o.EventName.Contains("Tournament")
-                                                                      select o).First());
+                if (this.tournamentInfo == null)
+                {
+                    this.TournamentInfo = (from o in this.context.Events
+                                           where o.EventName.StartsWith(this.RegionName) && o.EventName.Contains("Tournament")
+                                           select o).First();
+                }
+
+                return this.tournamentInfo;
             }
 
             set
@@ -597,9 +682,14 @@ namespace OdysseyMvc4.Models
         {
             get
             {
-                return this.volunteerInfo ?? (this.VolunteerInfo = (from o in this.context.Events
-                                                                    where o.EventName.Contains("Volunteer")
-                                                                    select o).First());
+                if (this.volunteerInfo == null)
+                {
+                    this.VolunteerInfo = (from o in this.context.Events
+                                          where o.EventName.Contains("Volunteer")
+                                          select o).First();
+                }
+
+                return this.volunteerInfo;
 
                 // TODO: Do we still need where o.EventName.StartsWith(this.RegionName)? I don't think so - Rob, 12/12/2014.
                 ////return this.volunteerInfo ?? (this.VolunteerInfo = (from o in this.context.Events
@@ -852,12 +942,14 @@ namespace OdysseyMvc4.Models
         /// <returns>
         /// The <see cref="IQueryable"/>.
         /// </returns>
+        #pragma warning disable MA0011, RCS1155
         public IQueryable<Judge> GetJudgeByIdAndName(int judgeId, string judgeFirstName, string judgeLastName)
         {
             return from j in this.context.Judges
                    where (j.JudgeID == judgeId) && (j.FirstName.ToLower() == judgeFirstName.ToLower()) && (j.LastName.ToLower() == judgeLastName.ToLower())
                    select j;
         }
+#pragma warning restore MA0011, RCS1155
 
         ///// TODO: Uncomment these (9/19/2013)
         ////public IQueryable<TournamentRegistration> GetTournamentRegistrationRecords(int pageIndex, int pageSize)
@@ -960,7 +1052,7 @@ namespace OdysseyMvc4.Models
 
             if (registration == null)
             {
-                return null;
+                return new List<string>();
             }
 
             return new List<string>
@@ -1230,7 +1322,7 @@ namespace OdysseyMvc4.Models
                     // Is this just the Coach backing up in the registration, changing a few values, and trying to
                     // re-register the team with the same judge?  If so, that's ok.
                     int teamId;
-                    if (int.TryParse(judgeRecord.TeamID, out teamId) && (teamId == tournamentRegistrationId))
+                    if (int.TryParse(judgeRecord.TeamID, NumberStyles.Integer, CultureInfo.InvariantCulture, out teamId) && (teamId == tournamentRegistrationId))
                     {
                         return 0;
                     }
@@ -1270,91 +1362,126 @@ namespace OdysseyMvc4.Models
         {
             IQueryable<TournamentRegistration> registration = this.context.TournamentRegistrations.Where(r => r.TeamID == id);
 
-            // If no registrations are returned from the database, just return failure.
             if (!registration.Any())
             {
                 return 0;
             }
 
+            TournamentRegistration existingRegistration = registration.First();
+
             switch (pageNumber)
             {
                 case 2:
-                    registration.First().SchoolID = newRegistrationData.SchoolID;
+                    ApplyTournamentPageTwoUpdates(existingRegistration, newRegistrationData);
                     break;
 
                 case 3:
-                    registration.First().JudgeID = newRegistrationData.JudgeID;
+                    ApplyTournamentPageThreeUpdates(existingRegistration, newRegistrationData);
                     break;
 
                 case 4:
-                    registration.First().VolunteerID = newRegistrationData.VolunteerID;
+                    ApplyTournamentPageFourUpdates(existingRegistration, newRegistrationData);
                     break;
 
                 case 5:
-                    registration.First().CoachFirstName = newRegistrationData.CoachFirstName;
-                    registration.First().CoachLastName = newRegistrationData.CoachLastName;
-                    registration.First().CoachAddress = newRegistrationData.CoachAddress;
-                    registration.First().CoachCity = newRegistrationData.CoachCity;
-                    registration.First().CoachState = newRegistrationData.CoachState;
-                    registration.First().CoachZipCode = newRegistrationData.CoachZipCode;
-                    registration.First().CoachEveningPhone = newRegistrationData.CoachEveningPhone;
-                    registration.First().CoachDaytimePhone = newRegistrationData.CoachDaytimePhone;
-                    registration.First().CoachMobilePhone = newRegistrationData.CoachMobilePhone;
-                    registration.First().CoachEmailAddress = newRegistrationData.CoachEmailAddress;
-                    registration.First().AltCoachFirstName = newRegistrationData.AltCoachFirstName;
-                    registration.First().AltCoachLastName = newRegistrationData.AltCoachLastName;
-                    registration.First().AltCoachEveningPhone = newRegistrationData.AltCoachEveningPhone;
-                    registration.First().AltCoachDaytimePhone = newRegistrationData.AltCoachDaytimePhone;
-                    registration.First().AltCoachMobilePhone = newRegistrationData.AltCoachMobilePhone;
-                    registration.First().AltCoachEmailAddress = newRegistrationData.AltCoachEmailAddress;
+                    ApplyTournamentPageFiveUpdates(existingRegistration, newRegistrationData);
                     break;
 
                 case 6:
-                    registration.First().MemberFirstName1 = newRegistrationData.MemberFirstName1;
-                    registration.First().MemberLastName1 = newRegistrationData.MemberLastName1;
-                    registration.First().MemberGrade1 = newRegistrationData.MemberGrade1;
-                    registration.First().MemberFirstName2 = newRegistrationData.MemberFirstName2;
-                    registration.First().MemberLastName2 = newRegistrationData.MemberLastName2;
-                    registration.First().MemberGrade2 = newRegistrationData.MemberGrade2;
-                    registration.First().MemberFirstName3 = newRegistrationData.MemberFirstName3;
-                    registration.First().MemberLastName3 = newRegistrationData.MemberLastName3;
-                    registration.First().MemberGrade3 = newRegistrationData.MemberGrade3;
-                    registration.First().MemberFirstName4 = newRegistrationData.MemberFirstName4;
-                    registration.First().MemberLastName4 = newRegistrationData.MemberLastName4;
-                    registration.First().MemberGrade4 = newRegistrationData.MemberGrade4;
-                    registration.First().MemberFirstName5 = newRegistrationData.MemberFirstName5;
-                    registration.First().MemberLastName5 = newRegistrationData.MemberLastName5;
-                    registration.First().MemberGrade5 = newRegistrationData.MemberGrade5;
-                    registration.First().MemberFirstName6 = newRegistrationData.MemberFirstName6;
-                    registration.First().MemberLastName6 = newRegistrationData.MemberLastName6;
-                    registration.First().MemberGrade6 = newRegistrationData.MemberGrade6;
-                    registration.First().MemberFirstName7 = newRegistrationData.MemberFirstName7;
-                    registration.First().MemberLastName7 = newRegistrationData.MemberLastName7;
-                    registration.First().MemberGrade7 = newRegistrationData.MemberGrade7;
+                    ApplyTournamentPageSixUpdates(existingRegistration, newRegistrationData);
                     break;
 
                 case 7:
-                    registration.First().ProblemID = newRegistrationData.ProblemID;
-                    registration.First().Division = newRegistrationData.Division;
-                    registration.First().Spontaneous = newRegistrationData.Spontaneous;
+                    ApplyTournamentPageSevenUpdates(existingRegistration, newRegistrationData);
                     break;
 
                 case 8:
-                    registration.First().SchedulingIssues = newRegistrationData.SchedulingIssues;
-                    registration.First().SpecialConsiderations = newRegistrationData.SpecialConsiderations;
+                    ApplyTournamentPageEightUpdates(existingRegistration, newRegistrationData);
                     break;
 
                 case 10:
-                    registration.First().TimeRegistered = newRegistrationData.TimeRegistered;
+                    existingRegistration.TimeRegistered = newRegistrationData.TimeRegistered;
                     break;
             }
 
-            // SaveChanges returns the number of objects updated in the database
             return this.context.SaveChanges();
         }
 
+        private static void ApplyTournamentPageTwoUpdates(TournamentRegistration target, TournamentRegistration source)
+        {
+            target.SchoolID = source.SchoolID;
+        }
+
+        private static void ApplyTournamentPageThreeUpdates(TournamentRegistration target, TournamentRegistration source)
+        {
+            target.JudgeID = source.JudgeID;
+        }
+
+        private static void ApplyTournamentPageFourUpdates(TournamentRegistration target, TournamentRegistration source)
+        {
+            target.VolunteerID = source.VolunteerID;
+        }
+
+        private static void ApplyTournamentPageFiveUpdates(TournamentRegistration target, TournamentRegistration source)
+        {
+            target.CoachFirstName = source.CoachFirstName;
+            target.CoachLastName = source.CoachLastName;
+            target.CoachAddress = source.CoachAddress;
+            target.CoachCity = source.CoachCity;
+            target.CoachState = source.CoachState;
+            target.CoachZipCode = source.CoachZipCode;
+            target.CoachEveningPhone = source.CoachEveningPhone;
+            target.CoachDaytimePhone = source.CoachDaytimePhone;
+            target.CoachMobilePhone = source.CoachMobilePhone;
+            target.CoachEmailAddress = source.CoachEmailAddress;
+            target.AltCoachFirstName = source.AltCoachFirstName;
+            target.AltCoachLastName = source.AltCoachLastName;
+            target.AltCoachEveningPhone = source.AltCoachEveningPhone;
+            target.AltCoachDaytimePhone = source.AltCoachDaytimePhone;
+            target.AltCoachMobilePhone = source.AltCoachMobilePhone;
+            target.AltCoachEmailAddress = source.AltCoachEmailAddress;
+        }
+
+        private static void ApplyTournamentPageSixUpdates(TournamentRegistration target, TournamentRegistration source)
+        {
+            target.MemberFirstName1 = source.MemberFirstName1;
+            target.MemberLastName1 = source.MemberLastName1;
+            target.MemberGrade1 = source.MemberGrade1;
+            target.MemberFirstName2 = source.MemberFirstName2;
+            target.MemberLastName2 = source.MemberLastName2;
+            target.MemberGrade2 = source.MemberGrade2;
+            target.MemberFirstName3 = source.MemberFirstName3;
+            target.MemberLastName3 = source.MemberLastName3;
+            target.MemberGrade3 = source.MemberGrade3;
+            target.MemberFirstName4 = source.MemberFirstName4;
+            target.MemberLastName4 = source.MemberLastName4;
+            target.MemberGrade4 = source.MemberGrade4;
+            target.MemberFirstName5 = source.MemberFirstName5;
+            target.MemberLastName5 = source.MemberLastName5;
+            target.MemberGrade5 = source.MemberGrade5;
+            target.MemberFirstName6 = source.MemberFirstName6;
+            target.MemberLastName6 = source.MemberLastName6;
+            target.MemberGrade6 = source.MemberGrade6;
+            target.MemberFirstName7 = source.MemberFirstName7;
+            target.MemberLastName7 = source.MemberLastName7;
+            target.MemberGrade7 = source.MemberGrade7;
+        }
+
+        private static void ApplyTournamentPageSevenUpdates(TournamentRegistration target, TournamentRegistration source)
+        {
+            target.ProblemID = source.ProblemID;
+            target.Division = source.Division;
+            target.Spontaneous = source.Spontaneous;
+        }
+
+        private static void ApplyTournamentPageEightUpdates(TournamentRegistration target, TournamentRegistration source)
+        {
+            target.SchedulingIssues = source.SchedulingIssues;
+            target.SpecialConsiderations = source.SpecialConsiderations;
+        }
+
         /// <summary>
-        /// Update the Volunteer record in the database.
+        /// The update volunteer.
         /// </summary>
         /// <param name="volunteerId">
         /// The volunteer id.
@@ -1366,7 +1493,7 @@ namespace OdysseyMvc4.Models
         /// The new registration data.
         /// </param>
         /// <returns>
-        /// The number of objects updated in the database.
+        /// The <see cref="int"/>.
         /// </returns>
         public int UpdateVolunteer(int volunteerId, int pageNumber, Volunteer newRegistrationData)
         {
@@ -1380,16 +1507,14 @@ namespace OdysseyMvc4.Models
             switch (pageNumber)
             {
                 case 2:
-                    // TODO: Can we just say volunteerFound = newRegistrationData?
                     volunteerFound.FirstName = newRegistrationData.FirstName;
                     volunteerFound.LastName = newRegistrationData.LastName;
                     volunteerFound.DaytimePhone = newRegistrationData.DaytimePhone;
                     volunteerFound.EveningPhone = newRegistrationData.EveningPhone;
                     volunteerFound.MobilePhone = newRegistrationData.MobilePhone;
                     volunteerFound.EmailAddress = newRegistrationData.EmailAddress;
-                    volunteerFound.VolunteerWantsToSee = newRegistrationData.VolunteerWantsToSee;
                     volunteerFound.Notes = newRegistrationData.Notes;
-
+                    volunteerFound.VolunteerWantsToSee = newRegistrationData.VolunteerWantsToSee;
                     break;
 
                 case 3:
@@ -1397,12 +1522,11 @@ namespace OdysseyMvc4.Models
                     break;
             }
 
-            // SaveChanges returns the number of objects updated in the database.
             return this.context.SaveChanges();
         }
 
         /// <summary>
-        /// Update the e-mail address for a volunteer in the Volunteer database table.
+        /// Update the e-mail address for a volunteer in the volunteers database table.
         /// </summary>
         /// <param name="volunteerId">
         /// The ID of the volunteer database record to update.
@@ -1422,124 +1546,8 @@ namespace OdysseyMvc4.Models
                 return 0;
             }
 
-            // Update the volunteer's e-mail address.
             volunteerFound.EmailAddress = email;
-
-            // SaveChanges returns the number of objects updated in the database.
             return this.context.SaveChanges();
         }
-
-        /// <summary>
-        /// The update volunteer record with tournament registration id.
-        /// </summary>
-        /// <param name="volunteerId">
-        /// The volunteer id.
-        /// </param>
-        /// <param name="tournamentRegistrationId">
-        /// The tournament registration id.
-        /// </param>
-        /// <param name="errorMessage">
-        /// The error message.
-        /// </param>
-        /// <returns>
-        /// The <see cref="int"/>.
-        /// </returns>
-        public int UpdateVolunteerRecordWithTournamentRegistrationId(int volunteerId, int tournamentRegistrationId, out string errorMessage)
-        {
-            // TODO: Check the TeamID.  If it's the same as the currently registering team, just return.
-            errorMessage = string.Empty;
-
-            Volunteer volunteerRecord = (from v in this.context.Volunteers
-                                         where v.VolunteerID == volunteerId
-                                         select v).First();
-
-            // Has this volunteer already been assigned to a team?
-            if (volunteerRecord.TeamID != null)
-            {
-                // Is this just the Coach backing up in the registration, changing a few values, and trying to
-                // re-register the team with the same volunteer?  If so, that's ok.
-                int teamId = (int)volunteerRecord.TeamID;
-                if (teamId == tournamentRegistrationId)
-                {
-                    return 0;
-                }
-
-                // If this volunteer has already been assigned to another team, it
-                // must have happened after Page04 was filled in
-                errorMessage =
-                    "The selected volunteer has already been assigned to another team. &nbsp;" +
-                    "The webmaster has been notified and you will be contacted about how to complete your registration.";
-            }
-
-            volunteerRecord.TeamID = tournamentRegistrationId;
-            volunteerRecord.TimeAssignedToTeam = DateTime.Now;
-
-            // SaveChanges returns the number of objects added to the database
-            return this.context.SaveChanges();
-        }
-
-        /////// <summary>
-        /////// The get query info.
-        /////// TODO: Uncomment all of this (9/19/2013)
-        /////// </summary>
-        /////// <param name="tableName">
-        /////// The table name.
-        /////// </param>
-        /////// <returns>
-        /////// The <see cref="QueryInfo"/>.
-        /////// </returns>
-        /////// <remarks>
-        /////// This QueryInfo code comes from http://blogs.msdn.com/alexj/archive/2008/02/11/rolling-your-own-sql-update-on-top-of-the-entity-framework-part-3.aspx
-        /////// </remarks>
-        ////[SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "Reviewed. Suppression is OK here.")]
-        ////private QueryInfo GetQueryInfo(ObjectQuery tableName)
-        ////{
-        ////    var info = new QueryInfo
-        ////                   {
-        ////                       OriginalSql = tableName.ToTraceString()
-        ////                   };
-
-        ////    // Get the table name
-        ////    info.TableName = info.OriginalSql.Between("FROM ", "AS [Extent1]")[0].Trim();
-
-        ////    // Get the aliases so we can build the map
-        ////    string[] bits = info.OriginalSql.Split(new[] { "FROM " }, StringSplitOptions.None);
-
-        ////    ////Utilities.Assert(
-        ////    ////    bits.Length == 2,
-        ////    ////    () => new InvalidOperationException("Unexpectedly complex SQL tree with 2 or more FROM's encountered\n\r" + info.OriginalSQL)
-        ////    ////);
-
-        ////    string trunc = bits[0].Replace("SELECT ", "").Trim();
-        ////    string[] aliases = trunc.Split(',');
-        ////    aliases = aliases.Select(a => a.Trim()).ToArray();
-
-        ////    // get an array of arrays in the form [DBfieldName][EntityPropertyName],...]
-        ////    var keyvaluepairs =
-        ////        aliases.Where(a => a.StartsWith("[Extent1].["))
-        ////               .Select(a => a.Replace("[Extent1].[", ""))
-        ////               .Select(a => a.Replace("] AS [", ","))
-        ////               .Select(a => a.Replace("]", ""))
-        ////               .Select(a => a.Split(','));
-
-        ////    // Set up the map from array
-        ////    foreach (var keyvaluepair in keyvaluepairs)
-        ////    {
-        ////        info.CsFieldMap[keyvaluepair[1]] = keyvaluepair[0];
-        ////    }
-
-        ////    ////Make sure the key is simple
-        ////    ////Utilities.Assert(Context.Keys.Length == 1,
-        ////    ////    () => new NotSupportedException("Only works for Entities with simple keys")
-        ////    ////);
-
-        ////    ////Construct an Alias for the SELECTOR
-        ////    ////string keyAlias = _context.Keys.Select(key => string.Format("[Extent1].[{0}] AS [{1}]", info.CsFieldMap[key], key)).FirstOrDefault();
-
-        ////    ////Store the filterSQL
-        ////    ////info.RestrictingSQL = string.Format("SELECT {0} FROM {1}", keyAlias, bits[1]);
-
-        ////    return info;
-        ////}
     }
 }

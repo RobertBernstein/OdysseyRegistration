@@ -5,6 +5,7 @@ using OdysseyMvc4.Models;
 using OdysseyMvc4.UnitTests.Helpers;
 using System.Web.Mvc;
 using static OdysseyMvc4.Controllers.BaseRegistrationController;
+using System.Globalization;
 
 namespace OdysseyMvc4.UnitTests.Controllers;
 
@@ -21,79 +22,40 @@ public class BaseRegistrationControllerTests
         _mockRepo = TestHelper.CreateMockRepository();
     }
 
-    #region GetFriendlyRegistrationName Tests
-
-    [Fact]
-    public void GetFriendlyRegistrationName_WhenNone_ReturnsEmptyString()
-    {
-        var controller = CreateController(RegistrationType.None);
-        controller.GetDisplayableRegistrationName().Should().BeEmpty();
-    }
-
-    [Fact]
-    public void GetFriendlyRegistrationName_WhenTournament_ReturnsTournamentRegistration()
-    {
-        var controller = CreateController(RegistrationType.Tournament);
-        controller.GetDisplayableRegistrationName().Should().Be("Tournament Registration");
-    }
-
-    [Fact]
-    public void GetFriendlyRegistrationName_WhenJudges_ReturnsJudgesRegistration()
-    {
-        var controller = CreateController(RegistrationType.Judges);
-        controller.GetDisplayableRegistrationName().Should().Be("Judges Registration");
-    }
-
-    [Fact]
-    public void GetFriendlyRegistrationName_WhenCoachesTraining_ReturnsCoachesTrainingRegistration()
-    {
-        var controller = CreateController(RegistrationType.CoachesTraining);
-        controller.GetDisplayableRegistrationName().Should().Be("Coaches Training Registration");
-    }
-
-    [Fact]
-    public void GetFriendlyRegistrationName_WhenVolunteer_ReturnsVolunteerRegistration()
-    {
-        var controller = CreateController(RegistrationType.Volunteer);
-        controller.GetDisplayableRegistrationName().Should().Be("Volunteer Registration");
-    }
-
-    #endregion
-
     #region GetDisplayableRegistrationName Tests
 
     [Fact]
     public void GetDisplayableRegistrationName_WhenNone_ReturnsEmptyString()
     {
-        var controller = CreateController(RegistrationType.None);
+        using var controller = CreateController(RegistrationType.None);
         controller.GetDisplayableRegistrationName().Should().BeEmpty();
     }
 
     [Fact]
     public void GetDisplayableRegistrationName_WhenTournament_ReturnsTournamentRegistration()
     {
-        var controller = CreateController(RegistrationType.Tournament);
+        using var controller = CreateController(RegistrationType.Tournament);
         controller.GetDisplayableRegistrationName().Should().Be("Tournament Registration");
     }
 
     [Fact]
     public void GetDisplayableRegistrationName_WhenJudges_ReturnsJudgesRegistration()
     {
-        var controller = CreateController(RegistrationType.Judges);
+        using var controller = CreateController(RegistrationType.Judges);
         controller.GetDisplayableRegistrationName().Should().Be("Judges Registration");
     }
 
     [Fact]
     public void GetDisplayableRegistrationName_WhenCoachesTraining_ReturnsCoachesTrainingRegistration()
     {
-        var controller = CreateController(RegistrationType.CoachesTraining);
+        using var controller = CreateController(RegistrationType.CoachesTraining);
         controller.GetDisplayableRegistrationName().Should().Be("Coaches Training Registration");
     }
 
     [Fact]
     public void GetDisplayableRegistrationName_WhenVolunteer_ReturnsVolunteerRegistration()
     {
-        var controller = CreateController(RegistrationType.Volunteer);
+        using var controller = CreateController(RegistrationType.Volunteer);
         controller.GetDisplayableRegistrationName().Should().Be("Volunteer Registration");
     }
 
@@ -134,10 +96,12 @@ public class BaseRegistrationControllerTests
     public void IsRegistrationClosed_WhenCloseDateInFuture_ReturnsFalse()
     {
         var config = TestHelper.CreateDefaultConfig();
-        config["TournamentRegistrationCloseDateTime"] = DateTime.Now.AddDays(30).ToString();
+        config["TournamentRegistrationCloseDateTime"] =
+            DateTime.Now.AddDays(30).ToString(CultureInfo.InvariantCulture);
+
         _mockRepo.Setup(r => r.Config).Returns(config);
 
-        var controller = CreateController(RegistrationType.Tournament);
+        using var controller = CreateController(RegistrationType.Tournament);
         controller.IsRegistrationClosed(RegistrationType.Tournament).Should().BeFalse();
     }
 
@@ -145,10 +109,10 @@ public class BaseRegistrationControllerTests
     public void IsRegistrationClosed_WhenCloseDateInPast_ReturnsTrue()
     {
         var config = TestHelper.CreateDefaultConfig();
-        config["TournamentRegistrationCloseDateTime"] = DateTime.Now.AddDays(-1).ToString();
+        config["TournamentRegistrationCloseDateTime"] = DateTime.Now.AddDays(-1).ToString(CultureInfo.InvariantCulture);
         _mockRepo.Setup(r => r.Config).Returns(config);
 
-        var controller = CreateController(RegistrationType.Tournament);
+        using var controller = CreateController(RegistrationType.Tournament);
         controller.IsRegistrationClosed(RegistrationType.Tournament).Should().BeTrue();
     }
 
@@ -159,7 +123,7 @@ public class BaseRegistrationControllerTests
         config["TournamentRegistrationCloseDateTime"] = "not-a-date";
         _mockRepo.Setup(r => r.Config).Returns(config);
 
-        var controller = CreateController(RegistrationType.Tournament);
+        using var controller = CreateController(RegistrationType.Tournament);
         controller.IsRegistrationClosed(RegistrationType.Tournament).Should().BeTrue();
     }
 
@@ -167,10 +131,10 @@ public class BaseRegistrationControllerTests
     public void IsRegistrationClosed_ForJudges_UsesJudgesConfig()
     {
         var config = TestHelper.CreateDefaultConfig();
-        config["JudgesRegistrationCloseDateTime"] = DateTime.Now.AddDays(30).ToString();
+        config["JudgesRegistrationCloseDateTime"] = DateTime.Now.AddDays(30).ToString(CultureInfo.InvariantCulture);
         _mockRepo.Setup(r => r.Config).Returns(config);
 
-        var controller = CreateController(RegistrationType.Judges);
+        using var controller = CreateController(RegistrationType.Judges);
         controller.IsRegistrationClosed(RegistrationType.Judges).Should().BeFalse();
     }
 
@@ -182,10 +146,10 @@ public class BaseRegistrationControllerTests
     public void IsRegistrationComingSoon_WhenOpenDateInFuture_ReturnsTrue()
     {
         var config = TestHelper.CreateDefaultConfig();
-        config["TournamentRegistrationOpenDateTime"] = DateTime.Now.AddDays(30).ToString();
+        config["TournamentRegistrationOpenDateTime"] = DateTime.Now.AddDays(30).ToString(CultureInfo.InvariantCulture);
         _mockRepo.Setup(r => r.Config).Returns(config);
 
-        var controller = CreateController(RegistrationType.Tournament);
+        using var controller = CreateController(RegistrationType.Tournament);
         controller.IsRegistrationComingSoon(RegistrationType.Tournament).Should().BeTrue();
     }
 
@@ -193,10 +157,10 @@ public class BaseRegistrationControllerTests
     public void IsRegistrationComingSoon_WhenOpenDateInPast_ReturnsFalse()
     {
         var config = TestHelper.CreateDefaultConfig();
-        config["TournamentRegistrationOpenDateTime"] = DateTime.Now.AddDays(-30).ToString();
+        config["TournamentRegistrationOpenDateTime"] = DateTime.Now.AddDays(-30).ToString(CultureInfo.InvariantCulture);
         _mockRepo.Setup(r => r.Config).Returns(config);
 
-        var controller = CreateController(RegistrationType.Tournament);
+        using var controller = CreateController(RegistrationType.Tournament);
         controller.IsRegistrationComingSoon(RegistrationType.Tournament).Should().BeFalse();
     }
 
@@ -207,7 +171,7 @@ public class BaseRegistrationControllerTests
         config["TournamentRegistrationOpenDateTime"] = "invalid-date";
         _mockRepo.Setup(r => r.Config).Returns(config);
 
-        var controller = CreateController(RegistrationType.Tournament);
+        using var controller = CreateController(RegistrationType.Tournament);
         controller.IsRegistrationComingSoon(RegistrationType.Tournament).Should().BeFalse();
     }
 
@@ -222,7 +186,7 @@ public class BaseRegistrationControllerTests
         config["IsTournamentRegistrationDown"] = "true";
         _mockRepo.Setup(r => r.Config).Returns(config);
 
-        var controller = CreateController(RegistrationType.Tournament);
+        using var controller = CreateController(RegistrationType.Tournament);
         controller.IsRegistrationDown(RegistrationType.Tournament).Should().BeTrue();
     }
 
@@ -233,7 +197,7 @@ public class BaseRegistrationControllerTests
         config["IsTournamentRegistrationDown"] = "false";
         _mockRepo.Setup(r => r.Config).Returns(config);
 
-        var controller = CreateController(RegistrationType.Tournament);
+        using var controller = CreateController(RegistrationType.Tournament);
         controller.IsRegistrationDown(RegistrationType.Tournament).Should().BeFalse();
     }
 
@@ -244,7 +208,7 @@ public class BaseRegistrationControllerTests
         config["IsTournamentRegistrationDown"] = "not-a-boolean";
         _mockRepo.Setup(r => r.Config).Returns(config);
 
-        var controller = CreateController(RegistrationType.Tournament);
+        using var controller = CreateController(RegistrationType.Tournament);
         controller.IsRegistrationDown(RegistrationType.Tournament).Should().BeFalse();
     }
 
@@ -255,7 +219,7 @@ public class BaseRegistrationControllerTests
         config["IsJudgesRegistrationDown"] = "true";
         _mockRepo.Setup(r => r.Config).Returns(config);
 
-        var controller = CreateController(RegistrationType.Judges);
+        using var controller = CreateController(RegistrationType.Judges);
         controller.IsRegistrationDown(RegistrationType.Judges).Should().BeTrue();
     }
 
@@ -267,12 +231,12 @@ public class BaseRegistrationControllerTests
     public void CurrentRegistrationState_WhenAllOpen_ReturnsAvailable()
     {
         var config = TestHelper.CreateDefaultConfig();
-        config["TournamentRegistrationOpenDateTime"] = DateTime.Now.AddDays(-30).ToString();
-        config["TournamentRegistrationCloseDateTime"] = DateTime.Now.AddDays(30).ToString();
+        config["TournamentRegistrationOpenDateTime"] = DateTime.Now.AddDays(-30).ToString(CultureInfo.InvariantCulture);
+        config["TournamentRegistrationCloseDateTime"] = DateTime.Now.AddDays(30).ToString(CultureInfo.InvariantCulture);
         config["IsTournamentRegistrationDown"] = "false";
         _mockRepo.Setup(r => r.Config).Returns(config);
 
-        var controller = CreateController(RegistrationType.Tournament);
+        using var controller = CreateController(RegistrationType.Tournament);
         controller.CurrentRegistrationState.Should().Be(RegistrationState.Available);
     }
 
@@ -280,10 +244,10 @@ public class BaseRegistrationControllerTests
     public void CurrentRegistrationState_WhenComingSoon_ReturnsSoon()
     {
         var config = TestHelper.CreateDefaultConfig();
-        config["TournamentRegistrationOpenDateTime"] = DateTime.Now.AddDays(30).ToString();
+        config["TournamentRegistrationOpenDateTime"] = DateTime.Now.AddDays(30).ToString(CultureInfo.InvariantCulture);
         _mockRepo.Setup(r => r.Config).Returns(config);
 
-        var controller = CreateController(RegistrationType.Tournament);
+        using var controller = CreateController(RegistrationType.Tournament);
         controller.CurrentRegistrationState.Should().Be(RegistrationState.Soon);
     }
 
@@ -291,11 +255,11 @@ public class BaseRegistrationControllerTests
     public void CurrentRegistrationState_WhenDown_ReturnsDown()
     {
         var config = TestHelper.CreateDefaultConfig();
-        config["TournamentRegistrationOpenDateTime"] = DateTime.Now.AddDays(-30).ToString();
+        config["TournamentRegistrationOpenDateTime"] = DateTime.Now.AddDays(-30).ToString(CultureInfo.InvariantCulture);
         config["IsTournamentRegistrationDown"] = "true";
         _mockRepo.Setup(r => r.Config).Returns(config);
 
-        var controller = CreateController(RegistrationType.Tournament);
+        using var controller = CreateController(RegistrationType.Tournament);
         controller.CurrentRegistrationState.Should().Be(RegistrationState.Down);
     }
 
@@ -303,12 +267,12 @@ public class BaseRegistrationControllerTests
     public void CurrentRegistrationState_WhenClosed_ReturnsClosed()
     {
         var config = TestHelper.CreateDefaultConfig();
-        config["TournamentRegistrationOpenDateTime"] = DateTime.Now.AddDays(-60).ToString();
-        config["TournamentRegistrationCloseDateTime"] = DateTime.Now.AddDays(-1).ToString();
+        config["TournamentRegistrationOpenDateTime"] = DateTime.Now.AddDays(-60).ToString(CultureInfo.InvariantCulture);
+        config["TournamentRegistrationCloseDateTime"] = DateTime.Now.AddDays(-1).ToString(CultureInfo.InvariantCulture);
         config["IsTournamentRegistrationDown"] = "false";
         _mockRepo.Setup(r => r.Config).Returns(config);
 
-        var controller = CreateController(RegistrationType.Tournament);
+        using var controller = CreateController(RegistrationType.Tournament);
         controller.CurrentRegistrationState.Should().Be(RegistrationState.Closed);
     }
 
@@ -316,11 +280,11 @@ public class BaseRegistrationControllerTests
     public void CurrentRegistrationState_SoonTakesPriorityOverDown()
     {
         var config = TestHelper.CreateDefaultConfig();
-        config["TournamentRegistrationOpenDateTime"] = DateTime.Now.AddDays(30).ToString();
+        config["TournamentRegistrationOpenDateTime"] = DateTime.Now.AddDays(30).ToString(CultureInfo.InvariantCulture);
         config["IsTournamentRegistrationDown"] = "true";
         _mockRepo.Setup(r => r.Config).Returns(config);
 
-        var controller = CreateController(RegistrationType.Tournament);
+        using var controller = CreateController(RegistrationType.Tournament);
         controller.CurrentRegistrationState.Should().Be(RegistrationState.Soon);
     }
 
@@ -328,12 +292,12 @@ public class BaseRegistrationControllerTests
     public void CurrentRegistrationState_DownTakesPriorityOverClosed()
     {
         var config = TestHelper.CreateDefaultConfig();
-        config["TournamentRegistrationOpenDateTime"] = DateTime.Now.AddDays(-60).ToString();
-        config["TournamentRegistrationCloseDateTime"] = DateTime.Now.AddDays(-1).ToString();
+        config["TournamentRegistrationOpenDateTime"] = DateTime.Now.AddDays(-60).ToString(CultureInfo.InvariantCulture);
+        config["TournamentRegistrationCloseDateTime"] = DateTime.Now.AddDays(-1).ToString(CultureInfo.InvariantCulture);
         config["IsTournamentRegistrationDown"] = "true";
         _mockRepo.Setup(r => r.Config).Returns(config);
 
-        var controller = CreateController(RegistrationType.Tournament);
+        using var controller = CreateController(RegistrationType.Tournament);
         controller.CurrentRegistrationState.Should().Be(RegistrationState.Down);
     }
 
@@ -341,14 +305,15 @@ public class BaseRegistrationControllerTests
     public void CurrentRegistrationState_CallsSetBaseViewData()
     {
         var config = TestHelper.CreateDefaultConfig();
-        config["TournamentRegistrationOpenDateTime"] = DateTime.Now.AddDays(-30).ToString();
-        config["TournamentRegistrationCloseDateTime"] = DateTime.Now.AddDays(30).ToString();
+        config["TournamentRegistrationOpenDateTime"] = DateTime.Now.AddDays(-30).ToString(CultureInfo.InvariantCulture);
+        config["TournamentRegistrationCloseDateTime"] = DateTime.Now.AddDays(30).ToString(CultureInfo.InvariantCulture);
         config["IsTournamentRegistrationDown"] = "false";
         _mockRepo.Setup(r => r.Config).Returns(config);
 
-        var controller = CreateController(RegistrationType.Tournament);
+        using var controller = CreateController(RegistrationType.Tournament);
         var state = controller.CurrentRegistrationState;
 
+        state.Should().Be(RegistrationState.Available);
         _mockRepo.Verify(r => r.Config, Times.AtLeastOnce);
         _mockRepo.Verify(r => r.TournamentInfo, Times.AtLeastOnce);
     }
@@ -357,12 +322,12 @@ public class BaseRegistrationControllerTests
     public void CurrentRegistrationState_ForJudges_UsesJudgesConfiguration()
     {
         var config = TestHelper.CreateDefaultConfig();
-        config["JudgesRegistrationOpenDateTime"] = DateTime.Now.AddDays(-30).ToString();
-        config["JudgesRegistrationCloseDateTime"] = DateTime.Now.AddDays(30).ToString();
+        config["JudgesRegistrationOpenDateTime"] = DateTime.Now.AddDays(-30).ToString(CultureInfo.InvariantCulture);
+        config["JudgesRegistrationCloseDateTime"] = DateTime.Now.AddDays(30).ToString(CultureInfo.InvariantCulture);
         config["IsJudgesRegistrationDown"] = "false";
         _mockRepo.Setup(r => r.Config).Returns(config);
 
-        var controller = CreateController(RegistrationType.Judges);
+        using var controller = CreateController(RegistrationType.Judges);
         controller.CurrentRegistrationState.Should().Be(RegistrationState.Available);
     }
 
@@ -373,7 +338,7 @@ public class BaseRegistrationControllerTests
     [Fact]
     public void BuildMessage_WithValidInputs_ReturnsMailMessage()
     {
-        var controller = CreateController(RegistrationType.Tournament);
+        using var controller = CreateController(RegistrationType.Tournament);
         var message = InvokeBuildMessage(controller, "from@test.com", "Subject", "Body", "to@test.com", null!, null!);
 
         message.Should().NotBeNull();
@@ -388,7 +353,7 @@ public class BaseRegistrationControllerTests
     [Fact]
     public void BuildMessage_WithMultipleRecipients_SplitsOnComma()
     {
-        var controller = CreateController(RegistrationType.Tournament);
+        using var controller = CreateController(RegistrationType.Tournament);
         var message = InvokeBuildMessage(controller, "from@test.com", "Subject", "Body", "to1@test.com,to2@test.com", null!, null!);
 
         message.Should().NotBeNull();
@@ -400,7 +365,7 @@ public class BaseRegistrationControllerTests
     [Fact]
     public void BuildMessage_WithBcc_SetsBcc()
     {
-        var controller = CreateController(RegistrationType.Tournament);
+        using var controller = CreateController(RegistrationType.Tournament);
         var message = InvokeBuildMessage(controller, "from@test.com", "Subject", "Body", "to@test.com", "bcc@test.com", null!);
 
         message.Should().NotBeNull();
@@ -411,7 +376,7 @@ public class BaseRegistrationControllerTests
     [Fact]
     public void BuildMessage_WithCc_SetsCc()
     {
-        var controller = CreateController(RegistrationType.Tournament);
+        using var controller = CreateController(RegistrationType.Tournament);
         var message = InvokeBuildMessage(controller, "from@test.com", "Subject", "Body", "to@test.com", null!, "cc@test.com");
 
         message.Should().NotBeNull();
@@ -422,7 +387,7 @@ public class BaseRegistrationControllerTests
     [Fact]
     public void BuildMessage_WithEmptyBccAndCc_DoesNotSetBccOrCc()
     {
-        var controller = CreateController(RegistrationType.Tournament);
+        using var controller = CreateController(RegistrationType.Tournament);
         var message = InvokeBuildMessage(controller, "from@test.com", "Subject", "Body", "to@test.com", "", "");
 
         message.Should().NotBeNull();
@@ -433,7 +398,7 @@ public class BaseRegistrationControllerTests
     [Fact]
     public void BuildMessage_WithWhitespaceBccAndCc_DoesNotSetBccOrCc()
     {
-        var controller = CreateController(RegistrationType.Tournament);
+        using var controller = CreateController(RegistrationType.Tournament);
         var message = InvokeBuildMessage(controller, "from@test.com", "Subject", "Body", "to@test.com", "   ", "   ");
 
         message.Should().NotBeNull();
@@ -444,7 +409,7 @@ public class BaseRegistrationControllerTests
     [Fact]
     public void BuildMessage_WithInvalidRecipient_ReturnsNull()
     {
-        var controller = CreateController(RegistrationType.Tournament);
+        using var controller = CreateController(RegistrationType.Tournament);
         var message = InvokeBuildMessage(controller, "from@test.com", "Subject", "Body", "not-an-email", null!, null!);
 
         message.Should().BeNull();
@@ -453,7 +418,7 @@ public class BaseRegistrationControllerTests
     [Fact]
     public void BuildMessage_SetsNormalPriority()
     {
-        var controller = CreateController(RegistrationType.Tournament);
+        using var controller = CreateController(RegistrationType.Tournament);
         var message = InvokeBuildMessage(controller, "from@test.com", "Subject", "Body", "to@test.com", null!, null!);
 
         message.Should().NotBeNull();
@@ -463,7 +428,7 @@ public class BaseRegistrationControllerTests
     [Fact]
     public void BuildMessage_WithThreeRecipients_AddsAllRecipients()
     {
-        var controller = CreateController(RegistrationType.Tournament);
+        using var controller = CreateController(RegistrationType.Tournament);
         var message = InvokeBuildMessage(controller, "from@test.com", "Subject", "Body", "to1@test.com,to2@test.com,to3@test.com", null!, null!);
 
         message.Should().NotBeNull();
@@ -476,7 +441,7 @@ public class BaseRegistrationControllerTests
     [Fact]
     public void BuildMessage_WithMixOfValidAndInvalidRecipients_ReturnsNull()
     {
-        var controller = CreateController(RegistrationType.Tournament);
+        using var controller = CreateController(RegistrationType.Tournament);
         var message = InvokeBuildMessage(controller, "from@test.com", "Subject", "Body", "valid@test.com,invalid-email", null!, null!);
 
         message.Should().BeNull();
@@ -485,7 +450,7 @@ public class BaseRegistrationControllerTests
     [Fact]
     public void BuildMessage_WithBothBccAndCc_SetsBothFields()
     {
-        var controller = CreateController(RegistrationType.Tournament);
+        using var controller = CreateController(RegistrationType.Tournament);
         var message = InvokeBuildMessage(controller, "from@test.com", "Subject", "Body", "to@test.com", "bcc@test.com", "cc@test.com");
 
         message.Should().NotBeNull();
@@ -498,7 +463,7 @@ public class BaseRegistrationControllerTests
     [Fact]
     public void BuildMessage_WithNullBccAndNullCc_DoesNotSetBccOrCc()
     {
-        var controller = CreateController(RegistrationType.Tournament);
+        using var controller = CreateController(RegistrationType.Tournament);
         var message = InvokeBuildMessage(controller, "from@test.com", "Subject", "Body", "to@test.com", null!, null!);
 
         message.Should().NotBeNull();
@@ -513,7 +478,7 @@ public class BaseRegistrationControllerTests
     [Fact]
     public void BadEmail_ReturnsViewResultWithCorrectPath()
     {
-        var controller = CreateController(RegistrationType.Tournament);
+        using var controller = CreateController(RegistrationType.Tournament);
 
         var result = controller.BadEmail();
 
@@ -525,7 +490,7 @@ public class BaseRegistrationControllerTests
     [Fact]
     public void BadEmail_SetsBaseViewData()
     {
-        var controller = CreateController(RegistrationType.Tournament);
+        using var controller = CreateController(RegistrationType.Tournament);
 
         var result = controller.BadEmail();
 
@@ -541,7 +506,7 @@ public class BaseRegistrationControllerTests
     [Fact]
     public void Closed_ReturnsViewResult()
     {
-        var controller = CreateController(RegistrationType.Tournament);
+        using var controller = CreateController(RegistrationType.Tournament);
 
         var result = controller.Closed();
 
@@ -552,7 +517,7 @@ public class BaseRegistrationControllerTests
     [Fact]
     public void Closed_ReturnsViewDataAsModel()
     {
-        var controller = CreateController(RegistrationType.Tournament);
+        using var controller = CreateController(RegistrationType.Tournament);
 
         var result = controller.Closed();
 
@@ -564,10 +529,12 @@ public class BaseRegistrationControllerTests
     [Fact]
     public void Closed_SetsBaseViewData()
     {
-        var controller = CreateController(RegistrationType.Tournament);
+        using var controller = CreateController(RegistrationType.Tournament);
 
         var result = controller.Closed();
 
+        result.Should().NotBeNull();
+        result.Should().BeOfType<ViewResult>();
         _mockRepo.Verify(r => r.Config, Times.AtLeastOnce);
         _mockRepo.Verify(r => r.TournamentInfo, Times.AtLeastOnce);
     }
@@ -579,7 +546,7 @@ public class BaseRegistrationControllerTests
     [Fact]
     public void ClosedPost_RedirectsToHomePage()
     {
-        var controller = CreateController(RegistrationType.Tournament);
+        using var controller = CreateController(RegistrationType.Tournament);
 
         var result = controller.ClosedPost();
 
@@ -591,10 +558,12 @@ public class BaseRegistrationControllerTests
     [Fact]
     public void ClosedPost_SetsBaseViewData()
     {
-        var controller = CreateController(RegistrationType.Tournament);
+        using var controller = CreateController(RegistrationType.Tournament);
 
         var result = controller.ClosedPost();
 
+        result.Should().NotBeNull();
+        result.Should().BeOfType<ViewResult>();
         _mockRepo.Verify(r => r.Config, Times.AtLeastOnce);
         _mockRepo.Verify(r => r.TournamentInfo, Times.AtLeastOnce);
     }
@@ -606,7 +575,7 @@ public class BaseRegistrationControllerTests
     [Fact]
     public void Down_ReturnsViewResult()
     {
-        var controller = CreateController(RegistrationType.Tournament);
+        using var controller = CreateController(RegistrationType.Tournament);
 
         var result = controller.Down();
 
@@ -617,7 +586,7 @@ public class BaseRegistrationControllerTests
     [Fact]
     public void Down_ReturnsViewDataAsModel()
     {
-        var controller = CreateController(RegistrationType.Tournament);
+        using var controller = CreateController(RegistrationType.Tournament);
 
         var result = controller.Down();
 
@@ -629,10 +598,12 @@ public class BaseRegistrationControllerTests
     [Fact]
     public void Down_SetsBaseViewData()
     {
-        var controller = CreateController(RegistrationType.Tournament);
+        using var controller = CreateController(RegistrationType.Tournament);
 
         var result = controller.Down();
 
+        result.Should().NotBeNull();
+        result.Should().BeOfType<ViewResult>();
         _mockRepo.Verify(r => r.Config, Times.AtLeastOnce);
         _mockRepo.Verify(r => r.TournamentInfo, Times.AtLeastOnce);
     }
@@ -644,7 +615,7 @@ public class BaseRegistrationControllerTests
     [Fact]
     public void DownPost_RedirectsToHomePage()
     {
-        var controller = CreateController(RegistrationType.Tournament);
+        using var controller = CreateController(RegistrationType.Tournament);
 
         var result = controller.DownPost();
 
@@ -656,10 +627,12 @@ public class BaseRegistrationControllerTests
     [Fact]
     public void DownPost_SetsBaseViewData()
     {
-        var controller = CreateController(RegistrationType.Tournament);
+        using var controller = CreateController(RegistrationType.Tournament);
 
         var result = controller.DownPost();
 
+        result.Should().NotBeNull();
+        result.Should().BeOfType<ViewResult>();
         _mockRepo.Verify(r => r.Config, Times.AtLeastOnce);
         _mockRepo.Verify(r => r.TournamentInfo, Times.AtLeastOnce);
     }
@@ -671,7 +644,7 @@ public class BaseRegistrationControllerTests
     [Fact]
     public void Error_ReturnsViewResult()
     {
-        var controller = CreateController(RegistrationType.Tournament);
+        using var controller = CreateController(RegistrationType.Tournament);
 
         var result = controller.Error();
 
@@ -682,7 +655,7 @@ public class BaseRegistrationControllerTests
     [Fact]
     public void Error_ReturnsViewDataAsModel()
     {
-        var controller = CreateController(RegistrationType.Tournament);
+        using var controller = CreateController(RegistrationType.Tournament);
 
         var result = controller.Error();
 
@@ -694,10 +667,12 @@ public class BaseRegistrationControllerTests
     [Fact]
     public void Error_SetsBaseViewData()
     {
-        var controller = CreateController(RegistrationType.Tournament);
+        using var controller = CreateController(RegistrationType.Tournament);
 
         var result = controller.Error();
 
+        result.Should().NotBeNull();
+        result.Should().BeOfType<ViewResult>();
         _mockRepo.Verify(r => r.Config, Times.AtLeastOnce);
         _mockRepo.Verify(r => r.TournamentInfo, Times.AtLeastOnce);
     }
@@ -713,11 +688,11 @@ public class BaseRegistrationControllerTests
     [Fact(Skip = "Requires SMTP server infrastructure - integration test needed")]
     public void SendMessage_WithValidConfiguration_ReturnsNullOnSuccess()
     {
-        var controller = CreateController(RegistrationType.Tournament);
+        using var controller = CreateController(RegistrationType.Tournament);
         var viewData = new OdysseyMvc4.ViewData.BaseViewData();
         controller.TestSetBaseViewData(viewData);
 
-        var mailMessage = new System.Net.Mail.MailMessage("from@test.com", "to@test.com")
+        using var mailMessage = new System.Net.Mail.MailMessage("from@test.com", "to@test.com")
         {
             Subject = "Test Subject",
             Body = "Test Body"
@@ -735,7 +710,7 @@ public class BaseRegistrationControllerTests
     [Fact]
     public void SetBaseViewData_SetsConfig()
     {
-        var controller = CreateController(RegistrationType.Tournament);
+        using var controller = CreateController(RegistrationType.Tournament);
         var viewData = new OdysseyMvc4.ViewData.BaseViewData();
 
         controller.TestSetBaseViewData(viewData);
@@ -747,7 +722,7 @@ public class BaseRegistrationControllerTests
     [Fact]
     public void SetBaseViewData_SetsRegionName()
     {
-        var controller = CreateController(RegistrationType.Tournament);
+        using var controller = CreateController(RegistrationType.Tournament);
         var viewData = new OdysseyMvc4.ViewData.BaseViewData();
 
         controller.TestSetBaseViewData(viewData);
@@ -758,7 +733,7 @@ public class BaseRegistrationControllerTests
     [Fact]
     public void SetBaseViewData_SetsRegionNumber()
     {
-        var controller = CreateController(RegistrationType.Tournament);
+        using var controller = CreateController(RegistrationType.Tournament);
         var viewData = new OdysseyMvc4.ViewData.BaseViewData();
 
         controller.TestSetBaseViewData(viewData);
@@ -769,7 +744,7 @@ public class BaseRegistrationControllerTests
     [Fact]
     public void SetBaseViewData_SetsTournamentInfo()
     {
-        var controller = CreateController(RegistrationType.Tournament);
+        using var controller = CreateController(RegistrationType.Tournament);
         var viewData = new OdysseyMvc4.ViewData.BaseViewData();
 
         controller.TestSetBaseViewData(viewData);
@@ -781,7 +756,7 @@ public class BaseRegistrationControllerTests
     [Fact]
     public void SetBaseViewData_SetsFriendlyRegistrationName()
     {
-        var controller = CreateController(RegistrationType.Tournament);
+        using var controller = CreateController(RegistrationType.Tournament);
         var viewData = new OdysseyMvc4.ViewData.BaseViewData();
 
         controller.TestSetBaseViewData(viewData);
@@ -792,7 +767,7 @@ public class BaseRegistrationControllerTests
     [Fact]
     public void SetBaseViewData_SetsSiteName()
     {
-        var controller = CreateController(RegistrationType.Tournament);
+        using var controller = CreateController(RegistrationType.Tournament);
         var viewData = new OdysseyMvc4.ViewData.BaseViewData();
 
         controller.TestSetBaseViewData(viewData);
@@ -803,7 +778,7 @@ public class BaseRegistrationControllerTests
     [Fact]
     public void SetBaseViewData_SetsPathToSiteCssFile()
     {
-        var controller = CreateController(RegistrationType.Tournament);
+        using var controller = CreateController(RegistrationType.Tournament);
         var viewData = new OdysseyMvc4.ViewData.BaseViewData();
 
         controller.TestSetBaseViewData(viewData);
@@ -818,7 +793,7 @@ public class BaseRegistrationControllerTests
     [Fact]
     public void Soon_ReturnsViewResult()
     {
-        var controller = CreateController(RegistrationType.Tournament);
+        using var controller = CreateController(RegistrationType.Tournament);
 
         var result = controller.Soon();
 
@@ -829,7 +804,7 @@ public class BaseRegistrationControllerTests
     [Fact]
     public void Soon_ReturnsViewDataAsModel()
     {
-        var controller = CreateController(RegistrationType.Tournament);
+        using var controller = CreateController(RegistrationType.Tournament);
 
         var result = controller.Soon();
 
@@ -841,10 +816,12 @@ public class BaseRegistrationControllerTests
     [Fact]
     public void Soon_SetsBaseViewData()
     {
-        var controller = CreateController(RegistrationType.Tournament);
+        using var controller = CreateController(RegistrationType.Tournament);
 
         var result = controller.Soon();
 
+        result.Should().NotBeNull();
+        result.Should().BeOfType<ViewResult>();
         _mockRepo.Verify(r => r.Config, Times.AtLeastOnce);
         _mockRepo.Verify(r => r.TournamentInfo, Times.AtLeastOnce);
     }

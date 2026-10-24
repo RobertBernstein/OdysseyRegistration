@@ -406,3 +406,6 @@ FodyWeavers.xsd
 # Exclude Docker passwords
 src/sa_password.txt
 src/webmaster_email_password.txt
+
+# Exclude local temp files
+/session-state/temp/

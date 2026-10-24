@@ -17,14 +17,14 @@ public class BaseViewDataTests
         // Arrange
         var viewData = new BaseViewData
         {
-            TournamentInfo = new Event { StartDate = new DateTime(2025, 3, 15) }
+            TournamentInfo = new Event { StartDate = new DateTime(2025, 3, 15, 0, 0, 0, DateTimeKind.Unspecified) }
         };
 
         // Act
         var result = viewData.TournamentDate;
 
         // Assert
-        result.Should().Be(new DateTime(2025, 3, 15).ToLongDateString());
+        result.Should().Be(new DateTime(2025, 3, 15, 0, 0, 0, DateTimeKind.Unspecified).ToLongDateString());
     }
 
     [Fact]

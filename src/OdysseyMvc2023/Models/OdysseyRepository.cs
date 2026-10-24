@@ -1,4 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="OdysseyRepository.cs" company="Tardis Technologies">
 //   Copyright 2014-2024 Tardis Technologies. All rights reserved.
 // </copyright>
@@ -20,6 +20,11 @@ using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
 
+// S125: retained decompiled legacy reference comments are intentional in this file.
+#pragma warning disable S125
+// S1121, S1117, MA0084, S1905, S3459, MA0016: legacy/decompiled repository patterns intentionally left unchanged during migration.
+#pragma warning disable S1121, S1117, MA0084, S1905, S3459, MA0016
+
 namespace OdysseyMvc2023.Models
 {
     /// <summary>
@@ -40,7 +45,7 @@ namespace OdysseyMvc2023.Models
         /// <summary>
         /// The registration system configuration.
         /// </summary>
-        private Dictionary<string, string> config;
+        private IDictionary<string, string> config;
 
         /// <summary>
         /// The divisions.
@@ -146,7 +151,7 @@ namespace OdysseyMvc2023.Models
         /// <summary>
         /// Gets the registration system configuration.
         /// </summary>
-        public Dictionary<string, string> Config
+        public IDictionary<string, string> Config
         {
             get
             {
@@ -159,7 +164,7 @@ namespace OdysseyMvc2023.Models
                     //        (Expression<Func<Config, Config>>)(c => c)),
                     //    (Func<Config, string>)(d => d.Name), (Func<Config, string>)(d => d.Value));
                     this.Config = (from c in this.context.Configs
-                                   select c).ToDictionary(d => d.Name, d => d.Value);
+                                   select c).ToDictionary(d => d.Name, d => d.Value, StringComparer.OrdinalIgnoreCase);
                 }
 
                 return this.config;
@@ -168,7 +173,7 @@ namespace OdysseyMvc2023.Models
             private set
             {
                 this.config = value;
-                this.config.Add("EndYear", (int.Parse(this.config["Year"]) + 1).ToString((IFormatProvider)CultureInfo.InvariantCulture));
+                this.config.Add("EndYear", (int.Parse(this.config["Year"], CultureInfo.InvariantCulture) + 1).ToString((IFormatProvider)CultureInfo.InvariantCulture));
             }
         }
 
@@ -260,7 +265,7 @@ namespace OdysseyMvc2023.Models
                 Problem problem1 = Queryable.FirstOrDefault<Problem>(queryable, (Expression<Func<Problem, bool>>)(problem => problem.ProblemID == 6));
                 if (problem1 != null)
                     problem1.ProblemName += " (The Primary Problem)";
-                return this.problemChoicesWithoutSpontaneous ?? (this.ProblemChoices = (IEnumerable<Problem>)queryable);
+                return this.problemChoicesWithoutSpontaneous ?? (this.problemChoicesWithoutSpontaneous = (IEnumerable<Problem>)queryable);
             }
         }
 
@@ -545,18 +550,24 @@ namespace OdysseyMvc2023.Models
                    select j;
         }
 
-        public IQueryable<Judge> GetJudgeByIdAndName(
-            int judgeId,
-            string judgeFirstName,
-            string judgeLastName)
-        {
-            //return Queryable.Where<Judge>((IQueryable<Judge>)this.context.Judges, (Expression<Func<Judge, bool>>)(j => j.JudgeID == judgeId && j.FirstName.ToLower() == judgeFirstName.ToLower() && j.LastName.ToLower() == judgeLastName.ToLower()));
-            return from j in this.context.Judges
-                   where (j.JudgeID == judgeId) && (j.FirstName.ToLower() == judgeFirstName.ToLower()) && (j.LastName.ToLower() == judgeLastName.ToLower())
-                   select j;
-        }
+        // Suppress analyzer warnings for the explicit case-insensitive name comparison and the direct LINQ query pattern used here.
+        #pragma warning disable MA0011, RCS1155
+                public IQueryable<Judge> GetJudgeByIdAndName(
+                    int judgeId,
+                    string judgeFirstName,
+                    string judgeLastName)
+                {
+                    //return Queryable.Where<Judge>((IQueryable<Judge>)this.context.Judges, (Expression<Func<Judge, bool>>)(j => j.JudgeID == judgeId && j.FirstName.ToLower() == judgeFirstName.ToLower() && j.LastName.ToLower() == judgeLastName.ToLower()));
+                    return from j in this.context.Judges
+                           where (j.JudgeID == judgeId) && (j.FirstName.ToLower() == judgeFirstName.ToLower()) && (j.LastName.ToLower() == judgeLastName.ToLower())
+                           select j;
+                }
+        #pragma warning restore MA0011, RCS1155
 
-        public short? GetJudgeIdFromTournamentRegistrationId(int tournamentRegistrationId) => (short?)Queryable.Where<TournamentRegistration>((IQueryable<TournamentRegistration>)this.context.TournamentRegistrations, (Expression<Func<TournamentRegistration, bool>>)(t => t.TeamID == tournamentRegistrationId)).FirstOrDefault<TournamentRegistration>()?.JudgeID;
+        public short? GetJudgeIdFromTournamentRegistrationId(int tournamentRegistrationId) =>
+            ((IQueryable<TournamentRegistration>)this.context.TournamentRegistrations)
+                .Where<TournamentRegistration>((Expression<Func<TournamentRegistration, bool>>)
+                (t => t.TeamID == tournamentRegistrationId)).FirstOrDefault<TournamentRegistration>()?.JudgeID;
 
         public void GetJudgeNameFromJudgeId(
           short? judgeId,
@@ -691,7 +702,7 @@ namespace OdysseyMvc2023.Models
             if (!string.IsNullOrWhiteSpace(judge.TeamID))
             {
                 int result;
-                if (int.TryParse(judge.TeamID, out result) && result == tournamentRegistrationId)
+                if (int.TryParse(judge.TeamID, NumberStyles.Integer, CultureInfo.InvariantCulture, out result) && result == tournamentRegistrationId)
                     return 0;
                 errorMessage = "The selected judge has already been assigned to another team. &nbsp;The webmaster has been notified and you will be contacted about how to complete your registration.";
             }
@@ -828,3 +839,6 @@ namespace OdysseyMvc2023.Models
         //}
     }
 }
+
+#pragma warning restore S1121, S1117, MA0084, S1905, S3459, MA0016
+#pragma warning restore S125

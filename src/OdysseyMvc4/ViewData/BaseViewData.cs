@@ -21,7 +21,7 @@ namespace OdysseyMvc4.ViewData
         /// <summary>
         /// Gets or sets the general configuration data for all registration types.
         /// </summary>
-        public Dictionary<string, string> Config { get; set; }
+        public IDictionary<string, string> Config { get; set; }
 
         /// <summary>
         /// Gets or sets the displayable registration name, e.g. "Tournament

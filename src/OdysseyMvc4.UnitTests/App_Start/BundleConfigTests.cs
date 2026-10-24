@@ -211,7 +211,7 @@ public class BundleConfigTests
             "RegisterBundles should register exactly 6 bundles (4 script bundles and 2 style bundles)");
         bundlePaths.Should().HaveCount(6,
             "All bundle paths should be distinct");
-        bundlePaths.Distinct().Should().HaveCount(6,
+        bundlePaths.Distinct(StringComparer.Ordinal).Should().HaveCount(6,
             "All bundle paths should be unique with no duplicates");
     }
 
@@ -286,7 +286,7 @@ public class BundleConfigTests
 
         var expectedExceptionType = typeof(NullReferenceException);
 
-        expectedExceptionType.Should().Be(typeof(NullReferenceException),
+        expectedExceptionType.Should().Be<NullReferenceException>(
             "RegisterBundles should throw NullReferenceException if passed a null BundleCollection because it does not validate parameters");
     }
 }

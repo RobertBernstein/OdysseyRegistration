@@ -13,7 +13,7 @@ namespace JudgeRegistrationRazor.Pages.JudgesRegistration
     /// example, the Index page is named IndexModel.
     /// https://docs.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.mvc.razorpages.pagemodel
     /// </summary>
-    public class Page01Model : BasePageModel
+    internal class Page01Model : BasePageModel
     {
         public string Title { get; private set; }
 
@@ -87,7 +87,7 @@ namespace JudgeRegistrationRazor.Pages.JudgesRegistration
                 string mailString =
                     ("?subject=I would like to help at the Region " +
                     RegionNumber +
-                    " Tournament&body=I cannot be a judge this year, but would like to help in some other way.%0A%0AMy name is ______________________.%0A%0AMy phone number is ______________________.%0A%0A").Replace(" ", "%20");
+                    " Tournament&body=I cannot be a judge this year, but would like to help in some other way.%0A%0AMy name is ______________________.%0A%0AMy phone number is ______________________.%0A%0A").Replace(" ", "%20", StringComparison.Ordinal);
                 builder.Append(mailString);
                 return builder.ToString();
             }
@@ -95,17 +95,11 @@ namespace JudgeRegistrationRazor.Pages.JudgesRegistration
 
         public async Task OnGetAsync()
         {
-            // Create a LINQ query to select the events.
-            // Note: The query is only defined at this point, it has not been run against the database.
-            var events = from e in Context.Events
-                         select e;
-
             JudgesInfo = await (from o in Context.Events
                                 where o.EventName.Contains("Judges") && o.EventName.Contains("Training")
-                                select o).FirstAsync();
+                                select o).FirstAsync().ConfigureAwait(false);
 
-            Judge = await Context.Judges.ToListAsync();
-            //Config = await Context.Configs;
+            Judge = await Context.Judges.ToListAsync().ConfigureAwait(false);
         }
 
         public string BuildMailRegionalDirectorHyperLink()
@@ -116,7 +110,7 @@ namespace JudgeRegistrationRazor.Pages.JudgesRegistration
             string mailString =
                 ("?subject=I would like to help at the Region " +
                 RegionNumber +
-                " Tournament&body=I cannot be a judge this year, but would like to help in some other way.%0A%0AMy name is ______________________.%0A%0AMy phone number is ______________________.%0A%0A").Replace(" ", "%20");
+                " Tournament&body=I cannot be a judge this year, but would like to help in some other way.%0A%0AMy name is ______________________.%0A%0AMy phone number is ______________________.%0A%0A").Replace(" ", "%20", StringComparison.Ordinal);
             builder.Append(mailString);
             return builder.ToString();
         }

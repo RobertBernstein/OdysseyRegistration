@@ -39,4 +39,4 @@ app.UseSystemWebAdapters();
 
 app.MapDefaultControllerRoute();
 
-app.Run();
+await app.RunAsync().ConfigureAwait(false);

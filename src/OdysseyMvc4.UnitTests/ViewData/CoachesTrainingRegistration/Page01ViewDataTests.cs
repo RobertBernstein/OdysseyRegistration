@@ -151,14 +151,14 @@ public class Page01ViewDataTests
         // Arrange
         var viewData = new Page01ViewData
         {
-            CoachesTrainingInfo = new Event { StartDate = new DateTime(2025, 3, 15) }
+            CoachesTrainingInfo = new Event { StartDate = new DateTime(2025, 3, 15, 0, 0, 0, DateTimeKind.Unspecified) }
         };
 
         // Act
         var result = viewData.CoachesTrainingDate;
 
         // Assert
-        result.Should().Be(new DateTime(2025, 3, 15).ToLongDateString());
+        result.Should().Be(new DateTime(2025, 3, 15, 0, 0, 0, DateTimeKind.Unspecified).ToLongDateString());
     }
 
     [Fact]

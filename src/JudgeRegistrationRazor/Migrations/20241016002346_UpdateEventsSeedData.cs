@@ -8,14 +8,19 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace JudgeRegistrationRazor.Migrations
 {
     /// <inheritdoc />
-    public partial class UpdateEventsSeedData : Migration
+    internal partial class UpdateEventsSeedData : Migration
     {
+        private static readonly string[] EventColumns =
+        {
+            "Id", "EndDate", "EventCoordinatorEmail", "EventCoordinatorName", "EventCoordinatorPhone", "EventCost", "EventMailBody", "EventMakeChecksOutTo", "EventName", "EventPayeeAddress1", "EventPayeeAddress2", "EventPayeeCity", "EventPayeeEmail1", "EventPayeeName", "EventPayeePhone1", "EventPayeeState", "EventPayeeZipCode", "EventVolunteerInformationMessage", "InformationURL", "LateEventCost", "LateEventCostStartDate", "Location", "LocationAddress", "LocationCity", "LocationMapURL", "LocationPhone", "LocationState", "LocationURL", "LocationURLColor", "PaymentDueDate", "StartDate", "TeamsVolunteerWantsToSeeMessage", "Time"
+        };
+
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.InsertData(
                 table: "Events",
-                columns: new[] { "Id", "EndDate", "EventCoordinatorEmail", "EventCoordinatorName", "EventCoordinatorPhone", "EventCost", "EventMailBody", "EventMakeChecksOutTo", "EventName", "EventPayeeAddress1", "EventPayeeAddress2", "EventPayeeCity", "EventPayeeEmail1", "EventPayeeName", "EventPayeePhone1", "EventPayeeState", "EventPayeeZipCode", "EventVolunteerInformationMessage", "InformationURL", "LateEventCost", "LateEventCostStartDate", "Location", "LocationAddress", "LocationCity", "LocationMapURL", "LocationPhone", "LocationState", "LocationURL", "LocationURLColor", "PaymentDueDate", "StartDate", "TeamsVolunteerWantsToSeeMessage", "Time" },
+                columns: EventColumns,
                 values: new object[,]
                 {
                     { 10, null, null, null, null, null, null, null, "Coordinators Meeting", null, null, null, null, null, null, null, null, null, null, null, null, "Dolley Madison Library", null, null, null, null, null, "http://www.fairfaxcounty.gov/library/branches/ch/direct.htm", "#FFFF00", null, new DateTime(2019, 9, 26, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "7:00 to 8:30 PM" },

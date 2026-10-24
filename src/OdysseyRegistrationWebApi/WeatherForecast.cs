@@ -1,6 +1,6 @@
 namespace OdysseyRegistrationWebApi
 {
-    public class WeatherForecast
+    internal class WeatherForecast
     {
         public DateOnly Date { get; set; }
 

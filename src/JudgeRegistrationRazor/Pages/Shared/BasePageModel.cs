@@ -1,4 +1,4 @@
-﻿using JudgeRegistrationRazor.Data;
+using JudgeRegistrationRazor.Data;
 using JudgeRegistrationRazor.Models;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -6,8 +6,25 @@ using System.Globalization;
 
 namespace JudgeRegistrationRazor.Pages.Shared
 {
-    public class BasePageModel(OdysseyContext context, ILogger<BasePageModel> logger) : PageModel
+    internal class BasePageModel(OdysseyContext context, ILogger<BasePageModel> logger) : PageModel
     {
+        private static readonly Action<ILogger, Exception?> LogConfigWasNullWarning =
+            LoggerMessage.Define(
+                LogLevel.Warning,
+                new EventId(1, nameof(LogConfigWasNullWarning)),
+                "Config was null and should not have been.");
+
+        private static readonly Action<ILogger, Exception?> LogTournamentInfoWasNullWarning =
+            LoggerMessage.Define(
+                LogLevel.Warning,
+                new EventId(2, nameof(LogTournamentInfoWasNullWarning)),
+                "TournamentInfo was null and should not have been.");
+
+        private static readonly Action<ILogger, Exception?> LogRegionNameWasNullWarning =
+            LoggerMessage.Define(
+                LogLevel.Warning,
+                new EventId(3, nameof(LogRegionNameWasNullWarning)),
+                "RegionName was null and should not have been.");
 
         /// <summary>
         /// Gets a publicly accessible context for child classes.
@@ -22,7 +39,7 @@ namespace JudgeRegistrationRazor.Pages.Shared
         /// <summary>
         /// The registration type.
         /// </summary>
-        public enum RegistrationType
+        internal enum RegistrationType
         {
             /// <summary>
             /// The default, i.e. no registration type.  This should never be used.
@@ -53,12 +70,12 @@ namespace JudgeRegistrationRazor.Pages.Shared
         /// <summary>
         /// Backing member variable for general configuration data for all registration types.
         /// </summary>
-        public Dictionary<string, string>? _config;
+        private Dictionary<string, string>? _config;
 
         /// <summary>
         /// Gets or sets the general configuration data for all registration types.
         /// </summary>
-        public Dictionary<string, string>? Config
+        public IDictionary<string, string>? Config
         {
             get
             {
@@ -66,19 +83,25 @@ namespace JudgeRegistrationRazor.Pages.Shared
                 if (_config == null)
                 {
                     _config = (from c in context.Configs
-                               select c).ToDictionary(d => d.Name, d => d.Value);
+                               select c).ToDictionary(d => d.Name, d => d.Value, StringComparer.OrdinalIgnoreCase);
 
-                    _config.Add("EndYear", (int.Parse(_config["Year"]) + 1).ToString(CultureInfo.InvariantCulture));
+                    _config.Add("EndYear", (int.Parse(_config["Year"], CultureInfo.InvariantCulture) + 1).ToString(CultureInfo.InvariantCulture));
                 }
 
                 return _config;
+            }
+
+            set
+            {
+                _config = value as Dictionary<string, string>
+                    ?? value?.ToDictionary(kvp => kvp.Key, kvp => kvp.Value, StringComparer.OrdinalIgnoreCase);
             }
         }
 
         /// <summary>
         /// Backing member variable for the displayable website name, e.g. "novanorth.org".
         /// </summary>
-        public string? _siteName = string.Empty;
+        private string? _siteName = string.Empty;
 
         /// <summary>
         /// Gets the displayable website name, e.g. "novanorth.org".
@@ -96,26 +119,34 @@ namespace JudgeRegistrationRazor.Pages.Shared
 
                         // TODO: Test this.
                         _siteName = Request.GetEncodedPathAndQuery() != null
-                            ? Request.Host.Host.ToLowerInvariant()
+                            ? Request.Host.Host
                             : "novanorth.org";
 
                         // Drop the "www." if present.
-                        _siteName.Replace("www.", string.Empty);
+                        if (_siteName.StartsWith("www.", StringComparison.OrdinalIgnoreCase))
+                        {
+                            _siteName = _siteName[4..];
+                        }
                     }
                     else
                     {
-                        logger.LogWarning("Config was null and should not have been.");
+                        LogConfigWasNullWarning(logger, null);
                     }
                 }
 
                 return _siteName;
+            }
+
+            set
+            {
+                _siteName = value;
             }
         }
 
         /// <summary>
         /// Backing member variable for the Odyssey of the Mind region name within Virginia (e.g., "NoVA North").
         /// </summary>
-        public string? _regionName = string.Empty;
+        private string? _regionName = string.Empty;
 
         /// <summary>
         /// Gets or sets the Odyssey of the Mind region name within Virginia (e.g., "NoVA North").
@@ -133,11 +164,16 @@ namespace JudgeRegistrationRazor.Pages.Shared
                     }
                     else
                     {
-                        logger.LogWarning("Config was null and should not have been.");
+                        LogConfigWasNullWarning(logger, null);
                     }
                 }
 
                 return _regionName;
+            }
+
+            set
+            {
+                _regionName = value;
             }
         }
 
@@ -161,7 +197,7 @@ namespace JudgeRegistrationRazor.Pages.Shared
                     }
                     else
                     {
-                        logger.LogWarning("Config was null and should not have been.");
+                        LogConfigWasNullWarning(logger, null);
                     }
                 }
 
@@ -169,7 +205,10 @@ namespace JudgeRegistrationRazor.Pages.Shared
             }
         }
 
-        public string _displayableRegistrationName = string.Empty;
+        /// <summary>
+        /// Backing member variable for the displayable registration name.
+        /// </summary>
+        private string _displayableRegistrationName = string.Empty;
 
         /// <summary>
         /// Gets the registration type name that is displayed to the user when they browse to the web page, e.g.
@@ -208,8 +247,6 @@ namespace JudgeRegistrationRazor.Pages.Shared
                             _displayableRegistrationName = "Coaches Training Registration";
                             break;
 
-                        case RegistrationType.Tournament:
-                        case RegistrationType.Judges:
                         default:
                             _displayableRegistrationName = CurrentRegistrationType + " Registration";
                             break;
@@ -217,6 +254,11 @@ namespace JudgeRegistrationRazor.Pages.Shared
                 }
 
                 return _displayableRegistrationName;
+            }
+
+            set
+            {
+                _displayableRegistrationName = value;
             }
         }
 
@@ -245,7 +287,7 @@ namespace JudgeRegistrationRazor.Pages.Shared
         /// <summary>
         /// Backing member variable for the date and time when the tournament is being held.
         /// </summary>
-        public string _tournamentTime = string.Empty;
+        private string _tournamentTime = string.Empty;
 
         /// <summary>
         /// Gets the date and time when the tournament is being held.
@@ -264,17 +306,22 @@ namespace JudgeRegistrationRazor.Pages.Shared
                 else
                 {
                     // TODO: Test that this actually works.
-                    logger.LogWarning("TournamentInfo was null and should not have been.");
+                    LogTournamentInfoWasNullWarning(logger, null);
                 }
 
                 return _tournamentTime;
+            }
+
+            set
+            {
+                _tournamentTime = value;
             }
         }
 
         /// <summary>
         /// Backing member variable for information about the tournament.
         /// </summary>
-        public Event? _tournamentInfo = null;
+        private Event? _tournamentInfo;
 
         /// <summary>
         /// Gets information about the tournament.
@@ -291,17 +338,22 @@ namespace JudgeRegistrationRazor.Pages.Shared
                 }
                 else
                 {
-                    logger.LogWarning("RegionName was null and should not have been.");
+                    LogRegionNameWasNullWarning(logger, null);
                 }
 
                 return _tournamentInfo;
+            }
+
+            set
+            {
+                _tournamentInfo = value;
             }
         }
 
         /// <summary>
         /// Backing member variable for the physical location where the tournament is being held.
         /// </summary>
-        public string _tournamentLocation = string.Empty;
+        private string _tournamentLocation = string.Empty;
 
         /// <summary>
         /// Gets the physical location where the tournament is being held.
@@ -321,10 +373,15 @@ namespace JudgeRegistrationRazor.Pages.Shared
                 else
                 {
                     // TODO: Test that this actually works.
-                    logger.LogWarning("TournamentInfo was null and should not have been.");
+                    LogTournamentInfoWasNullWarning(logger, null);
                 }
 
                 return _tournamentLocation;
+            }
+
+            set
+            {
+                _tournamentLocation = value;
             }
         }
     }

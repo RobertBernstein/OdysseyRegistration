@@ -1,4 +1,4 @@
-﻿using System.Linq.Expressions;
+using System.Linq.Expressions;
 using FluentAssertions;
 using JudgeRegistrationRazor.Data;
 using JudgeRegistrationRazor.Models;

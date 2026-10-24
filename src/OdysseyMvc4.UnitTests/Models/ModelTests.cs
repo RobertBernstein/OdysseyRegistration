@@ -49,9 +49,9 @@ public class ModelTests
             YearsOfSpontaneousJudgingExperience = "3",
             PreviousPositions = "Head Judge;Problem Judge",
             ProblemID = "1",
-            TimeRegistered = new DateTime(2025, 1, 15, 10, 0, 0),
-            TimeAssignedToTeam = new DateTime(2025, 1, 20),
-            TimeRegistrationStarted = new DateTime(2025, 1, 15, 9, 55, 0),
+            TimeRegistered = new DateTime(2025, 1, 15, 10, 0, 0, DateTimeKind.Unspecified),
+            TimeAssignedToTeam = new DateTime(2025, 1, 20, 0, 0, 0, DateTimeKind.Unspecified),
+            TimeRegistrationStarted = new DateTime(2025, 1, 15, 9, 55, 0, DateTimeKind.Unspecified),
             UserAgent = "Mozilla/5.0"
         };
 
@@ -77,7 +77,7 @@ public class ModelTests
         judge.TshirtSize.Should().Be("L");
         judge.WantsCEUCredit.Should().Be("Yes");
         judge.Active.Should().BeTrue();
-        judge.TimeRegistered.Should().Be(new DateTime(2025, 1, 15, 10, 0, 0));
+        judge.TimeRegistered.Should().Be(new DateTime(2025, 1, 15, 10, 0, 0, DateTimeKind.Unspecified));
         judge.UserAgent.Should().Be("Mozilla/5.0");
     }
 
@@ -135,8 +135,8 @@ public class ModelTests
             JudgeID = 42,
             TeamRegistrationFee = "$100",
             VolunteerID = 5,
-            TimeRegistrationStarted = new DateTime(2025, 1, 10),
-            TimeRegistered = new DateTime(2025, 1, 10, 14, 30, 0),
+            TimeRegistrationStarted = new DateTime(2025, 1, 10, 0, 0, 0, DateTimeKind.Unspecified),
+            TimeRegistered = new DateTime(2025, 1, 10, 14, 30, 0, DateTimeKind.Unspecified),
             UserAgent = "Chrome/120"
         };
 
@@ -229,15 +229,15 @@ public class ModelTests
             LocationCity = "Springfield",
             LocationState = "VA",
             LocationPhone = "703-555-0300",
-            StartDate = new DateTime(2025, 3, 15),
-            EndDate = new DateTime(2025, 3, 15),
+            StartDate = new DateTime(2025, 3, 15, 0, 0, 0, DateTimeKind.Unspecified),
+            EndDate = new DateTime(2025, 3, 15, 0, 0, 0, DateTimeKind.Unspecified),
             Time = "8:00 AM",
             EventCoordinatorName = "Coordinator",
             EventCoordinatorEmail = "coord@example.com",
             EventCost = "100",
             LateEventCost = "125",
-            LateEventCostStartDate = new DateTime(2025, 3, 1),
-            PaymentDueDate = new DateTime(2025, 3, 10),
+            LateEventCostStartDate = new DateTime(2025, 3, 1, 0, 0, 0, DateTimeKind.Unspecified),
+            PaymentDueDate = new DateTime(2025, 3, 10, 0, 0, 0, DateTimeKind.Unspecified),
             EventMakeChecksOutTo = "NoVA North Odyssey",
             EventMailBody = "Thank you"
         };
@@ -247,8 +247,8 @@ public class ModelTests
         evt.Location.Should().Be("Springfield High School");
         evt.EventCost.Should().Be("100");
         evt.LateEventCost.Should().Be("125");
-        evt.LateEventCostStartDate.Should().Be(new DateTime(2025, 3, 1));
-        evt.PaymentDueDate.Should().Be(new DateTime(2025, 3, 10));
+        evt.LateEventCostStartDate.Should().Be(new DateTime(2025, 3, 1, 0, 0, 0, DateTimeKind.Unspecified));
+        evt.PaymentDueDate.Should().Be(new DateTime(2025, 3, 10, 0, 0, 0, DateTimeKind.Unspecified));
     }
 
     [Fact]

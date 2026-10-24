@@ -1,4 +1,4 @@
-﻿namespace OdysseyMvc4.ViewData.VolunteerRegistration
+namespace OdysseyMvc4.ViewData.VolunteerRegistration
 {
     using OdysseyMvc4.ViewData;
     using System;
@@ -14,7 +14,7 @@
         [Required, Display(Name="E-mail Address")]
         public string EmailAddress { get; set; }
 
-        [System.Web.Mvc.Compare("EmailAddress", ErrorMessage="Your e-mail addresses do not match"), Display(Name="Confirm E-mail Address"), Required]
+        [System.ComponentModel.DataAnnotations.Compare("EmailAddress", ErrorMessage="Your e-mail addresses do not match"), Display(Name="Confirm E-mail Address"), Required]
         public string EmailConfirmation { get; set; }
 
         [Required, DataType(DataType.PhoneNumber), Display(Name="Evening Phone"), RegularExpression(@"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$", ErrorMessage="This is not a valid phone number")]

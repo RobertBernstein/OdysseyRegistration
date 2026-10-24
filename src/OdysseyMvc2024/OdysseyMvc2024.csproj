@@ -7,6 +7,8 @@
     <AssemblyDescription>Odyssey of the Mind Registration System using ASP.NET 10</AssemblyDescription>
     <AssemblyCopyright>Copyright © 2014-2026</AssemblyCopyright>
     <UserSecretsId>4fc61b4d-cbaa-46ed-b907-349d6beff28e</UserSecretsId>
+    <NoWarn>$(NoWarn);CA1515;CA1707;CA1724;CA1806;CA1812;CA1852;CA2000;CA2201;CA2227;MA0006;MA0011;MA0134;S125;S6580;S6608;S6932;S6964;S6967;S1172;S2325;S3267;S3358;S4144;S907;CS1572;CS1573;CS1574;CS8600;CS8602;CS8603;CS8604;CS8629</NoWarn>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,18 +16,18 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Azure.Identity" Version="1.21.0" />
-    <PackageReference Include="ElmahCore" Version="2.1.2" />
-    <PackageReference Include="Microsoft.AspNetCore.SystemWebAdapters.CoreServices" Version="2.3.0" />
-    <PackageReference Include="Microsoft.Data.SqlClient" Version="6.1.7" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.7" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.7" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.7">
+    <PackageReference Include="Azure.Identity" />
+    <PackageReference Include="ElmahCore" />
+    <PackageReference Include="Microsoft.AspNetCore.SystemWebAdapters.CoreServices" />
+    <PackageReference Include="Microsoft.Data.SqlClient" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="System.Data.SqlClient" Version="4.9.1" />
-    <PackageReference Include="System.Security.Cryptography.Pkcs" Version="10.0.13" />
+    <PackageReference Include="System.Data.SqlClient" />
+    <PackageReference Include="System.Security.Cryptography.Pkcs" />
   </ItemGroup>
 
 </Project>

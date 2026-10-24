@@ -1,14 +1,16 @@
-﻿using FluentAssertions;
+using FluentAssertions;
 using JudgesRegistrationRazorDb.Models;
+using Newtonsoft.Json;
 
-namespace EFCoreToolReverseEngineeringTest.UnitTests;
+namespace EFCoreToolReverseEngineeringTest.UnitTests.Models;
 
 public class SeedHelperTests
 {
-    private class TestEntity
+    [method: JsonConstructor]
+    private sealed class TestEntity(int id = 0, string? name = null)
     {
-        public int Id { get; set; }
-        public string? Name { get; set; }
+        public int Id { get; } = id;
+        public string? Name { get; } = name;
     }
 
     [Fact]
@@ -18,10 +20,17 @@ public class SeedHelperTests
         string testDirectory = Directory.GetCurrentDirectory();
         string seedDataPath = Path.Combine(testDirectory, "SeedData");
         Directory.CreateDirectory(seedDataPath);
-        
-        string fileName = "test-valid.json";
+
+        const string fileName = "test-valid.json";
         string filePath = Path.Combine(seedDataPath, fileName);
-        string jsonContent = "[{\"Id\":1,\"Name\":\"Test1\"},{\"Id\":2,\"Name\":\"Test2\"}]";
+
+        var expectedData = new List<TestEntity>
+        {
+            new(1, "Test1"),
+            new(2, "Test2")
+        };
+
+        string jsonContent = JsonConvert.SerializeObject(expectedData);
         File.WriteAllText(filePath, jsonContent);
 
         try
@@ -51,7 +60,7 @@ public class SeedHelperTests
     public void SeedData_FileNotFound_ThrowsFileNotFoundException()
     {
         // Arrange
-        string fileName = "non-existent-file.json";
+        const string fileName = "non-existent-file.json";
 
         // Act
         Action act = () => SeedHelper.SeedData<TestEntity>(fileName);
@@ -67,10 +76,10 @@ public class SeedHelperTests
         string testDirectory = Directory.GetCurrentDirectory();
         string seedDataPath = Path.Combine(testDirectory, "SeedData");
         Directory.CreateDirectory(seedDataPath);
-        
-        string fileName = "test-invalid.json";
+
+        const string fileName = "test-invalid.json";
         string filePath = Path.Combine(seedDataPath, fileName);
-        string jsonContent = "{ invalid json content }";
+        const string jsonContent = "{ invalid json content }";
         File.WriteAllText(filePath, jsonContent);
 
         try
@@ -99,9 +108,9 @@ public class SeedHelperTests
         string seedDataPath = Path.Combine(testDirectory, "SeedData");
         Directory.CreateDirectory(seedDataPath);
         
-        string fileName = "test-empty.json";
+        const string fileName = "test-empty.json";
         string filePath = Path.Combine(seedDataPath, fileName);
-        string jsonContent = "[]";
+        const string jsonContent = "[]";
         File.WriteAllText(filePath, jsonContent);
 
         try
@@ -130,10 +139,10 @@ public class SeedHelperTests
         string testDirectory = Directory.GetCurrentDirectory();
         string seedDataPath = Path.Combine(testDirectory, "SeedData");
         Directory.CreateDirectory(seedDataPath);
-        
-        string fileName = "test-null.json";
+
+        const string fileName = "test-null.json";
         string filePath = Path.Combine(seedDataPath, fileName);
-        string jsonContent = "null";
+        const string jsonContent = "null";
         File.WriteAllText(filePath, jsonContent);
 
         try
@@ -161,10 +170,10 @@ public class SeedHelperTests
         string testDirectory = Directory.GetCurrentDirectory();
         string seedDataPath = Path.Combine(testDirectory, "SeedData");
         Directory.CreateDirectory(seedDataPath);
-        
-        string fileName = "test-whitespace.json";
+
+        const string fileName = "test-whitespace.json";
         string filePath = Path.Combine(seedDataPath, fileName);
-        string jsonContent = @"
+        const string jsonContent = @"
         [
             {
                 ""Id"": 1,
@@ -208,8 +217,8 @@ public class SeedHelperTests
         string testDirectory = Directory.GetCurrentDirectory();
         string seedDataPath = Path.Combine(testDirectory, "SeedData");
         Directory.CreateDirectory(seedDataPath);
-        
-        string fileName = "test-empty-file.json";
+
+        const string fileName = "test-empty-file.json";
         string filePath = Path.Combine(seedDataPath, fileName);
         File.WriteAllText(filePath, string.Empty);
 
@@ -238,10 +247,10 @@ public class SeedHelperTests
         string testDirectory = Directory.GetCurrentDirectory();
         string seedDataPath = Path.Combine(testDirectory, "SeedData");
         Directory.CreateDirectory(seedDataPath);
-        
-        string fileName = "test-partial.json";
+
+        const string fileName = "test-partial.json";
         string filePath = Path.Combine(seedDataPath, fileName);
-        string jsonContent = "[{\"Id\":1},{\"Name\":\"Test2\"}]";
+        const string jsonContent = "[{\"Id\":1},{\"Name\":\"Test2\"}]";
         File.WriteAllText(filePath, jsonContent);
 
         try
@@ -274,10 +283,10 @@ public class SeedHelperTests
         string testDirectory = Directory.GetCurrentDirectory();
         string seedDataPath = Path.Combine(testDirectory, "SeedData");
         Directory.CreateDirectory(seedDataPath);
-        
-        string fileName = "test-string.json";
+
+        const string fileName = "test-string.json";
         string filePath = Path.Combine(seedDataPath, fileName);
-        string jsonContent = "[\"value1\",\"value2\",\"value3\"]";
+        const string jsonContent = "[\"value1\",\"value2\",\"value3\"]";
         File.WriteAllText(filePath, jsonContent);
 
         try

@@ -1,0 +1,19 @@
+<Project>
+  <PropertyGroup>
+    <Nullable Condition="'$(UsingMicrosoftNETSdk)' == 'true' and '$(MSBuildProjectName)' != 'OdysseyMvc2023'">enable</Nullable>
+    <ImplicitUsings Condition="'$(UsingMicrosoftNETSdk)' == 'true' and '$(MSBuildProjectName)' != 'OdysseyMvc2023'">enable</ImplicitUsings>
+    <AnalysisLevel>latest</AnalysisLevel>
+    <AnalysisMode>All</AnalysisMode>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(UsingMicrosoftNETSdk)' == 'true' and '$(MSBuildProjectName)' != 'OdysseyMvc2023'">
+    <PackageReference Include="SonarAnalyzer.CSharp" />
+    <PackageReference Include="Roslynator.Analyzers" />
+    <PackageReference Include="xunit.analyzers" />
+  </ItemGroup>
+</Project>

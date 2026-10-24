@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -30,7 +30,7 @@
 </head>
 <body>
     @*@Scripts.Render("~/bundles/jquery")*@
-    @RenderSection("scripts", false)
+    @await RenderSectionAsync("scripts", required: false)
     <div class="page">
         <div id="header">
             <div id="title">

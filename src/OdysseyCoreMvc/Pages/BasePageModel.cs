@@ -1,4 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="BasePageModel.cs" company="Tardis Technologies">
 //   Copyright 2022 Tardis Technologies. All rights reserved.
 // </copyright>
@@ -10,6 +10,7 @@
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using OdysseyCoreMvc.Models;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 
 namespace OdysseyCoreMvc.Pages
@@ -17,12 +18,31 @@ namespace OdysseyCoreMvc.Pages
     /// <summary>
     /// The base ViewData class for all other ViewData classes.
     /// </summary>
+    [SuppressMessage("Performance", "CA1515:Consider making public types internal", Justification = "Used as a base type for Razor PageModels across the application.")]
     public class BasePageModel : PageModel
     {
+        private static readonly Action<ILogger, Exception?> LogConfigWasNullWarning =
+            LoggerMessage.Define(
+                LogLevel.Warning,
+                new EventId(1, nameof(LogConfigWasNullWarning)),
+                "Config was null and should not have been.");
+
+        private static readonly Action<ILogger, Exception?> LogConfigOrRegionNameWasInvalidWarning =
+            LoggerMessage.Define(
+                LogLevel.Warning,
+                new EventId(2, nameof(LogConfigOrRegionNameWasInvalidWarning)),
+                "Config was null or RegionName was null or empty; neither should have been.");
+
+        private static readonly Action<ILogger, Exception?> LogTournamentInfoWasNullWarning =
+            LoggerMessage.Define(
+                LogLevel.Warning,
+                new EventId(3, nameof(LogTournamentInfoWasNullWarning)),
+                "TournamentInfo was null and should not have been.");
+
         /// <summary>
         /// The registration type.
         /// </summary>
-        public enum RegistrationType
+        protected enum RegistrationType
         {
             /// <summary>
             /// The default, i.e. no registration type.  This should never be used.
@@ -50,12 +70,17 @@ namespace OdysseyCoreMvc.Pages
             Volunteer
         }
 
-        protected readonly Data.OdysseyContext _context;
+        private readonly Data.OdysseyContext _context;
+
+        /// <summary>
+        /// Gets a context accessor for derived page models.
+        /// </summary>
+        protected Data.OdysseyContext Context => _context;
 
         /// <summary>
         /// Gets or sets the current registration type.
         /// </summary>
-        public RegistrationType CurrentRegistrationType { get; set; }
+        protected RegistrationType CurrentRegistrationType { get; set; }
 
         private readonly ILogger<BasePageModel> _logger;
 
@@ -76,7 +101,7 @@ namespace OdysseyCoreMvc.Pages
                 if (string.IsNullOrEmpty(_siteCssFile))
                 {
                     // TODO: Test that this works correctly after removing Request.Uri and Request.Uri.AbsoluteUri.
-                    if ((Request.GetEncodedPathAndQuery() != null) && Request.GetEncodedPathAndQuery().ToLowerInvariant().Contains("novasouth"))
+                    if (Request.GetEncodedPathAndQuery()?.Contains("novasouth", StringComparison.OrdinalIgnoreCase) == true)
                     {
                         _siteCssFile = Url.Content("NovaSouth.css");
                     }
@@ -93,22 +118,22 @@ namespace OdysseyCoreMvc.Pages
         /// <summary>
         /// Backing member variable for general configuration data for all registration types.
         /// </summary>
-        public Dictionary<string, string>? _config;
+        private Dictionary<string, string> _config = new(StringComparer.OrdinalIgnoreCase);
 
         /// <summary>
         /// Gets or sets the general configuration data for all registration types.
         /// </summary>
-        public Dictionary<string, string>? Config
+        public IDictionary<string, string> Config
         {
             get
             {
                 // If config is null, run the LINQ query, assign the result to Config as a Dictionary, and return the result.
-                if (_config == null)
-                {
-                    _config = (from c in _context.Config
-                              select c).ToDictionary(d => d.Name, d => d.Value);
+                _config ??= (from c in _context.Config
+                             select c).ToDictionary(d => d.Name, d => d.Value, StringComparer.OrdinalIgnoreCase);
 
-                    _config.Add("EndYear", (int.Parse(_config["Year"]) + 1).ToString(CultureInfo.InvariantCulture));
+                if (!_config.ContainsKey("EndYear") && _config.TryGetValue("Year", out var currentYear))
+                {
+                    _config.Add("EndYear", (int.Parse(currentYear, CultureInfo.InvariantCulture) + 1).ToString(CultureInfo.InvariantCulture));
                 }
 
                 return _config;
@@ -118,7 +143,7 @@ namespace OdysseyCoreMvc.Pages
         /// <summary>
         /// Backing member variable for the displayable website name, e.g. "novanorth.org".
         /// </summary>
-        public string? _siteName = string.Empty;
+        private string? _siteName = string.Empty;
 
         /// <summary>
         /// Gets the displayable website name, e.g. "novanorth.org".
@@ -130,25 +155,18 @@ namespace OdysseyCoreMvc.Pages
                 // If _regionName is null, run the LINQ query, assign the result to RegionName, and return the result
                 if (string.IsNullOrEmpty(_siteName))
                 {
-                    if (Config != null)
-                    {
-                        _regionName = Config["RegionName"];
+                    _regionName = Config["RegionName"];
 
-                        // TODO: Test this.
-                        _siteName = (Request.GetEncodedPathAndQuery() != null)
-                            ? Request.Host.Host.ToLowerInvariant()
-                            : "novanorth.org";
+                    // TODO: Test this.
+                    _siteName = (Request.GetEncodedPathAndQuery() != null)
+                        ? Request.Host.Host
+                        : "novanorth.org";
 
-                        // Drop the "www." if present.
-                        if (_siteName.StartsWith("www."))
-                        {
-                            // TODO: Test this replacement of .Substring(4).
-                            _siteName = _siteName[4..];
-                        }
-                    }
-                    else
+                    // Drop the "www." if present.
+                    if (_siteName.StartsWith("www.", StringComparison.OrdinalIgnoreCase))
                     {
-                        _logger.LogWarning("Config was null and should not have been.");
+                        // TODO: Test this replacement of .Substring(4).
+                        _siteName = _siteName[4..];
                     }
                 }
 
@@ -165,7 +183,7 @@ namespace OdysseyCoreMvc.Pages
         /// <summary>
         /// Backing member variable for the Odyssey of the Mind region name within Virginia (e.g., "NoVA North").
         /// </summary>
-        public string? _regionName = string.Empty;
+        private string? _regionName = string.Empty;
 
         /// <summary>
         /// Gets or sets the Odyssey of the Mind region name within Virginia (e.g., "NoVA North").
@@ -183,7 +201,7 @@ namespace OdysseyCoreMvc.Pages
                     }
                     else
                     {
-                        _logger.LogWarning("Config was null and should not have been.");
+                        LogConfigWasNullWarning(_logger, null);
                     }
                 }
 
@@ -211,7 +229,7 @@ namespace OdysseyCoreMvc.Pages
                     }
                     else
                     {
-                        _logger.LogWarning("Config was null and should not have been.");
+                        LogConfigWasNullWarning(_logger, null);
                     }
                 }
 
@@ -239,7 +257,7 @@ namespace OdysseyCoreMvc.Pages
         /// <summary>
         /// Backing member variable for information about the tournament.
         /// </summary>
-        public Events? _tournamentInfo = null;
+        private Events? _tournamentInfo;
 
         /// <summary>
         /// Gets information about the tournament.
@@ -258,7 +276,7 @@ namespace OdysseyCoreMvc.Pages
                     }
                     else
                     {
-                        _logger.LogWarning("Config was null or RegionName was null or empty; neither should have been.");
+                        LogConfigOrRegionNameWasInvalidWarning(_logger, null);
                     }
                 }
 
@@ -269,7 +287,7 @@ namespace OdysseyCoreMvc.Pages
         /// <summary>
         /// Backing member variable for the physical location where the tournament is being held.
         /// </summary>
-        public string _tournamentLocation = string.Empty;
+        private string _tournamentLocation = string.Empty;
 
         /// <summary>
         /// Gets the physical location where the tournament is being held.
@@ -289,9 +307,9 @@ namespace OdysseyCoreMvc.Pages
                 else
                 {
                     // TODO: Test that this actually works.
-                    _logger.LogWarning("TournamentInfo was null and should not have been.");
+                    LogTournamentInfoWasNullWarning(_logger, null);
                 }
-                
+
                 return _tournamentLocation;
             }
         }
@@ -299,7 +317,7 @@ namespace OdysseyCoreMvc.Pages
         /// <summary>
         /// Backing member variable for the date and time when the tournament is being held.
         /// </summary>
-        public string _tournamentTime = string.Empty;
+        private string _tournamentTime = string.Empty;
 
         /// <summary>
         /// Gets the date and time when the tournament is being held.
@@ -318,14 +336,14 @@ namespace OdysseyCoreMvc.Pages
                 else
                 {
                     // TODO: Test that this actually works.
-                    _logger.LogWarning("TournamentInfo was null and should not have been.");
+                    LogTournamentInfoWasNullWarning(_logger, null);
                 }
 
                 return _tournamentTime;
             }
         }
 
-        public string _displayableRegistrationName = string.Empty;
+        private string _displayableRegistrationName = string.Empty;
 
         /// <summary>
         /// Gets the registration type name that is displayed to the user when they browse to the web page, e.g.
@@ -364,8 +382,6 @@ namespace OdysseyCoreMvc.Pages
                             _displayableRegistrationName = "Coaches Training Registration";
                             break;
 
-                        case RegistrationType.Tournament:
-                        case RegistrationType.Judges:
                         default:
                             _displayableRegistrationName = CurrentRegistrationType + " Registration";
                             break;

@@ -1,4 +1,4 @@
-﻿namespace OdysseyMvc4.ViewData.TournamentRegistration
+namespace OdysseyMvc4.ViewData.TournamentRegistration
 {
     using OdysseyMvc4.ViewData;
     using System;
@@ -14,7 +14,7 @@
         [Required, Display(Name="Alternate Coach's E-mail Address")]
         public string AltCoachEmailAddress { get; set; }
 
-        [System.Web.Mvc.Compare("AltCoachEmailAddress", ErrorMessage="Your e-mail addresses do not match"), Display(Name="Confirm Alternate Coach's E-mail Address"), Required]
+        [System.ComponentModel.DataAnnotations.Compare("AltCoachEmailAddress", ErrorMessage="Your e-mail addresses do not match"), Display(Name="Confirm Alternate Coach's E-mail Address"), Required]
         public string AltCoachEmailConfirmation { get; set; }
 
         [Display(Name="Alternate Coach's Evening Phone"), DataType(DataType.PhoneNumber), RegularExpression(@"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$", ErrorMessage="This is not a valid phone number"), Required]
@@ -41,7 +41,7 @@
         [Required, Display(Name="E-mail Address")]
         public string CoachEmailAddress { get; set; }
 
-        [System.Web.Mvc.Compare("CoachEmailAddress", ErrorMessage="Your e-mail addresses do not match"), Display(Name="Confirm E-mail Address"), Required]
+        [System.ComponentModel.DataAnnotations.Compare("CoachEmailAddress", ErrorMessage="Your e-mail addresses do not match"), Display(Name="Confirm E-mail Address"), Required]
         public string CoachEmailConfirmation { get; set; }
 
         [Display(Name="Evening Phone"), RegularExpression(@"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$", ErrorMessage="This is not a valid phone number"), Required, DataType(DataType.PhoneNumber)]

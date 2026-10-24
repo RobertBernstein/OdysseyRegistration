@@ -1,4 +1,4 @@
-﻿namespace OdysseyMvc4
+namespace OdysseyMvc4
 {
     using System;
     using System.Collections.Generic;
@@ -7,7 +7,7 @@
     using System.Web.Mvc;
     using System.Web.Routing;
 
-    public class RouteConfig
+    public static class RouteConfig
     {
         public static void RegisterRoutes(RouteCollection routes)
         {

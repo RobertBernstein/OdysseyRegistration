@@ -25,7 +25,7 @@ public class VolunteerRegistrationControllerTests
     public void Constructor_SetsCurrentRegistrationType_ToVolunteer()
     {
         // Arrange & Act
-        var controller = new VolunteerRegistrationController();
+        using var controller = new VolunteerRegistrationController();
 
         // Assert
         controller.CurrentRegistrationType.Should().Be(BaseRegistrationController.RegistrationType.Volunteer);
@@ -35,7 +35,7 @@ public class VolunteerRegistrationControllerTests
     public void Constructor_SetsFriendlyRegistrationName_ToVolunteerRegistration()
     {
         // Arrange & Act
-        var controller = new VolunteerRegistrationController();
+        using var controller = new VolunteerRegistrationController();
 
         // Assert
         controller.FriendlyRegistrationName.Should().Be("Volunteer Registration");
@@ -49,7 +49,7 @@ public class VolunteerRegistrationControllerTests
     public void BuildMailRegionalDirectorHyperLink_ValidViewData_ReturnsMailtoLink()
     {
         // Arrange
-        var controller = new VolunteerRegistrationController();
+        using var controller = new VolunteerRegistrationController();
         var viewData = new Page01ViewData
         {
             Config = TestHelper.CreateDefaultConfig(),
@@ -69,7 +69,7 @@ public class VolunteerRegistrationControllerTests
     public void BuildMailRegionalDirectorHyperLink_ContainsRegionalDirectorEmail()
     {
         // Arrange
-        var controller = new VolunteerRegistrationController();
+        using var controller = new VolunteerRegistrationController();
         var viewData = new Page01ViewData
         {
             Config = TestHelper.CreateDefaultConfig(),
@@ -87,7 +87,7 @@ public class VolunteerRegistrationControllerTests
     public void BuildMailRegionalDirectorHyperLink_ContainsRegionNumber()
     {
         // Arrange
-        var controller = new VolunteerRegistrationController();
+        using var controller = new VolunteerRegistrationController();
         var viewData = new Page01ViewData
         {
             Config = TestHelper.CreateDefaultConfig(),
@@ -106,7 +106,7 @@ public class VolunteerRegistrationControllerTests
     public void BuildMailRegionalDirectorHyperLink_DifferentRegionNumber_UsesProvidedValue()
     {
         // Arrange
-        var controller = new VolunteerRegistrationController();
+        using var controller = new VolunteerRegistrationController();
         var viewData = new Page01ViewData
         {
             Config = TestHelper.CreateDefaultConfig(),
@@ -126,7 +126,7 @@ public class VolunteerRegistrationControllerTests
     public void BuildMailRegionalDirectorHyperLink_ContainsExpectedBodyText()
     {
         // Arrange
-        var controller = new VolunteerRegistrationController();
+        using var controller = new VolunteerRegistrationController();
         var viewData = new Page01ViewData
         {
             Config = TestHelper.CreateDefaultConfig(),
@@ -147,7 +147,7 @@ public class VolunteerRegistrationControllerTests
     public void BuildMailRegionalDirectorHyperLink_ContainsHelpMessage()
     {
         // Arrange
-        var controller = new VolunteerRegistrationController();
+        using var controller = new VolunteerRegistrationController();
         var viewData = new Page01ViewData
         {
             Config = TestHelper.CreateDefaultConfig(),
@@ -166,7 +166,7 @@ public class VolunteerRegistrationControllerTests
     public void BuildMailRegionalDirectorHyperLink_SubjectContainsCorrectText()
     {
         // Arrange
-        var controller = new VolunteerRegistrationController();
+        using var controller = new VolunteerRegistrationController();
         var viewData = new Page01ViewData
         {
             Config = TestHelper.CreateDefaultConfig(),
@@ -185,7 +185,7 @@ public class VolunteerRegistrationControllerTests
     public void BuildMailRegionalDirectorHyperLink_SpacesAreUrlEncoded()
     {
         // Arrange
-        var controller = new VolunteerRegistrationController();
+        using var controller = new VolunteerRegistrationController();
         var viewData = new Page01ViewData
         {
             Config = TestHelper.CreateDefaultConfig(),
@@ -204,7 +204,7 @@ public class VolunteerRegistrationControllerTests
     public void BuildMailRegionalDirectorHyperLink_ContainsPlaceholderForName()
     {
         // Arrange
-        var controller = new VolunteerRegistrationController();
+        using var controller = new VolunteerRegistrationController();
         var viewData = new Page01ViewData
         {
             Config = TestHelper.CreateDefaultConfig(),
@@ -224,7 +224,7 @@ public class VolunteerRegistrationControllerTests
     public void BuildMailRegionalDirectorHyperLink_ContainsPlaceholderForPhone()
     {
         // Arrange
-        var controller = new VolunteerRegistrationController();
+        using var controller = new VolunteerRegistrationController();
         var viewData = new Page01ViewData
         {
             Config = TestHelper.CreateDefaultConfig(),
@@ -244,7 +244,7 @@ public class VolunteerRegistrationControllerTests
     public void BuildMailRegionalDirectorHyperLink_LineBreaksAreEncoded()
     {
         // Arrange
-        var controller = new VolunteerRegistrationController();
+        using var controller = new VolunteerRegistrationController();
         var viewData = new Page01ViewData
         {
             Config = TestHelper.CreateDefaultConfig(),
@@ -263,7 +263,7 @@ public class VolunteerRegistrationControllerTests
     public void BuildMailRegionalDirectorHyperLink_CustomEmail_UsesProvidedEmail()
     {
         // Arrange
-        var controller = new VolunteerRegistrationController();
+        using var controller = new VolunteerRegistrationController();
         var config = TestHelper.CreateDefaultConfig();
         config["RegionalDirectorEmail"] = "custom@example.com";
         var viewData = new Page01ViewData
@@ -283,7 +283,7 @@ public class VolunteerRegistrationControllerTests
     public void BuildMailRegionalDirectorHyperLink_NullViewData_ThrowsNullReferenceException()
     {
         // Arrange
-        var controller = new VolunteerRegistrationController();
+        using var controller = new VolunteerRegistrationController();
 
         // Act
         var act = () => controller.BuildMailRegionalDirectorHyperLink(null!);
@@ -296,7 +296,7 @@ public class VolunteerRegistrationControllerTests
     public void BuildMailRegionalDirectorHyperLink_NullConfig_ThrowsNullReferenceException()
     {
         // Arrange
-        var controller = new VolunteerRegistrationController();
+        using var controller = new VolunteerRegistrationController();
         var viewData = new Page01ViewData
         {
             Config = null,
@@ -314,7 +314,7 @@ public class VolunteerRegistrationControllerTests
     public void BuildMailRegionalDirectorHyperLink_MissingRegionalDirectorEmail_ThrowsKeyNotFoundException()
     {
         // Arrange
-        var controller = new VolunteerRegistrationController();
+        using var controller = new VolunteerRegistrationController();
         var config = TestHelper.CreateDefaultConfig();
         config.Remove("RegionalDirectorEmail");
         var viewData = new Page01ViewData
@@ -334,7 +334,7 @@ public class VolunteerRegistrationControllerTests
     public void BuildMailRegionalDirectorHyperLink_NullRegionNumber_IncludesNullInSubject()
     {
         // Arrange
-        var controller = new VolunteerRegistrationController();
+        using var controller = new VolunteerRegistrationController();
         var viewData = new Page01ViewData
         {
             Config = TestHelper.CreateDefaultConfig(),
@@ -354,7 +354,7 @@ public class VolunteerRegistrationControllerTests
     public void BuildMailRegionalDirectorHyperLink_EmptyRegionNumber_IncludesEmptyInSubject()
     {
         // Arrange
-        var controller = new VolunteerRegistrationController();
+        using var controller = new VolunteerRegistrationController();
         var viewData = new Page01ViewData
         {
             Config = TestHelper.CreateDefaultConfig(),
@@ -377,7 +377,7 @@ public class VolunteerRegistrationControllerTests
     public void GenerateEmailBody_WithAllFields_ReplacesAllTokens()
     {
         // Arrange
-        var controller = new TestableVolunteerRegistrationController();
+        using var controller = new TestableVolunteerRegistrationController();
         var config = TestHelper.CreateDefaultConfig();
         var page03ViewData = new Page03ViewData
         {
@@ -399,13 +399,13 @@ public class VolunteerRegistrationControllerTests
                 LocationCity = "Test City",
                 LocationState = "VA",
                 LocationURL = "http://example.com",
-                StartDate = new DateTime(2025, 3, 15),
+                StartDate = new DateTime(2025, 3, 15, 0, 0, 0, DateTimeKind.Unspecified),
                 Time = "9:00 AM"
             }
         };
 
         // Act
-        var result = controller.PublicGenerateEmailBody(page03ViewData);
+        var result = TestableVolunteerRegistrationController.PublicGenerateEmailBody(page03ViewData);
 
         // Assert
         result.Should().Contain("ID: 123");
@@ -421,7 +421,7 @@ public class VolunteerRegistrationControllerTests
     public void GenerateEmailBody_WithoutLocationURL_DoesNotIncludeHyperlink()
     {
         // Arrange
-        var controller = new TestableVolunteerRegistrationController();
+        using var controller = new TestableVolunteerRegistrationController();
         var config = TestHelper.CreateDefaultConfig();
         var page03ViewData = new Page03ViewData
         {
@@ -449,7 +449,7 @@ public class VolunteerRegistrationControllerTests
         };
 
         // Act
-        var result = controller.PublicGenerateEmailBody(page03ViewData);
+        var result = TestableVolunteerRegistrationController.PublicGenerateEmailBody(page03ViewData);
 
         // Assert
         result.Should().Contain("Test Location, 456 Oak Ave, Springfield, MD");
@@ -461,7 +461,7 @@ public class VolunteerRegistrationControllerTests
     public void GenerateEmailBody_WithEmptyLocationURL_DoesNotIncludeHyperlink()
     {
         // Arrange
-        var controller = new TestableVolunteerRegistrationController();
+        using var controller = new TestableVolunteerRegistrationController();
         var config = TestHelper.CreateDefaultConfig();
         var page03ViewData = new Page03ViewData
         {
@@ -486,7 +486,7 @@ public class VolunteerRegistrationControllerTests
         };
 
         // Act
-        var result = controller.PublicGenerateEmailBody(page03ViewData);
+        var result = TestableVolunteerRegistrationController.PublicGenerateEmailBody(page03ViewData);
 
         // Assert
         result.Should().Contain("Community Center");
@@ -497,7 +497,7 @@ public class VolunteerRegistrationControllerTests
     public void GenerateEmailBody_WithoutLocationAddress_OnlyIncludesLocation()
     {
         // Arrange
-        var controller = new TestableVolunteerRegistrationController();
+        using var controller = new TestableVolunteerRegistrationController();
         var config = TestHelper.CreateDefaultConfig();
         var page03ViewData = new Page03ViewData
         {
@@ -525,7 +525,7 @@ public class VolunteerRegistrationControllerTests
         };
 
         // Act
-        var result = controller.PublicGenerateEmailBody(page03ViewData);
+        var result = TestableVolunteerRegistrationController.PublicGenerateEmailBody(page03ViewData);
 
         // Assert
         result.Should().Contain("Library, Fairfax, VA");
@@ -536,7 +536,7 @@ public class VolunteerRegistrationControllerTests
     public void GenerateEmailBody_WithNullStartDate_ReplacesWith_TBA()
     {
         // Arrange
-        var controller = new TestableVolunteerRegistrationController();
+        using var controller = new TestableVolunteerRegistrationController();
         var config = TestHelper.CreateDefaultConfig();
         var page03ViewData = new Page03ViewData
         {
@@ -560,7 +560,7 @@ public class VolunteerRegistrationControllerTests
         };
 
         // Act
-        var result = controller.PublicGenerateEmailBody(page03ViewData);
+        var result = TestableVolunteerRegistrationController.PublicGenerateEmailBody(page03ViewData);
 
         // Assert
         result.Should().Contain("Date: TBA");
@@ -570,7 +570,7 @@ public class VolunteerRegistrationControllerTests
     public void GenerateEmailBody_WithNullTime_ReplacesWith_TBA()
     {
         // Arrange
-        var controller = new TestableVolunteerRegistrationController();
+        using var controller = new TestableVolunteerRegistrationController();
         var config = TestHelper.CreateDefaultConfig();
         var page03ViewData = new Page03ViewData
         {
@@ -588,13 +588,13 @@ public class VolunteerRegistrationControllerTests
             TournamentInfo = new OdysseyMvc4.Models.Event
             {
                 Location = "Gym",
-                StartDate = new DateTime(2025, 4, 1),
+                StartDate = new DateTime(2025, 4, 1, 0, 0, 0, DateTimeKind.Unspecified),
                 Time = null
             }
         };
 
         // Act
-        var result = controller.PublicGenerateEmailBody(page03ViewData);
+        var result = TestableVolunteerRegistrationController.PublicGenerateEmailBody(page03ViewData);
 
         // Assert
         result.Should().Contain("Time: TBA");
@@ -604,7 +604,7 @@ public class VolunteerRegistrationControllerTests
     public void GenerateEmailBody_WithEmptyTime_ReplacesWith_TBA()
     {
         // Arrange
-        var controller = new TestableVolunteerRegistrationController();
+        using var controller = new TestableVolunteerRegistrationController();
         var config = TestHelper.CreateDefaultConfig();
         var page03ViewData = new Page03ViewData
         {
@@ -622,13 +622,13 @@ public class VolunteerRegistrationControllerTests
             TournamentInfo = new OdysseyMvc4.Models.Event
             {
                 Location = "Hall",
-                StartDate = new DateTime(2025, 5, 1),
+                StartDate = new DateTime(2025, 5, 1, 0, 0, 0, DateTimeKind.Unspecified),
                 Time = string.Empty
             }
         };
 
         // Act
-        var result = controller.PublicGenerateEmailBody(page03ViewData);
+        var result = TestableVolunteerRegistrationController.PublicGenerateEmailBody(page03ViewData);
 
         // Assert
         result.Should().Contain("Time: TBA");
@@ -638,7 +638,7 @@ public class VolunteerRegistrationControllerTests
     public void GenerateEmailBody_WithWhitespaceTime_ReplacesWith_TBA()
     {
         // Arrange
-        var controller = new TestableVolunteerRegistrationController();
+        using var controller = new TestableVolunteerRegistrationController();
         var config = TestHelper.CreateDefaultConfig();
         var page03ViewData = new Page03ViewData
         {
@@ -656,13 +656,13 @@ public class VolunteerRegistrationControllerTests
             TournamentInfo = new OdysseyMvc4.Models.Event
             {
                 Location = "Center",
-                StartDate = new DateTime(2025, 6, 1),
+                StartDate = new DateTime(2025, 6, 1, 0, 0, 0, DateTimeKind.Unspecified),
                 Time = "   "
             }
         };
 
         // Act
-        var result = controller.PublicGenerateEmailBody(page03ViewData);
+        var result = TestableVolunteerRegistrationController.PublicGenerateEmailBody(page03ViewData);
 
         // Assert
         result.Should().Contain("Time: TBA");
@@ -672,7 +672,7 @@ public class VolunteerRegistrationControllerTests
     public void GenerateEmailBody_WithOnlyLocation_BuildsSimpleString()
     {
         // Arrange
-        var controller = new TestableVolunteerRegistrationController();
+        using var controller = new TestableVolunteerRegistrationController();
         var config = TestHelper.CreateDefaultConfig();
         var page03ViewData = new Page03ViewData
         {
@@ -700,7 +700,7 @@ public class VolunteerRegistrationControllerTests
         };
 
         // Act
-        var result = controller.PublicGenerateEmailBody(page03ViewData);
+        var result = TestableVolunteerRegistrationController.PublicGenerateEmailBody(page03ViewData);
 
         // Assert
         result.Should().Contain("Location: Building");
@@ -711,7 +711,7 @@ public class VolunteerRegistrationControllerTests
     public void GenerateEmailBody_WithLocationAndURL_WrapsInHyperlink()
     {
         // Arrange
-        var controller = new TestableVolunteerRegistrationController();
+        using var controller = new TestableVolunteerRegistrationController();
         var config = TestHelper.CreateDefaultConfig();
         var page03ViewData = new Page03ViewData
         {
@@ -739,7 +739,7 @@ public class VolunteerRegistrationControllerTests
         };
 
         // Act
-        var result = controller.PublicGenerateEmailBody(page03ViewData);
+        var result = TestableVolunteerRegistrationController.PublicGenerateEmailBody(page03ViewData);
 
         // Assert
         result.Should().Contain("<a href=\"https://venue.example.com\" target=\"_blank\">Venue</a>");
@@ -752,11 +752,13 @@ public class VolunteerRegistrationControllerTests
     /// <summary>
     /// A testable wrapper around VolunteerRegistrationController that exposes protected members.
     /// </summary>
-    private class TestableVolunteerRegistrationController : VolunteerRegistrationController
+    private sealed class TestableVolunteerRegistrationController : VolunteerRegistrationController
     {
-        public string PublicGenerateEmailBody(Page03ViewData page03ViewData)
+        public static string PublicGenerateEmailBody(Page03ViewData page03ViewData)
         {
-            return this.GenerateEmailBody(page03ViewData);
+            using var controller = new TestableVolunteerRegistrationController();
+            _ = controller;
+            return GenerateEmailBody(page03ViewData);
         }
     }
 

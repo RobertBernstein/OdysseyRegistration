@@ -1,4 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="CoachesTrainingRegistrationController.cs" company="Tardis Technologies">
 //   Copyright 2021 Tardis Technologies. All rights reserved.
 // </copyright>
@@ -170,7 +170,7 @@ namespace OdysseyMvc4.Controllers
                 return this.View(viewData);
             }
 
-            viewData.MailBody = this.GenerateEmailBody(viewData);
+            viewData.MailBody = GenerateEmailBody(viewData);
 
             // Instantiate a new instance of MailMessage
             var mailMessage = BuildMessage(
@@ -196,7 +196,7 @@ namespace OdysseyMvc4.Controllers
         /// <returns>
         /// The <see cref="string"/>.
         /// </returns>
-        protected string GenerateEmailBody(Page02ViewData viewData)
+        protected static string GenerateEmailBody(Page02ViewData viewData)
         {
             string mailBody = viewData.CoachesTrainingInfo.EventMailBody;
             mailBody = Regex.Replace(mailBody, "<span>Region</span>", "Region " + viewData.Config["RegionNumber"]);
@@ -252,15 +252,12 @@ namespace OdysseyMvc4.Controllers
 
             // Only include a reference to the Coaches Handbook from VA if a URL is specified in the database.
             stringBuilder.Clear();
-            if (viewData.Config.ContainsKey("CoachesHandbookURL"))
+            if (viewData.Config.ContainsKey("CoachesHandbookURL") && !string.IsNullOrWhiteSpace(viewData.Config["CoachesHandbookURL"]))
             {
-                if (!string.IsNullOrWhiteSpace(viewData.Config["CoachesHandbookURL"]))
-                {
-                    stringBuilder.Append(
-                        "<li>\ta copy of the Coaches Handbook from the Virginia state website (<a href=\"" +
-                        viewData.Config["CoachesHandbookURL"] + "\" target=\"blank\">" +
-                        viewData.Config["CoachesHandbookURL"] + "</a>),</li>\n");
-                }
+                stringBuilder.Append(
+                    "<li>\ta copy of the Coaches Handbook from the Virginia state website (<a href=\"" +
+                    viewData.Config["CoachesHandbookURL"] + "\" target=\"blank\">" +
+                    viewData.Config["CoachesHandbookURL"] + "</a>),</li>\n");
             }
 
             mailBody = Regex.Replace(mailBody, "<span>VirginiaHandbook</span>", stringBuilder.ToString());
@@ -268,12 +265,10 @@ namespace OdysseyMvc4.Controllers
             mailBody = Regex.Replace(mailBody, "<span>MakeChecksOutTo</span>", viewData.CoachesTrainingInfo.EventMakeChecksOutTo);
 
             stringBuilder.Clear();
-            if (viewData.Config.ContainsKey("CoordinatorsDoNotPayCoachesTrainingRegistrationFee"))
+            if (viewData.Config.ContainsKey("CoordinatorsDoNotPayCoachesTrainingRegistrationFee") &&
+                string.Equals(viewData.Config["CoordinatorsDoNotPayCoachesTrainingRegistrationFee"], "true", StringComparison.OrdinalIgnoreCase))
             {
-                if (viewData.Config["CoordinatorsDoNotPayCoachesTrainingRegistrationFee"].ToLower() == "true")
-                {
-                    stringBuilder.Append(viewData.Config["SchoolCoordinatorsDoNotPayMessage"]);
-                }
+                stringBuilder.Append(viewData.Config["SchoolCoordinatorsDoNotPayMessage"]);
             }
 
             mailBody = Regex.Replace(mailBody, "<span>CoordinatorsDoNotPay</span>", stringBuilder.ToString());

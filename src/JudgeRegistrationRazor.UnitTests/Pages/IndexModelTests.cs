@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+using FluentAssertions;
 using JudgeRegistrationRazor.Data;
 using JudgeRegistrationRazor.Models;
 using JudgeRegistrationRazor.Pages;
@@ -242,10 +242,19 @@ public sealed class IndexModelTests
 
     private static Mock<DbSet<T>> CreateMockDbSet<T>(IQueryable<T> data) where T : class
     {
+        // CA2000 is disabled here to prevent an error because the analyzer sees new TestAsyncEnumerator<T>(...) as a
+        // disposable object created and returned from a helper without a matching dispose. It is a false positive: the
+        // enumerator is not leaked in the test; it is handed to the EF Core async query pipeline, which disposes it
+        // when enumeration completes. This might be happening because the code is mocking IAsyncEnumerable<T> for a
+        // fake DbSet, not using real EF Core state. Here, the best practical fix is a targeted suppression with an
+        // explanatory comment, rather than wrapping the enumerator in using (that would dispose it too early and break
+        // the mock).
+#pragma warning disable CA2000 // The enumerator is returned to EF Core and disposed when the query is enumerated.
         var mockSet = new Mock<DbSet<T>>();
         mockSet.As<IAsyncEnumerable<T>>()
             .Setup(m => m.GetAsyncEnumerator(It.IsAny<CancellationToken>()))
             .Returns(new TestAsyncEnumerator<T>(data.GetEnumerator()));
+#pragma warning restore CA2000
         mockSet.As<IQueryable<T>>().Setup(m => m.Provider).Returns(new TestAsyncQueryProvider<T>(data.Provider));
         mockSet.As<IQueryable<T>>().Setup(m => m.Expression).Returns(data.Expression);
         mockSet.As<IQueryable<T>>().Setup(m => m.ElementType).Returns(data.ElementType);

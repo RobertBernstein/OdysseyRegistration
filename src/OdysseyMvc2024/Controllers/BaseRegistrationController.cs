@@ -13,6 +13,8 @@
 // MVID: 7B658547-521F-44CB-80FA-52857CB94B72
 // Assembly location: C:\Users\rob\OneDrive\Odyssey\OdysseyProd\registration\bin\OdysseyMvc4.dll
 
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Net;
 using System.Net.Mail;
 using ElmahCore;
@@ -27,12 +29,16 @@ namespace OdysseyMvc2024.Controllers
     /// Provides common functionality for multi-page registration processes.
     /// All registration controllers should inherit from this class.
     /// </summary>
+    [SuppressMessage("Design", "CA1515:Consider making public types internal", Justification = "ASP.NET MVC controller types are intentionally public.")]
+    [SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "Legacy flow logs via ELMAH and returns deterministic registration-state behavior.")]
+    [SuppressMessage("Design", "CA1024:Use properties where appropriate", Justification = "Method retained for backward compatibility with legacy call sites.")]
+    [SuppressMessage("Naming", "CA1721:Property names should not match get methods", Justification = "FriendlyRegistrationName property and GetFriendlyRegistrationName method are retained for legacy compatibility.")]
     public abstract class BaseRegistrationController : Controller
     {
         /// <summary>
         /// The object that provides access to the database.
         /// </summary>
-        protected readonly IOdysseyRepository Repository;
+        protected IOdysseyRepository Repository { get; }
 
         protected BaseRegistrationController(IOdysseyRepository repository)
         {
@@ -94,6 +100,8 @@ namespace OdysseyMvc2024.Controllers
           string bcc,
           string cc)
         {
+            ArgumentNullException.ThrowIfNull(to);
+
             var mailMessage = new MailMessage
             {
                 From = new MailAddress(from),
@@ -116,6 +124,7 @@ namespace OdysseyMvc2024.Controllers
                 {
                     // Log the exception using Elmah
                     ElmahExtensions.RaiseError(ex);
+                    mailMessage.Dispose();
                     return null;
                 }
             }
@@ -213,11 +222,11 @@ namespace OdysseyMvc2024.Controllers
         {
             string hostname = HttpContext.Request.Host.Host;
 
-            string siteName = !string.IsNullOrEmpty(Url.PageLink()) 
-                ? hostname.ToLowerInvariant()
+            string siteName = !string.IsNullOrEmpty(Url.PageLink())
+                ? hostname
                 : "novanorth.org";
 
-            if (siteName.StartsWith("www."))
+            if (siteName.StartsWith("www.", StringComparison.OrdinalIgnoreCase))
             {
                 siteName = siteName.Substring(4);
             }
@@ -359,7 +368,7 @@ namespace OdysseyMvc2024.Controllers
             {
                 // TODO: Change this to TryParse (everywhere).
                 // TODO: This will fail if you specify an invalid date, such as 2/29 on a non-leap year! Log such possibilities. Add a unit test for this.
-                registrationCloseDateTime = DateTime.Parse(baseViewData.Config[registrationType.ToString() + "RegistrationCloseDateTime"]);
+                registrationCloseDateTime = DateTime.Parse(baseViewData.Config[registrationType.ToString() + "RegistrationCloseDateTime"], CultureInfo.InvariantCulture);
             }
             catch (Exception ex)
             {
@@ -406,7 +415,7 @@ namespace OdysseyMvc2024.Controllers
             DateTime registrationOpenDate;
             try
             {
-                registrationOpenDate = DateTime.Parse(baseViewData.Config[registrationType.ToString() + "RegistrationOpenDateTime"]);
+                registrationOpenDate = DateTime.Parse(baseViewData.Config[registrationType.ToString() + "RegistrationOpenDateTime"], CultureInfo.InvariantCulture);
             }
             catch (Exception ex)
             {
@@ -464,6 +473,9 @@ namespace OdysseyMvc2024.Controllers
         /// </returns>
         public string? SendMessage(BaseViewData viewData, MailMessage mailMessage)
         {
+            ArgumentNullException.ThrowIfNull(viewData);
+            ArgumentNullException.ThrowIfNull(mailMessage);
+
             // TODO: Check for an empty WebmasterEmailPassword here. - 10/30/2025.
             // TODO: Log if pw is empty.
             SmtpClient smtpClient = new()
@@ -500,7 +512,7 @@ namespace OdysseyMvc2024.Controllers
                             ElmahExtensions.RaiseError(new Exception("Retrying to send email after mailbox unavailable."));
                             continue;
                         default:
-                            return string.Format("Failed to deliver message to {0}", smtpFailedRecipientException.FailedRecipient);
+                            return string.Format(CultureInfo.InvariantCulture, "Failed to deliver message to {0}", smtpFailedRecipientException.FailedRecipient);
                     }
                 }
             }
@@ -525,6 +537,8 @@ namespace OdysseyMvc2024.Controllers
         /// </param>
         protected void SetBaseViewData(BaseViewData viewData)
         {
+            ArgumentNullException.ThrowIfNull(viewData);
+
             // Validate config info before assignment
             if (Repository.Config == null)
             {
@@ -620,6 +634,7 @@ namespace OdysseyMvc2024.Controllers
         /// <summary>
         /// Determines the availability of a registration system.
         /// </summary>
+        [SuppressMessage("Design", "CA1515:Consider making public types internal", Justification = "Public enum retained for compatibility with existing controller and view usage.")]
         public enum RegistrationState
         {
             /// <summary>
@@ -646,6 +661,7 @@ namespace OdysseyMvc2024.Controllers
         /// <summary>
         /// The registration type.
         /// </summary>
+        [SuppressMessage("Design", "CA1515:Consider making public types internal", Justification = "Public enum retained for compatibility with existing controller and view usage.")]
         public enum RegistrationType
         {
             /// <summary>

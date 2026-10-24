@@ -7,14 +7,19 @@
 namespace JudgeRegistrationRazor.Migrations
 {
     /// <inheritdoc />
-    public partial class UpdateProblemSeedData : Migration
+    internal partial class UpdateProblemSeedData : Migration
     {
+        private static readonly string[] ProblemColumns =
+        {
+            "Id", "CostLimit", "Divisions", "Notes", "PCAddress", "PCCity", "PCEmail1", "PCEmail2", "PCFaxNumber", "PCFirstName", "PCHomePhone", "PCLastName", "PCMobilePhone", "PCPostalCode", "PCStateOrProvince", "PCWorkPhone", "ProblemCaptainID", "ProblemCategory", "ProblemDescription", "ProblemName"
+        };
+
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.InsertData(
                 table: "Problem",
-                columns: new[] { "Id", "CostLimit", "Divisions", "Notes", "PCAddress", "PCCity", "PCEmail1", "PCEmail2", "PCFaxNumber", "PCFirstName", "PCHomePhone", "PCLastName", "PCMobilePhone", "PCPostalCode", "PCStateOrProvince", "PCWorkPhone", "ProblemCaptainID", "ProblemCategory", "ProblemDescription", "ProblemName" },
+                columns: ProblemColumns,
                 values: new object[,]
                 {
                     { 1, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, "I Don't Know" },

@@ -47,6 +47,7 @@
 - NEVER break OdysseyMvc4 (.NET Framework) - it's running in production
 - NEVER commit passwords, connection strings, or secrets to git
 - The sa_password.txt file must exist in OdysseyRegistration/OdysseyRegistration/ but NEVER commit it
+- Preserve all existing comments, XML documentation, TODOs, and explanatory inline comments during any code change; do not delete or rewrite user-added comments unless the user explicitly requests comment removal
 - Always pass CancellationToken through all async calls in .NET 10.0 projects
 - No sync-over-async (no .Result/.Wait)
 - Problem table IDs start at 1 (not 0) - code must handle this

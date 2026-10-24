@@ -1,4 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="JudgesRegistrationController.cs" company="Tardis Technologies">
 //   Copyright 2025 Tardis Technologies. All rights reserved.
 // </copyright>
@@ -27,6 +27,13 @@ using ElmahCore;
 
 namespace OdysseyMvc2024.Controllers
 {
+    [SuppressMessage("Design", "CA1515:Consider making public types internal", Justification = "ASP.NET MVC controller types are intentionally public.")]
+    [SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "Legacy registration flow logs via ELMAH and redirects to preserve UX.")]
+    [SuppressMessage("Major Code Smell", "S6967", Justification = "Legacy MVC action patterns are intentionally preserved.")]
+    [SuppressMessage("Minor Code Smell", "S6932", Justification = "Legacy request access pattern retained.")]
+    [SuppressMessage("Minor Code Smell", "S6608", Justification = "Legacy initialization style retained.")]
+    [SuppressMessage("Minor Code Smell", "S2325", Justification = "Instance method retained for testability and override flexibility.")]
+    [SuppressMessage("Best Practices", "MA0009:Regular expressions should not be vulnerable to Denial of Service attacks", Justification = "Generated static expressions are fixed string placeholders.")]
     public partial class JudgesRegistrationController : BaseRegistrationController
     {
         // [SetsRequiredMembers] tells the compiler that this constructor initializes all 'required' members
@@ -106,110 +113,76 @@ namespace OdysseyMvc2024.Controllers
 
         protected string GenerateEmailBody(Page03ViewData page03ViewData)
         {
-            var body = page03ViewData.JudgesInfo.EventMailBody;
+            ArgumentNullException.ThrowIfNull(page03ViewData);
 
-            body = JudgeIdRegex().Replace(body, page03ViewData.Judge.JudgeID.ToString(CultureInfo.InvariantCulture));
-            body = FirstNameRegex().Replace(body, page03ViewData.Judge.FirstName);
-            body = LastNameRegex().Replace(body, page03ViewData.Judge.LastName);
-            body = RegionRegex().Replace(body, "Region " + page03ViewData.RegionNumber);
+            Event judgesInfo = page03ViewData.JudgesInfo ?? throw new ArgumentNullException(nameof(page03ViewData));
+            Judge judge = page03ViewData.Judge ?? throw new ArgumentNullException(nameof(page03ViewData));
+            Event tournamentInfo = page03ViewData.TournamentInfo ?? throw new ArgumentNullException(nameof(page03ViewData));
+            IDictionary<string, string> config = page03ViewData.Config ?? throw new ArgumentNullException(nameof(page03ViewData));
 
-            var htmlEncoder = HtmlEncoder.Default;
-            var trainingSb = new StringBuilder();
-
-            if (!string.IsNullOrWhiteSpace(page03ViewData.JudgesInfo.LocationURL))
-            {
-                trainingSb.Append("<a href=\"")
-                          .Append(htmlEncoder.Encode(page03ViewData.JudgesInfo.LocationURL))
-                          .Append("\" target=\"_blank\">");
-            }
-
-            trainingSb.Append(htmlEncoder.Encode(page03ViewData.JudgesInfo.Location));
-
-            if (!string.IsNullOrWhiteSpace(page03ViewData.JudgesInfo.LocationAddress))
-            {
-                trainingSb.Append(", ").Append(htmlEncoder.Encode(page03ViewData.JudgesInfo.LocationAddress));
-            }
-
-            if (!string.IsNullOrWhiteSpace(page03ViewData.JudgesInfo.LocationCity))
-            {
-                trainingSb.Append(", ").Append(htmlEncoder.Encode(page03ViewData.JudgesInfo.LocationCity));
-            }
-
-            if (!string.IsNullOrWhiteSpace(page03ViewData.JudgesInfo.LocationState))
-            {
-                trainingSb.Append(", ").Append(htmlEncoder.Encode(page03ViewData.JudgesInfo.LocationState));
-            }
-
-            if (!string.IsNullOrWhiteSpace(page03ViewData.JudgesInfo.LocationURL))
-            {
-                trainingSb.Append("</a>");
-            }
-
-            // TODO: (05/26/2025) Test that this works correctly. You may want to revert to the previous code if it does not.
-            body = JudgesTrainingLocationRegex().Replace(body, trainingSb.ToString());
-
-            // Training date and time
-            var trainingDate = page03ViewData.JudgesInfo.StartDate.HasValue
-                ? page03ViewData.JudgesInfo.StartDate.Value.ToLongDateString()
-                : "TBA";
-
-            var trainingTime = !string.IsNullOrWhiteSpace(page03ViewData.JudgesInfo.Time)
-                ? page03ViewData.JudgesInfo.Time
-                : "TBA";
-
-            body = JudgesTrainingDateRegex().Replace(body, trainingDate);
-            body = JudgesTrainingTimeRegex().Replace(body, trainingTime);
-
-            // Build Tournament location HTML (encode text parts)
-            var tournamentSb = new StringBuilder();
-
-            if (!string.IsNullOrWhiteSpace(page03ViewData.TournamentInfo.LocationURL))
-            {
-                tournamentSb.Append("<a href=\"")
-                            .Append(htmlEncoder.Encode(page03ViewData.TournamentInfo.LocationURL))
-                            .Append("\" target=\"_blank\">");
-            }
-
-            tournamentSb.Append(htmlEncoder.Encode(page03ViewData.TournamentInfo.Location));
-
-            if (!string.IsNullOrWhiteSpace(page03ViewData.TournamentInfo.LocationAddress))
-            {
-                tournamentSb.Append(", ").Append(htmlEncoder.Encode(page03ViewData.TournamentInfo.LocationAddress));
-            }
-
-            if (!string.IsNullOrWhiteSpace(page03ViewData.TournamentInfo.LocationCity))
-            {
-                tournamentSb.Append(", ").Append(htmlEncoder.Encode(page03ViewData.TournamentInfo.LocationCity));
-            }
-
-            if (!string.IsNullOrWhiteSpace(page03ViewData.TournamentInfo.LocationState))
-            {
-                tournamentSb.Append(", ").Append(htmlEncoder.Encode(page03ViewData.TournamentInfo.LocationState));
-            }
-
-            if (!string.IsNullOrWhiteSpace(page03ViewData.TournamentInfo.LocationURL))
-            {
-                tournamentSb.Append("</a>");
-            }
-
-            body = TournamentLocationRegex().Replace(body, tournamentSb.ToString());
-
-            // Tournament date and time
-            var tournamentDate = page03ViewData.TournamentInfo.StartDate.HasValue
-                ? page03ViewData.TournamentInfo.StartDate.Value.ToLongDateString()
-                : "TBA";
-
-            var tournamentTime = !string.IsNullOrWhiteSpace(page03ViewData.TournamentInfo.Time)
-                ? page03ViewData.TournamentInfo.Time
-                : "TBA";
-
-            body = TournamentDateRegex().Replace(body, tournamentDate);
-            body = TournamentTimeRegex().Replace(body, tournamentTime);
-
-            // ContactUsURL
-            body = ContactUsUrlRegex().Replace(body, page03ViewData.Config["HomePage"] + page03ViewData.Config["ContactUsURL"]);
-
+            var body = judgesInfo.EventMailBody;
+            body = ReplaceJudgeTokens(body, page03ViewData.RegionNumber, judge);
+            body = ReplaceLocationTokens(body, judgesInfo, tournamentInfo, config);
             return body;
+        }
+
+        private static string ReplaceJudgeTokens(string body, string regionNumber, Judge judge)
+        {
+            var replaced = JudgeIdRegex().Replace(body, judge.JudgeID.ToString(CultureInfo.InvariantCulture));
+            replaced = FirstNameRegex().Replace(replaced, judge.FirstName);
+            replaced = LastNameRegex().Replace(replaced, judge.LastName);
+            return RegionRegex().Replace(replaced, "Region " + regionNumber);
+        }
+
+        private static string ReplaceLocationTokens(string body, Event judgesInfo, Event tournamentInfo, IDictionary<string, string> config)
+        {
+            var htmlEncoder = HtmlEncoder.Default;
+            var trainingLocation = BuildLocationHtml(judgesInfo.Location, judgesInfo.LocationURL, judgesInfo.LocationAddress, judgesInfo.LocationCity, judgesInfo.LocationState, htmlEncoder);
+            var tournamentLocation = BuildLocationHtml(tournamentInfo.Location, tournamentInfo.LocationURL, tournamentInfo.LocationAddress, tournamentInfo.LocationCity, tournamentInfo.LocationState, htmlEncoder);
+
+            var replaced = JudgesTrainingLocationRegex().Replace(body, trainingLocation);
+            replaced = JudgesTrainingDateRegex().Replace(replaced, judgesInfo.StartDate.HasValue ? judgesInfo.StartDate.Value.ToLongDateString() : "TBA");
+            replaced = JudgesTrainingTimeRegex().Replace(replaced, !string.IsNullOrWhiteSpace(judgesInfo.Time) ? judgesInfo.Time : "TBA");
+            replaced = TournamentLocationRegex().Replace(replaced, tournamentLocation);
+            replaced = TournamentDateRegex().Replace(replaced, tournamentInfo.StartDate.HasValue ? tournamentInfo.StartDate.Value.ToLongDateString() : "TBA");
+            replaced = TournamentTimeRegex().Replace(replaced, !string.IsNullOrWhiteSpace(tournamentInfo.Time) ? tournamentInfo.Time : "TBA");
+            return ContactUsUrlRegex().Replace(replaced, config["HomePage"] + config["ContactUsURL"]);
+        }
+
+        private static string BuildLocationHtml(string location, string locationUrl, string locationAddress, string locationCity, string locationState, HtmlEncoder htmlEncoder)
+        {
+            var builder = new StringBuilder();
+
+            if (!string.IsNullOrWhiteSpace(locationUrl))
+            {
+                builder.Append("<a href=\"")
+                    .Append(htmlEncoder.Encode(locationUrl))
+                    .Append("\" target=\"_blank\">");
+            }
+
+            builder.Append(htmlEncoder.Encode(location));
+
+            if (!string.IsNullOrWhiteSpace(locationAddress))
+            {
+                builder.Append(", ").Append(htmlEncoder.Encode(locationAddress));
+            }
+
+            if (!string.IsNullOrWhiteSpace(locationCity))
+            {
+                builder.Append(", ").Append(htmlEncoder.Encode(locationCity));
+            }
+
+            if (!string.IsNullOrWhiteSpace(locationState))
+            {
+                builder.Append(", ").Append(htmlEncoder.Encode(locationState));
+            }
+
+            if (!string.IsNullOrWhiteSpace(locationUrl))
+            {
+                builder.Append("</a>");
+            }
+
+            return builder.ToString();
         }
 
         /// <summary>
@@ -222,7 +195,7 @@ namespace OdysseyMvc2024.Controllers
         /// <returns>
         /// A concatenated, semicolon-separated string of previously-held positions.
         /// </returns>
-        private static string GetPreviousPositions(Page02ViewData page02ViewData)
+        private static string? GetPreviousPositions(Page02ViewData page02ViewData)
         {
             // TODO: Add curly braces to all of this.
             StringBuilder previousPositions = new();
@@ -346,7 +319,8 @@ namespace OdysseyMvc2024.Controllers
 
             SetBaseViewData(page01ViewData);
             page01ViewData.MailRegionalDirectorHyperLink = BuildMailRegionalDirectorHyperLink(page01ViewData);
-            page01ViewData.MailRegionalDirectorHyperLinkText = "send an e-mail to " + page01ViewData.Config["RegionalDirectorText"];
+            IDictionary<string, string> config = page01ViewData.Config ?? throw new InvalidOperationException("Configuration is missing for Page01.");
+            page01ViewData.MailRegionalDirectorHyperLinkText = "send an e-mail to " + config["RegionalDirectorText"];
             return View(page01ViewData);
         }
 
@@ -426,7 +400,7 @@ namespace OdysseyMvc2024.Controllers
             {
                 Config = Repository.Config,
                 TournamentInfo = tournamentInfo,
-                TshirtSizes = new SelectList(TshirtSizeChoices, TshirtSizeChoices.First()),
+                TshirtSizes = new SelectList(TshirtSizeChoices, TshirtSizeChoices[0]),
                 ProblemChoices = new SelectList(
                     Repository.ProblemChoices,
                     "ProblemID",
@@ -457,6 +431,8 @@ namespace OdysseyMvc2024.Controllers
         [HttpPost]
         public ActionResult Page02(int id, Page02ViewData page02ViewData)
         {
+            ArgumentNullException.ThrowIfNull(page02ViewData);
+
             // If registration is currently closed, down, or coming soon, redirect to the appropriate page.
             if (CurrentRegistrationState != BaseRegistrationController.RegistrationState.Available)
             {
@@ -473,67 +449,55 @@ namespace OdysseyMvc2024.Controllers
                     return View(page02ViewData);
                 }
 
-                Judge newJudgeData = new()
-                {
-                    FirstName = page02ViewData.FirstName,
-                    LastName = page02ViewData.LastName,
-                    Address = page02ViewData.Address,
-                    AddressLine2 = page02ViewData.AddressLine2,
-                    City = page02ViewData.City,
-                    State = page02ViewData.State,
-                    ZipCode = page02ViewData.ZipCode,
-                    EveningPhone = page02ViewData.EveningPhone,
-                    DaytimePhone = page02ViewData.DaytimePhone,
-                    MobilePhone = page02ViewData.MobilePhone,
-                    EmailAddress = page02ViewData.EmailAddress,
-                    ProblemChoice1 = page02ViewData.ProblemChoice1,
-                    ProblemChoice2 = page02ViewData.ProblemChoice2,
-                    ProblemChoice3 = page02ViewData.ProblemChoice3,
-                    HasChildrenCompeting = page02ViewData.HasChildrenCompeting,
-                    ProblemCOI1 = page02ViewData.ProblemConflict1,
-                    ProblemCOI2 = page02ViewData.ProblemConflict2,
-                    ProblemCOI3 = page02ViewData.ProblemConflict3,
-                    YearsOfLongTermJudgingExperience = page02ViewData.YearsOfLongTermJudgingExperience,
-                    YearsOfSpontaneousJudgingExperience = page02ViewData.YearsOfSpontaneousJudgingExperience,
-                    PreviousPositions = JudgesRegistrationController.GetPreviousPositions(page02ViewData),
-                    WillingToBeScorechecker = page02ViewData.WillingToBeScorechecker,
-
-                    // TODO: Is `as string` correct here? (10/05/2025)
-                    TshirtSize = page02ViewData.SelectedTshirtSize as string,
-                    WantsCEUCredit = page02ViewData.WantsCeuCredit,
-                    Notes = page02ViewData.Notes
-                };
-
-                // If the judge did not provide an e-mail address, make sure "None" is written to the database
-                if (string.IsNullOrWhiteSpace(newJudgeData.EmailAddress))
-                {
-                    newJudgeData.EmailAddress = "None";
-                }
-
-                // TODO: if case: Send an e-mail reporting database failure; could not find the record already added to the database
+                var newJudgeData = CreateJudgeFromPage02(page02ViewData);
                 Repository.UpdateJudge(id, 2, newJudgeData);
-
-                // Display debugging information.
-                ////Response.Write("<p>Head Judge: " + collection["PreviouslyHeadJudge"] + "</p>");
-                ////Response.Write("<p>Problem Judge: " + collection["PreviouslyProblemJudge"] + "</p>");
-                ////Response.Write("<p>Style Judge: " + collection["PreviouslyStyleJudge"] + "</p>");
-                ////Response.Write("<p>Staging Judge: " + collection["PreviouslyStagingJudge"] + "</p>");
-                ////Response.Write("<p>Timekeeper: " + collection["PreviouslyTimekeeper"] + "</p>");
-                ////Response.Write("<p>Scorechecker: " + collection["PreviouslyScorechecker"] + "</p>");
-                ////Response.Write("<p>WeighIn Judge: " + collection["PreviouslyWeighInJudge"] + "</p>");
-                ////Response.Write("Previous Positions: " + viewData.Judge.PreviousPositions);
-                ////return null;
-
-                // ... save and redirect
                 return RedirectToAction("Page03", new { id });
             }
             catch (Exception exception)
             {
                 ElmahExtensions.RaiseError(exception);
-
-                // TODO: Replace with Error Message
                 return RedirectToAction("Index", "Home");
             }
+        }
+
+        private static Judge CreateJudgeFromPage02(Page02ViewData page02ViewData)
+        {
+            var newJudgeData = new Judge
+            {
+                FirstName = page02ViewData.FirstName,
+                LastName = page02ViewData.LastName,
+                Address = page02ViewData.Address,
+                AddressLine2 = page02ViewData.AddressLine2,
+                City = page02ViewData.City,
+                State = page02ViewData.State,
+                ZipCode = page02ViewData.ZipCode,
+                EveningPhone = page02ViewData.EveningPhone,
+                DaytimePhone = page02ViewData.DaytimePhone,
+                MobilePhone = page02ViewData.MobilePhone,
+                EmailAddress = page02ViewData.EmailAddress,
+                ProblemChoice1 = page02ViewData.ProblemChoice1,
+                ProblemChoice2 = page02ViewData.ProblemChoice2,
+                ProblemChoice3 = page02ViewData.ProblemChoice3,
+                HasChildrenCompeting = page02ViewData.HasChildrenCompeting,
+                ProblemCOI1 = page02ViewData.ProblemConflict1,
+                ProblemCOI2 = page02ViewData.ProblemConflict2,
+                ProblemCOI3 = page02ViewData.ProblemConflict3,
+                YearsOfLongTermJudgingExperience = page02ViewData.YearsOfLongTermJudgingExperience,
+                YearsOfSpontaneousJudgingExperience = page02ViewData.YearsOfSpontaneousJudgingExperience,
+                PreviousPositions = GetPreviousPositions(page02ViewData),
+                WillingToBeScorechecker = page02ViewData.WillingToBeScorechecker,
+                TshirtSize = page02ViewData.SelectedTshirtSize as string,
+                WantsCEUCredit = page02ViewData.WantsCeuCredit,
+                Notes = page02ViewData.Notes
+            };
+
+            // If the judge did not provide an e-mail address, make sure "None" is written to the database
+            if (string.IsNullOrWhiteSpace(newJudgeData.EmailAddress))
+            {
+                newJudgeData.EmailAddress = "None";
+            }
+
+            return newJudgeData;
         }
 
         /// <summary>
@@ -594,8 +558,9 @@ namespace OdysseyMvc2024.Controllers
 
                 // TODO: Check for an empty WebmasterEmailPassword here. - 10/30/2025.
                 // TODO: Log if pw is empty.
-                var mailMessage = BuildMessage(page03ViewData.Config["WebmasterEmail"], page03ViewData.RegionName + " Odyssey Region " + page03ViewData.RegionNumber + " " + page03ViewData.FriendlyRegistrationName, page03ViewData.MailBody, page03ViewData.Judge.EmailAddress, (string)null, (string)null);
-                
+                IDictionary<string, string> config = page03ViewData.Config ?? throw new InvalidOperationException("Configuration is missing for Page03.");
+                var mailMessage = BuildMessage(config["WebmasterEmail"], page03ViewData.RegionName + " Odyssey Region " + page03ViewData.RegionNumber + " " + page03ViewData.FriendlyRegistrationName, page03ViewData.MailBody, page03ViewData.Judge.EmailAddress, string.Empty, string.Empty);
+
                 if (mailMessage == null)
                 {
                     return RedirectToAction("BadEmail");
@@ -645,6 +610,8 @@ namespace OdysseyMvc2024.Controllers
           string restartRegistrationButton,
           IFormCollection collection)
         {
+            ArgumentNullException.ThrowIfNull(collection);
+
             // If registration is currently closed, down, or coming soon, redirect to the appropriate page.
             if (CurrentRegistrationState != BaseRegistrationController.RegistrationState.Available)
             {
@@ -660,7 +627,8 @@ namespace OdysseyMvc2024.Controllers
             if (!string.IsNullOrEmpty(submitButton))
             {
                 // Update the Judge e-mail address in the database.
-                Repository.UpdateJudgeEmail(id, collection["NewEmailTextBox"]);
+                string newEmail = collection["NewEmailTextBox"].ToString();
+                Repository.UpdateJudgeEmail(id, newEmail);
                 return Page03(id);
             }
 
@@ -671,7 +639,8 @@ namespace OdysseyMvc2024.Controllers
             };
 
             SetBaseViewData(baseViewData);
-            return new RedirectResult(baseViewData.Config["HomePage"]);
+            IDictionary<string, string> config = baseViewData.Config ?? throw new InvalidOperationException("Configuration is missing for redirect.");
+            return new RedirectResult(config["HomePage"]);
             // return RedirectToAction("Index", "Home");
         }
     }
