@@ -38,14 +38,14 @@ This tells VS Code/.NET tooling to prefer the C# extension experience when openi
 | /src/   | OdysseyCoreMvc                       | .NET 10.0          | Unused (I think): Core MVC framework  |
 | /src/   | OdysseyMvc4                          | .NET Framework 4.8 | MVC framework 4<br />**This is what is running in production today (01/01/2025).** |
 | /src/   | OdysseyMvc4.Tests                    | .NET Framework 4.8 | MVC framework 4 tests |
-| /src/   | OdysseyMvc2023                       | **.NET Framework 4.8** | MVC framework 2023, ==I think unused since it's .NET Framework==  |
-| /src/   | OdysseyMvc2024                       | .NET 10.0          | ==Is this the current project or is it the 2023 project? I think it's this one.== |
+| /src/   | OdysseyMvc2023                       | **.NET Framework 4.8** | MVC framework 2023, ==I think this is unused since it's .NET Framework==  |
+| /src/   | OdysseyMvc2024                       | .NET 10.0          | ==This is the current project, not the 2023 project.== |
 | /src/   | OdysseyRegistrationWebApi            | .NET 10.0          | Web API for registration |
 | /src/   | UpdateProblemSynopsesForRegistration | .NET Framework 4.8 | Update problem synopses, ==Need to figure out what this does and if it's worth keeping== |
 
 ## Technologies
 
-The OdysseyMvc4 (original) and OdysseyMvc2023 (current? I think it's really OdysseyMvc2024 build on .NET) projects are currently built using ASP.NET MVC version 4 on .NET Framework 4.8.
+The OdysseyMvc4 (original) project is built using ASP.NET MVC version 4 on .NET Framework 4.8. The OdysseyMvc2024 (new) project is built using ASP.NET (Core) MVC on .NET (Core) 10.
 
 ## Conversion Progress
 

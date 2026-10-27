@@ -2,13 +2,16 @@
 
 An ASP.NET Core 10.0 MVC application for managing Odyssey of the Mind tournament and judges registrations for regional tournaments.
 
+> [!note]
+> The previous ASP.NET MVC 4 application (OdysseyMvc4) also supported **Coaches Training Registration** and **Volunteer Registration**, which may be re-enabled in this project in the future.
+
 ## Overview
 
 This system provides multi-page registration workflows for:
 - **Tournament Registration**: Teams, coaches, and school information (10-page workflow)
 - **Judges Registration**: Judge volunteer information (3-page workflow)
 
-The system supports multiple regions (NOVA North and NOVA South) with site-specific branding and configuration.
+The system supports multiple regions (NoVA North and NoVA South) with site-specific branding and configuration.
 
 ## Project Structure
 
@@ -173,6 +176,9 @@ In WinHost Control Panel:
 2. Add a new setting with:
    - Name: `ConnectionStrings:OdysseyConnection` (or `ConnectionStrings__OdysseyConnection`)
    - Value: Your full connection string with password
+
+> [!important]
+> I did not see anywhere to change IIS Settings in the WinHost Control Panel as of 10/26/2026.
 
 #### Option 2: Azure Key Vault (For Azure Hosting)
 For Azure App Service deployments:
