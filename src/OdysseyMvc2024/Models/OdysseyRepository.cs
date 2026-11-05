@@ -370,42 +370,25 @@ namespace OdysseyMvc2024.Models
         }
 
         /// <summary>
-        /// Gets the problem choices for a web page drop-down list, having excluded the spontaneous problem from the list.
+        /// Gets the problem choices for a web page drop-down list, excluding the spontaneous problem from the list.
         /// </summary>
-        public IEnumerable<Problem> ProblemChoicesWithoutSpontaneous
+        public IEnumerable<Problem> ProblemChoicesWithoutSpontaneous =>
+            _problemChoicesWithoutSpontaneous ??= InitializeProblemChoicesWithoutSpontaneous();
+
+        private List<Problem> InitializeProblemChoicesWithoutSpontaneous()
         {
-            get
+            var problems = _context.Problems
+                .Where(p => p.ProblemName != "Spontaneous")
+                .OrderBy(p => p.ProblemID)
+                .ToList();
+
+            if (problems.FirstOrDefault(problem => problem.ProblemID == ThePrimaryProblemNumber) is { } thePrimaryProblem &&
+                !thePrimaryProblem.ProblemName.Contains("(The Primary Problem)"))
             {
-                var problems = _context.Problems.Where(p => p.ProblemName != "Spontaneous").OrderBy(p => p.ProblemID);
-
-                // TODO: (Rob) Should we just call the PrimaryProblem property here? 01/06/2025.
-                if (problems.FirstOrDefault(problem => problem.ProblemID == ThePrimaryProblemNumber) is { } thePrimaryProblem)
-                {
-                    thePrimaryProblem.ProblemName += " (The Primary Problem)";
-                }
-
-                // TODO: (Rob) Look into what this does, 12/12/2014.
-                _problemChoicesWithoutSpontaneous ??= problems;
-                return _problemChoicesWithoutSpontaneous;
+                thePrimaryProblem.ProblemName += " (The Primary Problem)";
             }
 
-            // get
-            // {
-            //     // If problems is null, run the LINQ query, assign the result to Problems, and return the result
-            //     IQueryable<Problem> temp = from p in this.context.Problems
-            //         orderby p.ProblemID
-            //         where p.ProblemName != "Spontaneous"
-            //         select p;
-
-            //     Problem thePrimaryProblem = temp.FirstOrDefault(problem => problem.ProblemID == 6);
-            //     if (thePrimaryProblem != null)
-            //     {
-            //         thePrimaryProblem.ProblemName += " (The Primary Problem)";
-            //     }
-
-            //     // TODO: Look into what this does - Rob, 12/12/2014.
-            //     return this.problemChoicesWithoutSpontaneous ?? (this.ProblemChoices = temp);
-            // }
+            return problems;
         }
 
         /// <summary>
