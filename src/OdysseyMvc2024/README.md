@@ -99,8 +99,9 @@ Email functionality includes:
 - **BuildMessage()**: Constructs MailMessage with to/cc/bcc support
 - **SendMessage()**: Sends email with retry logic for transient failures
 - **Configuration**: SMTP server, credentials from Config dictionary
-- **Error Handling**: ElmahCore logging and user-friendly error views
+- **Error Handling**: ElmahCore logging, SQL connectivity handling, and user-friendly error views
 - **Error Views**: BadEmail.cshtml, BadCoachEmail.cshtml, BadAltCoachEmail.cshtml
+- **Database Unavailable**: SQL Server connectivity failures return HTTP 503 with a maintenance page stating registration is temporarily down for maintenance
 
 ## Technologies
 
@@ -134,6 +135,7 @@ All configuration stored in Config table as key-value pairs:
 - `appsettings.json`: Base configuration (no secrets)
 - `appsettings.Development.json`: Development overrides
 - **User Secrets**: Connection strings and sensitive data for development
+- **SqlOutageNotification**: SMTP settings used to email `webmaster@novanorth.org` when SQL Server is unavailable
 
 ### User Secrets (Development)
 The project uses ASP.NET Core User Secrets to store sensitive configuration like connection strings outside the project:
@@ -147,6 +149,16 @@ dotnet user-secrets init
 
 # Set the connection string
 dotnet user-secrets set "ConnectionStrings:OdysseyConnection" "Server=localhost;Database=DB_12824_registration;User Id=sa;Password=YOUR_PASSWORD;TrustServerCertificate=True;"
+
+# Set the webmaster's email password in order to send registration, etc., emails
+dotnet user-secrets set "Config:WebmasterEmailPassword" "WEBMASTER_SMTP_PASSWORD"
+
+# Configure SQL outage email notification SMTP settings
+dotnet user-secrets set "SqlOutageNotification:SmtpHost" "mail.novanorth.org"
+dotnet user-secrets set "SqlOutageNotification:SmtpPort" "587"
+dotnet user-secrets set "SqlOutageNotification:EnableSsl" "true"
+dotnet user-secrets set "SqlOutageNotification:Username" "webmaster@novanorth.org"
+dotnet user-secrets set "SqlOutageNotification:Password" "WEBMASTER_SMTP_PASSWORD"
 
 # View stored secrets
 dotnet user-secrets list
@@ -186,7 +198,8 @@ For Azure App Service deployments:
 1. Create an Azure Key Vault
 2. Store the connection string as a secret
 3. Configure managed identity for the App Service
-4. Add the Key Vault configuration provider:
+4. Add package `Azure.Identity` when enabling this option
+5. Add the Key Vault configuration provider:
 
 ```csharp
 // In Program.cs

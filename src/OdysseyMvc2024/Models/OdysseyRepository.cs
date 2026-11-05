@@ -46,8 +46,9 @@ namespace OdysseyMvc2024.Models
             _context = context ?? throw new ArgumentNullException(nameof(context));
 
             // If config is null, run the LINQ query, assign the result to Config as a Dictionary, and return the result.
+            // If ToDictionary throws (for example, SQL connectivity issues), constructor execution stops and this repository instance is not created.
             Config ??= (from c in _context.Configs
-                         select c).ToDictionary(d => d.Name, d => d.Value, StringComparer.OrdinalIgnoreCase);
+                        select c).ToDictionary(d => d.Name, d => d.Value, StringComparer.OrdinalIgnoreCase);
 
             Config.Add("EndYear", (int.Parse(Config["Year"], CultureInfo.InvariantCulture) + 1).ToString(CultureInfo.InvariantCulture));
         }
@@ -309,7 +310,7 @@ namespace OdysseyMvc2024.Models
             //         where o.EventName.Contains("Judges") && o.EventName.Contains("Training")
             //         select o).First());
             // }
-               
+
             // set
             // {
             //     this.judgesInfo = value;
@@ -343,7 +344,7 @@ namespace OdysseyMvc2024.Models
             //         where p.ProblemID == 6
             //         select p);
             // }
-               
+
             // private set
             // {
             //     this.primaryProblem = value;
@@ -383,16 +384,16 @@ namespace OdysseyMvc2024.Models
             //     IOrderedQueryable<Problem> temp = from p in this.context.Problems
             //         orderby p.ProblemID
             //         select p;
-               
+
             //     Problem thePrimaryProblem = temp.FirstOrDefault(problem => problem.ProblemID == 6);
             //     if (thePrimaryProblem != null)
             //     {
             //         thePrimaryProblem.ProblemName += " (The Primary Problem)";
             //     }
-               
+
             //     return this.problemChoices ?? (this.ProblemChoices = temp);
             // }
-               
+
             // private set
             // {
             //     this.problemChoices = value;
@@ -426,13 +427,13 @@ namespace OdysseyMvc2024.Models
             //         orderby p.ProblemID
             //         where p.ProblemName != "Spontaneous"
             //         select p;
-               
+
             //     Problem thePrimaryProblem = temp.FirstOrDefault(problem => problem.ProblemID == 6);
             //     if (thePrimaryProblem != null)
             //     {
             //         thePrimaryProblem.ProblemName += " (The Primary Problem)";
             //     }
-               
+
             //     // TODO: Look into what this does - Rob, 12/12/2014.
             //     return this.problemChoicesWithoutSpontaneous ?? (this.ProblemChoices = temp);
             // }
@@ -476,19 +477,19 @@ namespace OdysseyMvc2024.Models
             //         where p.ProblemID != 7
             //         orderby p.ProblemID
             //         select p;
-               
+
             //     // TODO: When the following was uncommented, " (The Primary Problem)" showed up twice in the same dropdown entry.
             //     // I have no idea why commenting this out solves the problem!  I need to revisit and fix this.
-               
+
             //     ////var primaryProblem = temp.Where(problem => problem.ProblemID == 6).FirstOrDefault();
             //     ////if (primaryProblem != null)
             //     ////{
             //     ////primaryProblem.ProblemName += " (The Primary Problem)";
             //     ////}
-               
+
             //     return this.problemConflicts ?? (this.ProblemConflicts = temp);
             // }
-               
+
             // private set
             // {
             //     this.problemConflicts = value;
@@ -655,7 +656,7 @@ namespace OdysseyMvc2024.Models
         //             orderby r.ID
         //             select r);
         //     }
-           
+
         //     private set
         //     {
         //         this.roles = value;
@@ -685,7 +686,8 @@ namespace OdysseyMvc2024.Models
                         .OrderBy<School, string>(s => s.Name ?? string.Empty)
                         .Select(s => new
                         {
-                            s.ID, s.Name
+                            s.ID,
+                            s.Name
                         });
                 }
 
@@ -705,11 +707,9 @@ namespace OdysseyMvc2024.Models
                 // TODO: This is throwing an exception!
                 if (_tournamentInfo == null)
                 {
-                    var events = Events ?? Enumerable.Empty<Event>();
-                    TournamentInfo = events.First(e =>
-                        e.EventName != null &&
-                        e.EventName.StartsWith(RegionName, StringComparison.Ordinal) &&
-                        e.EventName.Contains("Tournament", StringComparison.Ordinal));
+                    TournamentInfo = (Events ?? []).First(e =>
+                        e.EventName?.StartsWith(RegionName, StringComparison.Ordinal) == true &&
+                        e.EventName?.Contains("Tournament", StringComparison.Ordinal) == true);
                 }
 
                 return _tournamentInfo!;
@@ -871,7 +871,7 @@ namespace OdysseyMvc2024.Models
         //     //\u003C\u003Eh__TransparentIdentifier6 = data,
         //     //      y = y
         //     //  }), data => j.JudgeID), data => new JudgesExport()
-           
+
         //     // Solution for multiple joins came from https://stackoverflow.com/questions/267488/linq-to-sql-multiple-left-outer-joins
         //     return from j in this.context.Judges
         //            join p in this.context.Problems on j.ProblemCOI1 equals p.ProblemID.ToString(CultureInfo
@@ -923,18 +923,18 @@ namespace OdysseyMvc2024.Models
                    select j;
         }
 
-        #pragma warning disable CA1304, RCS1155, CA1862, MA0011, CA1311
-                public IQueryable<Judge> GetJudgeByIdAndName(
-                    int judgeId,
-                    string judgeFirstName,
-                    string judgeLastName)
-                {
-                    // return Queryable.Where<Judge>((IQueryable<Judge>)this.context.Judges, (Expression<Func<Judge, bool>>)(j => j.JudgeID == judgeId && j.FirstName.ToLower() == judgeFirstName.ToLower() && j.LastName.ToLower() == judgeLastName.ToLower()));
-                    return from j in _context.Judges
-                           where (j.JudgeID == judgeId) && (j.FirstName.ToLower() == judgeFirstName.ToLower()) && (j.LastName.ToLower() == judgeLastName.ToLower())
-                           select j;
-                }
-        #pragma warning restore CA1304, RCS1155, CA1862, MA0011, CA1311
+#pragma warning disable CA1304, RCS1155, CA1862, MA0011, CA1311
+        public IQueryable<Judge> GetJudgeByIdAndName(
+            int judgeId,
+            string judgeFirstName,
+            string judgeLastName)
+        {
+            // return Queryable.Where<Judge>((IQueryable<Judge>)this.context.Judges, (Expression<Func<Judge, bool>>)(j => j.JudgeID == judgeId && j.FirstName.ToLower() == judgeFirstName.ToLower() && j.LastName.ToLower() == judgeLastName.ToLower()));
+            return from j in _context.Judges
+                   where (j.JudgeID == judgeId) && (j.FirstName.ToLower() == judgeFirstName.ToLower()) && (j.LastName.ToLower() == judgeLastName.ToLower())
+                   select j;
+        }
+#pragma warning restore CA1304, RCS1155, CA1862, MA0011, CA1311
 
         public short? GetJudgeIdFromTournamentRegistrationId(int tournamentRegistrationId) => ((IQueryable<TournamentRegistration>)_context.TournamentRegistrations).Where<TournamentRegistration>((Expression<Func<TournamentRegistration, bool>>)(t => t.Id == tournamentRegistrationId)).FirstOrDefault<TournamentRegistration>()?.JudgeID;
 
@@ -943,7 +943,7 @@ namespace OdysseyMvc2024.Models
           out string judgeFirstName,
           out string judgeLastName)
         {
-            Judge? judge = Queryable.Where<Judge>((IQueryable<Judge>)_context.Judges, (Expression<Func<Judge, bool>>)(j => (int?)j.JudgeID == (int?)judgeId)).FirstOrDefault<Judge>();
+            Judge? judge = _context.Judges.Where(j => j.JudgeID == judgeId).FirstOrDefault();
             if (judge == null)
             {
                 judgeFirstName = string.Empty;
@@ -958,22 +958,17 @@ namespace OdysseyMvc2024.Models
 
         public IReadOnlyList<string> GetMemberGradesByRegistration(int id)
         {
-            TournamentRegistration? tournamentRegistration = Queryable.Where<TournamentRegistration>((IQueryable<TournamentRegistration>)_context.TournamentRegistrations, (Expression<Func<TournamentRegistration, bool>>)(t => t.Id == id)).FirstOrDefault<TournamentRegistration>();
-            if (tournamentRegistration == null)
-            {
-                return [];
-            }
-
-            return
-              [
-                tournamentRegistration.MemberGrade1 ?? string.Empty,
-                tournamentRegistration.MemberGrade2 ?? string.Empty,
-                tournamentRegistration.MemberGrade3 ?? string.Empty,
-                tournamentRegistration.MemberGrade4 ?? string.Empty,
-                tournamentRegistration.MemberGrade5 ?? string.Empty,
-                tournamentRegistration.MemberGrade6 ?? string.Empty,
-                tournamentRegistration.MemberGrade7 ?? string.Empty
-              ];
+            return _context.TournamentRegistrations.Where(t => t.Id == id).FirstOrDefault() == null
+                ? []
+                : [
+                _context.TournamentRegistrations.Where(t => t.Id == id).FirstOrDefault().MemberGrade1 ?? string.Empty,
+                _context.TournamentRegistrations.Where(t => t.Id == id).FirstOrDefault().MemberGrade2 ?? string.Empty,
+                _context.TournamentRegistrations.Where(t => t.Id == id).FirstOrDefault().MemberGrade3 ?? string.Empty,
+                _context.TournamentRegistrations.Where(t => t.Id == id).FirstOrDefault().MemberGrade4 ?? string.Empty,
+                _context.TournamentRegistrations.Where(t => t.Id == id).FirstOrDefault().MemberGrade5 ?? string.Empty,
+                _context.TournamentRegistrations.Where(t => t.Id == id).FirstOrDefault().MemberGrade6 ?? string.Empty,
+                _context.TournamentRegistrations.Where(t => t.Id == id).FirstOrDefault().MemberGrade7 ?? string.Empty
+            ];
         }
 
         public string? GetProblemNameFromProblemId(int? problemId)
@@ -1070,9 +1065,9 @@ namespace OdysseyMvc2024.Models
         {
             errorMessage = string.Empty;
             var nullable = judgeId;
-            if (!(nullable.HasValue ? new int?((int)nullable.GetValueOrDefault()) : new int?()).HasValue)
+            if (!(nullable.HasValue ? new int?(nullable.GetValueOrDefault()) : new int?()).HasValue)
                 return 0;
-            Judge judge = Queryable.Where<Judge>((IQueryable<Judge>)_context.Judges, (Expression<Func<Judge, bool>>)(j => (int?)j.JudgeID == (int?)judgeId)).First<Judge>();
+            Judge judge = _context.Judges.Where<Judge>(j => j.JudgeID == judgeId).First<Judge>();
             if (!string.IsNullOrWhiteSpace(judge.TeamID))
             {
                 if (int.TryParse(judge.TeamID, NumberStyles.Integer, CultureInfo.InvariantCulture, out int result) && result == tournamentRegistrationId)
@@ -1256,11 +1251,11 @@ namespace OdysseyMvc2024.Models
         // {
         //     // TODO: Check the TeamID.  If it's the same as the currently registering team, just return.
         //     errorMessage = string.Empty;
-           
+
         //     Volunteer volunteerRecord = (from v in this.context.Volunteers
         //         where v.VolunteerID == volunteerId
         //         select v).First();
-           
+
         //     // Has this volunteer already been assigned to a team?
         //     if (volunteerRecord.TeamID != null)
         //     {
@@ -1271,17 +1266,17 @@ namespace OdysseyMvc2024.Models
         //         {
         //             return 0;
         //         }
-           
+
         //         // If this volunteer has already been assigned to another team, it
         //         // must have happened after Page04 was filled in
         //         errorMessage =
         //             "The selected volunteer has already been assigned to another team. &nbsp;" +
         //             "The webmaster has been notified and you will be contacted about how to complete your registration.";
         //     }
-           
+
         //     volunteerRecord.TeamID = tournamentRegistrationId;
         //     volunteerRecord.TimeAssignedToTeam = DateTime.Now;
-           
+
         //     // SaveChanges returns the number of objects added to the database
         //     return this.context.SaveChanges();
         // }
@@ -1353,5 +1348,4 @@ namespace OdysseyMvc2024.Models
     }
 }
 
-#pragma warning restore S1121, S1144, S2971, MA0074, S1905, CA1307, CA1310, CA1031
-#pragma warning restore S125
+#pragma warning restore S1121, S1144, S2971, MA0074, S1905, CA1307, CA1310, CA1031, S125

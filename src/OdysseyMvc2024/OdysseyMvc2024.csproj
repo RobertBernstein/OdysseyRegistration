@@ -16,7 +16,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Azure.Identity" />
     <PackageReference Include="ElmahCore" />
     <PackageReference Include="Microsoft.AspNetCore.SystemWebAdapters.CoreServices" />
     <PackageReference Include="Microsoft.Data.SqlClient" />

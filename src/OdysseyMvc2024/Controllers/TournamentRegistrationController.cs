@@ -820,10 +820,15 @@ namespace OdysseyMvc2024.Controllers
             }
 
             page10ViewData.JudgeErrorMessage = errorMessage;
-            using MailMessage? mailMessage = BuildMessage(page10ViewData.Config["WebmasterEmail"], "Error: " + page10ViewData.RegionName + " Odyssey Region " + page10ViewData.RegionNumber + " Tournament Registration", "<p>Team with ID # " + (object)id + " attempted to re-register after its judge was assigned to the team.</p><p>" + errorMessage + "</p>", page10ViewData.Config["WebmasterEmail"], string.Empty, string.Empty);
+            using MailMessage? mailMessage = BuildMessage(page10ViewData.Config["WebmasterEmail"],
+                                                          "Error: " + page10ViewData.RegionName + " Odyssey Region " + page10ViewData.RegionNumber + " Tournament Registration",
+                                                          "<p>Team with ID # " + id + " attempted to re-register after its judge was assigned to the team.</p><p>" + errorMessage + "</p>",
+                                                          page10ViewData.Config["WebmasterEmail"],
+                                                          string.Empty,
+                                                          string.Empty);
             if (mailMessage != null)
             {
-                page10ViewData.MailErrorMessage = SendMessage((BaseViewData)page10ViewData, mailMessage);
+                page10ViewData.MailErrorMessage = SendMessage(page10ViewData, mailMessage);
             }
 
             errorResult = View(page10ViewData);

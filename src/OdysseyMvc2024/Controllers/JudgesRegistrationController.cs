@@ -21,6 +21,7 @@ using OdysseyMvc2024.ViewData;
 using OdysseyMvc2024.ViewData.JudgesRegistration;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using System.Net.Mail;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.RegularExpressions;
@@ -565,7 +566,12 @@ namespace OdysseyMvc2024.Controllers
                 // TODO: Check for an empty WebmasterEmailPassword here. - 10/30/2025.
                 // TODO: Log if pw is empty.
                 IDictionary<string, string> config = page03ViewData.Config ?? throw new InvalidOperationException("Configuration is missing for Page03.");
-                var mailMessage = BuildMessage(config["WebmasterEmail"], page03ViewData.RegionName + " Odyssey Region " + page03ViewData.RegionNumber + " " + page03ViewData.FriendlyRegistrationName, page03ViewData.MailBody, page03ViewData.Judge.EmailAddress, string.Empty, string.Empty);
+                MailMessage? mailMessage = BuildMessage(config["WebmasterEmail"],
+                                                        page03ViewData.RegionName + " Odyssey Region " + page03ViewData.RegionNumber + " " + page03ViewData.FriendlyRegistrationName,
+                                                        page03ViewData.MailBody,
+                                                        page03ViewData.Judge.EmailAddress,
+                                                        string.Empty,
+                                                        string.Empty);
 
                 if (mailMessage == null)
                 {
