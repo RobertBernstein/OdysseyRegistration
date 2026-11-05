@@ -938,7 +938,14 @@ namespace OdysseyMvc2024.Controllers
             page10ViewData.ProblemName = Repository.GetProblemNameFromProblemId(page10ViewData.TournamentRegistration.ProblemID);
             page10ViewData.MailBody = GenerateEmailBody(/*page10ViewData*/);
 
-            using MailMessage? mailMessage = BuildMessage(page10ViewData.Config["WebmasterEmail"], page10ViewData.RegionName + " Odyssey Region " + page10ViewData.RegionNumber + " Tournament Registration", page10ViewData.MailBody, recipients, "rob@tardistech.com", string.Empty);
+            using MailMessage? mailMessage = BuildMessage(
+                page10ViewData.Config["WebmasterEmail"],
+                page10ViewData.RegionName + " Odyssey Region " + page10ViewData.RegionNumber + " Tournament Registration",
+                page10ViewData.MailBody,
+                recipients,
+                "rob@tardistech.com", // bcc
+                string.Empty);
+
             if (mailMessage != null)
             {
                 page10ViewData.MailErrorMessage = SendMessage((BaseViewData)page10ViewData, mailMessage);
