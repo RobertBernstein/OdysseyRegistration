@@ -185,7 +185,7 @@ namespace OdysseyMvc2024.Migrations
         private static void CreateSchoolTable(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                            name: "School",
+                            name: "Schools",
                             columns: table => new
                             {
                                 ID = table.Column<int>(type: "int", nullable: false)
@@ -196,15 +196,15 @@ namespace OdysseyMvc2024.Migrations
                                 State = table.Column<string>(type: "nvarchar(max)", nullable: true),
                                 PostalCode = table.Column<string>(type: "nvarchar(max)", nullable: true),
                                 Phone = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                                Membership_1 = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                                Membership_1seen = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                                Membership_2 = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                                Membership_2seen = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                                Membership_3 = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                                Membership_3seen = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                                Membership_4 = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                                Membership_4seen = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                                CoordNew_ = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                                Membership_1 = table.Column<string>(name: "Membership#1", type: "nvarchar(max)", nullable: true),
+                                Membership_1seen = table.Column<string>(name: "Membership#1seen", type: "nvarchar(max)", nullable: true),
+                                Membership_2 = table.Column<string>(name: "Membership#2", type: "nvarchar(max)", nullable: true),
+                                Membership_2seen = table.Column<string>(name: "Membership#2seen", type: "nvarchar(max)", nullable: true),
+                                Membership_3 = table.Column<string>(name: "Membership#3", type: "nvarchar(max)", nullable: true),
+                                Membership_3seen = table.Column<string>(name: "Membership#3seen", type: "nvarchar(max)", nullable: true),
+                                Membership_4 = table.Column<string>(name: "Membership#4", type: "nvarchar(max)", nullable: true),
+                                Membership_4seen = table.Column<string>(name: "Membership#4seen", type: "nvarchar(max)", nullable: true),
+                                CoordNew_ = table.Column<string>(name: "CoordNew?", type: "nvarchar(max)", nullable: true),
                                 CoordFirstName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                                 CoordLastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                                 CoordAddress = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -216,10 +216,10 @@ namespace OdysseyMvc2024.Migrations
                                 CoordMobilePhone = table.Column<string>(type: "nvarchar(max)", nullable: true),
                                 CoordFaxNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
                                 CoordEmailName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                                Share_ = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                                Share_ = table.Column<string>(name: "Share?", type: "nvarchar(max)", nullable: true),
                                 Notes = table.Column<string>(type: "nvarchar(max)", nullable: true)
                             },
-                            constraints: table => table.PrimaryKey("PK_School", x => x.ID));
+                            constraints: table => table.PrimaryKey("PK_Schools", x => x.ID));
         }
 
         [SuppressMessage("Performance", "MA0051:Method is too long", Justification = "Generated EF Core migration schema definitions are intentionally large and not hand-maintained.")]
@@ -309,7 +309,7 @@ namespace OdysseyMvc2024.Migrations
                 name: "Problem");
 
             migrationBuilder.DropTable(
-                name: "School");
+                name: "Schools");
 
             migrationBuilder.DropTable(
                 name: "TournamentRegistration");

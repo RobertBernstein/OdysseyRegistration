@@ -78,7 +78,6 @@ namespace OdysseyMvc2024.Models
             modelBuilder.Entity<Event>().ToTable("Events");
             modelBuilder.Entity<Judge>().ToTable("Judges");
             modelBuilder.Entity<Problem>().ToTable("Problem");
-            modelBuilder.Entity<School>().ToTable("School");
             modelBuilder.Entity<TournamentRegistration>().ToTable("TournamentRegistration");
 
             // Configure Judge key/identity and map legacy column names
@@ -90,6 +89,21 @@ namespace OdysseyMvc2024.Models
                 // Legacy DB had '?' in column names; map underscore-suffixed properties to those columns
                 entity.Property(j => j.InformationMailed_).HasColumnName("InformationMailed?");
                 entity.Property(j => j.AttendedJT_).HasColumnName("AttendedJT?");
+            });
+
+            modelBuilder.Entity<School>(entity =>
+            {
+                entity.ToTable("Schools");
+                entity.Property(s => s.Membership_1).HasColumnName("Membership#1");
+                entity.Property(s => s.Membership_1seen).HasColumnName("Membership#1seen");
+                entity.Property(s => s.Membership_2).HasColumnName("Membership#2");
+                entity.Property(s => s.Membership_2seen).HasColumnName("Membership#2seen");
+                entity.Property(s => s.Membership_3).HasColumnName("Membership#3");
+                entity.Property(s => s.Membership_3seen).HasColumnName("Membership#3seen");
+                entity.Property(s => s.Membership_4).HasColumnName("Membership#4");
+                entity.Property(s => s.Membership_4seen).HasColumnName("Membership#4seen");
+                entity.Property(s => s.CoordNew_).HasColumnName("CoordNew?");
+                entity.Property(s => s.Share_).HasColumnName("Share?");
             });
 
             // Other configurations...

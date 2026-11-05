@@ -406,7 +406,8 @@ namespace OdysseyMvc2024.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CoordNew_")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("CoordNew?");
 
                     b.Property<string>("CoordPhone")
                         .HasColumnType("nvarchar(max)");
@@ -418,28 +419,36 @@ namespace OdysseyMvc2024.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Membership_1")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("Membership#1");
 
                     b.Property<string>("Membership_1seen")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("Membership#1seen");
 
                     b.Property<string>("Membership_2")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("Membership#2");
 
                     b.Property<string>("Membership_2seen")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("Membership#2seen");
 
                     b.Property<string>("Membership_3")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("Membership#3");
 
                     b.Property<string>("Membership_3seen")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("Membership#3seen");
 
                     b.Property<string>("Membership_4")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("Membership#4");
 
                     b.Property<string>("Membership_4seen")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("Membership#4seen");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(max)");
@@ -454,14 +463,15 @@ namespace OdysseyMvc2024.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Share_")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("Share?");
 
                     b.Property<string>("State")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ID");
 
-                    b.ToTable("School", (string)null);
+                    b.ToTable("Schools", (string)null);
                 });
 
             modelBuilder.Entity("OdysseyMvc2024.Models.TournamentRegistration", b =>
