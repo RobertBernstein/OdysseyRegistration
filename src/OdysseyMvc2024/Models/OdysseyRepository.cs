@@ -354,50 +354,19 @@ namespace OdysseyMvc2024.Models
         /// <summary>
         /// Gets the problem choices for a web page drop-down list.
         /// </summary>
-        public IEnumerable<Problem> ProblemChoices
+        public IEnumerable<Problem> ProblemChoices => _problemChoices ??= InitializeProblemChoices();
+
+        private List<Problem> InitializeProblemChoices()
         {
-            get
+            var problems = _context.Problems.OrderBy(p => p.ProblemID).ToList();
+
+            if (problems.FirstOrDefault(p => p.ProblemID == ThePrimaryProblemNumber) is { } primary &&
+                !primary.ProblemName.Contains("(The Primary Problem)"))
             {
-                // If problems is null, run the LINQ query, assign the result to Problems, and return the result
-                var problems = _context.Problems.OrderBy(p => p.ProblemID);
-
-                // TODO: (Rob) Should we just call the PrimaryProblem property here? 01/06/2025.
-                if (problems.FirstOrDefault(problem => problem.ProblemID == ThePrimaryProblemNumber) is { } thePrimaryProblem)
-                {
-                    thePrimaryProblem.ProblemName += " (The Primary Problem)";
-                }
-
-                // TODO: (Rob) Test that the primary problem string gets added above.
-                if (_problemChoices == null)
-                {
-                    ProblemChoices = problems;
-                }
-
-                return _problemChoices!;
+                primary.ProblemName += " (The Primary Problem)";
             }
 
-            private set => _problemChoices = value;
-
-            // get
-            // {
-            //     // If problems is null, run the LINQ query, assign the result to Problems, and return the result
-            //     IOrderedQueryable<Problem> temp = from p in this.context.Problems
-            //         orderby p.ProblemID
-            //         select p;
-
-            //     Problem thePrimaryProblem = temp.FirstOrDefault(problem => problem.ProblemID == 6);
-            //     if (thePrimaryProblem != null)
-            //     {
-            //         thePrimaryProblem.ProblemName += " (The Primary Problem)";
-            //     }
-
-            //     return this.problemChoices ?? (this.ProblemChoices = temp);
-            // }
-
-            // private set
-            // {
-            //     this.problemChoices = value;
-            // }
+            return problems;
         }
 
         /// <summary>
