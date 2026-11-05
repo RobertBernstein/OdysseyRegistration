@@ -12,7 +12,9 @@
   <Project Path="JudgeRegistrationRazor.UnitTests/JudgeRegistrationRazor.UnitTests.csproj" Id="4210b5f9-643d-49e8-8582-4b1d337a0d86">
     <Build Solution="Debug|*" Project="false" />
   </Project>
-  <Project Path="JudgeRegistrationRazor/JudgeRegistrationRazor.csproj" />
+  <Project Path="JudgeRegistrationRazor/JudgeRegistrationRazor.csproj">
+    <Build Solution="Debug|*" Project="false" />
+  </Project>
   <Project Path="docker-compose.dcproj">
     <Build />
   </Project>
@@ -26,7 +28,9 @@
   <Project Path="OdysseyCoreMvc/OdysseyCoreMvc.csproj">
     <Build Solution="Debug|*" Project="false" />
   </Project>
-  <Project Path="OdysseyMvc2023/OdysseyMvc2023.csproj" Id="61f704b8-472e-44c2-950b-76ac84104e24" />
+  <Project Path="OdysseyMvc2023/OdysseyMvc2023.csproj" Id="61f704b8-472e-44c2-950b-76ac84104e24">
+    <Build Solution="Debug|*" Project="false" />
+  </Project>
   <Project Path="OdysseyMvc2024/OdysseyMvc2024.csproj" />
   <Project Path="OdysseyMvc4.UnitTests/OdysseyMvc4.UnitTests.csproj">
     <Build Solution="Debug|*" Project="false" />
