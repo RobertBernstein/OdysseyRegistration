@@ -13,26 +13,26 @@
 // MVID: 7B658547-521F-44CB-80FA-52857CB94B72
 // Assembly location: C:\Users\rob\OneDrive\Odyssey\OdysseyProd\registration\bin\OdysseyMvc4.dll
 
+using ElmahCore;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using OdysseyMvc2024.Models;
 using OdysseyMvc2024.ViewData;
+using OdysseyMvc2024.ViewData.JudgesRegistration;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Text.Encodings.Web;
-using OdysseyMvc2024.Models;
-using OdysseyMvc2024.ViewData.JudgesRegistration;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using ElmahCore;
+using System.Text.RegularExpressions;
 
 namespace OdysseyMvc2024.Controllers
 {
-    [SuppressMessage("Design", "CA1515:Consider making public types internal", Justification = "ASP.NET MVC controller types are intentionally public.")]
     [SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "Legacy registration flow logs via ELMAH and redirects to preserve UX.")]
+    [SuppressMessage("Design", "CA1515:Consider making public types internal", Justification = "ASP.NET MVC controller types are intentionally public.")]
     [SuppressMessage("Major Code Smell", "S6967", Justification = "Legacy MVC action patterns are intentionally preserved.")]
-    [SuppressMessage("Minor Code Smell", "S6932", Justification = "Legacy request access pattern retained.")]
-    [SuppressMessage("Minor Code Smell", "S6608", Justification = "Legacy initialization style retained.")]
     [SuppressMessage("Minor Code Smell", "S2325", Justification = "Instance method retained for testability and override flexibility.")]
+    [SuppressMessage("Minor Code Smell", "S6608", Justification = "Legacy initialization style retained.")]
+    [SuppressMessage("Minor Code Smell", "S6932", Justification = "Legacy request access pattern retained.")]
     [SuppressMessage("Best Practices", "MA0009:Regular expressions should not be vulnerable to Denial of Service attacks", Justification = "Generated static expressions are fixed string placeholders.")]
     public partial class JudgesRegistrationController : BaseRegistrationController
     {
@@ -281,7 +281,7 @@ namespace OdysseyMvc2024.Controllers
             SetBaseViewData(page02ViewData);
 
             page02ViewData.TshirtSizes = new SelectList(TshirtSizeChoices, page02ViewData.SelectedTshirtSize);
-            
+
             // Preserve selected values for each dropdown
             page02ViewData.ProblemChoices = new SelectList(
                 Repository.ProblemChoices,
@@ -341,29 +341,32 @@ namespace OdysseyMvc2024.Controllers
         public ActionResult Page01Post()
         {
             // If registration is currently closed, down, or coming soon, redirect to the appropriate page.
-            if (CurrentRegistrationState != BaseRegistrationController.RegistrationState.Available)
+            if (CurrentRegistrationState != RegistrationState.Available)
             {
                 return RedirectToAction(CurrentRegistrationState.ToString());
             }
 
             try
             {
-                Judge newJudge = new Judge()
+                Judge newJudge = new()
                 {
                     TimeRegistrationStarted = DateTime.Now,
-                    UserAgent = Request.Headers["User-Agent"].ToString()
+                    UserAgent = Request.Headers.UserAgent.ToString()
                 };
 
                 // TODO: else case: Send an e-mail reporting database failure; could not create the record
-
                 Repository.AddJudge(newJudge);
-                return RedirectToAction("Page02", (object)new { id = newJudge.JudgeID });
+
+                // TODO: rename JudgeID to Id?
+                return RedirectToAction("Page02", new { id = newJudge.JudgeID });
             }
             catch (Exception exception)
             {
                 // TODO: Replace with Error Message?
                 // Log the error using Elmah.
                 ElmahExtensions.RaiseError(exception);
+
+                // TODO: Notify user of the error in a user-friendly way, possibly redirecting to an error page.
                 return RedirectToAction("Index", "Home");
             }
         }
@@ -380,6 +383,9 @@ namespace OdysseyMvc2024.Controllers
         [HttpGet]
         public ActionResult Page02(int id)
         {
+            // This line is included to avoid compiler warnings about the unused 'id' parameter. It has no functional effect.
+            _ = id;
+
             // If registration is currently closed, down, or coming soon, redirect to the appropriate page.
             if (CurrentRegistrationState != BaseRegistrationController.RegistrationState.Available)
             {
@@ -611,6 +617,10 @@ namespace OdysseyMvc2024.Controllers
           IFormCollection collection)
         {
             ArgumentNullException.ThrowIfNull(collection);
+
+            // These lines are included to avoid compiler warnings about the unused parameters. They have no functional effect.
+            _ = homePageButton;
+            _ = nextButton;
 
             // If registration is currently closed, down, or coming soon, redirect to the appropriate page.
             if (CurrentRegistrationState != BaseRegistrationController.RegistrationState.Available)

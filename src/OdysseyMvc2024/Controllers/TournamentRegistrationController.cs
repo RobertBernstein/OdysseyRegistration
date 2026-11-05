@@ -14,19 +14,19 @@
 // MVID: 7B658547-521F-44CB-80FA-52857CB94B72
 // Assembly location: C:\Users\rob\OneDrive\Odyssey\OdysseyProd\registration\bin\OdysseyMvc4.dll
 
+using ElmahCore;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.ViewEngines;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using OdysseyMvc2024.Models;
+using OdysseyMvc2024.ViewData;
+using OdysseyMvc2024.ViewData.TournamentRegistration;
 using System.Collections;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Net.Mail;
 using System.Text;
-using OdysseyMvc2024.Models;
-using OdysseyMvc2024.ViewData;
-using OdysseyMvc2024.ViewData.TournamentRegistration;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Mvc.ViewEngines;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using ElmahCore;
 
 namespace OdysseyMvc2024.Controllers
 {
@@ -36,10 +36,10 @@ namespace OdysseyMvc2024.Controllers
     /// </summary>
     [SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "Legacy registration flow logs to ELMAH and redirects to preserve user experience.")]
     [SuppressMessage("Design", "CA1515:Consider making public types internal", Justification = "ASP.NET MVC controller types are intentionally public.")]
+    [SuppressMessage("Major Code Smell", "S6967", Justification = "Legacy MVC action patterns are intentionally preserved.")]
     [SuppressMessage("Minor Code Smell", "S3267", Justification = "Legacy code path retained to preserve behavior.")]
     [SuppressMessage("Minor Code Smell", "S3358", Justification = "Legacy conditional logic retained to preserve behavior.")]
     [SuppressMessage("Minor Code Smell", "S6932", Justification = "Legacy request access pattern retained.")]
-    [SuppressMessage("Major Code Smell", "S6967", Justification = "Legacy MVC action patterns are intentionally preserved.")]
     [SuppressMessage("Style", "S907", Justification = "Legacy decompiled control flow retained to minimize behavior changes.")]
     [SuppressMessage("Best Practices", "MA0134:Observe result of async calls", Justification = "Legacy non-async action flow retained for compatibility.")]
     [SuppressMessage("Code Smell", "S1172", Justification = "Method signature retained for legacy compatibility.")]
@@ -61,7 +61,7 @@ namespace OdysseyMvc2024.Controllers
             : base(repository)
         {
             // Set the registration type to Tournament and initialize the friendly name
-            CurrentRegistrationType = BaseRegistrationController.RegistrationType.Tournament;
+            CurrentRegistrationType = RegistrationType.Tournament;
             FriendlyRegistrationName = GetFriendlyRegistrationName();
         }
 
@@ -161,8 +161,13 @@ namespace OdysseyMvc2024.Controllers
             return stringBuilder.ToString();
         }
 
+        /// <summary>
+        /// This method is the GET request entry point for the tournament registration process. It redirects to the
+        /// first page of the registration flow, Page01.
+        /// </summary>
+        /// <returns>An ActionResult that redirects to the Page01 action.</returns>
         [HttpGet]
-        public ActionResult Index() => (ActionResult)RedirectToAction("Page01");
+        public ActionResult Index() => RedirectToAction("Page01");
 
         [HttpGet]
         public ActionResult Page01()
@@ -186,7 +191,7 @@ namespace OdysseyMvc2024.Controllers
         [ActionName("Page01")]
         public ActionResult Page01Post()
         {
-            if (CurrentRegistrationState != BaseRegistrationController.RegistrationState.Available)
+            if (CurrentRegistrationState != RegistrationState.Available)
             {
                 return RedirectToAction(CurrentRegistrationState.ToString());
             }
@@ -198,26 +203,27 @@ namespace OdysseyMvc2024.Controllers
             };
 
             SetBaseViewData(viewData);
-            
+
             try
             {
                 TournamentRegistration newRegistration = new()
                 {
-                    TimeRegistrationStarted = new DateTime?(DateTime.Now),
+                    TimeRegistrationStarted = DateTime.Now,
                     TeamRegistrationFee = viewData.TeamRegistrationFee,
                     UserAgent = Request.Headers.UserAgent.ToString()
                 };
 
+                // TODO: else case: Send an e-mail reporting database failure; could not create the record
                 Repository.AddTournamentRegistration(newRegistration);
-                
-                return RedirectToAction("Page02", new
-                {
-                    id = newRegistration.Id
-                });
+                return RedirectToAction("Page02", new { id = newRegistration.Id });
             }
             catch (Exception exception)
             {
+                // TODO: Replace with Error Message?
+                // Log the error using Elmah.
                 ElmahExtensions.RaiseError(exception);
+
+                // TODO: Notify user of the error in a user-friendly way, possibly redirecting to an error page.
                 return RedirectToAction("Index", "Home");
             }
         }
@@ -225,9 +231,12 @@ namespace OdysseyMvc2024.Controllers
         [HttpGet]
         public ActionResult Page02(int id)
         {
+            // This line is included to avoid compiler warnings about the unused 'id' parameter. It has no functional effect.
+            _ = id;
+
             if (CurrentRegistrationState != BaseRegistrationController.RegistrationState.Available)
             {
-                return (ActionResult)RedirectToAction(CurrentRegistrationState.ToString());
+                return RedirectToAction(CurrentRegistrationState.ToString());
             }
 
             Page02ViewData page02ViewData = new()
@@ -248,32 +257,32 @@ namespace OdysseyMvc2024.Controllers
 
             if (CurrentRegistrationState != BaseRegistrationController.RegistrationState.Available)
             {
-                return (ActionResult)RedirectToAction(CurrentRegistrationState.ToString());
+                return RedirectToAction(CurrentRegistrationState.ToString());
             }
 
             try
             {
-                TournamentRegistration? newRegistrationData = new TournamentRegistration()
+                TournamentRegistration? newRegistrationData = new()
                 {
                     SchoolID = new int?(page02ViewData.SelectedSchool)
                 };
                 Repository.UpdateTournamentRegistration(id, 2, newRegistrationData);
-                return (ActionResult)RedirectToAction("Page03", (object)new
-                {
-                    id = id
-                });
+                return RedirectToAction("Page03", new { id });
             }
             catch (Exception exception)
             {
                 ElmahExtensions.RaiseError(exception);
-                return (ActionResult)RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Home");
             }
         }
 
         [HttpGet]
         public ActionResult Page03(int id)
         {
-            if (CurrentRegistrationState != BaseRegistrationController.RegistrationState.Available)
+            // This line is included to avoid compiler warnings about the unused 'id' parameter. It has no functional effect.
+            _ = id;
+
+            if (CurrentRegistrationState != RegistrationState.Available)
             {
                 return RedirectToAction(CurrentRegistrationState.ToString());
             }
@@ -287,7 +296,7 @@ namespace OdysseyMvc2024.Controllers
 
             SetBaseViewData(page03ViewData);
             page03ViewData.NoJudgesFound = false;
-            
+
             return View(page03ViewData);
         }
 
@@ -306,26 +315,26 @@ namespace OdysseyMvc2024.Controllers
                 SetBaseViewData((BaseViewData)page03ViewData);
                 TryUpdateModelAsync<Page03ViewData>(page03ViewData);
                 page03ViewData.ListOfJudgesFound = Repository.GetJudgeByIdAndName(int.Parse(page03ViewData.JudgeId, CultureInfo.InvariantCulture), page03ViewData.JudgeFirstName, page03ViewData.JudgeLastName);
-                
+
                 if (!page03ViewData.ListOfJudgesFound.Any<Judge>())
                 {
                     page03ViewData.NoJudgesFound = true;
                     return View(page03ViewData);
                 }
-                
-                if (page03ViewData.ListOfJudgesFound.First<Judge>() != null && page03ViewData.ListOfJudgesFound.First<Judge>().TeamID != null)
+
+                if (page03ViewData.ListOfJudgesFound.First<Judge>()?.TeamID != null)
                 {
                     page03ViewData.JudgeAlreadyTaken = true;
                     return View(page03ViewData);
                 }
-                
-                TournamentRegistration? newRegistrationData = new TournamentRegistration()
+
+                TournamentRegistration? newRegistrationData = new()
                 {
                     JudgeID = new short?(short.Parse(page03ViewData.JudgeId, CultureInfo.InvariantCulture))
                 };
-                
+
                 Repository.UpdateTournamentRegistration(id, 3, newRegistrationData);
-                
+
                 return RedirectToAction("Page05", new
                 {
                     id
@@ -359,7 +368,7 @@ namespace OdysseyMvc2024.Controllers
 
             SetBaseViewData(page04ViewData);
             page04ViewData.NoVolunteersFound = false;
-            
+
             return View(page04ViewData);
         }
 
@@ -398,7 +407,7 @@ namespace OdysseyMvc2024.Controllers
                 //    VolunteerID = new int?(page04ViewData.VolunteerFound.VolunteerID)
                 //};
                 //this.Repository.UpdateTournamentRegistration(id.Value, 4, newRegistrationData);
-                
+
                 return RedirectToAction("Page05", new
                 {
                     id
@@ -414,6 +423,9 @@ namespace OdysseyMvc2024.Controllers
         [HttpGet]
         public ActionResult Page05(int id)
         {
+            // This line is included to avoid compiler warnings about the unused 'id' parameter. It has no functional effect.
+            _ = id;
+
             if (CurrentRegistrationState != BaseRegistrationController.RegistrationState.Available)
             {
                 return RedirectToAction(CurrentRegistrationState.ToString());
@@ -426,7 +438,7 @@ namespace OdysseyMvc2024.Controllers
             };
 
             SetBaseViewData(page05ViewData);
-            
+
             return View(page05ViewData);
         }
 
@@ -444,7 +456,7 @@ namespace OdysseyMvc2024.Controllers
             {
                 TryUpdateModelAsync<Page05ViewData>(page05ViewData);
                 SetBaseViewData(page05ViewData);
-                
+
                 using MailMessage? coachEmailCheck = BuildMessage(page05ViewData.Config["WebmasterEmail"], "test", "test", page05ViewData.CoachEmailAddress, string.Empty, string.Empty);
                 if (coachEmailCheck == null)
                 {
@@ -456,8 +468,8 @@ namespace OdysseyMvc2024.Controllers
                 {
                     return RedirectToAction("BadAltCoachEmail");
                 }
-                
-                TournamentRegistration? newRegistrationData = new TournamentRegistration()
+
+                TournamentRegistration? newRegistrationData = new()
                 {
                     CoachFirstName = page05ViewData.CoachFirstName,
                     CoachLastName = page05ViewData.CoachLastName,
@@ -476,13 +488,10 @@ namespace OdysseyMvc2024.Controllers
                     AltCoachMobilePhone = page05ViewData.AltCoachMobilePhone,
                     AltCoachEmailAddress = page05ViewData.AltCoachEmailAddress
                 };
-                
+
                 Repository.UpdateTournamentRegistration(id, 5, newRegistrationData);
-                
-                return RedirectToAction("Page06", new
-                {
-                    id
-                });
+
+                return RedirectToAction("Page06", new { id });
             }
             catch (Exception exception)
             {
@@ -494,27 +503,30 @@ namespace OdysseyMvc2024.Controllers
         [HttpGet]
         public ActionResult Page06(int id)
         {
+            // This line is included to avoid compiler warnings about the unused 'id' parameter. It has no functional effect.
+            _ = id;
+
             if (CurrentRegistrationState != BaseRegistrationController.RegistrationState.Available)
             {
                 return RedirectToAction(CurrentRegistrationState.ToString());
             }
-            
+
             List<string> items = ["Kindergarten"];
 
             for (int index = 1; index <= 12; ++index)
             {
-                items.Add(index.ToString((IFormatProvider)CultureInfo.InvariantCulture));
+                items.Add(index.ToString(CultureInfo.InvariantCulture));
             }
 
             Page06ViewData page06ViewData = new()
             {
                 Config = Repository.Config,
                 TournamentInfo = Repository.TournamentInfo,
-                GradeChoices = (IEnumerable<SelectListItem>)new SelectList((IEnumerable)items)
+                GradeChoices = new SelectList(items)
             };
 
             SetBaseViewData(page06ViewData);
-            
+
             return View(page06ViewData);
         }
 
@@ -556,13 +568,10 @@ namespace OdysseyMvc2024.Controllers
                     MemberLastName7 = page06ViewData.MemberLastName7,
                     MemberGrade7 = page06ViewData.MemberGrade7
                 };
-                
+
                 Repository.UpdateTournamentRegistration(id, 6, newRegistrationData);
-                
-                return RedirectToAction("Page07", new
-                {
-                    id
-                });
+
+                return RedirectToAction("Page07", new { id });
             }
             catch (Exception exception)
             {
@@ -601,7 +610,7 @@ namespace OdysseyMvc2024.Controllers
             };
 
             SetBaseViewData(page07ViewData);
-            
+
             return View(page07ViewData);
         }
 
@@ -621,9 +630,9 @@ namespace OdysseyMvc2024.Controllers
                 {
                     Division = page07ViewData.DivisionRadioGroup ?? page07ViewData.DivisionOfTeam.ToString(CultureInfo.InvariantCulture)
                 };
-                
+
                 string? divisionRadioGroup = page07ViewData.DivisionRadioGroup;
-                
+
                 if (divisionRadioGroup != null)
                 {
                     if (divisionRadioGroup != "0")
@@ -641,9 +650,9 @@ namespace OdysseyMvc2024.Controllers
                         goto label_8;
                     }
                 }
-                
+
                 newRegistrationData.ProblemID = new int?(int.Parse(page07ViewData.SelectedProblem, CultureInfo.InvariantCulture));
-            
+
             // TODO: What is this label here for?
             label_8:
                 Repository.UpdateTournamentRegistration(id, 7, newRegistrationData);
@@ -672,7 +681,7 @@ namespace OdysseyMvc2024.Controllers
             };
 
             SetBaseViewData(page08ViewData);
-            
+
             return View(page08ViewData);
         }
 
@@ -688,12 +697,14 @@ namespace OdysseyMvc2024.Controllers
 
             try
             {
-                TournamentRegistration? newRegistrationData = new TournamentRegistration()
+                TournamentRegistration? newRegistrationData = new()
                 {
                     SchedulingIssues = page08ViewData.SchedulingIssues,
                     SpecialConsiderations = page08ViewData.SpecialConsiderations
                 };
+
                 Repository.UpdateTournamentRegistration(id, 8, newRegistrationData);
+
                 return RedirectToAction("Page09", new
                 {
                     id
@@ -723,15 +734,14 @@ namespace OdysseyMvc2024.Controllers
 
             SetBaseViewData(page09ViewData);
             page09ViewData.SchoolName = Repository.GetSchoolNameFromSchoolId(page09ViewData.TournamentRegistration.SchoolID);
-            string judgeFirstName;
-            string judgeLastName;
-            Repository.GetJudgeNameFromJudgeId(page09ViewData.TournamentRegistration.JudgeID, out judgeFirstName, out judgeLastName);
+            Repository.GetJudgeNameFromJudgeId(page09ViewData.TournamentRegistration.JudgeID, out string judgeFirstName, out string judgeLastName);
             page09ViewData.JudgeFirstName = judgeFirstName;
             page09ViewData.JudgeLastName = judgeLastName;
             page09ViewData.Division = page09ViewData.TournamentRegistration.Division == "0" ? "Primary" : page09ViewData.TournamentRegistration.Division;
             page09ViewData.ProblemName = Repository.GetProblemNameFromProblemId(page09ViewData.TournamentRegistration.ProblemID);
-            
+
             bool? spontaneous = page09ViewData.TournamentRegistration.Spontaneous;
+
             if (spontaneous == true)
             {
                 page09ViewData.IsDoingSpontaneous = "Yes";
@@ -751,21 +761,25 @@ namespace OdysseyMvc2024.Controllers
 
         [HttpPost]
         public ActionResult Page09(
-          int id,
-          string homePageButton,
-          string nextButton,
-          FormCollection collection)
+            int id,
+            string homePageButton,
+            string nextButton,
+            FormCollection collection)
         {
-            return CurrentRegistrationState != BaseRegistrationController.RegistrationState.Available ? (ActionResult)RedirectToAction(CurrentRegistrationState.ToString()) : (ActionResult)RedirectToAction("Page10", (object)new
-            {
-                id
-            });
+            // These lines are included to avoid compiler warnings about the unused parameters. They have no functional effect.
+            _ = homePageButton;
+            _ = nextButton;
+            _ = collection;
+
+            return CurrentRegistrationState != RegistrationState.Available
+                ? RedirectToAction(CurrentRegistrationState.ToString())
+                : RedirectToAction("Page10", new { id });
         }
 
         [HttpGet]
         public ActionResult Page10(int id)
         {
-            if (CurrentRegistrationState != BaseRegistrationController.RegistrationState.Available)
+            if (CurrentRegistrationState != RegistrationState.Available)
             {
                 return RedirectToAction(CurrentRegistrationState.ToString());
             }
@@ -828,7 +842,7 @@ namespace OdysseyMvc2024.Controllers
             page10ViewData.SchoolName = Repository.GetSchoolNameFromSchoolId(page10ViewData.TournamentRegistration.SchoolID);
             page10ViewData.ProblemName = Repository.GetProblemNameFromProblemId(page10ViewData.TournamentRegistration.ProblemID);
             page10ViewData.Division = page10ViewData.TournamentRegistration.Division == "0" ? "Primary" : page10ViewData.TournamentRegistration.Division;
-            page10ViewData.MailBody = GenerateEmailBody(page10ViewData);
+            page10ViewData.MailBody = GenerateEmailBody(/*page10ViewData*/);
 
             using MailMessage? mailMessage = BuildMessage(page10ViewData.Config["WebmasterEmail"], page10ViewData.RegionName + " Odyssey Region " + page10ViewData.RegionNumber + " Tournament Registration", page10ViewData.MailBody, page10ViewData.TournamentRegistration.CoachEmailAddress, string.Empty, string.Empty);
             if (mailMessage != null)
@@ -853,6 +867,10 @@ namespace OdysseyMvc2024.Controllers
         [HttpPost]
         public ActionResult ResendEmail(FormCollection collection)
         {
+            // This line is included to avoid compiler warnings about the unused 'collection' parameter. It has no functional effect.
+            // TODO: Consider removing the 'collection' parameter if it is not needed, or use it appropriately in the method.
+            _ = collection;
+
             ResendEmailViewData resendEmailViewData = new()
             {
                 Config = Repository.Config,
@@ -913,14 +931,12 @@ namespace OdysseyMvc2024.Controllers
 
         private void PopulateResendEmailSummary(Page10ViewData page10ViewData, string recipients)
         {
-            string judgeFirstName;
-            string judgeLastName;
-            Repository.GetJudgeNameFromJudgeId(page10ViewData.TournamentRegistration.JudgeID, out judgeFirstName, out judgeLastName);
+            Repository.GetJudgeNameFromJudgeId(page10ViewData.TournamentRegistration.JudgeID, out string judgeFirstName, out string judgeLastName);
             page10ViewData.JudgeFirstName = judgeFirstName;
             page10ViewData.JudgeLastName = judgeLastName;
             page10ViewData.SchoolName = Repository.GetSchoolNameFromSchoolId(page10ViewData.TournamentRegistration.SchoolID);
             page10ViewData.ProblemName = Repository.GetProblemNameFromProblemId(page10ViewData.TournamentRegistration.ProblemID);
-            page10ViewData.MailBody = GenerateEmailBody(page10ViewData);
+            page10ViewData.MailBody = GenerateEmailBody(/*page10ViewData*/);
 
             using MailMessage? mailMessage = BuildMessage(page10ViewData.Config["WebmasterEmail"], page10ViewData.RegionName + " Odyssey Region " + page10ViewData.RegionNumber + " Tournament Registration", page10ViewData.MailBody, recipients, "rob@tardistech.com", string.Empty);
             if (mailMessage != null)
@@ -965,17 +981,17 @@ namespace OdysseyMvc2024.Controllers
             return RedirectToAction("Page01", "TournamentRegistration");
         }
 
-        private string GenerateEmailBody(Page10ViewData page10ViewData)
+        // TODO: Do we still need the Page10ViewData parameter in GenerateEmailBody?  It is currently commented out, but it may be needed for future functionality.
+        private string GenerateEmailBody(/*Page10ViewData page10ViewData*/)
         {
-            using (StringWriter writer = new())
-            {
-                ICompositeViewEngine? viewEngine = HttpContext.RequestServices.GetService(typeof(ICompositeViewEngine)) as ICompositeViewEngine;
-                ViewEngineResult partialView = viewEngine.FindView(ControllerContext, "TournamentRegistration/EmailPartial", false);
-                ViewContext viewContext = new(ControllerContext, partialView.View, ViewData, TempData, writer, new HtmlHelperOptions());
-                partialView.View.RenderAsync(viewContext).Wait();
+            using StringWriter writer = new();
 
-                return writer.GetStringBuilder().ToString();
-            }
+            ICompositeViewEngine? viewEngine = HttpContext.RequestServices.GetService(typeof(ICompositeViewEngine)) as ICompositeViewEngine;
+            ViewEngineResult partialView = viewEngine.FindView(ControllerContext, "TournamentRegistration/EmailPartial", false);
+            ViewContext viewContext = new(ControllerContext, partialView.View, ViewData, TempData, writer, new HtmlHelperOptions());
+            partialView.View.RenderAsync(viewContext).Wait();
+
+            return writer.GetStringBuilder().ToString();
         }
     }
 }
