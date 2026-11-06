@@ -1,4 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Page05ViewData.cs" company="Tardis Technologies">
 //   Copyright 2014 Tardis Technologies. All rights reserved.
 // </copyright>
@@ -26,14 +26,16 @@ namespace OdysseyMvc2024.ViewData.TournamentRegistration
         [Required]
         [Display(Name = "Alternate Coach's Daytime Phone")]
         [DataType(DataType.PhoneNumber)]
-        [RegularExpression(@"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$", ErrorMessage = "This is not a valid phone number")]
+        [RegularExpression(@"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$", ErrorMessage = "This is not a valid phone number.")]
         public string? AltCoachDaytimePhone { get; set; }
 
         [Required]
+        [EmailAddress(ErrorMessage = "Enter a valid alternate coach e-mail address.")]
         [Display(Name = "Alternate Coach's E-mail Address")]
         public string? AltCoachEmailAddress { get; set; }
 
         [Required]
+        [EmailAddress(ErrorMessage = "Enter a valid alternate coach e-mail address.")]
         [Display(Name = "Confirm Alternate Coach's E-mail Address")]
         [Compare("AltCoachEmailAddress", ErrorMessage = "Your e-mail addresses do not match")]
         public string? AltCoachEmailConfirmation { get; set; }
@@ -41,7 +43,7 @@ namespace OdysseyMvc2024.ViewData.TournamentRegistration
         [Required]
         [Display(Name = "Alternate Coach's Evening Phone")]
         [DataType(DataType.PhoneNumber)]
-        [RegularExpression(@"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$", ErrorMessage = "This is not a valid phone number")]
+        [RegularExpression(@"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$", ErrorMessage = "This is not a valid phone number.")]
         public string? AltCoachEveningPhone { get; set; }
 
         [Required]
@@ -57,7 +59,7 @@ namespace OdysseyMvc2024.ViewData.TournamentRegistration
         [Required]
         [Display(Name = "Alternate Coach's Mobile Phone")]
         [DataType(DataType.PhoneNumber)]
-        [RegularExpression(@"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$", ErrorMessage = "This is not a valid phone number")]
+        [RegularExpression(@"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$", ErrorMessage = "This is not a valid phone number.")]
         public string? AltCoachMobilePhone { get; set; }
 
         [Required]
@@ -73,22 +75,24 @@ namespace OdysseyMvc2024.ViewData.TournamentRegistration
         [Required]
         [Display(Name = "Daytime Phone")]
         [DataType(DataType.PhoneNumber)]
-        [RegularExpression(@"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$", ErrorMessage = "This is not a valid phone number")]
+        [RegularExpression(@"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$", ErrorMessage = "This is not a valid phone number.")]
         public string? CoachDaytimePhone { get; set; }
 
         [Required]
+        [EmailAddress(ErrorMessage = "Enter a valid coach e-mail address.")]
         [Display(Name = "E-mail Address")]
         public string? CoachEmailAddress { get; set; }
 
         [Required]
+        [EmailAddress(ErrorMessage = "Enter a valid coach e-mail address.")]
         [Display(Name = "Confirm E-mail Address")]
-        [Compare("CoachEmailAddress", ErrorMessage = "Your e-mail addresses do not match")]
+        [Compare("CoachEmailAddress", ErrorMessage = "Your e-mail addresses do not match.")]
         public string? CoachEmailConfirmation { get; set; }
 
         [Required]
         [Display(Name = "Evening Phone")]
         [DataType(DataType.PhoneNumber)]
-        [RegularExpression(@"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$", ErrorMessage = "This is not a valid phone number")]
+        [RegularExpression(@"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$", ErrorMessage = "This is not a valid phone number.")]
         public string? CoachEveningPhone { get; set; }
 
         [Required]
@@ -104,7 +108,7 @@ namespace OdysseyMvc2024.ViewData.TournamentRegistration
         [Required]
         [Display(Name = "Mobile Phone")]
         [DataType(DataType.PhoneNumber)]
-        [RegularExpression(@"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$", ErrorMessage = "This is not a valid phone number")]
+        [RegularExpression(@"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$", ErrorMessage = "This is not a valid phone number.")]
         public string? CoachMobilePhone { get; set; }
 
         [Required]

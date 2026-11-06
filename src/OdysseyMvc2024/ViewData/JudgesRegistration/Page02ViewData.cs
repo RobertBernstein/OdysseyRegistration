@@ -126,6 +126,7 @@ namespace OdysseyMvc2024.ViewData.JudgesRegistration
         /// Gets or sets the Judge's confirmation e-mail address.
         /// </summary>
         [Required]
+        [EmailAddress]
         [System.ComponentModel.DataAnnotations.Compare("EmailAddress", ErrorMessage = "Your e-mail addresses do not match")]
         [Display(Name = "Confirm E-mail Address")]
         public string? EmailConfirmation { get; set; }
@@ -226,7 +227,7 @@ namespace OdysseyMvc2024.ViewData.JudgesRegistration
         [Required]
         [Display(Name = "T-Shirt Size")]
         [BindNever]
-        public required IEnumerable<SelectListItem> TshirtSizes { get; set; } = Array.Empty<SelectListItem>();
+        public required IEnumerable<SelectListItem> TshirtSizes { get; set; } = [];
 
         /// <summary>
         /// Gets or sets the Judge's problem choices.
@@ -240,7 +241,7 @@ namespace OdysseyMvc2024.ViewData.JudgesRegistration
         /// objects. By using [BindNever], we ensure these properties are only set server-side,
         /// </remarks>
         [BindNever]
-        public required IEnumerable<SelectListItem> ProblemChoices { get; set; } = Array.Empty<SelectListItem>();
+        public required IEnumerable<SelectListItem> ProblemChoices { get; set; } = [];
 
         /// <summary>
         /// Gets the problem conflicts.
@@ -249,15 +250,16 @@ namespace OdysseyMvc2024.ViewData.JudgesRegistration
         {
             get
             {
-                var source = ProblemChoices ?? Enumerable.Empty<SelectListItem>();
-                
+                var source = ProblemChoices ?? [];
+
                 var problemConflicts = new List<SelectListItem>(source);
-                
+
                 var foundItem = problemConflicts.Find(sli => sli.Text == "No Preference");
-                
+
                 if (foundItem != null)
                 {
                     foundItem.Text = "I Don't Know";
+                    foundItem.Selected = true;
                 }
 
                 return problemConflicts;

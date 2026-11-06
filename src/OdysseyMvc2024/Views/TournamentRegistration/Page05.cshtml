@@ -74,13 +74,13 @@
         @Html.TextBoxFor(x => x.CoachLastName, null, new { style = "width:200px" })
         @Html.ValidationMessageFor(x => x.CoachLastName)
     </p>
-    <p>
-    <p>Please provide your <a id="coachAddressLink" href="javascript:void(0)">home address</a>, NOT the school's address.</p>
 
-    <img src="@Url.Content("~/images/bullet.gif")" alt="Required" width="15" />
-    @Html.LabelFor(x => x.CoachAddress)
-    @Html.TextBoxFor(x => x.CoachAddress, null, new { style = "width:300px" })
-    @Html.ValidationMessageFor(x => x.CoachAddress)
+    <p>Please provide your <a id="coachAddressLink" href="javascript:void(0)">home address</a>, NOT the school's address.</p>
+    <p>
+		<img src="@Url.Content("~/images/bullet.gif")" alt="Required" width="15" />
+		@Html.LabelFor(x => x.CoachAddress)
+		@Html.TextBoxFor(x => x.CoachAddress, null, new { style = "width:300px" })
+		@Html.ValidationMessageFor(x => x.CoachAddress)
     </p>
     <p>
         <img src="@Url.Content("~/images/bullet.gif")" alt="Required" width="15" />
@@ -132,13 +132,13 @@
     <p>
         <img src="@Url.Content("~/images/bullet.gif")" alt="Required" width="15" />
         @Html.LabelFor(x => x.CoachEmailAddress)
-        @Html.TextBoxFor(x => x.CoachEmailAddress, null, new { style = "width:300px" })
+        @Html.TextBoxFor(x => x.CoachEmailAddress, null, new { style = "width:300px", type = "email" })
         @Html.ValidationMessageFor(x => x.CoachEmailAddress)
     </p>
     <p>
         <img src="@Url.Content("~/images/bullet.gif")" alt="Required" width="15" />
         @Html.LabelFor(x => x.CoachEmailConfirmation)
-        @Html.TextBoxFor(x => x.CoachEmailConfirmation, null, new { style = "width:300px" })
+        @Html.TextBoxFor(x => x.CoachEmailConfirmation, null, new { style = "width:300px", type = "email" })
         @Html.ValidationMessageFor(x => x.CoachEmailConfirmation)
     </p>
     <hr />
@@ -184,13 +184,13 @@
     <p>
         <img src="@Url.Content("~/images/bullet.gif")" alt="Required" width="15" />
         @Html.LabelFor(x => x.AltCoachEmailAddress)
-        @Html.TextBoxFor(x => x.AltCoachEmailAddress, null, new { style = "width:300px" })
+        @Html.TextBoxFor(x => x.AltCoachEmailAddress, null, new { style = "width:300px", type = "email" })
         @Html.ValidationMessageFor(x => x.AltCoachEmailAddress)
     </p>
     <p>
         <img src="@Url.Content("~/images/bullet.gif")" alt="Required" width="15" />
         @Html.LabelFor(x => x.AltCoachEmailConfirmation)
-        @Html.TextBoxFor(x => x.AltCoachEmailConfirmation, null, new { style = "width:300px" })
+        @Html.TextBoxFor(x => x.AltCoachEmailConfirmation, null, new { style = "width:300px", type = "email" })
         @Html.ValidationMessageFor(x => x.AltCoachEmailConfirmation)
     </p>
     <hr />

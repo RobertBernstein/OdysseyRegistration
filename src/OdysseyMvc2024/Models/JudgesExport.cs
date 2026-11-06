@@ -1,4 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="JudgesExport.cs" company="Tardis Technologies">
 //   Copyright 2013 Tardis Technologies. All rights reserved.
 // </copyright>
@@ -14,6 +14,7 @@
 // Assembly location: C:\Users\rob\OneDrive\Odyssey\OdysseyProd\registration\bin\OdysseyMvc4.dll
 
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace OdysseyMvc2024.Models
 {
@@ -80,6 +81,7 @@ namespace OdysseyMvc2024.Models
         /// <summary>
         /// Gets or sets the email.
         /// </summary>
+        [EmailAddress]
         public string? Email { get; set; }
 
         /// <summary>

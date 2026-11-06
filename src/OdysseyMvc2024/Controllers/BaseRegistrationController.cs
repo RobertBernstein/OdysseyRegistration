@@ -1,4 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="BaseRegistrationController.cs" company="Tardis Technologies">
 //   Copyright 2025 Tardis Technologies. All rights reserved.
 // </copyright>
@@ -33,17 +33,12 @@ namespace OdysseyMvc2024.Controllers
     [SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "Legacy flow logs via ELMAH and returns deterministic registration-state behavior.")]
     [SuppressMessage("Design", "CA1024:Use properties where appropriate", Justification = "Method retained for backward compatibility with legacy call sites.")]
     [SuppressMessage("Naming", "CA1721:Property names should not match get methods", Justification = "FriendlyRegistrationName property and GetFriendlyRegistrationName method are retained for legacy compatibility.")]
-    public abstract class BaseRegistrationController : Controller
+    public abstract class BaseRegistrationController(IOdysseyRepository repository) : Controller
     {
         /// <summary>
         /// The object that provides access to the database.
         /// </summary>
-        protected IOdysseyRepository Repository { get; }
-
-        protected BaseRegistrationController(IOdysseyRepository repository)
-        {
-            Repository = repository ?? throw new ArgumentNullException(nameof(repository));
-        }
+        protected IOdysseyRepository Repository { get; } = repository ?? throw new ArgumentNullException(nameof(repository));
 
         protected static readonly string[] TshirtSizeChoices = ["S", "M", "L", "XL", "XXL", "XXXL"];
 
@@ -135,7 +130,7 @@ namespace OdysseyMvc2024.Controllers
                 // Set the Bcc address of the mail message
                 mailMessage.Bcc.Add(new MailAddress(bcc));
             }
-            
+
             // Check if the cc value is null or an empty value
             if (!string.IsNullOrWhiteSpace(cc))
             {
@@ -194,7 +189,7 @@ namespace OdysseyMvc2024.Controllers
         /// </summary>
         /// <remarks>
         /// This method checks the page link in the <see cref="Url"/> property to determine which
-        /// CSS file to apply. Ensure that the <see cref="Url"/> property is not null and provides a valid page link 
+        /// CSS file to apply. Ensure that the <see cref="Url"/> property is not null and provides a valid page link
         /// for this method to function correctly.
         /// </remarks>
         /// <returns>
@@ -228,7 +223,7 @@ namespace OdysseyMvc2024.Controllers
 
             if (siteName.StartsWith("www.", StringComparison.OrdinalIgnoreCase))
             {
-                siteName = siteName.Substring(4);
+                siteName = siteName[4..];
             }
 
             return siteName;
@@ -668,7 +663,7 @@ namespace OdysseyMvc2024.Controllers
             /// The default, i.e. no registration type.  This should never be used.
             /// </summary>
             None,
-            
+
             /// <summary>
             /// Identifies Tournament Registration.
             /// </summary>

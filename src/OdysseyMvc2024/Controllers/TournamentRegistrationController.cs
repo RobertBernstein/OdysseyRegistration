@@ -282,10 +282,18 @@ namespace OdysseyMvc2024.Controllers
 
             try
             {
+                if (!ModelState.IsValid)
+                {
+                    page02ViewData.SchoolList = new SelectList(Repository.Schools, "ID", "Name");
+                    SetBaseViewData(page02ViewData);
+                    return View(page02ViewData);
+                }
+
                 TournamentRegistration? newRegistrationData = new()
                 {
                     SchoolID = new int?(page02ViewData.SelectedSchool)
                 };
+
                 Repository.UpdateTournamentRegistration(id, 2, newRegistrationData);
                 return RedirectToAction("Page03", new { id });
             }
@@ -334,6 +342,13 @@ namespace OdysseyMvc2024.Controllers
             {
                 SetBaseViewData((BaseViewData)page03ViewData);
                 TryUpdateModelAsync<Page03ViewData>(page03ViewData);
+
+                if (!ModelState.IsValid)
+                {
+                    page03ViewData.ListOfJudgesFound = new List<Judge>().AsQueryable();
+                    return View(page03ViewData);
+                }
+
                 page03ViewData.ListOfJudgesFound = Repository.GetJudgeByIdAndName(int.Parse(page03ViewData.JudgeId, CultureInfo.InvariantCulture), page03ViewData.JudgeFirstName, page03ViewData.JudgeLastName);
 
                 if (!page03ViewData.ListOfJudgesFound.Any<Judge>())
@@ -395,6 +410,8 @@ namespace OdysseyMvc2024.Controllers
         [HttpPost]
         public ActionResult Page04(int? id, Page04ViewData page04ViewData)
         {
+            ArgumentNullException.ThrowIfNull(page04ViewData);
+
             if (!id.HasValue)
             {
                 return RedirectToAction("Error");
@@ -409,6 +426,11 @@ namespace OdysseyMvc2024.Controllers
             {
                 SetBaseViewData(page04ViewData);
                 TryUpdateModelAsync<Page04ViewData>(page04ViewData);
+
+                if (!ModelState.IsValid)
+                {
+                    return View(page04ViewData);
+                }
 
                 // TODO: Did I comment out too much?
                 //page04ViewData.VolunteerFound = this.Repository.GetVolunteerByIdAndName(int.Parse(page04ViewData.VolunteerId), page04ViewData.VolunteerFirstName, page04ViewData.VolunteerLastName);
@@ -476,6 +498,11 @@ namespace OdysseyMvc2024.Controllers
             {
                 TryUpdateModelAsync<Page05ViewData>(page05ViewData);
                 SetBaseViewData(page05ViewData);
+
+                if (!ModelState.IsValid)
+                {
+                    return View(page05ViewData);
+                }
 
                 using MailMessage? coachEmailCheck = BuildMessage(page05ViewData.Config["WebmasterEmail"], "test", "test", page05ViewData.CoachEmailAddress, string.Empty, string.Empty);
                 if (coachEmailCheck == null)
@@ -563,6 +590,19 @@ namespace OdysseyMvc2024.Controllers
             try
             {
                 TryUpdateModelAsync<Page06ViewData>(page06ViewData);
+                SetBaseViewData(page06ViewData);
+
+                if (!ModelState.IsValid)
+                {
+                    List<string> items = ["Kindergarten"];
+                    for (int index = 1; index <= 12; ++index)
+                    {
+                        items.Add(index.ToString(CultureInfo.InvariantCulture));
+                    }
+
+                    page06ViewData.GradeChoices = new SelectList(items);
+                    return View(page06ViewData);
+                }
 
                 TournamentRegistration? newRegistrationData = new()
                 {
@@ -646,6 +686,24 @@ namespace OdysseyMvc2024.Controllers
 
             try
             {
+                SetBaseViewData(page07ViewData);
+
+                if (!ModelState.IsValid)
+                {
+                    IReadOnlyList<string> gradesByRegistration = Repository.GetMemberGradesByRegistration(id);
+                    page07ViewData.DivisionOfTeam = DetermineDivisionOfTeam(gradesByRegistration);
+                    page07ViewData.Division123ProblemDropDown = new SelectList(Repository.ProblemsWithoutPrimaryOrSpontaneous, "ProblemID", "ProblemName");
+                    page07ViewData.IsDoingSpontaneousDropDown = new SelectList(new List<string>()
+                    {
+                        "Yes",
+                        "No"
+                    });
+                    page07ViewData.Division123ListOfProblemsAsHtmlList = GetProblemsAsHtmlList(false);
+                    page07ViewData.Division123AndPrimaryListOfProblemsAsHtmlList = GetProblemsAsHtmlList(true);
+                    page07ViewData.PrimaryProblemName = Repository.PrimaryProblem.First<Problem>().ProblemName;
+                    return View(page07ViewData);
+                }
+
                 TournamentRegistration? newRegistrationData = new()
                 {
                     Division = page07ViewData.DivisionRadioGroup ?? page07ViewData.DivisionOfTeam.ToString(CultureInfo.InvariantCulture)
@@ -717,6 +775,13 @@ namespace OdysseyMvc2024.Controllers
 
             try
             {
+                SetBaseViewData(page08ViewData);
+
+                if (!ModelState.IsValid)
+                {
+                    return View(page08ViewData);
+                }
+
                 TournamentRegistration? newRegistrationData = new()
                 {
                     SchedulingIssues = page08ViewData.SchedulingIssues,
