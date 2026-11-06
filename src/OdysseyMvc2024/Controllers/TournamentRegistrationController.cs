@@ -70,7 +70,17 @@ namespace OdysseyMvc2024.Controllers
         /// This action is called during the registration validation process.
         /// </summary>
         /// <returns>View for invalid alternate coach email</returns>
-        public ActionResult BadAltCoachEmail() => (ActionResult)View();
+        public ActionResult BadAltCoachEmail()
+        {
+            BaseViewData baseViewData = new()
+            {
+                Config = Repository.Config,
+                TournamentInfo = Repository.TournamentInfo
+            };
+
+            SetBaseViewData(baseViewData);
+            return View((object)baseViewData);
+        }
 
         /// <summary>
         /// Returns an error view when the primary coach's email address is invalid.
@@ -78,7 +88,17 @@ namespace OdysseyMvc2024.Controllers
         /// <returns>
         /// View for invalid primary coach email.
         /// </returns>
-        public ActionResult BadCoachEmail() => (ActionResult)View();
+        public ActionResult BadCoachEmail()
+        {
+            BaseViewData baseViewData = new()
+            {
+                Config = Repository.Config,
+                TournamentInfo = Repository.TournamentInfo
+            };
+
+            SetBaseViewData(baseViewData);
+            return View((object)baseViewData);
+        }
 
         /// <summary>
         /// Determines the division of the team based on the grades of its members.
