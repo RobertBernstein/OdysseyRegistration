@@ -26,7 +26,7 @@ namespace OdysseyMvc2024.UnitTests.Controllers;
 
 public sealed class TournamentRegistrationControllerPage07Tests
 {
-    private static readonly IReadOnlyList<string> PrimaryTeamGrades = new[] { "Kindergarten" };
+    private static readonly IReadOnlyList<string> PrimaryTeamGrades = ["Kindergarten"];
 
     [Fact]
     public void Page07Get_WhenRegistrationIsAvailable_ReturnsPage07ViewWithProblemData()

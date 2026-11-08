@@ -81,7 +81,7 @@ public sealed class TournamentRegistrationControllerResendEmailTests
         var repository = CreateRepository();
         using var controller = CreateController(repository.Object);
 
-        var form = new FormCollection(new Dictionary<string, Microsoft.Extensions.Primitives.StringValues>());
+        var form = new FormCollection([]);
 
         // Act
         var result = controller.ResendEmail(form);

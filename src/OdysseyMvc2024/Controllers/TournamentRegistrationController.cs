@@ -1137,7 +1137,7 @@ namespace OdysseyMvc2024.Controllers
             ViewEngineResult partialView = viewEngine.FindView(ControllerContext, "TournamentRegistration/EmailPartial", false);
             if (!partialView.Success || partialView.View is null)
             {
-                string searchedLocations = string.Join(", ", partialView.SearchedLocations ?? Enumerable.Empty<string>());
+                string searchedLocations = string.Join(", ", partialView.SearchedLocations ?? []);
                 string message = string.IsNullOrWhiteSpace(searchedLocations)
                     ? "Could not locate view 'TournamentRegistration/EmailPartial' when generating tournament registration email body."
                     : $"Could not locate view 'TournamentRegistration/EmailPartial' when generating tournament registration email body. Searched: {searchedLocations}";

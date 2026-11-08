@@ -107,7 +107,7 @@ public sealed class TournamentRegistrationControllerPage09Tests
         var repository = CreateRepositoryForAvailableState();
         using var controller = CreateController(repository.Object);
 
-        var form = new FormCollection(new Dictionary<string, StringValues>());
+        var form = new FormCollection([]);
 
         // Act
         var result = controller.Page09(10, string.Empty, string.Empty, form);
@@ -129,7 +129,7 @@ public sealed class TournamentRegistrationControllerPage09Tests
         var repository = CreateRepository(CreateConfigForState(state));
         using var controller = CreateController(repository.Object);
 
-        var form = new FormCollection(new Dictionary<string, StringValues>());
+        var form = new FormCollection([]);
 
         // Act
         var result = controller.Page09(10, string.Empty, string.Empty, form);
