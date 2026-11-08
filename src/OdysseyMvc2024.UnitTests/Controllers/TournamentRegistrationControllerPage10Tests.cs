@@ -83,6 +83,64 @@ public sealed class TournamentRegistrationControllerPage10Tests
             Times.Never);
     }
 
+    [Fact]
+    public void Page10Get_WhenRegistrationRecordIsMissing_RedirectsToError()
+    {
+        // Arrange
+        var repository = CreateRepositoryForAvailableState(withJudgeAssignmentError: false);
+        repository.Setup(r => r.GetTournamentRegistrationById(It.IsAny<int>())).Returns((TournamentRegistration?)null);
+        using var controller = CreateController(repository.Object);
+
+        // Act
+        var result = controller.Page10(10);
+
+        // Assert
+        var redirect = result.Should().BeOfType<RedirectToActionResult>().Subject;
+        redirect.ActionName.Should().Be("Error");
+
+        repository.Verify(
+            r => r.UpdateTournamentRegistration(
+                It.IsAny<int>(),
+                It.IsAny<int>(),
+                It.IsAny<TournamentRegistration?>()),
+            Times.Never);
+    }
+
+    [Fact]
+    public void Page10Get_WhenEmailPartialRenders_UsesPage10ViewDataModel()
+    {
+        // Arrange
+        var repository = CreateRepositoryForAvailableState(withJudgeAssignmentError: false);
+        object? renderedModel = null;
+        using var controller = CreateController(
+            repository.Object,
+            includeEmailPartialView: true,
+            onRenderViewContext: viewContext => renderedModel = viewContext.ViewData.Model);
+
+        // Act
+        var result = controller.Page10(10);
+
+        // Assert
+        result.Should().BeOfType<ViewResult>();
+        renderedModel.Should().BeOfType<Page10ViewData>();
+    }
+
+    [Fact]
+    public void Page10Get_WhenEmailPartialViewIsMissing_ThrowsInvalidOperationException()
+    {
+        // Arrange
+        var repository = CreateRepositoryForAvailableState(withJudgeAssignmentError: false);
+        using var controller = CreateController(repository.Object, includeEmailPartialView: false);
+
+        // Act
+        Action action = () => controller.Page10(10);
+
+        // Assert
+        action.Should()
+            .Throw<InvalidOperationException>()
+            .WithMessage("*TournamentRegistration/EmailPartial*");
+    }
+
     [Theory]
     [InlineData("Soon")]
     [InlineData("Down")]
@@ -101,18 +159,32 @@ public sealed class TournamentRegistrationControllerPage10Tests
         redirect.ActionName.Should().Be(state);
     }
 
-    private static TournamentRegistrationController CreateController(IOdysseyRepository repository)
+    private static TournamentRegistrationController CreateController(
+        IOdysseyRepository repository,
+        bool includeEmailPartialView = true,
+        Action<Microsoft.AspNetCore.Mvc.Rendering.ViewContext>? onRenderViewContext = null)
     {
         var controller = new TournamentRegistrationController(repository);
 
-        var view = new Mock<IView>();
-        view.SetupGet(v => v.Path).Returns("TournamentRegistration/EmailPartial");
-        view.Setup(v => v.RenderAsync(It.IsAny<Microsoft.AspNetCore.Mvc.Rendering.ViewContext>())).Returns(Task.CompletedTask);
-
         var compositeViewEngine = new Mock<ICompositeViewEngine>();
-        compositeViewEngine
-            .Setup(v => v.FindView(It.IsAny<ActionContext>(), "TournamentRegistration/EmailPartial", false))
-            .Returns(ViewEngineResult.Found("TournamentRegistration/EmailPartial", view.Object));
+        if (includeEmailPartialView)
+        {
+            var view = new Mock<IView>();
+            view.SetupGet(v => v.Path).Returns("TournamentRegistration/EmailPartial");
+            view.Setup(v => v.RenderAsync(It.IsAny<Microsoft.AspNetCore.Mvc.Rendering.ViewContext>()))
+                .Callback<Microsoft.AspNetCore.Mvc.Rendering.ViewContext>(viewContext => onRenderViewContext?.Invoke(viewContext))
+                .Returns(Task.CompletedTask);
+
+            compositeViewEngine
+                .Setup(v => v.FindView(It.IsAny<ActionContext>(), "TournamentRegistration/EmailPartial", false))
+                .Returns(ViewEngineResult.Found("TournamentRegistration/EmailPartial", view.Object));
+        }
+        else
+        {
+            compositeViewEngine
+                .Setup(v => v.FindView(It.IsAny<ActionContext>(), "TournamentRegistration/EmailPartial", false))
+                .Returns(ViewEngineResult.NotFound("TournamentRegistration/EmailPartial", ["/Views/Shared/TournamentRegistration/EmailPartial.cshtml"]));
+        }
 
         var services = new ServiceCollection()
             .AddSingleton(compositeViewEngine.Object)

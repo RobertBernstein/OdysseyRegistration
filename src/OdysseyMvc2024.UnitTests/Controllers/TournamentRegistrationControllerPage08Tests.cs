@@ -65,6 +65,22 @@ public sealed class TournamentRegistrationControllerPage08Tests
     }
 
     [Fact]
+    public void Page08Get_WhenRegistrationRecordIsMissing_RedirectsToError()
+    {
+        // Arrange
+        var repository = CreateRepositoryForAvailableState();
+        repository.Setup(r => r.GetTournamentRegistrationById(It.IsAny<int>())).Returns((TournamentRegistration?)null);
+        using var controller = CreateController(repository.Object);
+
+        // Act
+        var result = controller.Page08(10);
+
+        // Assert
+        var redirect = result.Should().BeOfType<RedirectToActionResult>().Subject;
+        redirect.ActionName.Should().Be("Error");
+    }
+
+    [Fact]
     public void Page08Post_WithValidData_UpdatesRegistrationAndRedirectsToPage09()
     {
         // Arrange
@@ -152,6 +168,36 @@ public sealed class TournamentRegistrationControllerPage08Tests
         // Assert
         var redirect = result.Should().BeOfType<RedirectToActionResult>().Subject;
         redirect.ActionName.Should().Be(state);
+
+        repository.Verify(
+            r => r.UpdateTournamentRegistration(
+                It.IsAny<int>(),
+                It.IsAny<int>(),
+                It.IsAny<TournamentRegistration?>()),
+            Times.Never);
+    }
+
+    [Fact]
+    public void Page08Post_WhenRegistrationRecordIsMissing_RedirectsToErrorAndDoesNotUpdate()
+    {
+        // Arrange
+        var repository = CreateRepositoryForAvailableState();
+        repository.Setup(r => r.GetTournamentRegistrationById(It.IsAny<int>())).Returns((TournamentRegistration?)null);
+        using var controller = CreateController(repository.Object);
+
+        var viewData = new Page08ViewData
+        {
+            SchedulingIssues = "Coach has two teams.",
+            SpecialConsiderations = "Wheelchair access requested.",
+            TournamentRegistration = new TournamentRegistration()
+        };
+
+        // Act
+        var result = controller.Page08(10, viewData);
+
+        // Assert
+        var redirect = result.Should().BeOfType<RedirectToActionResult>().Subject;
+        redirect.ActionName.Should().Be("Error");
 
         repository.Verify(
             r => r.UpdateTournamentRegistration(

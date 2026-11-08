@@ -66,6 +66,22 @@ public sealed class TournamentRegistrationControllerPage09Tests
         model.ProblemName.Should().Be("(Could not obtain problem name)");
     }
 
+    [Fact]
+    public void Page09Get_WhenRegistrationRecordIsMissing_RedirectsToError()
+    {
+        // Arrange
+        var repository = CreateRepositoryForAvailableState();
+        repository.Setup(r => r.GetTournamentRegistrationById(It.IsAny<int>())).Returns((TournamentRegistration?)null);
+        using var controller = CreateController(repository.Object);
+
+        // Act
+        var result = controller.Page09(10);
+
+        // Assert
+        var redirect = result.Should().BeOfType<RedirectToActionResult>().Subject;
+        redirect.ActionName.Should().Be("Error");
+    }
+
     [Theory]
     [InlineData("Soon")]
     [InlineData("Down")]
@@ -121,6 +137,24 @@ public sealed class TournamentRegistrationControllerPage09Tests
         // Assert
         var redirect = result.Should().BeOfType<RedirectToActionResult>().Subject;
         redirect.ActionName.Should().Be(state);
+    }
+
+    [Fact]
+    public void Page09Post_WhenRegistrationRecordIsMissing_RedirectsToError()
+    {
+        // Arrange
+        var repository = CreateRepositoryForAvailableState();
+        repository.Setup(r => r.GetTournamentRegistrationById(It.IsAny<int>())).Returns((TournamentRegistration?)null);
+        using var controller = CreateController(repository.Object);
+
+        var form = new FormCollection([]);
+
+        // Act
+        var result = controller.Page09(10, string.Empty, string.Empty, form);
+
+        // Assert
+        var redirect = result.Should().BeOfType<RedirectToActionResult>().Subject;
+        redirect.ActionName.Should().Be("Error");
     }
 
     private static TournamentRegistrationController CreateController(IOdysseyRepository repository)

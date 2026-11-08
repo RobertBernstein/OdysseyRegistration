@@ -99,7 +99,9 @@ OdysseyMvc2024/
 │       ├── Closed.cshtml           # Registration closed state
 │       ├── Down.cshtml             # Registration down state
 │       ├── Error.cshtml            # General error
-│       └── Soon.cshtml             # Registration coming soon state
+│       ├── Soon.cshtml             # Registration coming soon state
+│       └── TournamentRegistration/
+│           └── EmailPartial.cshtml # Page10 email body template
 │
 ├── wwwroot/
 │   ├── css/
@@ -741,7 +743,7 @@ public class BaseViewData
 | Home | Index.cshtml |
 | JudgesRegistration | Page01.cshtml, Page02.cshtml, Page03.cshtml |
 | TournamentRegistration | Page01-Page10.cshtml, BadAltCoachEmail.cshtml, BadCoachEmail.cshtml, Error.cshtml, ResendEmail.cshtml |
-| Shared | _Layout.cshtml, BadEmail.cshtml, Closed.cshtml, Down.cshtml, Error.cshtml, Soon.cshtml |
+| Shared | _Layout.cshtml, BadEmail.cshtml, Closed.cshtml, Down.cshtml, Error.cshtml, Soon.cshtml, TournamentRegistration/EmailPartial.cshtml |
 
 ---
 

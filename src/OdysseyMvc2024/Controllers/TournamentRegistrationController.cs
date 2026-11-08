@@ -751,11 +751,17 @@ namespace OdysseyMvc2024.Controllers
                 return RedirectToAction(CurrentRegistrationState.ToString());
             }
 
+            TournamentRegistration? tournamentRegistration = Repository.GetTournamentRegistrationById(id);
+            if (tournamentRegistration is null)
+            {
+                return RedirectToErrorForMissingTournamentRegistration(id, nameof(Page08));
+            }
+
             Page08ViewData page08ViewData = new()
             {
                 Config = Repository.Config,
                 TournamentInfo = Repository.TournamentInfo,
-                TournamentRegistration = Repository.GetTournamentRegistrationById(id)
+                TournamentRegistration = tournamentRegistration
             };
 
             SetBaseViewData(page08ViewData);
@@ -780,6 +786,11 @@ namespace OdysseyMvc2024.Controllers
                 if (!ModelState.IsValid)
                 {
                     return View(page08ViewData);
+                }
+
+                if (Repository.GetTournamentRegistrationById(id) is null)
+                {
+                    return RedirectToErrorForMissingTournamentRegistration(id, nameof(Page08));
                 }
 
                 TournamentRegistration? newRegistrationData = new()
@@ -810,11 +821,17 @@ namespace OdysseyMvc2024.Controllers
                 return (ActionResult)RedirectToAction(CurrentRegistrationState.ToString());
             }
 
+            TournamentRegistration? tournamentRegistration = Repository.GetTournamentRegistrationById(id);
+            if (tournamentRegistration is null)
+            {
+                return RedirectToErrorForMissingTournamentRegistration(id, nameof(Page09));
+            }
+
             Page09ViewData page09ViewData = new()
             {
                 Config = Repository.Config,
                 TournamentInfo = Repository.TournamentInfo,
-                TournamentRegistration = Repository.GetTournamentRegistrationById(id)
+                TournamentRegistration = tournamentRegistration
             };
 
             SetBaseViewData(page09ViewData);
@@ -849,15 +866,20 @@ namespace OdysseyMvc2024.Controllers
             int id,
             string homePageButton,
             string nextButton,
-            FormCollection collection)
+            IFormCollection collection)
         {
             // These lines are included to avoid compiler warnings about the unused parameters. They have no functional effect.
             _ = homePageButton;
             _ = nextButton;
             _ = collection;
 
-            return CurrentRegistrationState != RegistrationState.Available
-                ? RedirectToAction(CurrentRegistrationState.ToString())
+            if (CurrentRegistrationState != RegistrationState.Available)
+            {
+                return RedirectToAction(CurrentRegistrationState.ToString());
+            }
+
+            return Repository.GetTournamentRegistrationById(id) is null
+                ? RedirectToErrorForMissingTournamentRegistration(id, nameof(Page09))
                 : RedirectToAction("Page10", new { id });
         }
 
@@ -870,6 +892,11 @@ namespace OdysseyMvc2024.Controllers
             }
 
             var page10ViewData = CreatePage10ViewData(id);
+            if (page10ViewData is null)
+            {
+                return RedirectToErrorForMissingTournamentRegistration(id, nameof(Page10));
+            }
+
             SetBaseViewData(page10ViewData);
 
             if (TryHandleJudgeAssignmentError(page10ViewData, id, out var errorResult))
@@ -881,12 +908,15 @@ namespace OdysseyMvc2024.Controllers
             return View(page10ViewData);
         }
 
-        private Page10ViewData CreatePage10ViewData(int id)
+        private Page10ViewData? CreatePage10ViewData(int id)
         {
-            return new Page10ViewData
-            {
-                TournamentRegistration = Repository.GetTournamentRegistrationById(id)
-            };
+            TournamentRegistration? tournamentRegistration = Repository.GetTournamentRegistrationById(id);
+            return tournamentRegistration is null
+                ? null
+                : new Page10ViewData
+                {
+                    TournamentRegistration = tournamentRegistration
+                };
         }
 
         private bool TryHandleJudgeAssignmentError(Page10ViewData page10ViewData, int id, out ActionResult errorResult)
@@ -932,7 +962,7 @@ namespace OdysseyMvc2024.Controllers
             page10ViewData.SchoolName = Repository.GetSchoolNameFromSchoolId(page10ViewData.TournamentRegistration.SchoolID);
             page10ViewData.ProblemName = Repository.GetProblemNameFromProblemId(page10ViewData.TournamentRegistration.ProblemID);
             page10ViewData.Division = page10ViewData.TournamentRegistration.Division == "0" ? "Primary" : page10ViewData.TournamentRegistration.Division;
-            page10ViewData.MailBody = GenerateEmailBody(/*page10ViewData*/);
+            page10ViewData.MailBody = GenerateEmailBody(page10ViewData);
 
             using MailMessage? mailMessage = BuildMessage(page10ViewData.Config["WebmasterEmail"], page10ViewData.RegionName + " Odyssey Region " + page10ViewData.RegionNumber + " Tournament Registration", page10ViewData.MailBody, page10ViewData.TournamentRegistration.CoachEmailAddress, string.Empty, string.Empty);
             if (mailMessage != null)
@@ -955,7 +985,7 @@ namespace OdysseyMvc2024.Controllers
         }
 
         [HttpPost]
-        public ActionResult ResendEmail(FormCollection collection)
+        public ActionResult ResendEmail(IFormCollection collection)
         {
             ArgumentNullException.ThrowIfNull(collection);
 
@@ -1039,7 +1069,7 @@ namespace OdysseyMvc2024.Controllers
             page10ViewData.JudgeLastName = judgeLastName;
             page10ViewData.SchoolName = Repository.GetSchoolNameFromSchoolId(page10ViewData.TournamentRegistration.SchoolID);
             page10ViewData.ProblemName = Repository.GetProblemNameFromProblemId(page10ViewData.TournamentRegistration.ProblemID);
-            page10ViewData.MailBody = GenerateEmailBody(/*page10ViewData*/);
+            page10ViewData.MailBody = GenerateEmailBody(page10ViewData);
 
             using MailMessage? mailMessage = BuildMessage(
                 page10ViewData.Config["WebmasterEmail"],
@@ -1091,17 +1121,42 @@ namespace OdysseyMvc2024.Controllers
             return RedirectToAction("Page01", "TournamentRegistration");
         }
 
-        // TODO: Do we still need the Page10ViewData parameter in GenerateEmailBody?  It is currently commented out, but it may be needed for future functionality.
-        private string GenerateEmailBody(/*Page10ViewData page10ViewData*/)
+        private string GenerateEmailBody(Page10ViewData page10ViewData)
         {
+            ArgumentNullException.ThrowIfNull(page10ViewData);
+
             using StringWriter writer = new();
 
-            ICompositeViewEngine? viewEngine = HttpContext.RequestServices.GetService(typeof(ICompositeViewEngine)) as ICompositeViewEngine;
+            if (HttpContext.RequestServices.GetService(typeof(ICompositeViewEngine)) is not ICompositeViewEngine viewEngine)
+            {
+                const string message = "The ICompositeViewEngine service is not available for tournament registration email rendering.";
+                ElmahExtensions.RaiseError(new InvalidOperationException(message));
+                throw new InvalidOperationException(message);
+            }
+
             ViewEngineResult partialView = viewEngine.FindView(ControllerContext, "TournamentRegistration/EmailPartial", false);
-            ViewContext viewContext = new(ControllerContext, partialView.View, ViewData, TempData, writer, new HtmlHelperOptions());
-            partialView.View.RenderAsync(viewContext).Wait();
+            if (!partialView.Success || partialView.View is null)
+            {
+                string searchedLocations = string.Join(", ", partialView.SearchedLocations ?? Enumerable.Empty<string>());
+                string message = string.IsNullOrWhiteSpace(searchedLocations)
+                    ? "Could not locate view 'TournamentRegistration/EmailPartial' when generating tournament registration email body."
+                    : $"Could not locate view 'TournamentRegistration/EmailPartial' when generating tournament registration email body. Searched: {searchedLocations}";
+                ElmahExtensions.RaiseError(new InvalidOperationException(message));
+                throw new InvalidOperationException(message);
+            }
+
+            ViewDataDictionary<Page10ViewData> partialViewData = new(ViewData, page10ViewData);
+            ViewContext viewContext = new(ControllerContext, partialView.View, partialViewData, TempData, writer, new HtmlHelperOptions());
+            partialView.View.RenderAsync(viewContext).GetAwaiter().GetResult();
 
             return writer.GetStringBuilder().ToString();
+        }
+
+        private RedirectToActionResult RedirectToErrorForMissingTournamentRegistration(int id, string actionName)
+        {
+            string message = $"Tournament registration with Team ID {id} was not found while processing {actionName}.";
+            ElmahExtensions.RaiseError(new InvalidOperationException(message));
+            return RedirectToAction("Error");
         }
     }
 }
