@@ -1,4 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Page02ViewData.cs" company="Tardis Technologies">
 //   Copyright 2014 Tardis Technologies. All rights reserved.
 // </copyright>
@@ -13,9 +13,8 @@
 // MVID: 7B658547-521F-44CB-80FA-52857CB94B72
 // Assembly location: C:\Users\rob\OneDrive\Odyssey\OdysseyProd\registration\bin\OdysseyMvc4.dll
 
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using OdysseyMvc2024.Models;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace OdysseyMvc2024.ViewData.TournamentRegistration
@@ -28,7 +27,8 @@ namespace OdysseyMvc2024.ViewData.TournamentRegistration
         /// <summary>
         /// Gets or sets the list of schools eligible to compete in the tournament.
         /// </summary>
-        public required IEnumerable<SelectListItem> SchoolList { get; set; }
+        [ValidateNever]
+        public IEnumerable<SelectListItem> SchoolList { get; set; } = [];
 
         /// <summary>
         /// Gets or sets the selected school.
