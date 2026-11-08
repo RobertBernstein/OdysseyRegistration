@@ -22,7 +22,6 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using OdysseyMvc2024.Models;
 using OdysseyMvc2024.ViewData;
 using OdysseyMvc2024.ViewData.TournamentRegistration;
-using System.Collections;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Net.Mail;
@@ -342,6 +341,7 @@ namespace OdysseyMvc2024.Controllers
             {
                 SetBaseViewData((BaseViewData)page03ViewData);
                 TryUpdateModelAsync<Page03ViewData>(page03ViewData);
+                ModelState.Remove(nameof(Page03ViewData.ListOfJudgesFound));
 
                 if (!ModelState.IsValid)
                 {

@@ -1,4 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Page03ViewData.cs" company="Tardis Technologies">
 //   Copyright 2014 Tardis Technologies. All rights reserved.
 // </copyright>
@@ -13,9 +13,9 @@
 // MVID: 7B658547-521F-44CB-80FA-52857CB94B72
 // Assembly location: C:\Users\rob\OneDrive\Odyssey\OdysseyProd\registration\bin\OdysseyMvc4.dll
 
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using OdysseyMvc2024.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace OdysseyMvc2024.ViewData.TournamentRegistration
 {
@@ -57,6 +57,7 @@ namespace OdysseyMvc2024.ViewData.TournamentRegistration
         /// <summary>
         /// Gets or sets the list of judges found.
         /// </summary>
+        [ValidateNever]
         public required IQueryable<Judge> ListOfJudgesFound { get; set; }
 
         /// <summary>
