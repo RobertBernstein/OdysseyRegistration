@@ -1,6 +1,6 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Page07ViewData.cs" company="Tardis Technologies">
-//   Copyright 2014 Tardis Technologies. All rights reserved.
+//   Copyright 2014-2026 Tardis Technologies. All rights reserved.
 // </copyright>
 // <summary>
 //   Defines the Page07ViewData type.
@@ -14,8 +14,6 @@
 // Assembly location: C:\Users\rob\OneDrive\Odyssey\OdysseyProd\registration\bin\OdysseyMvc4.dll
 
 using Microsoft.AspNetCore.Mvc.Rendering;
-using OdysseyMvc2024.Models;
-using System.Collections.Generic;
 
 namespace OdysseyMvc2024.ViewData.TournamentRegistration
 {
@@ -42,7 +40,7 @@ namespace OdysseyMvc2024.ViewData.TournamentRegistration
         /// <summary>
         /// Gets or sets the division 123 problem drop down.
         /// </summary>
-        public required IEnumerable<SelectListItem> Division123ProblemDropDown { get; set; }
+        public IEnumerable<SelectListItem> Division123ProblemDropDown { get; set; } = [];
 
         /// <summary>
         /// Gets or sets the division of team.
@@ -62,7 +60,7 @@ namespace OdysseyMvc2024.ViewData.TournamentRegistration
         /// <summary>
         /// Gets or sets the is doing spontaneous drop down.
         /// </summary>
-        public required IEnumerable<SelectListItem> IsDoingSpontaneousDropDown { get; set; }
+        public IEnumerable<SelectListItem> IsDoingSpontaneousDropDown { get; set; } = [];
 
         /// <summary>
         /// Gets or sets the primary problem name.

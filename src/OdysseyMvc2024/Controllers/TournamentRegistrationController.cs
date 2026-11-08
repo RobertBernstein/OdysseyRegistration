@@ -957,17 +957,23 @@ namespace OdysseyMvc2024.Controllers
         [HttpPost]
         public ActionResult ResendEmail(FormCollection collection)
         {
-            // This line is included to avoid compiler warnings about the unused 'collection' parameter. It has no functional effect.
-            // TODO: Consider removing the 'collection' parameter if it is not needed, or use it appropriately in the method.
-            _ = collection;
+            ArgumentNullException.ThrowIfNull(collection);
 
             ResendEmailViewData resendEmailViewData = new()
             {
                 Config = Repository.Config,
-                TournamentInfo = Repository.TournamentInfo
+                TournamentInfo = Repository.TournamentInfo,
+                CoachCheckbox = collection[nameof(ResendEmailViewData.CoachCheckbox)],
+                AltCoachCheckbox = collection[nameof(ResendEmailViewData.AltCoachCheckbox)]
             };
 
-            TryUpdateModelAsync<ResendEmailViewData>(resendEmailViewData);
+            string teamNumber = collection[nameof(ResendEmailViewData.TeamNumber)];
+            if (!string.IsNullOrWhiteSpace(teamNumber) &&
+                int.TryParse(teamNumber, NumberStyles.Integer, CultureInfo.InvariantCulture, out int parsedTeamNumber))
+            {
+                resendEmailViewData.TeamNumber = parsedTeamNumber;
+            }
+
             var page10ViewData = CreateResendEmailPageViewData(resendEmailViewData.TeamNumber);
             SetBaseViewData(page10ViewData);
 
@@ -979,13 +985,20 @@ namespace OdysseyMvc2024.Controllers
             }
 
             var recipients = BuildResendRecipientList(resendEmailViewData, page10ViewData);
+            if (string.IsNullOrWhiteSpace(recipients))
+            {
+                resendEmailViewData.ErrorMessage = "No valid recipient e-mail address was available, so no e-mail was sent.";
+                resendEmailViewData.Success = false;
+                return View(resendEmailViewData);
+            }
+
             PopulateResendEmailSummary(page10ViewData, recipients);
             return View(resendEmailViewData);
         }
 
         private static bool NoRecipientsSelected(ResendEmailViewData resendEmailViewData)
         {
-            return resendEmailViewData.CoachCheckbox == "false" && resendEmailViewData.AltCoachCheckbox == "false";
+            return resendEmailViewData.CoachCheckbox != "true" && resendEmailViewData.AltCoachCheckbox != "true";
         }
 
         private Page10ViewData CreateResendEmailPageViewData(int teamNumber)
