@@ -908,6 +908,21 @@ namespace OdysseyMvc2024.Controllers
             return View(page10ViewData);
         }
 
+        [HttpGet]
+        public ActionResult PayPalPayment()
+        {
+            PayPalPaymentViewData payPalPaymentViewData = new()
+            {
+                Config = Repository.Config,
+                TournamentInfo = Repository.TournamentInfo,
+                TeamTournamentId = string.Empty,
+                CoachLastName = string.Empty
+            };
+
+            SetBaseViewData(payPalPaymentViewData);
+            return View(payPalPaymentViewData);
+        }
+
         private Page10ViewData? CreatePage10ViewData(int id)
         {
             TournamentRegistration? tournamentRegistration = Repository.GetTournamentRegistrationById(id);

@@ -1,0 +1,13 @@
+@model OdysseyMvc2024.ViewData.TournamentRegistration.Page10ViewData
+
+@{
+	var payPalPaymentViewData = new OdysseyMvc2024.ViewData.TournamentRegistration.PayPalPaymentViewData
+	{
+		Config = Model.Config,
+		TournamentInfo = Model.TournamentInfo,
+		TeamTournamentId = Model.TournamentRegistration.Id.ToString(),
+		CoachLastName = Model.TournamentRegistration.CoachLastName ?? string.Empty
+	};
+}
+
+<partial name="_PayPalPaymentForm" model="payPalPaymentViewData" />

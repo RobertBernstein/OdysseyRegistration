@@ -1,0 +1,32 @@
+@model OdysseyMvc2024.ViewData.TournamentRegistration.PayPalPaymentViewData
+
+@{
+	ViewBag.Title = Model.FriendlyRegistrationName + " Online Payment";
+}
+
+<h1>@ViewBag.Title</h1>
+
+@if (Model.AcceptingPayPal)
+{
+	<p>
+		Use this page if you need to complete your payment later without returning to the tournament registration wizard.
+	</p>
+	<p>
+		Enter your Team's Tournament ID and Coach's Last Name, then click Pay Now.
+	</p>
+
+	<partial name="_PayPalPaymentForm" model="Model" />
+}
+else
+{
+	<p>
+		Payment for tournament registration will be made by check and mailed to the address that you received at the
+		end of registration. Due to numerous difficulties we experienced in previous years, we are not accepting payment
+		by PayPal.
+	</p>
+}
+
+<hr />
+<p style="text-align: left">
+	<button type="button" id="homePageButton" onclick="location.href='@Model.Config["HomePage"]'">Return to the Home Page</button>
+</p>
