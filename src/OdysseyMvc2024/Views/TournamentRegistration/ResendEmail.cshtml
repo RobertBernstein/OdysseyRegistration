@@ -6,6 +6,10 @@
 
 <h1>Resend Tournament Registration E-mail</h1>
 <h2>You have found the @Model.Config["RegionName"] Team Registration E-mail Resender</h2>
+<p>
+    Need payment tracking? Open the
+    <a asp-action="PaymentStatusReport" asp-controller="TournamentRegistration">Tournament Registration Payment Status Report</a>.
+</p>
 
 @if (!string.IsNullOrEmpty(Model.ErrorMessage))
 {

@@ -1050,6 +1050,19 @@ namespace OdysseyMvc2024.Models
             return _context.SaveChanges();
         }
 
+        public int UpdateTournamentRegistrationPaidStatus(int id, short paidStatus)
+        {
+            var tournamentRegistrations = _context.TournamentRegistrations.Where(r => r.Id == id);
+
+            if (!tournamentRegistrations.Any())
+            {
+                return 0;
+            }
+
+            tournamentRegistrations.First().Paid = paidStatus;
+            return _context.SaveChanges();
+        }
+
         private static void ApplyTournamentRegistrationPageData(
             TournamentRegistration registration,
             int pageNumber,

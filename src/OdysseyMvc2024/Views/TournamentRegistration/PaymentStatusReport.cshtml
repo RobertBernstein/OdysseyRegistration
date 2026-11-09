@@ -1,0 +1,80 @@
+@model OdysseyMvc2024.ViewData.TournamentRegistration.PaymentStatusReportViewData
+
+@{
+	ViewBag.Title = "Tournament Registration Payment Status Report";
+}
+
+<h1>@ViewBag.Title</h1>
+
+<form method="get" asp-action="PaymentStatusReport" asp-controller="TournamentRegistration">
+	<label for="paidFilter">Show:</label>
+	<select id="paidFilter" name="paidFilter">
+		@if (Model.PaidFilter == OdysseyMvc2024.ViewData.TournamentRegistration.PaymentStatusReportViewData.AllFilterValue)
+		{
+			<option value="all" selected>All Teams</option>
+		}
+		else
+		{
+			<option value="all">All Teams</option>
+		}
+
+		@if (Model.PaidFilter == OdysseyMvc2024.ViewData.TournamentRegistration.PaymentStatusReportViewData.PaidFilterValue)
+		{
+			<option value="paid" selected>Paid Teams</option>
+		}
+		else
+		{
+			<option value="paid">Paid Teams</option>
+		}
+
+		@if (Model.PaidFilter == OdysseyMvc2024.ViewData.TournamentRegistration.PaymentStatusReportViewData.UnpaidFilterValue)
+		{
+			<option value="unpaid" selected>Unpaid Teams</option>
+		}
+		else
+		{
+			<option value="unpaid">Unpaid Teams</option>
+		}
+	</select>
+	<button type="submit">Apply Filter</button>
+</form>
+
+<hr />
+
+@if (!Model.Rows.Any())
+{
+	<p>No teams matched the selected filter.</p>
+}
+else
+{
+	<table style="width: 100%; border-collapse: collapse;">
+		<thead>
+			<tr>
+				<th style="text-align: left; border-bottom: 1px solid #ccc;">Team ID</th>
+				<th style="text-align: left; border-bottom: 1px solid #ccc;">Coach Last Name</th>
+				<th style="text-align: left; border-bottom: 1px solid #ccc;">School</th>
+				<th style="text-align: left; border-bottom: 1px solid #ccc;">Problem</th>
+				<th style="text-align: left; border-bottom: 1px solid #ccc;">Payment Status</th>
+				<th style="text-align: left; border-bottom: 1px solid #ccc;">Time Registered</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var row in Model.Rows)
+			{
+				<tr>
+					<td>@row.TeamId</td>
+					<td>@row.CoachLastName</td>
+					<td>@row.SchoolName</td>
+					<td>@row.ProblemName</td>
+					<td>@(row.Paid ? "Paid" : "Unpaid")</td>
+					<td>@(row.TimeRegistered.HasValue ? row.TimeRegistered.Value.ToString("g") : string.Empty)</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+}
+
+<hr />
+<p style="text-align: left">
+	<button type="button" id="homePageButton" onclick="location.href='@Model.Config["HomePage"]'">Return to the Home Page</button>
+</p>

@@ -26,6 +26,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Net.Mail;
 using System.Text;
+using static System.StringComparison;
 
 namespace OdysseyMvc2024.Controllers
 {
@@ -44,6 +45,11 @@ namespace OdysseyMvc2024.Controllers
     [SuppressMessage("Code Smell", "S1172", Justification = "Method signature retained for legacy compatibility.")]
     public class TournamentRegistrationController : BaseRegistrationController
     {
+        /// <summary>
+        /// PayPal Instant Payment Notification (IPN) endpoint used to submit message verification requests.
+        /// </summary>
+        private static readonly Uri PayPalIpnVerificationEndpoint = new("https://ipnpb.paypal.com/cgi-bin/webscr");
+
         /// <summary>
         /// Initializes a new instance of the TournamentRegistrationController.
         /// </summary>
@@ -923,6 +929,100 @@ namespace OdysseyMvc2024.Controllers
             return View(payPalPaymentViewData);
         }
 
+        /// <summary>
+        /// Processes a PayPal Instant Payment Notification (IPN) message, verifies it with PayPal, and marks the
+        /// referenced tournament registration as paid when the notification is valid and completed.
+        /// </summary>
+        /// <remarks>Logs invalid verification responses, missing or invalid team identifiers, unknown
+        /// registrations, and failed paid-status updates. Only updates the paid flag when the IPN is VERIFIED, the
+        /// payment status is Completed, and the registration is not already marked as paid.</remarks>
+        /// <param name="cancellationToken">Propagates notification that the request should be canceled.</param>
+        /// <returns>An <see cref="IActionResult"/> that returns <see cref="OkResult"/> after handling the IPN message.</returns>
+        [HttpPost]
+        [IgnoreAntiforgeryToken]
+        public async Task<IActionResult> PayPalIpn(CancellationToken cancellationToken)
+        {
+            IFormCollection form = await Request.ReadFormAsync(cancellationToken).ConfigureAwait(false);
+            Dictionary<string, string> formValues = form.ToDictionary(
+                entry => entry.Key,
+                entry => entry.Value.ToString(),
+                StringComparer.Ordinal);
+
+            string verificationResponse = await ValidatePayPalIpnAsync(formValues, cancellationToken).ConfigureAwait(false);
+            if (!string.Equals(verificationResponse, "VERIFIED", Ordinal))
+            {
+                ElmahExtensions.RaiseError(new InvalidOperationException(
+                    $"PayPal IPN verification failed with response '{verificationResponse}'."));
+                return Ok();
+            }
+
+            if (!formValues.TryGetValue("payment_status", out string? paymentStatus) ||
+                !string.Equals(paymentStatus, "Completed", OrdinalIgnoreCase))
+            {
+                return Ok();
+            }
+
+            if (!formValues.TryGetValue("custom", out string? teamIdValue) ||
+                !int.TryParse(teamIdValue, NumberStyles.Integer, CultureInfo.InvariantCulture, out int teamId))
+            {
+                ElmahExtensions.RaiseError(new InvalidOperationException("PayPal IPN did not include a valid team ID in the custom field."));
+                return Ok();
+            }
+
+            TournamentRegistration? tournamentRegistration = Repository.GetTournamentRegistrationById(teamId);
+            if (tournamentRegistration is null)
+            {
+                ElmahExtensions.RaiseError(new InvalidOperationException(
+                    $"PayPal IPN referenced unknown tournament registration Team ID {teamId}."));
+                return Ok();
+            }
+
+            if (tournamentRegistration.Paid == 1)
+            {
+                return Ok();
+            }
+
+            int rowsUpdated = Repository.UpdateTournamentRegistrationPaidStatus(teamId, 1);
+            if (rowsUpdated == 0)
+            {
+                ElmahExtensions.RaiseError(new InvalidOperationException(
+                    $"Failed to update Paid status for tournament registration Team ID {teamId}."));
+            }
+
+            return Ok();
+        }
+
+        /// <summary>
+        /// Validates a PayPal Instant Payment Notification (IPN) message by sending it to PayPal for verification.
+        /// </summary>
+        /// <param name="formValues">The form values received from the IPN message.</param>
+        /// <param name="cancellationToken">Propagates notification that the request should be canceled.</param>
+        /// <returns>A task that represents the asynchronous operation. The task result contains the verification
+        /// response from PayPal.</returns>
+        protected virtual async Task<string> ValidatePayPalIpnAsync(
+            IReadOnlyDictionary<string, string> formValues,
+            CancellationToken cancellationToken)
+        {
+            ArgumentNullException.ThrowIfNull(formValues);
+
+            List<KeyValuePair<string, string>> verificationPayload =
+            [
+                new KeyValuePair<string, string>("cmd", "_notify-validate")
+            ];
+
+            foreach ((string key, string value) in formValues)
+            {
+                verificationPayload.Add(new KeyValuePair<string, string>(key, value));
+            }
+
+            using HttpClient client = new();
+            using FormUrlEncodedContent content = new(verificationPayload);
+            using HttpResponseMessage response = await client.PostAsync(PayPalIpnVerificationEndpoint, content, cancellationToken).ConfigureAwait(false);
+            response.EnsureSuccessStatusCode();
+            string responseBody = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+            return responseBody.Trim();
+        }
+
         private Page10ViewData? CreatePage10ViewData(int id)
         {
             TournamentRegistration? tournamentRegistration = Repository.GetTournamentRegistrationById(id);
@@ -1098,6 +1198,58 @@ namespace OdysseyMvc2024.Controllers
             {
                 page10ViewData.MailErrorMessage = SendMessage((BaseViewData)page10ViewData, mailMessage);
             }
+        }
+
+        [HttpGet]
+        public ActionResult PaymentStatusReport(string paidFilter = PaymentStatusReportViewData.AllFilterValue)
+        {
+            string normalizedFilter = NormalizePaidFilter(paidFilter);
+
+            IEnumerable<TournamentRegistration> filteredRegistrations = normalizedFilter switch
+            {
+                PaymentStatusReportViewData.PaidFilterValue => Repository.TournamentRegistrations.Where(registration => registration.Paid == 1),
+                PaymentStatusReportViewData.UnpaidFilterValue => Repository.TournamentRegistrations.Where(registration => registration.Paid != 1),
+                _ => Repository.TournamentRegistrations
+            };
+
+            List<PaymentStatusReportItemViewData> rows = filteredRegistrations
+                .OrderBy(registration => registration.Id)
+                .Select(registration => new PaymentStatusReportItemViewData
+                {
+                    TeamId = registration.Id,
+                    CoachLastName = registration.CoachLastName ?? string.Empty,
+                    SchoolName = Repository.GetSchoolNameFromSchoolId(registration.SchoolID) ?? string.Empty,
+                    ProblemName = Repository.GetProblemNameFromProblemId(registration.ProblemID) ?? string.Empty,
+                    Paid = registration.Paid == 1,
+                    TimeRegistered = registration.TimeRegistered
+                })
+                .ToList();
+
+            PaymentStatusReportViewData viewData = new()
+            {
+                Config = Repository.Config,
+                TournamentInfo = Repository.TournamentInfo,
+                PaidFilter = normalizedFilter,
+                Rows = rows
+            };
+
+            SetBaseViewData(viewData);
+            return View(viewData);
+        }
+
+        private static string NormalizePaidFilter(string? paidFilter)
+        {
+            if (string.Equals(paidFilter, PaymentStatusReportViewData.PaidFilterValue, OrdinalIgnoreCase))
+            {
+                return PaymentStatusReportViewData.PaidFilterValue;
+            }
+
+            if (string.Equals(paidFilter, PaymentStatusReportViewData.UnpaidFilterValue, OrdinalIgnoreCase))
+            {
+                return PaymentStatusReportViewData.UnpaidFilterValue;
+            }
+
+            return PaymentStatusReportViewData.AllFilterValue;
         }
 
         public ActionResult Carolina()

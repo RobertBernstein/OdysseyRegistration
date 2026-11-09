@@ -1,4 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="OdysseyRepository.cs" company="Tardis Technologies">
 //   Copyright 2014-2024 Tardis Technologies. All rights reserved.
 // </copyright>
@@ -51,5 +51,6 @@ namespace OdysseyMvc2024.Models
         int UpdateJudgeEmail(int judgeId, string email);
         int UpdateJudgeRecordWithTournamentRegistrationId(short? judgeId, int tournamentRegistrationId, out string errorMessage);
         int UpdateTournamentRegistration(int id, int pageNumber, TournamentRegistration? newRegistrationData);
+        int UpdateTournamentRegistrationPaidStatus(int id, short paidStatus);
     }
 }
