@@ -1212,7 +1212,7 @@ namespace OdysseyMvc2024.Controllers
                 _ => Repository.TournamentRegistrations
             };
 
-            List<PaymentStatusReportItemViewData> rows = filteredRegistrations
+            List<PaymentStatusReportItemViewData> rows = [.. filteredRegistrations
                 .OrderBy(registration => registration.Id)
                 .Select(registration => new PaymentStatusReportItemViewData
                 {
@@ -1222,8 +1222,7 @@ namespace OdysseyMvc2024.Controllers
                     ProblemName = Repository.GetProblemNameFromProblemId(registration.ProblemID) ?? string.Empty,
                     Paid = registration.Paid == 1,
                     TimeRegistered = registration.TimeRegistered
-                })
-                .ToList();
+                })];
 
             PaymentStatusReportViewData viewData = new()
             {

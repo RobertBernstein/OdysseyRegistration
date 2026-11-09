@@ -135,15 +135,17 @@ static async Task<string> SendSqlOutageNotificationAsync(WebApplication app, Htt
 
     string smtpHost = notificationSection["SmtpHost"] ?? throw new InvalidOperationException("SqlOutageNotification:SmtpHost is missing.");
 
-    if (!int.TryParse(notificationSection["SmtpPort"], out int smtpPort))
-    {
-        throw new InvalidOperationException("SqlOutageNotification:SmtpPort is missing or invalid.");
-    }
+    // TODO: Consider validating SmtpPort and EnableSsl if you want to support non-default ports or SSL. For now, we assume defaults.
+    // - Sending email via WinHost was failing when these values were included.
+    //if (!int.TryParse(notificationSection["SmtpPort"], out int smtpPort))
+    //{
+    //    throw new InvalidOperationException("SqlOutageNotification:SmtpPort is missing or invalid.");
+    //}
 
-    if (!bool.TryParse(notificationSection["EnableSsl"], out bool enableSsl))
-    {
-        throw new InvalidOperationException("SqlOutageNotification:EnableSsl is missing or invalid.");
-    }
+    //if (!bool.TryParse(notificationSection["EnableSsl"], out bool enableSsl))
+    //{
+    //    throw new InvalidOperationException("SqlOutageNotification:EnableSsl is missing or invalid.");
+    //}
 
     string fromAddressValue = notificationSection["FromAddress"] ?? "webmaster@novanorth.org";
     string toAddressValue = notificationSection["ToAddress"] ?? "webmaster@novanorth.org";
@@ -181,6 +183,8 @@ static async Task<string> SendSqlOutageNotificationAsync(WebApplication app, Htt
         IsBodyHtml = false,
     };
 
+    // TODO: Consider including the smtpPort and enableSsl parameters in the SmtpClient constructor to support non-default ports or SSL.
+    // - Sending email via WinHost was failing when these values were included.
     using SmtpClient smtpClient = new(smtpHost/*, smtpPort*/)
     {
         //EnableSsl = enableSsl,
