@@ -895,14 +895,14 @@ namespace OdysseyMvc2024.Controllers
         }
 
         [HttpGet]
-        public ActionResult Page10(int id)
+        public async Task<ActionResult> Page10(int id, CancellationToken cancellationToken)
         {
             if (CurrentRegistrationState != RegistrationState.Available)
             {
                 return RedirectToAction(CurrentRegistrationState.ToString());
             }
 
-            var page10ViewData = CreatePage10ViewData(id);
+            Page10ViewData? page10ViewData = CreatePage10ViewData(id);
             if (page10ViewData is null)
             {
                 return RedirectToErrorForMissingTournamentRegistration(id, nameof(Page10));
@@ -910,12 +910,12 @@ namespace OdysseyMvc2024.Controllers
 
             SetBaseViewData(page10ViewData);
 
-            if (TryHandleJudgeAssignmentError(page10ViewData, id, out var errorResult))
+            if (TryHandleJudgeAssignmentError(page10ViewData, id, out ActionResult errorResult))
             {
                 return errorResult;
             }
 
-            PopulatePage10Summary(page10ViewData, id);
+            await PopulatePage10SummaryAsync(page10ViewData, id, cancellationToken).ConfigureAwait(false);
             return View(page10ViewData);
         }
 
@@ -1070,9 +1070,9 @@ namespace OdysseyMvc2024.Controllers
             return true;
         }
 
-        private void PopulatePage10Summary(Page10ViewData page10ViewData, int id)
+        private async Task PopulatePage10SummaryAsync(Page10ViewData page10ViewData, int id, CancellationToken cancellationToken)
         {
-            var tournamentRegistrationId = Repository.GetJudgeIdFromTournamentRegistrationId(id);
+            short? tournamentRegistrationId = Repository.GetJudgeIdFromTournamentRegistrationId(id);
             page10ViewData.TournamentRegistration.TimeRegistered = DateTime.Now;
             Repository.UpdateTournamentRegistration(id, 10, page10ViewData.TournamentRegistration);
 
@@ -1082,7 +1082,7 @@ namespace OdysseyMvc2024.Controllers
             page10ViewData.SchoolName = Repository.GetSchoolNameFromSchoolId(page10ViewData.TournamentRegistration.SchoolID);
             page10ViewData.ProblemName = Repository.GetProblemNameFromProblemId(page10ViewData.TournamentRegistration.ProblemID);
             page10ViewData.Division = page10ViewData.TournamentRegistration.Division == "0" ? "Primary" : page10ViewData.TournamentRegistration.Division;
-            page10ViewData.MailBody = GenerateEmailBody(page10ViewData);
+            page10ViewData.MailBody = await GenerateEmailBodyAsync(page10ViewData, cancellationToken).ConfigureAwait(false);
 
             using MailMessage? mailMessage = BuildMessage(page10ViewData.Config["WebmasterEmail"], page10ViewData.RegionName + " Odyssey Region " + page10ViewData.RegionNumber + " Tournament Registration", page10ViewData.MailBody, page10ViewData.TournamentRegistration.CoachEmailAddress, string.Empty, string.Empty);
             if (mailMessage != null)
@@ -1105,7 +1105,7 @@ namespace OdysseyMvc2024.Controllers
         }
 
         [HttpPost]
-        public ActionResult ResendEmail(IFormCollection collection)
+        public async Task<ActionResult> ResendEmail(IFormCollection collection, CancellationToken cancellationToken)
         {
             ArgumentNullException.ThrowIfNull(collection);
 
@@ -1124,7 +1124,7 @@ namespace OdysseyMvc2024.Controllers
                 resendEmailViewData.TeamNumber = parsedTeamNumber;
             }
 
-            var page10ViewData = CreateResendEmailPageViewData(resendEmailViewData.TeamNumber);
+            Page10ViewData page10ViewData = CreateResendEmailPageViewData(resendEmailViewData.TeamNumber);
             SetBaseViewData(page10ViewData);
 
             if (NoRecipientsSelected(resendEmailViewData))
@@ -1134,7 +1134,7 @@ namespace OdysseyMvc2024.Controllers
                 return View(resendEmailViewData);
             }
 
-            var recipients = BuildResendRecipientList(resendEmailViewData, page10ViewData);
+            string recipients = BuildResendRecipientList(resendEmailViewData, page10ViewData);
             if (string.IsNullOrWhiteSpace(recipients))
             {
                 resendEmailViewData.ErrorMessage = "No valid recipient e-mail address was available, so no e-mail was sent.";
@@ -1142,7 +1142,7 @@ namespace OdysseyMvc2024.Controllers
                 return View(resendEmailViewData);
             }
 
-            PopulateResendEmailSummary(page10ViewData, recipients);
+            await PopulateResendEmailSummaryAsync(page10ViewData, recipients, cancellationToken).ConfigureAwait(false);
             return View(resendEmailViewData);
         }
 
@@ -1182,14 +1182,14 @@ namespace OdysseyMvc2024.Controllers
             return recipients;
         }
 
-        private void PopulateResendEmailSummary(Page10ViewData page10ViewData, string recipients)
+        private async Task PopulateResendEmailSummaryAsync(Page10ViewData page10ViewData, string recipients, CancellationToken cancellationToken)
         {
             Repository.GetJudgeNameFromJudgeId(page10ViewData.TournamentRegistration.JudgeID, out string judgeFirstName, out string judgeLastName);
             page10ViewData.JudgeFirstName = judgeFirstName;
             page10ViewData.JudgeLastName = judgeLastName;
             page10ViewData.SchoolName = Repository.GetSchoolNameFromSchoolId(page10ViewData.TournamentRegistration.SchoolID);
             page10ViewData.ProblemName = Repository.GetProblemNameFromProblemId(page10ViewData.TournamentRegistration.ProblemID);
-            page10ViewData.MailBody = GenerateEmailBody(page10ViewData);
+            page10ViewData.MailBody = await GenerateEmailBodyAsync(page10ViewData, cancellationToken).ConfigureAwait(false);
 
             using MailMessage? mailMessage = BuildMessage(
                 page10ViewData.Config["WebmasterEmail"],
@@ -1292,11 +1292,11 @@ namespace OdysseyMvc2024.Controllers
             return RedirectToAction("Page01", "TournamentRegistration");
         }
 
-        private string GenerateEmailBody(Page10ViewData page10ViewData)
+        private Task<string> GenerateEmailBodyAsync(Page10ViewData page10ViewData, CancellationToken cancellationToken)
         {
             ArgumentNullException.ThrowIfNull(page10ViewData);
 
-            return _emailBodyRenderer.Render(ControllerContext, ViewData, TempData, page10ViewData);
+            return _emailBodyRenderer.RenderAsync(ControllerContext, ViewData, TempData, page10ViewData, cancellationToken);
         }
 
         private RedirectToActionResult RedirectToErrorForMissingTournamentRegistration(int id, string actionName)

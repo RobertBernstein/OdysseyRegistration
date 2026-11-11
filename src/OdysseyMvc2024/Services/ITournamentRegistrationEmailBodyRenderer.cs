@@ -15,9 +15,10 @@ namespace OdysseyMvc2024.Services;
 
 public interface ITournamentRegistrationEmailBodyRenderer
 {
-    string Render(
+    Task<string> RenderAsync(
         ControllerContext controllerContext,
         ViewDataDictionary viewData,
         ITempDataDictionary tempData,
-        Page10ViewData page10ViewData);
+        Page10ViewData page10ViewData,
+        CancellationToken cancellationToken);
 }

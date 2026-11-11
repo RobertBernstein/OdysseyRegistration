@@ -20,16 +20,19 @@ public sealed class TournamentRegistrationEmailBodyRenderer : ITournamentRegistr
 {
     private const string EmailPartialViewName = "TournamentRegistration/EmailPartial";
 
-    public string Render(
+    public async Task<string> RenderAsync(
         ControllerContext controllerContext,
         ViewDataDictionary viewData,
         ITempDataDictionary tempData,
-        Page10ViewData page10ViewData)
+        Page10ViewData page10ViewData,
+        CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(controllerContext);
         ArgumentNullException.ThrowIfNull(viewData);
         ArgumentNullException.ThrowIfNull(tempData);
         ArgumentNullException.ThrowIfNull(page10ViewData);
+
+        cancellationToken.ThrowIfCancellationRequested();
 
         using StringWriter writer = new();
 
@@ -53,8 +56,9 @@ public sealed class TournamentRegistrationEmailBodyRenderer : ITournamentRegistr
 
         ViewDataDictionary<Page10ViewData> partialViewData = new(viewData, page10ViewData);
         ViewContext viewContext = new(controllerContext, partialView.View, partialViewData, tempData, writer, new HtmlHelperOptions());
-        partialView.View.RenderAsync(viewContext).GetAwaiter().GetResult();
+        await partialView.View.RenderAsync(viewContext).ConfigureAwait(false);
 
+        cancellationToken.ThrowIfCancellationRequested();
         return writer.GetStringBuilder().ToString();
     }
 }

@@ -47,7 +47,7 @@ public sealed class TournamentRegistrationControllerResendEmailTests
     }
 
     [Fact]
-    public void ResendEmailPost_WhenNoRecipientsSelected_ReturnsErrorMessageAndDoesNotBuildSummary()
+    public async Task ResendEmailPost_WhenNoRecipientsSelected_ReturnsErrorMessageAndDoesNotBuildSummary()
     {
         // Arrange
         var repository = CreateRepository();
@@ -61,7 +61,7 @@ public sealed class TournamentRegistrationControllerResendEmailTests
         });
 
         // Act
-        var result = controller.ResendEmail(form);
+        ActionResult result = await controller.ResendEmail(form, CancellationToken.None);
 
         // Assert
         var viewResult = result.Should().BeOfType<ViewResult>().Subject;
@@ -75,7 +75,7 @@ public sealed class TournamentRegistrationControllerResendEmailTests
     }
 
     [Fact]
-    public void ResendEmailPost_WithDefaultInput_ReturnsNoRecipientsErrorMessage()
+    public async Task ResendEmailPost_WithDefaultInput_ReturnsNoRecipientsErrorMessage()
     {
         // Arrange
         var repository = CreateRepository();
@@ -84,7 +84,7 @@ public sealed class TournamentRegistrationControllerResendEmailTests
         var form = new FormCollection([]);
 
         // Act
-        var result = controller.ResendEmail(form);
+        ActionResult result = await controller.ResendEmail(form, CancellationToken.None);
 
         // Assert
         var viewResult = result.Should().BeOfType<ViewResult>().Subject;
@@ -100,7 +100,7 @@ public sealed class TournamentRegistrationControllerResendEmailTests
     }
 
     [Fact]
-    public void ResendEmailPost_WhenCoachRecipientSelected_PopulatesSummaryPath()
+    public async Task ResendEmailPost_WhenCoachRecipientSelected_PopulatesSummaryPath()
     {
         // Arrange
         var repository = CreateRepository();
@@ -114,7 +114,7 @@ public sealed class TournamentRegistrationControllerResendEmailTests
         });
 
         // Act
-        var result = controller.ResendEmail(form);
+        ActionResult result = await controller.ResendEmail(form, CancellationToken.None);
 
         // Assert
         var viewResult = result.Should().BeOfType<ViewResult>().Subject;

@@ -28,14 +28,14 @@ namespace OdysseyMvc2024.UnitTests.Controllers;
 public sealed class TournamentRegistrationControllerPage10Tests
 {
     [Fact]
-    public void Page10Get_WhenRegistrationIsAvailableAndNoJudgeAssignmentError_ReturnsSummaryViewAndUpdatesRegistration()
+    public async Task Page10Get_WhenRegistrationIsAvailableAndNoJudgeAssignmentError_ReturnsSummaryViewAndUpdatesRegistration()
     {
         // Arrange
         var repository = CreateRepositoryForAvailableState(withJudgeAssignmentError: false);
         using var controller = CreateController(repository.Object);
 
         // Act
-        var result = controller.Page10(10);
+        ActionResult result = await controller.Page10(10, CancellationToken.None);
 
         // Assert
         var viewResult = result.Should().BeOfType<ViewResult>().Subject;
@@ -60,14 +60,14 @@ public sealed class TournamentRegistrationControllerPage10Tests
     }
 
     [Fact]
-    public void Page10Get_WhenJudgeAssignmentErrorOccurs_ReturnsErrorViewAndDoesNotUpdateRegistration()
+    public async Task Page10Get_WhenJudgeAssignmentErrorOccurs_ReturnsErrorViewAndDoesNotUpdateRegistration()
     {
         // Arrange
         var repository = CreateRepositoryForAvailableState(withJudgeAssignmentError: true);
         using var controller = CreateController(repository.Object);
 
         // Act
-        var result = controller.Page10(10);
+        ActionResult result = await controller.Page10(10, CancellationToken.None);
 
         // Assert
         var viewResult = result.Should().BeOfType<ViewResult>().Subject;
@@ -84,7 +84,7 @@ public sealed class TournamentRegistrationControllerPage10Tests
     }
 
     [Fact]
-    public void Page10Get_WhenRegistrationRecordIsMissing_RedirectsToError()
+    public async Task Page10Get_WhenRegistrationRecordIsMissing_RedirectsToError()
     {
         // Arrange
         var repository = CreateRepositoryForAvailableState(withJudgeAssignmentError: false);
@@ -92,7 +92,7 @@ public sealed class TournamentRegistrationControllerPage10Tests
         using var controller = CreateController(repository.Object);
 
         // Act
-        var result = controller.Page10(10);
+        ActionResult result = await controller.Page10(10, CancellationToken.None);
 
         // Assert
         var redirect = result.Should().BeOfType<RedirectToActionResult>().Subject;
@@ -107,7 +107,7 @@ public sealed class TournamentRegistrationControllerPage10Tests
     }
 
     [Fact]
-    public void Page10Get_WhenEmailPartialRenders_UsesPage10ViewDataModel()
+    public async Task Page10Get_WhenEmailPartialRenders_UsesPage10ViewDataModel()
     {
         // Arrange
         var repository = CreateRepositoryForAvailableState(withJudgeAssignmentError: false);
@@ -118,7 +118,7 @@ public sealed class TournamentRegistrationControllerPage10Tests
             onRenderViewContext: viewContext => renderedModel = viewContext.ViewData.Model);
 
         // Act
-        var result = controller.Page10(10);
+        ActionResult result = await controller.Page10(10, CancellationToken.None);
 
         // Assert
         result.Should().BeOfType<ViewResult>();
@@ -126,18 +126,18 @@ public sealed class TournamentRegistrationControllerPage10Tests
     }
 
     [Fact]
-    public void Page10Get_WhenEmailPartialViewIsMissing_ThrowsInvalidOperationException()
+    public async Task Page10Get_WhenEmailPartialViewIsMissing_ThrowsInvalidOperationException()
     {
         // Arrange
         var repository = CreateRepositoryForAvailableState(withJudgeAssignmentError: false);
         using var controller = CreateController(repository.Object, includeEmailPartialView: false);
 
         // Act
-        Action action = () => controller.Page10(10);
+        Func<Task> action = () => controller.Page10(10, CancellationToken.None);
 
         // Assert
-        action.Should()
-            .Throw<InvalidOperationException>()
+        await action.Should()
+            .ThrowAsync<InvalidOperationException>()
             .WithMessage("*TournamentRegistration/EmailPartial*");
     }
 
@@ -145,14 +145,14 @@ public sealed class TournamentRegistrationControllerPage10Tests
     [InlineData("Soon")]
     [InlineData("Down")]
     [InlineData("Closed")]
-    public void Page10Get_WhenRegistrationIsNotAvailable_RedirectsToCurrentState(string state)
+    public async Task Page10Get_WhenRegistrationIsNotAvailable_RedirectsToCurrentState(string state)
     {
         // Arrange
         var repository = CreateRepository(CreateConfigForState(state), withJudgeAssignmentError: false);
         using var controller = CreateController(repository.Object);
 
         // Act
-        var result = controller.Page10(10);
+        ActionResult result = await controller.Page10(10, CancellationToken.None);
 
         // Assert
         var redirect = result.Should().BeOfType<RedirectToActionResult>().Subject;
