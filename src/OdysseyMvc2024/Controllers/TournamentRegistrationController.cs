@@ -17,9 +17,8 @@
 using ElmahCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Mvc.ViewEngines;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using OdysseyMvc2024.Models;
+using OdysseyMvc2024.Services;
 using OdysseyMvc2024.ViewData;
 using OdysseyMvc2024.ViewData.TournamentRegistration;
 using System.Diagnostics.CodeAnalysis;
@@ -50,24 +49,30 @@ namespace OdysseyMvc2024.Controllers
         /// </summary>
         private static readonly Uri PayPalIpnVerificationEndpoint = new("https://ipnpb.paypal.com/cgi-bin/webscr");
 
+        private readonly ITournamentRegistrationEmailBodyRenderer _emailBodyRenderer;
+
         /// <summary>
         /// Initializes a new instance of the TournamentRegistrationController.
         /// </summary>
         /// <param name="repository">
         /// Repository for Odyssey registration data access.
         /// </param>
+        /// <param name="emailBodyRenderer">Renderer used to generate the tournament registration email body from the shared partial view.</param>
         // [SetsRequiredMembers] tells the compiler that this constructor initializes all 'required' members
         // (specifically FriendlyRegistrationName from BaseRegistrationController). Without this attribute,
         // external assemblies (such as the unit test project) cannot instantiate this class because the
         // compiler enforces that callers set 'required' properties — even though this constructor already
         // does so internally.
         [SetsRequiredMembers]
-        public TournamentRegistrationController(IOdysseyRepository repository)
+        public TournamentRegistrationController(
+            IOdysseyRepository repository,
+            ITournamentRegistrationEmailBodyRenderer? emailBodyRenderer = null)
             : base(repository)
         {
             // Set the registration type to Tournament and initialize the friendly name
             CurrentRegistrationType = RegistrationType.Tournament;
             FriendlyRegistrationName = GetFriendlyRegistrationName();
+            _emailBodyRenderer = emailBodyRenderer ?? new TournamentRegistrationEmailBodyRenderer();
         }
 
         /// <summary>
@@ -1291,31 +1296,7 @@ namespace OdysseyMvc2024.Controllers
         {
             ArgumentNullException.ThrowIfNull(page10ViewData);
 
-            using StringWriter writer = new();
-
-            if (HttpContext.RequestServices.GetService(typeof(ICompositeViewEngine)) is not ICompositeViewEngine viewEngine)
-            {
-                const string message = "The ICompositeViewEngine service is not available for tournament registration email rendering.";
-                ElmahExtensions.RaiseError(new InvalidOperationException(message));
-                throw new InvalidOperationException(message);
-            }
-
-            ViewEngineResult partialView = viewEngine.FindView(ControllerContext, "TournamentRegistration/EmailPartial", false);
-            if (!partialView.Success || partialView.View is null)
-            {
-                string searchedLocations = string.Join(", ", partialView.SearchedLocations ?? []);
-                string message = string.IsNullOrWhiteSpace(searchedLocations)
-                    ? "Could not locate view 'TournamentRegistration/EmailPartial' when generating tournament registration email body."
-                    : $"Could not locate view 'TournamentRegistration/EmailPartial' when generating tournament registration email body. Searched: {searchedLocations}";
-                ElmahExtensions.RaiseError(new InvalidOperationException(message));
-                throw new InvalidOperationException(message);
-            }
-
-            ViewDataDictionary<Page10ViewData> partialViewData = new(ViewData, page10ViewData);
-            ViewContext viewContext = new(ControllerContext, partialView.View, partialViewData, TempData, writer, new HtmlHelperOptions());
-            partialView.View.RenderAsync(viewContext).GetAwaiter().GetResult();
-
-            return writer.GetStringBuilder().ToString();
+            return _emailBodyRenderer.Render(ControllerContext, ViewData, TempData, page10ViewData);
         }
 
         private RedirectToActionResult RedirectToErrorForMissingTournamentRegistration(int id, string actionName)

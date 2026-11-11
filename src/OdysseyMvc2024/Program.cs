@@ -10,6 +10,7 @@
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using OdysseyMvc2024.Models;
+using OdysseyMvc2024.Services;
 using System.ComponentModel;
 using System.Globalization;
 using System.Net;
@@ -28,6 +29,7 @@ builder.Services.AddDbContext<OdysseyEntities>(options =>
 
 // builder.Services.AddScoped<IOdysseyEntities, OdysseyEntities>();
 builder.Services.AddScoped<IOdysseyRepository, OdysseyRepository>();
+builder.Services.AddScoped<ITournamentRegistrationEmailBodyRenderer, TournamentRegistrationEmailBodyRenderer>();
 
 var app = builder.Build();
 

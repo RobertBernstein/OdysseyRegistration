@@ -92,7 +92,7 @@
 </p>
 <hr />
 <div id="printableContent">
-    @Html.Raw(Model.MailBody)
+    <partial name="TournamentRegistration/EmailPartial" model="Model" />
 </div>
 <p class="required">
     An e-mail has been sent to @Model.TournamentRegistration.CoachEmailAddress containing all of the information on this page.
