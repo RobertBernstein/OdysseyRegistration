@@ -25,6 +25,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <!-- Exclude protected directory from publish (development-only password files) -->
+    <Exclude Include="protected\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="ElmahCore" />
     <PackageReference Include="Microsoft.AspNetCore.SystemWebAdapters.CoreServices" />
     <PackageReference Include="Microsoft.Data.SqlClient" />
@@ -37,5 +42,15 @@
     <PackageReference Include="System.Data.SqlClient" />
     <PackageReference Include="System.Security.Cryptography.Pkcs" />
   </ItemGroup>
+
+  <Target Name="CopyPasswordFile" BeforeTargets="Build">
+    <PropertyGroup>
+      <SourcePasswordFile>$([System.IO.Path]::Combine($(ProjectDir), '..', 'sa_password.txt'))</SourcePasswordFile>
+      <ProtectedDir>$([System.IO.Path]::Combine($(ProjectDir), 'protected'))</ProtectedDir>
+      <DestPasswordFile>$([System.IO.Path]::Combine($(ProtectedDir), 'sql-pw.txt'))</DestPasswordFile>
+    </PropertyGroup>
+    <MakeDir Directories="$(ProtectedDir)" />
+    <Copy SourceFiles="$(SourcePasswordFile)" DestinationFiles="$(DestPasswordFile)" SkipUnchangedFiles="true" />
+  </Target>
 
 </Project>

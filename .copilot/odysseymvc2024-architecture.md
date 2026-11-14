@@ -1,4 +1,4 @@
-# OdysseyMvc2024 Architecture Reference
+﻿# OdysseyMvc2024 Architecture Reference
 
 > Comprehensive documentation for the OdysseyMvc2024 project — the .NET 10.0 migration target for the Odyssey of the Mind registration system.
 
@@ -772,36 +772,53 @@ wwwroot/
 
 ### Connection String
 
-#### Development: Build-time password injection
-OdysseyMvc2024 uses an automated build-time mechanism to inject SQL passwords:
+#### Development: Build-time password injection (protected/ directory)
+OdysseyMvc2024 uses an automated build-time mechanism for development:
 
-1. **User Secrets** provides the connection string template with Password= placeholder:
+1. **User Secrets** provides the connection string template with `Password=` placeholder:
    `
    ConnectionStrings:OdysseyConnection = "Server=localhost;Database=DB_12824_registration;User Id=sa;Password=PLACEHOLDER;TrustServerCertificate=True;"
    `
 
-2. **MSBuild target** (CopyPasswordFile in .csproj) runs before every build:
-   - Creates src/OdysseyMvc2024/protected/ directory
-   - Copies src/sa_password.txt → src/OdysseyMvc2024/protected/sql-pw.txt
-   - Never committed to git (in .gitignore)
+2. **MSBuild target** (`CopyPasswordFile` in `.csproj`) runs before every build:
+   - Creates `src/OdysseyMvc2024/protected/` directory
+   - Copies `src/sa_password.txt` → `src/OdysseyMvc2024/protected/sql-pw.txt`
+   - Never committed to git (in `.gitignore`)
 
-3. **Startup injection** (Program.cs line 29):
-   - ConnectionStringPasswordInjector.InjectSqlPasswordFromProtectedFile() is called
-   - Reads actual password from protected/sql-pw.txt
-   - Replaces Password=PLACEHOLDER with real password
-   - Connection string is ready for database access
+3. **Startup injection** (`Program.cs` line 29):
+   - `ConnectionStringPasswordInjector.InjectSqlPasswordFromProtectedFile()` is called
+   - **Development**: Reads actual password from `protected/sql-pw.txt`
+   - **Staging/Production**: `protected/` is not deployed → gracefully skips injection
+   - Assumes password is already filled via environment variable on production
+
+#### Publish exclusion
+The `protected/` directory is explicitly **excluded from publish**:
+`xml
+<ItemGroup>
+  <!-- Exclude protected directory from publish (development-only password files) -->
+  <Exclude Include="protected\**" />
+</ItemGroup>
+`
+Password files never leave the development machine and are never deployed to servers.
 
 #### Setup for new machines
-1. Create src/sa_password.txt with SQL Server password (plain text, single line)
-2. Rebuild OdysseyMvc2024 → protected/sql-pw.txt is auto-created from sa_password.txt
+1. Create `src/sa_password.txt` with SQL Server password (plain text, single line)
+2. Rebuild OdysseyMvc2024 → `protected/sql-pw.txt` is auto-created from `sa_password.txt`
 3. Start the app → password is injected at runtime
 
 #### Staging and Production
-- Upload src/OdysseyMvc2024/protected/sql-pw.txt via FTPS, OR
-- Use WinHost Environment Variables (recommended):
-  - Name: ConnectionStrings:OdysseyConnection
-  - Value: Full connection string with production password
-  - App will skip file injection if password is already present
+The `protected/` directory is **not deployed**. Configure password via:
+
+**Option 1: Environment Variables (Recommended)**
+- WinHost Control Panel → Site Manager → IIS Settings → Application Settings
+- Name: `ConnectionStrings:OdysseyConnection`
+- Value: Full connection string with production password already filled in
+- App skips file injection since password is already present
+
+**Option 2: Upload password file (Fallback)**
+- Manually create `protected/` directory on server
+- Upload `protected/sql-pw.txt` via FTPS with production password
+- App will inject the password at startup
 
 ### appsettings.json
 Minimal — only logging configuration:

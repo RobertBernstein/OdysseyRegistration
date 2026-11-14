@@ -31,9 +31,9 @@ bld/
 [Oo]bj/
 [Ll]og/
 [Ll]ogs/
-OdysseyRegistration/OdysseyMvc2024/publish-test
-OdysseyRegistration/OdysseyMvc2024/publish-prod
-OdysseyRegistration/src/OdysseyMvc2024/protected/
+src/OdysseyMvc2024/publish-test
+src/OdysseyMvc2024/publish-prod
+src/OdysseyMvc2024/protected/
 
 # Visual Studio 2015/2017 cache/options directory
 .vs/
@@ -191,7 +191,7 @@ DocProject/Help/html
 *.azurePubxml
 # Note: Comment the next line if you want to checkin your web deploy settings,
 # but database connection strings (with potential passwords) will be unencrypted
-*.pubxml
+#*.pubxml
 *.publishproj
 
 # Microsoft Azure Web App publish settings. Comment the next line if you want to
