@@ -106,11 +106,14 @@ dotnet user-secrets clear
 - They override values in `appsettings.json`
 - They are never committed to source control
 
-**Important**: The password in User Secrets must match the password in `src/sa_password.txt` (used by Docker for SQL Server).
+**Important**:
+- The `ConnectionStrings:OdysseyConnection` value must include a `Password=` segment (placeholder is allowed).
+- At runtime, OdysseyMvc2024 replaces the `Password=` value by reading `protected/sql-pw.txt` from the website content root.
+- For local Docker development, keep the runtime SQL password in `src/OdysseyMvc2024/protected/sql-pw.txt` and keep it aligned with `src/sa_password.txt`.
 
-### Production Secrets Management
+### Staging and Production Secrets Management
 
-User Secrets are **only for development**. For production environments (WinHost), use one of these approaches:
+User Secrets are **only for development**. For staging and production environments (WinHost), use one of these approaches:
 
 #### Option 1: Environment Variables via WinHost Control Panel (Recommended)
 
@@ -127,11 +130,12 @@ This approach:
 - Can be changed without redeploying
 - Is the recommended approach for shared hosting
 
-#### Option 2: appsettings.Production.json on Server
+#### Option 2: Environment appsettings file on Server
 
-1. Create `appsettings.Production.json` directly on the WinHost server (via FTP)
-2. Include the connection string with production password
-3. Ensure this file is NOT in source control (add to `.gitignore`)
+1. For production, create `appsettings.Production.json` directly on the WinHost server (via FTP)
+2. For staging, create `appsettings.Staging.json` directly on the WinHost server (via FTP)
+3. Keep these files out of source control (add to `.gitignore`)
+4. Keep password material in `protected/sql-pw.txt`; the connection string still needs a `Password=` segment
 
 ```json
 {
@@ -264,6 +268,10 @@ cd publish
 .\publish.ps1 -Environment test -SkipPublish
 .\publish.ps1 -Environment prod -SkipPublish
 ```
+
+> [!important]
+> Before the deployed website can connect to SQL Server in **staging or production**, upload `protected/sql-pw.txt` to the deployed site via FTPS.
+> This file must contain only the SQL password used by the connection string account.
 
 #### Updating `publish-config.json`
 

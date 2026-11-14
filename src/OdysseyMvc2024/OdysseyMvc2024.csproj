@@ -12,7 +12,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="web.WinHost-Production.config" />
+    <Content Remove="web.WinHost-Staging.config" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include=".github\copilot-instructions.md" />
+    <None Include="web.WinHost-Production.config">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </None>
+    <None Include="web.WinHost-Staging.config" />
   </ItemGroup>
 
   <ItemGroup>

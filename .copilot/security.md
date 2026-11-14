@@ -1,4 +1,4 @@
-# Security Rules
+﻿# Security Rules
 
 ## Secrets management
 - NEVER commit secrets, passwords, or connection strings to git
@@ -12,13 +12,53 @@ dotnet user-secrets set "ConnectionStrings:OdysseyConnection" "Server=localhost;
 dotnet user-secrets list  # View stored secrets
 ```
 - Stored at: `%APPDATA%\Microsoft\UserSecrets\{UserSecretsId}\secrets.json`
-- Password must match `OdysseyRegistration/sa_password.txt` (for Docker)
+- Connection string must include `Password=` placeholder (placeholder is acceptable)
+
+### OdysseyMvc2024 SQL password injection (Build-time)
+
+#### How it works
+OdysseyMvc2024 uses a build-time password injection mechanism to keep secrets out of source control:
+
+1. **Build process**: Every time OdysseyMvc2024 builds, an MSBuild target (`CopyPasswordFile`):
+   - Creates the `src/OdysseyMvc2024/protected/` directory if it doesn't exist
+   - Copies `src/sa_password.txt` → `src/OdysseyMvc2024/protected/sql-pw.txt`
+   - Skips copying if file is unchanged (efficient builds)
+
+2. **Startup process**: When app starts (`Program.cs` line 29):
+   - `ConnectionStringPasswordInjector.InjectSqlPasswordFromProtectedFile()` is called
+   - Reads password from `protected/sql-pw.txt` (inside app directory)
+   - Injects it into connection string after `Password=` placeholder
+   - Connection string is ready for database access
+
+3. **File locations**:
+   - Source (shared): `src/sa_password.txt` (one password for all local development)
+   - Target (per-project): `src/OdysseyMvc2024/protected/sql-pw.txt` (created at build, never committed)
+   - Format: Plain text, single line, password only (whitespace trimmed)
+
+#### Setup for new machines
+When setting up OdysseyMvc2024 on a new machine:
+
+1. Create `src/sa_password.txt` with SQL Server password (one line, no extra whitespace)
+2. Rebuild OdysseyMvc2024 → automatically creates `protected/sql-pw.txt` from `sa_password.txt`
+3. Start the app → password is injected into connection string at runtime
+4. Never commit `sa_password.txt` or `protected/` to git (both are in `.gitignore`)
+
+#### File safety
+- `src/sa_password.txt`: Shared source, in `.gitignore`, used by Docker and OdysseyMvc2024
+- `src/OdysseyMvc2024/protected/`: Created at build time, in `.gitignore`, never committed
+- `protected/sql-pw.txt`: Auto-created during build from `sa_password.txt`
+
+#### Staging and production
+Upload `src/OdysseyMvc2024/protected/sql-pw.txt` via FTPS before starting site, OR use Environment Variables in WinHost Control Panel (recommended):
+- Name: `ConnectionStrings:OdysseyConnection`
+- Value: Full connection string with production password
+- App will skip file injection if password is already in connection string
 
 ### Docker (SQL Server)
 - Use `sa_password.txt` for local Docker SQL password (don't commit it)
 - Docker Secrets mount this as `/run/secrets/sa_password`
 
-### Production (WinHost)
+### Staging and Production (WinHost)
 Choose one of these approaches:
 
 **Option 1: Environment Variables (Recommended)**

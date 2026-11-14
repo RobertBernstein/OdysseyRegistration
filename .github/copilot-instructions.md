@@ -79,7 +79,9 @@ cd OdysseyRegistration\OdysseyMvc2024
 dotnet user-secrets set "ConnectionStrings:OdysseyConnection" "Server=localhost;Database=DB_12824_registration;User Id=sa;Password=YOUR_PASSWORD;TrustServerCertificate=True;"
 ```
 - Stored at: `%APPDATA%\Microsoft\UserSecrets\{UserSecretsId}\secrets.json`
-- Password must match `OdysseyRegistration/sa_password.txt` (for Docker)
+- `ConnectionStrings:OdysseyConnection` must include `Password=` (placeholder value allowed)
+- OdysseyMvc2024 injects the real password from `OdysseyRegistration/OdysseyMvc2024/protected/sql-pw.txt` at startup
+- For Docker, keep `sql-pw.txt` aligned with `OdysseyRegistration/sa_password.txt`
 - View secrets: `dotnet user-secrets list`
 
 ### Docker: sa_password.txt
@@ -88,12 +90,13 @@ dotnet user-secrets set "ConnectionStrings:OdysseyConnection" "Server=localhost;
 - Docker Secrets mount this as `/run/secrets/sa_password`
 - Do NOT commit this file to git
 
-### Production: WinHost Options
+### Staging and Production: WinHost Options
 
 1. **Environment Variables (Recommended)**: WinHost Control Panel → Site Manager → IIS Settings → Application Settings
-2. **appsettings.Production.json**: Create on server via FTP (not in source control)
+2. **appsettings.{Environment}.json**: Create `appsettings.Staging.json` or `appsettings.Production.json` on server via FTP (not in source control)
 3. **Web.config** (Legacy .NET Framework): Use transforms or edit on server
 4. **Azure Key Vault** (Future): For Azure App Service migration
+5. **Required for all staging and production options**: Upload `protected/sql-pw.txt` via FTPS before the website can connect to SQL Server
 
 See `.copilot/security.md` for detailed configuration instructions.
 

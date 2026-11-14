@@ -59,6 +59,9 @@ OdysseyMvc2024/
 │   ├── ContactUsSenderRole.cs      # Contact form sender role entity
 │   └── JudgesExport.cs            # DTO for judges data export
 │
+├── Services/
+│   └── ConnectionStringPasswordInjector.cs  # Runtime password injection (build-time file → connection string)
+│
 ├── ViewData/
 │   ├── BaseViewData.cs             # Base view model for all pages
 │   ├── JudgesRegistration/
@@ -116,6 +119,8 @@ OdysseyMvc2024/
     ├── 20241005151813_InitialCreate.Designer.cs
     └── OdysseyEntitiesModelSnapshot.cs
 ```
+
+> **Note on `protected/` directory**: This directory is created at build time by the `CopyPasswordFile` MSBuild target in `OdysseyMvc2024.csproj`. It copies `src/sa_password.txt` to `protected/sql-pw.txt` for runtime password injection. Never commit this directory or the password file to git — both are in `.gitignore`.
 
 ---
 
@@ -766,12 +771,37 @@ wwwroot/
 ## 11. Configuration
 
 ### Connection String
-- **Development**: User Secrets (`dotnet user-secrets`)
-  ```
-  ConnectionStrings:OdysseyConnection = "Server=localhost;Database=DB_12824_registration;User Id=sa;Password=...;TrustServerCertificate=True;"
-  ```
-- **Fallback** (in OdysseyEntities.OnConfiguring): `Server=localhost;Database=DB_12824_registration;Trusted_Connection=True;TrustServerCertificate=True;`
-- **Production**: WinHost environment variables or appsettings.Production.json (not in source control)
+
+#### Development: Build-time password injection
+OdysseyMvc2024 uses an automated build-time mechanism to inject SQL passwords:
+
+1. **User Secrets** provides the connection string template with Password= placeholder:
+   `
+   ConnectionStrings:OdysseyConnection = "Server=localhost;Database=DB_12824_registration;User Id=sa;Password=PLACEHOLDER;TrustServerCertificate=True;"
+   `
+
+2. **MSBuild target** (CopyPasswordFile in .csproj) runs before every build:
+   - Creates src/OdysseyMvc2024/protected/ directory
+   - Copies src/sa_password.txt → src/OdysseyMvc2024/protected/sql-pw.txt
+   - Never committed to git (in .gitignore)
+
+3. **Startup injection** (Program.cs line 29):
+   - ConnectionStringPasswordInjector.InjectSqlPasswordFromProtectedFile() is called
+   - Reads actual password from protected/sql-pw.txt
+   - Replaces Password=PLACEHOLDER with real password
+   - Connection string is ready for database access
+
+#### Setup for new machines
+1. Create src/sa_password.txt with SQL Server password (plain text, single line)
+2. Rebuild OdysseyMvc2024 → protected/sql-pw.txt is auto-created from sa_password.txt
+3. Start the app → password is injected at runtime
+
+#### Staging and Production
+- Upload src/OdysseyMvc2024/protected/sql-pw.txt via FTPS, OR
+- Use WinHost Environment Variables (recommended):
+  - Name: ConnectionStrings:OdysseyConnection
+  - Value: Full connection string with production password
+  - App will skip file injection if password is already present
 
 ### appsettings.json
 Minimal — only logging configuration:
@@ -792,7 +822,6 @@ Minimal — only logging configuration:
 - **OdysseyMvc2024** (Kestrel): Port 5153 (HTTP) / 7023 (HTTPS)
 
 ---
-
 ## 12. Database Migrations
 
 The project uses EF Core Code First migrations:

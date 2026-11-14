@@ -33,6 +33,7 @@ bld/
 [Ll]ogs/
 OdysseyRegistration/OdysseyMvc2024/publish-test
 OdysseyRegistration/OdysseyMvc2024/publish-prod
+OdysseyRegistration/src/OdysseyMvc2024/protected/
 
 # Visual Studio 2015/2017 cache/options directory
 .vs/

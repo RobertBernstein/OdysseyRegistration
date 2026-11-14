@@ -23,9 +23,14 @@ builder.Services.AddSystemWebAdapters();
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+string odysseyConnectionString = builder.Configuration.GetConnectionString("OdysseyConnection")
+    ?? throw new InvalidOperationException("Missing ConnectionStrings:OdysseyConnection. Configure it in app settings or environment variables.");
+
+odysseyConnectionString = ConnectionStringPasswordInjector.InjectSqlPasswordFromProtectedFile(odysseyConnectionString, builder.Environment.ContentRootPath);
+
 // Configure DbContext with connection string
 builder.Services.AddDbContext<OdysseyEntities>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("OdysseyConnection")));
+    options.UseSqlServer(odysseyConnectionString));
 
 // builder.Services.AddScoped<IOdysseyEntities, OdysseyEntities>();
 builder.Services.AddScoped<IOdysseyRepository, OdysseyRepository>();

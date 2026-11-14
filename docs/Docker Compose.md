@@ -1,4 +1,4 @@
-﻿# Docker Documentation
+# Docker Documentation
 
 ## Startup Configuration: Running OdysseyMvc2024 with Docker Containers
 
@@ -215,6 +215,7 @@ During initialization, `src/init/sqlserver-entrypoint.sh` passes both values as 
 
 **Important**:
 - The SA password in User Secrets must match `src/sa_password.txt`.
+- OdysseyMvc2024 reads the runtime SQL password from `src/OdysseyMvc2024/protected/sql-pw.txt` and injects it into `ConnectionStrings:OdysseyConnection` after `Password=`.
 - The SMTP password in `Config:WebmasterEmailPassword` must be exported to `src/webmaster_email_password.txt` so Docker/SQL init can populate the SQL Config table.
 - `.gitignore` includes `src/sa_password.txt` and `src/webmaster_email_password.txt` to prevent these secret files from being committed.
 

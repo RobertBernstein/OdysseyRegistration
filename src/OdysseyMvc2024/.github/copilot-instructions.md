@@ -270,8 +270,10 @@ OdysseyMvc2024 depends on a SQL Server database running in Docker. The solution 
 The application uses different connection string sources depending on the environment:
 
 #### Development (Local Debugging)
-**ASP.NET Core User Secrets** provides the connection string with the password:
+**ASP.NET Core User Secrets** provides the connection string, and `protected/sql-pw.txt` provides the runtime SQL password:
 - User Secrets are stored outside the project at `%APPDATA%\Microsoft\UserSecrets\{UserSecretsId}\secrets.json`
+- `ConnectionStrings:OdysseyConnection` must include a `Password=` segment (placeholder is allowed)
+- The app reads `protected/sql-pw.txt` and injects it after `Password=` at startup
 - Never committed to source control
 - Automatically loaded in Development environment
 
@@ -296,7 +298,9 @@ The SQL Server container uses **Docker Secrets** for the SA password:
 - Mounted as `/run/secrets/sa_password` in the container
 - Used by SQL Server via `MSSQL_SA_PASSWORD_FILE` environment variable
 
-**Note**: When setting up a new development environment, ensure the User Secrets connection string password matches the password in `sa_password.txt`.
+**Note**:
+- For local Docker work, keep `OdysseyRegistration/OdysseyMvc2024/protected/sql-pw.txt` and `OdysseyRegistration/sa_password.txt` aligned.
+- For WinHost staging/test/prod deployment, upload `protected/sql-pw.txt` via FTPS before starting the site.
 
 ### Documentation
 Full Docker setup documentation: `OdysseyMvc2024/Documentation/Docker Compose.md`

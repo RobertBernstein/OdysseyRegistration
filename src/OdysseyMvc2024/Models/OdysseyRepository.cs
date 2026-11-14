@@ -656,12 +656,19 @@ namespace OdysseyMvc2024.Models
                 // TODO: Add try/catch.
                 // TODO: Add logging for when "NoVA North Regional Tournament" cannot be found in the database and display the current value of any containing "Tournament".
                 // TODO: Figure out how to cache this value so we don't query for/set it every time a page is displayed.
-                // TODO: This is throwing an exception!
                 if (_tournamentInfo == null)
                 {
-                    TournamentInfo = (Events ?? []).First(e =>
+                    IEnumerable<Event> events = Events ?? [];
+
+                    Event? strictMatch = events.FirstOrDefault(e =>
                         e.EventName?.StartsWith(RegionName, StringComparison.Ordinal) == true &&
                         e.EventName?.Contains("Tournament", StringComparison.Ordinal) == true);
+
+                    Event? fallbackMatch = strictMatch ?? events.FirstOrDefault(e =>
+                        e.EventName?.Contains("Tournament", StringComparison.OrdinalIgnoreCase) == true);
+
+                    TournamentInfo = fallbackMatch ?? throw new InvalidOperationException(
+                        $"No tournament event is configured. Expected EventName starting with '{RegionName}' and containing 'Tournament'.");
                 }
 
                 return _tournamentInfo!;

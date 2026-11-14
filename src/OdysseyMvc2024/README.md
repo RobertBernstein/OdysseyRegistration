@@ -169,11 +169,23 @@ dotnet user-secrets clear
 
 User Secrets are stored at: `%APPDATA%\Microsoft\UserSecrets\{UserSecretsId}\secrets.json`
 
-**Note**: The password must match the one in `src/sa_password.txt` used by Docker.
+**Note**:
+- `ConnectionStrings:OdysseyConnection` must include `Password=` (placeholder value is acceptable).
+- At startup, the app reads `protected/sql-pw.txt` and injects that value after `Password=`.
+- For local Docker, keep `src/OdysseyMvc2024/protected/sql-pw.txt` aligned with `src/sa_password.txt`.
 
-### Production Secrets Management
+### Staging and Production Secrets Management
 
-User Secrets are **only for development**. For production environments, use one of these approaches:
+User Secrets are **only for development**. For staging and production environments, use one of these approaches.
+
+### Required runtime SQL password file (all staging and production options)
+1. Deploy the site.
+2. Upload `protected/sql-pw.txt` to the site root via FTPS.
+3. Put only the SQL password in that file (no extra text).
+4. Ensure the configured `ConnectionStrings:OdysseyConnection` still contains a `Password=` segment.
+
+> [!important]
+> OdysseyMvc2024 cannot open SQL connections in staging or production until `protected/sql-pw.txt` exists on the server.
 
 #### Option 1: Environment Variables (Recommended for WinHost)
 Set environment variables on the hosting server. ASP.NET Core automatically reads them:
@@ -222,12 +234,13 @@ Use Web.config transformation for different environments:
 </connectionStrings>
 ```
 
-#### Option 4: Separate appsettings.Production.json
-Create a production-specific config file (keep it out of source control):
+#### Option 4: Separate environment appsettings file
+Create an environment-specific config file (keep it out of source control):
 
-1. Create `appsettings.Production.json` on the server
-2. Add it to `.gitignore`
-3. Contains the production connection string
+1. For production, create `appsettings.Production.json` on the server
+2. For staging, create `appsettings.Staging.json` on the server
+3. Add environment-specific settings files to `.gitignore`
+4. Store only non-secret connection string structure there; keep password in `protected/sql-pw.txt`
 
 **Security Best Practices:**
 - Never commit passwords to source control
