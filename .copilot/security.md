@@ -1,4 +1,4 @@
-﻿# Security Rules
+# Security Rules
 
 ## Secrets management
 - NEVER commit secrets, passwords, or connection strings to git

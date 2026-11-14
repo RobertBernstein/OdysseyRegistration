@@ -1,4 +1,4 @@
-﻿# OdysseyMvc2024 Architecture Reference
+# OdysseyMvc2024 Architecture Reference
 
 > Comprehensive documentation for the OdysseyMvc2024 project — the .NET 10.0 migration target for the Odyssey of the Mind registration system.
 
