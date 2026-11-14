@@ -173,6 +173,7 @@ User Secrets are stored at: `%APPDATA%\Microsoft\UserSecrets\{UserSecretsId}\sec
 - `ConnectionStrings:OdysseyConnection` must include `Password=` (placeholder value is acceptable).
 - At startup, the app reads `protected/sql-pw.txt` and injects that value after `Password=`.
 - For local Docker, keep `src/OdysseyMvc2024/protected/sql-pw.txt` aligned with `src/sa_password.txt`.
+- In local development only, `dotnet build` creates `protected/sql-pw.txt`; `dotnet clean` removes `protected/sql-pw.txt` and the `protected` directory (this does not apply to staging or production).
 
 ### Staging and Production Secrets Management
 

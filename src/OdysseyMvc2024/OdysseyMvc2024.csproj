@@ -53,4 +53,13 @@
     <Copy SourceFiles="$(SourcePasswordFile)" DestinationFiles="$(DestPasswordFile)" SkipUnchangedFiles="true" />
   </Target>
 
+  <Target Name="RemovePasswordFile" AfterTargets="Clean">
+    <PropertyGroup>
+      <ProtectedDir>$([System.IO.Path]::Combine($(ProjectDir), 'protected'))</ProtectedDir>
+      <DestPasswordFile>$([System.IO.Path]::Combine($(ProtectedDir), 'sql-pw.txt'))</DestPasswordFile>
+    </PropertyGroup>
+    <Delete Files="$(DestPasswordFile)" Condition="Exists('$(DestPasswordFile)')" />
+    <RemoveDir Directories="$(ProtectedDir)" Condition="Exists('$(ProtectedDir)')" />
+  </Target>
+
 </Project>
