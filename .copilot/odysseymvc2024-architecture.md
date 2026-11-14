@@ -772,53 +772,54 @@ wwwroot/
 
 ### Connection String
 
-#### Development: Build-time password injection (protected/ directory)
-OdysseyMvc2024 uses an automated build-time mechanism for development:
+#### File-based password injection (all environments)
+OdysseyMvc2024 uses a file-based password injection mechanism that requires the password file to exist in all environments:
 
-1. **User Secrets** provides the connection string template with `Password=` placeholder:
-   `
-   ConnectionStrings:OdysseyConnection = "Server=localhost;Database=DB_12824_registration;User Id=sa;Password=PLACEHOLDER;TrustServerCertificate=True;"
-   `
+1. **Development**: MSBuild target creates the file at build time
+   - User Secrets provides connection string template with `Password=` placeholder
+   - `CopyPasswordFile` MSBuild target (in `.csproj`) runs before build:
+     - Creates `src/OdysseyMvc2024/protected/` directory
+     - Copies `src/sa_password.txt` → `src/OdysseyMvc2024/protected/sql-pw.txt`
 
-2. **MSBuild target** (`CopyPasswordFile` in `.csproj`) runs before every build:
-   - Creates `src/OdysseyMvc2024/protected/` directory
-   - Copies `src/sa_password.txt` → `src/OdysseyMvc2024/protected/sql-pw.txt`
-   - Never committed to git (in `.gitignore`)
-
-3. **Startup injection** (`Program.cs` line 29):
+2. **Startup (all environments)**: `Program.cs` line 29
    - `ConnectionStringPasswordInjector.InjectSqlPasswordFromProtectedFile()` is called
-   - **Development**: Reads actual password from `protected/sql-pw.txt`
-   - **Staging/Production**: `protected/` is not deployed → gracefully skips injection
-   - Assumes password is already filled via environment variable on production
+   - **Reads password from `protected/sql-pw.txt`** (required to exist)
+   - Injects actual password into connection string after `Password=` placeholder
+   - **Throws exception if file doesn't exist** — prevents misconfigured deployments
+   - Connection string is ready for database access
 
-#### Publish exclusion
-The `protected/` directory is explicitly **excluded from publish**:
+3. **Publish behavior**:
+   - `protected/` directory is **excluded from publish** (see .csproj line 27-30)
+   - Development: File auto-created by build, not published to other machines
+   - Staging/Production: File must be uploaded separately via FTPS before app starts
+
+#### Development setup
+1. Create `src/sa_password.txt` with SQL Server password (plain text, single line)
+2. Rebuild OdysseyMvc2024 → `protected/sql-pw.txt` is auto-created
+3. Start the app → password is injected into connection string
+
+#### Staging and Production deployment
+Password file must be manually uploaded before application starts:
+
+1. **Publish application** (using your deploy script/CI/CD)
+   - `protected/` directory is automatically excluded
+   - Application files are deployed to server
+
+2. **Upload password file via FTPS**:
+   - Create `protected/` directory on server
+   - Upload `protected/sql-pw.txt` with environment-specific password
+
+3. **Start/Restart application**
+   - App starts, password is injected from file
+   - If file is missing, app throws startup exception
+
+#### Publish exclusion (csproj)
 `xml
 <ItemGroup>
-  <!-- Exclude protected directory from publish (development-only password files) -->
+  <!-- Exclude protected directory from publish (must be uploaded separately per environment) -->
   <Exclude Include="protected\**" />
 </ItemGroup>
 `
-Password files never leave the development machine and are never deployed to servers.
-
-#### Setup for new machines
-1. Create `src/sa_password.txt` with SQL Server password (plain text, single line)
-2. Rebuild OdysseyMvc2024 → `protected/sql-pw.txt` is auto-created from `sa_password.txt`
-3. Start the app → password is injected at runtime
-
-#### Staging and Production
-The `protected/` directory is **not deployed**. Configure password via:
-
-**Option 1: Environment Variables (Recommended)**
-- WinHost Control Panel → Site Manager → IIS Settings → Application Settings
-- Name: `ConnectionStrings:OdysseyConnection`
-- Value: Full connection string with production password already filled in
-- App skips file injection since password is already present
-
-**Option 2: Upload password file (Fallback)**
-- Manually create `protected/` directory on server
-- Upload `protected/sql-pw.txt` via FTPS with production password
-- App will inject the password at startup
 
 ### appsettings.json
 Minimal — only logging configuration:

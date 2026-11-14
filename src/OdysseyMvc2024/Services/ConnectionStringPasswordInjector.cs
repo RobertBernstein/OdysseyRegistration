@@ -1,10 +1,10 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
+// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="ConnectionStringPasswordInjector.cs" company="Tardis Technologies">
 //   Copyright 2026 Tardis Technologies. All rights reserved.
 // </copyright>
 // <summary>
 //   Injects SQL password values from protected files into configured connection strings.
-//   Development-only: skips injection on staging/production where password file is not deployed.
+//   Development: File is auto-created at build time. Staging/Production: File must be uploaded via FTPS.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -16,9 +16,9 @@ internal static class ConnectionStringPasswordInjector
 
     /// <summary>
     /// Injects SQL password from a protected file into the connection string.
-    /// On staging/production where the protected/ directory is not deployed,
-    /// gracefully skips injection and returns the connection string unchanged
-    /// (assumes the password placeholder is already filled via environment variable).
+    /// The password file must always exist before startup:
+    /// - Development: Auto-created at build time by CopyPasswordFile MSBuild target
+    /// - Staging/Production: Must be uploaded via FTPS before application starts
     /// </summary>
     internal static string InjectSqlPasswordFromProtectedFile(string connectionString, string contentRootPath)
     {
@@ -32,12 +32,11 @@ internal static class ConnectionStringPasswordInjector
         }
 
         string passwordFilePath = Path.Combine(contentRootPath, "protected", "sql-pw.txt");
-        
-        // On staging/production, the protected/ directory is not deployed.
-        // If the file doesn't exist, assume the password is already filled via environment variable.
         if (!File.Exists(passwordFilePath))
         {
-            return connectionString;
+            throw new InvalidOperationException($"Required password file was not found at '{passwordFilePath}'. " +
+                "Development: Rebuild the project to auto-create this file. " +
+                "Staging/Production: Upload protected/sql-pw.txt via FTPS before starting the application.");
         }
 
         string passwordFromFile = File.ReadAllText(passwordFilePath).Trim();

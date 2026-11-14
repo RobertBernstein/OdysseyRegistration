@@ -14,65 +14,66 @@ dotnet user-secrets list  # View stored secrets
 - Stored at: `%APPDATA%\Microsoft\UserSecrets\{UserSecretsId}\secrets.json`
 - Connection string must include `Password=` placeholder (placeholder is acceptable)
 
-### OdysseyMvc2024 SQL password injection (Build-time, Development-only)
+### OdysseyMvc2024 SQL password injection (File-based, all environments)
 
 #### How it works
-OdysseyMvc2024 uses a build-time password injection mechanism **for development only**:
+OdysseyMvc2024 requires a password file in all environments (development, staging, production):
 
-1. **Build process**: Every time OdysseyMvc2024 builds, an MSBuild target (`CopyPasswordFile`):
+1. **Build process (Development only)**: The MSBuild target (`CopyPasswordFile`) runs before every build:
    - Creates the `src/OdysseyMvc2024/protected/` directory if it doesn't exist
    - Copies `src/sa_password.txt` → `src/OdysseyMvc2024/protected/sql-pw.txt`
    - Skips copying if file is unchanged (efficient builds)
 
-2. **Startup process**: When app starts (`Program.cs` line 29):
+2. **Startup process (All environments)**: When app starts (`Program.cs` line 29):
    - `ConnectionStringPasswordInjector.InjectSqlPasswordFromProtectedFile()` is called
-   - **Development**: Reads password from `protected/sql-pw.txt` and injects into connection string
-   - **Staging/Production**: `protected/` directory is not deployed (excluded from publish), so injection is skipped
-   - Returns connection string unchanged (password must already be filled via environment variable)
+   - Reads password from `protected/sql-pw.txt` (required to exist)
+   - Injects it into connection string after `Password=` placeholder
+   - **Throws exception if file doesn't exist** — prevents misconfigured deployments
+   - Connection string is ready for database access
 
 3. **File locations**:
-   - Source (shared): `src/sa_password.txt` (one password for all local development)
-   - Target (per-project, development-only): `src/OdysseyMvc2024/protected/sql-pw.txt` (created at build, never committed, never published)
+   - Source (shared, development only): `src/sa_password.txt` (one password for all local development)
+   - Target (per-project): `src/OdysseyMvc2024/protected/sql-pw.txt` (must exist in all environments)
    - Format: Plain text, single line, password only (whitespace trimmed)
 
-#### Publish exclusion
+#### Publish behavior
 The `protected/` directory is **excluded from publish** in `.csproj`:
 `xml
 <ItemGroup>
-  <!-- Exclude protected directory from publish (development-only password files) -->
+  <!-- Exclude protected directory from publish (must be uploaded separately per environment) -->
   <Exclude Include="protected\**" />
 </ItemGroup>
 `
-This ensures password files never leave the development machine.
+This ensures:
+- Development: Auto-created by build, not published to other machines
+- Staging/Production: Not auto-deployed, must be uploaded separately before app starts
 
-#### Setup for new machines
-When setting up OdysseyMvc2024 on a new machine:
+#### Setup for new machines (Development)
+When setting up OdysseyMvc2024 on a new development machine:
 
 1. Create `src/sa_password.txt` with SQL Server password (one line, no extra whitespace)
 2. Rebuild OdysseyMvc2024 → automatically creates `protected/sql-pw.txt` from `sa_password.txt`
 3. Start the app → password is injected into connection string at runtime
 
+#### Deployment to Staging and Production
+The `protected/` directory is not published. Password file must be uploaded before app starts:
+
+**Required steps (for each deployment):**
+1. Publish application normally (`protected/` is excluded)
+2. Create `protected/` directory on server via FTP
+3. Upload `protected/sql-pw.txt` via FTPS with environment-specific password
+4. Start/restart application → password is injected at startup
+
+**Note**: Environment variables are NOT used for passwords. The file-based approach ensures:
+- Consistent behavior across all environments
+- No accidental password exposure in config files
+- Explicit deployment step prevents misconfiguration
+
 #### File safety
-- `src/sa_password.txt`: Shared source, in `.gitignore`, never committed
-- `src/OdysseyMvc2024/protected/`: Created at build time, in `.gitignore`, never committed, **never published**
-- `protected/sql-pw.txt`: Auto-created during build from `sa_password.txt`, development-only
-
-#### Staging and production
-The `protected/` directory and password files are **not deployed** to staging or production.
-
-**Option 1: Environment Variables (Recommended)**
-- WinHost Control Panel → Site Manager → IIS Settings → Application Settings
-- Name: `ConnectionStrings:OdysseyConnection`
-- Value: Full connection string with production password already filled in
-- App will skip file injection since password is already present
-
-**Option 2: Upload password file (Fallback)**
-- If for some reason you need to use the file-based approach on staging/production:
-  - Manually create `protected/` directory on server via FTP
-  - Upload `protected/sql-pw.txt` via FTPS with production password
-  - App will inject the password at startup
-
-**Recommended approach**: Use Option 1 (Environment Variables) — simpler, more secure, no need to manage files on server.
+- `src/sa_password.txt`: Development only, in `.gitignore`, never committed
+- `src/OdysseyMvc2024/protected/`: Excluded from publish, in `.gitignore`, never committed
+- `protected/sql-pw.txt`: Auto-created in dev (build), manually uploaded in staging/prod
+- Password is never exposed in logs or error messages
 
 ### Docker (SQL Server)
 - Use `sa_password.txt` for local Docker SQL password (don't commit it)

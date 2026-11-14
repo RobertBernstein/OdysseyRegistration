@@ -31,8 +31,8 @@ bld/
 [Oo]bj/
 [Ll]og/
 [Ll]ogs/
-src/OdysseyMvc2024/publish-test
-src/OdysseyMvc2024/publish-prod
+**/publish-test/
+**/publish-prod/
 src/OdysseyMvc2024/protected/
 
 # Visual Studio 2015/2017 cache/options directory
