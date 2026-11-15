@@ -339,8 +339,8 @@ namespace OdysseyMvc2024.Controllers
         public string GetDisplayableRegistrationName() => GetFriendlyRegistrationName();
 
         /// <summary>
-        /// Determine whether the specified registration is closed based on the Config
-        /// table in the database.
+        /// Determine whether the specified registration is closed based on the Config table in the database, where
+        /// "closed" is defined as the current date and time being after the registration close date and time.
         /// </summary>
         /// <param name="registrationType">
         /// The registration type.
@@ -361,9 +361,7 @@ namespace OdysseyMvc2024.Controllers
             DateTime registrationCloseDateTime;
             try
             {
-                // TODO: Change this to TryParse (everywhere).
-                // TODO: This will fail if you specify an invalid date, such as 2/29 on a non-leap year! Log such possibilities. Add a unit test for this.
-                registrationCloseDateTime = DateTime.Parse(baseViewData.Config[registrationType.ToString() + "RegistrationCloseDateTime"], CultureInfo.InvariantCulture);
+                registrationCloseDateTime = ParseRegistrationDateTime(baseViewData.Config, registrationType, "RegistrationCloseDateTime");
             }
             catch (Exception ex)
             {
@@ -388,8 +386,9 @@ namespace OdysseyMvc2024.Controllers
         }
 
         /// <summary>
-        /// Determine whether the specified registration is coming soon based on the
-        /// Config table in the database.
+        /// Determine whether the specified registration is coming soon based on the Config table in the database,
+        /// where "coming soon" is defined as the current date and time being before the registration open date and
+        /// time.
         /// </summary>
         /// <param name="registrationType">
         /// The registration type.
@@ -410,7 +409,7 @@ namespace OdysseyMvc2024.Controllers
             DateTime registrationOpenDate;
             try
             {
-                registrationOpenDate = DateTime.Parse(baseViewData.Config[registrationType.ToString() + "RegistrationOpenDateTime"], CultureInfo.InvariantCulture);
+                registrationOpenDate = ParseRegistrationDateTime(baseViewData.Config, registrationType, "RegistrationOpenDateTime");
             }
             catch (Exception ex)
             {
@@ -425,11 +424,32 @@ namespace OdysseyMvc2024.Controllers
             return DateTime.Compare(currentEasternTime, registrationOpenDate) < 0;
         }
 
+        private static DateTime ParseRegistrationDateTime(IDictionary<string, string> config, RegistrationType registrationType, string configSuffix)
+        {
+            ArgumentNullException.ThrowIfNull(config);
+
+            string configKey = registrationType.ToString() + configSuffix;
+            if (!config.TryGetValue(configKey, out string? configuredDateTime) || string.IsNullOrWhiteSpace(configuredDateTime))
+            {
+                throw new InvalidOperationException($"Missing required registration config value '{configKey}'.");
+            }
+
+            if (!DateTime.TryParse(configuredDateTime, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime parsedDateTime))
+            {
+                throw new FormatException($"Invalid registration config value '{configKey}' with value '{configuredDateTime}'.");
+            }
+
+            return parsedDateTime;
+        }
+
         /// <summary>
-        /// Is the current registration type set to be administratively down?
+        /// Is the current registration type set to be administratively down? This is determined by setting the
+        /// `Is[current-registration-type-name]Down` fields in the Config table to True in the database. This is
+        /// different from IsRegistrationClosed, which is determined by the registration close date and time, and from
+        /// IsRegistrationComingSoon, which is determined by the registration open date and time.
         /// </summary>
         /// <param name="registrationType">
-        /// The registration type.
+        /// The registration type name, e.g., Judges, Tournament, Volunteer, CoachesTraining.
         /// </param>
         /// <returns>
         /// true if the registration is administratively down, false otherwise.
